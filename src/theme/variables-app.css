@@ -13,3 +13,6 @@ ion-content {
 ion-card {
   --background: var(--ion-color-primary-contrast);
 }
+ion-list {
+  --ion-background-color: transparent;
+}

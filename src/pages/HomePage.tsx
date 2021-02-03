@@ -9,6 +9,8 @@ const HomePage: React.FC = () => {
       <IonContent>
         <IonList>
           <IonItem routerLink="/intro">Intro</IonItem>
+          <IonItem routerLink="/login">Login</IonItem>
+          <IonItem routerLink="/register">Register</IonItem>
         </IonList>
       </IonContent>
     </IonPage>

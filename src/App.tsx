@@ -17,6 +17,8 @@ import AboutPage from "./pages/AboutPage";
 import DiscoverPage from "./pages/DiscoverPage";
 import SettingsPage from "./pages/SettingsPage";
 import IntroPage from "./pages/subpages/IntroPage";
+import LoginPage from "./pages/subpages/LoginPage";
+import RegisterPage from "./pages/subpages/RegisterPage";
 
 import {
   home as homeIcon,
@@ -52,6 +54,12 @@ const App: React.FC = () => (
           </Route>
           <Route exact path="/intro">
             <IntroPage />
+          </Route>
+          <Route exact path="/login">
+            <LoginPage />
+          </Route>
+          <Route exact path="/register">
+            <RegisterPage />
           </Route>
           <Route exact path="/">
             <Redirect to="/home" />
