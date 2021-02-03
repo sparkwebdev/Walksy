@@ -1,0 +1,7 @@
+{
+  "name": "walksy",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "react"
+}
