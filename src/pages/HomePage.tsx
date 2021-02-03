@@ -8,7 +8,7 @@ const HomePage: React.FC = () => {
       <PageHeader title="Home" />
       <IonContent>
         <IonList>
-          <IonItem routerLink="/"></IonItem>
+          <IonItem routerLink="/intro">Intro</IonItem>
         </IonList>
       </IonContent>
     </IonPage>
