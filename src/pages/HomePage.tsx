@@ -1,4 +1,4 @@
-import { IonPage, IonContent } from "@ionic/react";
+import { IonPage, IonContent, IonList, IonItem } from "@ionic/react";
 import React from "react";
 import PageHeader from "../components/PageHeader";
 
@@ -6,7 +6,11 @@ const HomePage: React.FC = () => {
   return (
     <IonPage>
       <PageHeader title="Home" />
-      <IonContent></IonContent>
+      <IonContent>
+        <IonList>
+          <IonItem routerLink="/"></IonItem>
+        </IonList>
+      </IonContent>
     </IonPage>
   );
 };
