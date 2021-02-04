@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Redirect, Route } from "react-router-dom";
+import { Redirect, Route, Switch } from "react-router-dom";
 import {
   IonApp,
   IonIcon,
@@ -23,6 +23,7 @@ import LoginPage from "./pages/subpages/LoginPage";
 import RegisterPage from "./pages/subpages/RegisterPage";
 import UserWalks from "./pages/UserWalks";
 import GuidedWalks from "./pages/GuidedWalks";
+import NotFoundPage from "./pages/NotFoundPage";
 
 import WalksContext from "./data/walks-context";
 
@@ -49,9 +50,9 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
-        <React.Suspense fallback={<IonSpinner />}>
-          <IonTabs>
-            <IonRouterOutlet>
+        <IonTabs>
+          <IonRouterOutlet>
+            <Switch>
               <Route exact path="/home">
                 <HomePage />
               </Route>
@@ -80,48 +81,53 @@ const App: React.FC = () => {
                 <RegisterPage />
               </Route>
 
-              <Route path="/user-walks">
-                <UserWalks />
-              </Route>
-              <Route path="/guided-walks">
-                <GuidedWalks />
-              </Route>
-              <Route path="/new-walk">
-                <NewWalk />
-              </Route>
+              <React.Suspense fallback={<IonSpinner />}>
+                <Route path="/user-walks">
+                  <UserWalks />
+                </Route>
+                <Route path="/guided-walks">
+                  <GuidedWalks />
+                </Route>
+                <Route path="/new-walk">
+                  <NewWalk />
+                </Route>
+              </React.Suspense>
 
               <Route exact path="/">
                 <Redirect to="/home" />
               </Route>
-            </IonRouterOutlet>
-            <IonTabBar slot="bottom">
-              <IonTabButton tab="home" href="/home">
-                <IonIcon icon={homeIcon} />
-                <IonLabel>Home</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="walk" href="/walk">
-                <IonIcon icon={walkIcon} />
-                <IonLabel>Walk</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="dashboard" href="/dashboard">
-                <IonIcon icon={personIcon} />
-                <IonLabel>Dashboard</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="discover" href="/discover">
-                <IonIcon icon={imagesIcon} />
-                <IonLabel>Discover</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="about" href="/about">
-                <IonIcon icon={informationIcon} />
-                <IonLabel>About</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="settings" href="/settings">
-                <IonIcon icon={settingsIcon} />
-                <IonLabel>Settings</IonLabel>
-              </IonTabButton>
-            </IonTabBar>
-          </IonTabs>
-        </React.Suspense>
+              <Route>
+                <NotFoundPage />
+              </Route>
+            </Switch>
+          </IonRouterOutlet>
+          <IonTabBar slot="bottom">
+            <IonTabButton tab="home" href="/home">
+              <IonIcon icon={homeIcon} />
+              <IonLabel>Home</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="walk" href="/walk">
+              <IonIcon icon={walkIcon} />
+              <IonLabel>Walk</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="dashboard" href="/dashboard">
+              <IonIcon icon={personIcon} />
+              <IonLabel>Dashboard</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="discover" href="/discover">
+              <IonIcon icon={imagesIcon} />
+              <IonLabel>Discover</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="about" href="/about">
+              <IonIcon icon={informationIcon} />
+              <IonLabel>About</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="settings" href="/settings">
+              <IonIcon icon={settingsIcon} />
+              <IonLabel>Settings</IonLabel>
+            </IonTabButton>
+          </IonTabBar>
+        </IonTabs>
       </IonReactRouter>
     </IonApp>
   );
