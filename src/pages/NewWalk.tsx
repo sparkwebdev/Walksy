@@ -1,4 +1,4 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef, useContext } from "react";
 import {
   IonPage,
   IonHeader,
@@ -15,18 +15,18 @@ import {
   IonInput,
   IonButton,
   IonSelect,
-  IonSelectOption
-} from '@ionic/react';
-import { useHistory } from 'react-router-dom';
+  IonSelectOption,
+} from "@ionic/react";
+import { useHistory } from "react-router-dom";
 
-import MemoriesContext, { MemoryType } from '../data/memories-context';
-import ImagePicker, { Photo } from '../components/ImagePicker';
+import WalksContext, { WalkType } from "../data/walks-context";
+import ImagePicker, { Photo } from "../components/ImagePicker";
 
-const NewMemory: React.FC = () => {
+const NewWalk: React.FC = () => {
   const [takenPhoto, setTakenPhoto] = useState<Photo>();
-  const [chosenMemoryType, setChosenMemoryType] = useState<MemoryType>('good');
+  const [chosenWalkType, setChosenWalkType] = useState<WalkType>("user");
 
-  const memoriesCtx = useContext(MemoriesContext);
+  const walksCtx = useContext(WalksContext);
 
   const titleRef = useRef<HTMLIonInputElement>(null);
 
@@ -36,29 +36,25 @@ const NewMemory: React.FC = () => {
     setTakenPhoto(photo);
   };
 
-  const selectMemoryTypeHandler = (event: CustomEvent) => {
-    const selectedMemoryType = event.detail.value;
-    setChosenMemoryType(selectedMemoryType);
+  const selectWalkTypeHandler = (event: CustomEvent) => {
+    const selectedWalkType = event.detail.value;
+    setChosenWalkType(selectedWalkType);
   };
 
-  const addMemoryHandler = async () => {
+  const addWalkHandler = async () => {
     const enteredTitle = titleRef.current?.value;
 
     if (
       !enteredTitle ||
       enteredTitle.toString().trim().length === 0 ||
       !takenPhoto ||
-      !chosenMemoryType
+      !chosenWalkType
     ) {
       return;
     }
 
-    memoriesCtx.addMemory(
-      takenPhoto,
-      enteredTitle.toString(),
-      chosenMemoryType
-    );
-    history.length > 0 ? history.goBack() : history.replace('/good-memories');
+    walksCtx.addWalk(takenPhoto, enteredTitle.toString(), chosenWalkType);
+    history.length > 0 ? history.goBack() : history.replace("/user-walks");
   };
 
   return (
@@ -66,9 +62,9 @@ const NewMemory: React.FC = () => {
       <IonHeader>
         <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/good-memories" />
+            <IonBackButton defaultHref="/user-walks" />
           </IonButtons>
-          <IonTitle>Add New Memory</IonTitle>
+          <IonTitle>Add New Walk</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -76,7 +72,7 @@ const NewMemory: React.FC = () => {
           <IonRow>
             <IonCol>
               <IonItem>
-                <IonLabel position="floating">Memory Title</IonLabel>
+                <IonLabel position="floating">Walk Title</IonLabel>
                 <IonInput type="text" ref={titleRef}></IonInput>
               </IonItem>
             </IonCol>
@@ -84,11 +80,11 @@ const NewMemory: React.FC = () => {
           <IonRow>
             <IonCol>
               <IonSelect
-                onIonChange={selectMemoryTypeHandler}
-                value={chosenMemoryType}
+                onIonChange={selectWalkTypeHandler}
+                value={chosenWalkType}
               >
-                <IonSelectOption value="good">Good Memory</IonSelectOption>
-                <IonSelectOption value="bad">Bad Memory</IonSelectOption>
+                <IonSelectOption value="user">User Walk</IonSelectOption>
+                <IonSelectOption value="guided">Guided Walk</IonSelectOption>
               </IonSelect>
             </IonCol>
           </IonRow>
@@ -99,7 +95,7 @@ const NewMemory: React.FC = () => {
           </IonRow>
           <IonRow className="ion-margin-top">
             <IonCol className="ion-text-center">
-              <IonButton onClick={addMemoryHandler}>Add Memory</IonButton>
+              <IonButton onClick={addWalkHandler}>Add Walk</IonButton>
             </IonCol>
           </IonRow>
         </IonGrid>
@@ -108,4 +104,4 @@ const NewMemory: React.FC = () => {
   );
 };
 
-export default NewMemory;
+export default NewWalk;

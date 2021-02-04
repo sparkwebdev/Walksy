@@ -21,10 +21,10 @@ import SettingsPage from "./pages/SettingsPage";
 import IntroPage from "./pages/subpages/IntroPage";
 import LoginPage from "./pages/subpages/LoginPage";
 import RegisterPage from "./pages/subpages/RegisterPage";
-import GoodMemories from "./pages/GoodMemories";
-import BadMemories from "./pages/BadMemories";
+import UserWalks from "./pages/UserWalks";
+import GuidedWalks from "./pages/GuidedWalks";
 
-import MemoriesContext from "./data/memories-context";
+import WalksContext from "./data/walks-context";
 
 import {
   home as homeIcon,
@@ -35,12 +35,12 @@ import {
   settings as settingsIcon,
 } from "ionicons/icons";
 
-const NewMemory = React.lazy(() => import("./pages/NewMemory"));
+const NewWalk = React.lazy(() => import("./pages/NewWalk"));
 
 const App: React.FC = () => {
-  const memoriesCtx = useContext(MemoriesContext);
+  const walksCtx = useContext(WalksContext);
 
-  const { initContext } = memoriesCtx;
+  const { initContext } = walksCtx;
 
   useEffect(() => {
     initContext();
@@ -80,14 +80,14 @@ const App: React.FC = () => {
                 <RegisterPage />
               </Route>
 
-              <Route path="/good-memories">
-                <GoodMemories />
+              <Route path="/user-walks">
+                <UserWalks />
               </Route>
-              <Route path="/bad-memories">
-                <BadMemories />
+              <Route path="/guided-walks">
+                <GuidedWalks />
               </Route>
-              <Route path="/new-memory">
-                <NewMemory />
+              <Route path="/new-walk">
+                <NewWalk />
               </Route>
 
               <Route exact path="/">

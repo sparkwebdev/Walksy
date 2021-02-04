@@ -12,37 +12,37 @@ import {
 } from "@ionic/react";
 import { add } from "ionicons/icons";
 
-import MemoriesList from "./MemoriesList";
-import { Memory } from "../data/memories-context";
+import WalksList from "./WalksList";
+import { Walk } from "../data/walks-context";
 import ToolbarAction from "./ToolbarAction";
 
-const MemoriesContent: React.FC<{
+const WalksContent: React.FC<{
   title: string;
   fallbackText: string;
-  memories: Memory[];
+  walks: Walk[];
 }> = (props) => {
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
           <IonTitle>{props.title}</IonTitle>
-          <ToolbarAction link="/new-memory" icon={add} />
+          <ToolbarAction link="/new-walk" icon={add} />
         </IonToolbar>
       </IonHeader>
       <IonContent>
         <IonGrid>
-          {props.memories.length === 0 && (
+          {props.walks.length === 0 && (
             <IonRow>
               <IonCol className="ion-text-center">
                 <h2>{props.fallbackText}</h2>
               </IonCol>
             </IonRow>
           )}
-          <MemoriesList items={props.memories} />
+          <WalksList items={props.walks} />
         </IonGrid>
       </IonContent>
     </IonPage>
   );
 };
 
-export default MemoriesContent;
+export default WalksContent;

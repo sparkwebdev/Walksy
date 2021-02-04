@@ -22,12 +22,12 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 import "./theme/variables-app.css";
 import "./theme/global.css";
-import MemoriesContextProvider from "./data/MemoriesContextProvider";
+import WalksContextProvider from "./data/WalksContextProvider";
 
 ReactDOM.render(
-  <MemoriesContextProvider>
+  <WalksContextProvider>
     <App />
-  </MemoriesContextProvider>,
+  </WalksContextProvider>,
   document.getElementById("root")
 );
 
