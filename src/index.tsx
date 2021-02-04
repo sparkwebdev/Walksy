@@ -22,8 +22,14 @@ import "@ionic/react/css/display.css";
 import "./theme/variables.css";
 import "./theme/variables-app.css";
 import "./theme/global.css";
+import MemoriesContextProvider from "./data/MemoriesContextProvider";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(
+  <MemoriesContextProvider>
+    <App />
+  </MemoriesContextProvider>,
+  document.getElementById("root")
+);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
