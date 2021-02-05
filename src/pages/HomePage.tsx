@@ -1,6 +1,7 @@
 import { IonPage, IonContent, IonList, IonItem } from "@ionic/react";
 import React from "react";
 import PageHeader from "../components/PageHeader";
+import WalksList from "../components/WalksList";
 
 const HomePage: React.FC = () => {
   return (
@@ -12,6 +13,8 @@ const HomePage: React.FC = () => {
           <IonItem routerLink="/login">Login</IonItem>
           <IonItem routerLink="/register">Register</IonItem>
           <IonItem routerLink="/new-walk">New Walk</IonItem>
+          <WalksList title="User Walks" type="user" />
+          <WalksList title="Guided Walks" type="guided" />
         </IonList>
       </IonContent>
     </IonPage>

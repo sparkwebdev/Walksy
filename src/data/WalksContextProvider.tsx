@@ -17,12 +17,24 @@ const WalksContextProvider: React.FC = (props) => {
         title: walk.title,
         imagePath: walk.imagePath,
         type: walk.type,
+        startTime: walk.startTime,
+        endTime: walk.endTime,
+        steps: walk.steps,
+        distance: walk.distance,
       };
     });
     Storage.set({ key: "walks", value: JSON.stringify(storableWalks) });
   }, [walks]);
 
-  const addWalk = async (photo: Photo, title: string, type: WalkType) => {
+  const addWalk = async (
+    photo: Photo,
+    title: string,
+    type: WalkType,
+    startTime: string,
+    endTime: string,
+    steps: number,
+    distance: number
+  ) => {
     const fileName = new Date().getTime() + ".jpeg";
 
     const base64 = await base64FromPath(photo.preview);
@@ -36,6 +48,10 @@ const WalksContextProvider: React.FC = (props) => {
       id: Math.random().toString(),
       title,
       type,
+      startTime,
+      endTime,
+      steps,
+      distance,
       imagePath: fileName,
       base64Url: base64,
     };
@@ -57,6 +73,10 @@ const WalksContextProvider: React.FC = (props) => {
         id: storedWalk.id,
         title: storedWalk.title,
         type: storedWalk.type,
+        startTime: storedWalk.startTime,
+        endTime: storedWalk.endTime,
+        steps: storedWalk.steps,
+        distance: storedWalk.distance,
         imagePath: storedWalk.imagePath,
         base64Url: "data:image/jpeg;base64," + file.data,
       });

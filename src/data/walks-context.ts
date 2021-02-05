@@ -9,12 +9,16 @@ export interface Walk {
   imagePath: string;
   title: string;
   type: WalkType;
+  startTime: string;
+  endTime: string;
+  steps: number;
+  distance: number;
   base64Url: string;
 }
 
 const WalksContext = React.createContext<{
   walks: Walk[];
-  addWalk: (photo: Photo, title: string, type: WalkType) => void;
+  addWalk: (photo: Photo, title: string, type: WalkType, startTime: string, endTime: string, steps: number, distance: number) => void;
   initContext: () => void;
 }>({
   walks: [],
