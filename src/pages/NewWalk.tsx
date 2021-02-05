@@ -22,6 +22,7 @@ import "./NewWalk.css";
 import WalksContext, { WalkType } from "../data/walks-context";
 import ImagePicker, { Photo } from "../components/ImagePicker";
 import Progress from "../components/Progress";
+import { Plugins } from "@capacitor/core";
 import { Pedometer } from "@ionic-native/pedometer";
 import { getFriendlyTimeOfDay, getFriendlyWalkDescriptor } from "../helpers";
 
@@ -30,6 +31,8 @@ import {
   checkmark as finishIcon,
   close as cancelIcon,
 } from "ionicons/icons";
+
+const { Geolocation } = Plugins;
 
 let watch: any = null;
 let ticker: any = null;
@@ -52,6 +55,14 @@ const NewWalk: React.FC = () => {
 
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
+
+  const [trackedRoute, setTrackedRoute] = useState<
+    {
+      lat: number;
+      long: number;
+      timestamp: number;
+    }[]
+  >([]);
 
   const [takenPhoto, setTakenPhoto] = useState<Photo>();
 
@@ -94,6 +105,18 @@ const NewWalk: React.FC = () => {
       setSteps(data.numberOfSteps);
       setDistance(data.distance / 1000); // metres to km
     });
+    watch = Geolocation.watchPosition({}, (position, err) => {
+      if (position) {
+        setTrackedRoute((current) => [
+          ...current!,
+          {
+            lat: position.coords.latitude,
+            long: position.coords.longitude,
+            timestamp: position.timestamp,
+          },
+        ]);
+      }
+    });
   };
 
   const finishWalkHandler = () => {
@@ -113,6 +136,9 @@ const NewWalk: React.FC = () => {
     setNote("");
     clearTimeout(ticker);
     Pedometer.stopPedometerUpdates();
+    if (watch !== null) {
+      Geolocation.clearWatch(watch);
+    }
   };
 
   useEffect(() => {
