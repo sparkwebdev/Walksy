@@ -8,6 +8,7 @@ export interface Walk {
   id: string;
   imagePath: string;
   title: string;
+  note: string;
   type: WalkType;
   startTime: string;
   endTime: string;
@@ -18,7 +19,7 @@ export interface Walk {
 
 const WalksContext = React.createContext<{
   walks: Walk[];
-  addWalk: (photo: Photo, title: string, type: WalkType, startTime: string, endTime: string, steps: number, distance: number) => void;
+  addWalk: (photo: Photo, title: string, note: string, type: WalkType, startTime: string, endTime: string, steps: number, distance: number) => void;
   initContext: () => void;
 }>({
   walks: [],

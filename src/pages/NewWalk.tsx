@@ -30,6 +30,8 @@ import {
   checkmark as finishIcon,
   close as cancelIcon,
 } from "ionicons/icons";
+
+let watch: any = null;
 let ticker: any = null;
 
 const getSuggestedTitle = () => {
@@ -108,6 +110,7 @@ const NewWalk: React.FC = () => {
     setEndTime("");
     setTrackedRoute([]);
     setTakenPhoto(undefined);
+    setNote("");
     clearTimeout(ticker);
     Pedometer.stopPedometerUpdates();
   };
@@ -124,6 +127,7 @@ const NewWalk: React.FC = () => {
     walksCtx.addWalk(
       takenPhoto!,
       walkTitle,
+      note!,
       chosenWalkType,
       startTime,
       endTime,
