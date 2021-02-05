@@ -57,6 +57,9 @@ const App: React.FC = () => {
               <Route path="/walk">
                 <NewWalk />
               </Route>
+              <Route exact path="/walk/:id">
+                <WalkPage />
+              </Route>
             </React.Suspense>
             <Route exact path="/dashboard">
               <DashboardPage />
