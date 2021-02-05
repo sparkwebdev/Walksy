@@ -163,7 +163,7 @@ const NewWalk: React.FC = () => {
     history.length > 0 ? history.goBack() : history.replace("/user-walks");
   };
 
-  const handleViewMap = async () => {
+  const viewMapHandler = async () => {
     console.log("View map");
   };
 
@@ -276,7 +276,7 @@ const NewWalk: React.FC = () => {
               <IonCol size="12">
                 <IonButton
                   expand="block"
-                  onClick={handleViewMap}
+                  onClick={viewMapHandler}
                   class="ion-margin-top ion-margin-bottom"
                   color="secondary"
                 >
