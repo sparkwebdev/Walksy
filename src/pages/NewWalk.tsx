@@ -12,8 +12,12 @@ import {
   IonSelect,
   IonSelectOption,
   IonList,
+  IonTextarea,
+  IonIcon,
+  IonAlert,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
+import "./NewWalk.css";
 
 import WalksContext, { WalkType } from "../data/walks-context";
 import ImagePicker, { Photo } from "../components/ImagePicker";
@@ -21,15 +25,26 @@ import Progress from "../components/Progress";
 import { Pedometer } from "@ionic-native/pedometer";
 import { getFriendlyTimeOfDay, getFriendlyWalkDescriptor } from "../helpers";
 
+import {
+  map as mapIcon,
+  checkmark as finishIcon,
+  close as cancelIcon,
+} from "ionicons/icons";
 let ticker: any = null;
+
+const getSuggestedTitle = () => {
+  return `${getFriendlyTimeOfDay()} ${getFriendlyWalkDescriptor()}`;
+};
 
 const NewWalk: React.FC = () => {
   const [isWalking, setIsWalking] = useState(false);
-  const [walkTitle, setWalkTitle] = useState(
-    `${getFriendlyTimeOfDay()} ${getFriendlyWalkDescriptor()}`
-  );
+  const [walkTitle, setWalkTitle] = useState(getSuggestedTitle());
+  const [chosenWalkType, setChosenWalkType] = useState<WalkType>("user");
 
-  const [time, setTime] = useState<{ min: number; sec: number }>();
+  const [time, setTime] = useState<{ min: number; sec: number }>({
+    min: 0,
+    sec: 0,
+  });
   const [steps, setSteps] = useState<number>(0);
   const [distance, setDistance] = useState<number>(0);
 
@@ -37,7 +52,10 @@ const NewWalk: React.FC = () => {
   const [endTime, setEndTime] = useState("");
 
   const [takenPhoto, setTakenPhoto] = useState<Photo>();
-  const [chosenWalkType, setChosenWalkType] = useState<WalkType>("user");
+
+  const [note, setNote] = useState("");
+
+  const [cancelWalkAlert, setCancelWalkAlert] = useState(false);
 
   const walksCtx = useContext(WalksContext);
 
@@ -76,15 +94,27 @@ const NewWalk: React.FC = () => {
     });
   };
 
-  const endWalkHandler = () => {
+  const finishWalkHandler = () => {
+    setEndTime(new Date().toISOString());
+  };
+
+  const clearWalkHandler = () => {
     setIsWalking(false);
+    setWalkTitle(getSuggestedTitle());
+    setTime({ min: 0, sec: 0 });
+    setSteps(0);
+    setDistance(0);
+    setStartTime("");
+    setEndTime("");
+    setTrackedRoute([]);
+    setTakenPhoto(undefined);
     clearTimeout(ticker);
     Pedometer.stopPedometerUpdates();
-    setEndTime(new Date().toISOString());
   };
 
   useEffect(() => {
     saveWalkHandler();
+    clearWalkHandler();
   }, [endTime]);
 
   const saveWalkHandler = () => {
@@ -101,6 +131,14 @@ const NewWalk: React.FC = () => {
       distance
     );
     history.length > 0 ? history.goBack() : history.replace("/user-walks");
+  };
+
+  const handleViewMap = async () => {
+    console.log("View map");
+  };
+
+  const handleCancelWalk = async () => {
+    clearWalkHandler();
   };
 
   return (
@@ -125,6 +163,7 @@ const NewWalk: React.FC = () => {
                 <IonSelect
                   onIonChange={selectWalkTypeHandler}
                   value={chosenWalkType}
+                  hidden={true}
                 >
                   <IonSelectOption value="user">User Walk</IonSelectOption>
                   <IonSelectOption value="guided">Guided Walk</IonSelectOption>
@@ -151,7 +190,11 @@ const NewWalk: React.FC = () => {
           </IonGrid>
         ) : (
           <IonGrid>
-            <Progress time={time} distance={distance} steps={steps} />
+            <IonRow>
+              <IonCol>
+                <Progress time={time} distance={distance} steps={steps} />
+              </IonCol>
+            </IonRow>
             <IonRow>
               <IonCol>
                 <IonSelect
@@ -168,9 +211,87 @@ const NewWalk: React.FC = () => {
                 <ImagePicker onImagePick={photoPickHandler} />
               </IonCol>
             </IonRow>
-            <IonRow className="ion-margin-top">
-              <IonCol className="ion-text-center">
-                <IonButton onClick={endWalkHandler}>End Walk</IonButton>
+            <IonRow className="ion-text-center">
+              <IonCol>
+                <IonItem>
+                  <IonLabel position="floating">
+                    Add a thought or description...
+                  </IonLabel>
+                  <IonTextarea
+                    value={note}
+                    onIonChange={(e) => setNote(e.detail.value!)}
+                  ></IonTextarea>
+                </IonItem>
+              </IonCol>
+            </IonRow>
+            <IonRow className="ion-text-center">
+              <IonCol>
+                <IonList>
+                  {trackedRoute.map((position) => {
+                    return (
+                      <IonItem key={position.timestamp}>
+                        <IonLabel text-wrap>
+                          Lat: {position.lat}
+                          Lng: {position.long}
+                          <p>{position.timestamp}</p>
+                        </IonLabel>
+                      </IonItem>
+                    );
+                  })}
+                </IonList>
+              </IonCol>
+            </IonRow>
+            <IonRow>
+              <IonCol size="12">
+                <IonButton
+                  expand="block"
+                  onClick={handleViewMap}
+                  class="ion-margin-top ion-margin-bottom"
+                  color="secondary"
+                >
+                  <IonIcon slot="start" icon={mapIcon} />
+                  View on Map
+                </IonButton>
+              </IonCol>
+            </IonRow>
+            <IonRow>
+              <IonCol size="5">
+                <IonButton
+                  expand="block"
+                  onClick={() => setCancelWalkAlert(true)}
+                  color="danger"
+                >
+                  <IonIcon slot="start" icon={cancelIcon} />
+                  Cancel
+                </IonButton>
+                <IonAlert
+                  isOpen={cancelWalkAlert}
+                  onDidDismiss={() => setCancelWalkAlert(false)}
+                  cssClass="my-custom-class"
+                  header={"Cancel"}
+                  subHeader={"Are you sure?"}
+                  buttons={[
+                    {
+                      text: "No",
+                      role: "cancel",
+                    },
+                    {
+                      text: "Yes",
+                      cssClass: "secondary",
+                      handler: handleCancelWalk,
+                    },
+                  ]}
+                />
+              </IonCol>
+              <IonCol size="7">
+                <IonButton
+                  expand="block"
+                  onClick={finishWalkHandler}
+                  color="success"
+                >
+                  <IonIcon slot="start" icon={finishIcon} />
+                  Finish
+                </IonButton>
               </IonCol>
             </IonRow>
           </IonGrid>
