@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   IonPage,
   IonContent,
@@ -11,6 +11,7 @@ import {
   IonButton,
   IonSelect,
   IonSelectOption,
+  IonList,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 
@@ -20,14 +21,17 @@ import Progress from "../components/Progress";
 import { Pedometer } from "@ionic-native/pedometer";
 import { getFriendlyTimeOfDay, getFriendlyWalkDescriptor } from "../helpers";
 
+let ticker: any = null;
+
 const NewWalk: React.FC = () => {
   const [isWalking, setIsWalking] = useState(false);
   const [walkTitle, setWalkTitle] = useState(
     `${getFriendlyTimeOfDay()} ${getFriendlyWalkDescriptor()}`
   );
 
-  const [steps, setSteps] = useState(0);
-  const [distance, setDistance] = useState(0);
+  const [time, setTime] = useState<{ min: number; sec: number }>();
+  const [steps, setSteps] = useState<number>(0);
+  const [distance, setDistance] = useState<number>(0);
 
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
@@ -48,8 +52,22 @@ const NewWalk: React.FC = () => {
     setChosenWalkType(selectedWalkType);
   };
 
+  const startTimer = () => {
+    let time = 1;
+    ticker = setInterval(function () {
+      let minutes = Math.floor(time / 60);
+      let seconds = time % 60;
+      setTime({
+        min: minutes,
+        sec: seconds,
+      });
+      time++;
+    }, 1000);
+  };
+
   const startWalkHandler = () => {
     setIsWalking(true);
+    startTimer();
     setStartTime(new Date().toISOString());
 
     Pedometer.startPedometerUpdates().subscribe((data) => {
@@ -60,14 +78,28 @@ const NewWalk: React.FC = () => {
 
   const endWalkHandler = () => {
     setIsWalking(false);
-    setEndTime(new Date().toISOString());
+    clearTimeout(ticker);
     Pedometer.stopPedometerUpdates();
+    setEndTime(new Date().toISOString());
+  };
 
-    if (!walkTitle || !takenPhoto || !chosenWalkType) {
+  useEffect(() => {
+    saveWalkHandler();
+  }, [endTime]);
+
+  const saveWalkHandler = () => {
+    if (!takenPhoto) {
       return;
     }
-
-    walksCtx.addWalk(takenPhoto, walkTitle, chosenWalkType);
+    walksCtx.addWalk(
+      takenPhoto!,
+      walkTitle,
+      chosenWalkType,
+      startTime,
+      endTime,
+      steps,
+      distance
+    );
     history.length > 0 ? history.goBack() : history.replace("/user-walks");
   };
 
@@ -119,9 +151,7 @@ const NewWalk: React.FC = () => {
           </IonGrid>
         ) : (
           <IonGrid>
-            <Progress distance={distance} steps={steps} />
-            Start: {startTime}
-            End: {endTime}
+            <Progress time={time} distance={distance} steps={steps} />
             <IonRow>
               <IonCol>
                 <IonSelect
