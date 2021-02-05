@@ -5,7 +5,7 @@ import { time as timeIcon, walk as walkIcon } from "ionicons/icons";
 import { getUnitDistance } from "../helpers";
 
 interface ContainerProps {
-  time?: { min: 0; sec: 0 };
+  time?: { min: number; sec: number };
   steps?: number;
   distance?: number;
 }
