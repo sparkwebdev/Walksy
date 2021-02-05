@@ -257,12 +257,13 @@ const NewWalk: React.FC = () => {
             <IonRow className="ion-text-center">
               <IonCol>
                 <IonList>
-                  {trackedRoute.map((position) => {
+                  {trackedRoute.map((position, index) => {
                     return (
-                      <IonItem key={position.timestamp}>
+                      <IonItem key={index}>
                         <IonLabel text-wrap>
-                          Lat: {position.lat}
-                          Lng: {position.long}
+                          <p>
+                            Lat: {position.lat}—Long: {position.long}
+                          </p>
                           <p>{position.timestamp}</p>
                         </IonLabel>
                       </IonItem>
