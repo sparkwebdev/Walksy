@@ -53,9 +53,11 @@ const App: React.FC = () => {
             <Route exact path="/home">
               <HomePage />
             </Route>
-            <Route exact path="/walk">
-              <WalkPage />
-            </Route>
+            <React.Suspense fallback={<IonSpinner />}>
+              <Route path="/walk">
+                <NewWalk />
+              </Route>
+            </React.Suspense>
             <Route exact path="/dashboard">
               <DashboardPage />
             </Route>
@@ -77,12 +79,6 @@ const App: React.FC = () => {
             <Route exact path="/register">
               <RegisterPage />
             </Route>
-
-            <React.Suspense fallback={<IonSpinner />}>
-              <Route path="/new-walk">
-                <NewWalk />
-              </Route>
-            </React.Suspense>
 
             <Route exact path="/">
               <Redirect to="/home" />

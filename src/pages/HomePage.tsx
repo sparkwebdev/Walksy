@@ -12,7 +12,6 @@ const HomePage: React.FC = () => {
           <IonItem routerLink="/intro">Intro</IonItem>
           <IonItem routerLink="/login">Login</IonItem>
           <IonItem routerLink="/register">Register</IonItem>
-          <IonItem routerLink="/new-walk">New Walk</IonItem>
           <WalksList title="User Walks" type="user" />
           <WalksList title="Guided Walks" type="guided" />
         </IonList>
