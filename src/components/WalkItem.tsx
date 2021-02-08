@@ -23,17 +23,26 @@ const WalkItem: React.FC<{
   return (
     <IonCard className="walk-item">
       <img src={props.image} alt={props.title} />
-      <IonCardHeader>
-        <IonCardTitle>{props.title}</IonCardTitle>
+      <IonCardHeader
+        style={{
+          borderTop: "solid 10px " + props.colour,
+        }}
+      >
+        <IonCardTitle className="ion-margin-bottom">{props.title}</IonCardTitle>
         <IonCardSubtitle>
           {dayjs(props.startTime).format("dddd, DD MMM")}
         </IonCardSubtitle>
         {props.steps > 0 && (
-          <IonCardSubtitle>
+          <IonCardSubtitle className="ion-margin-top">
             {props.distance?.toFixed(2)}
             <span className="smallprint">&nbsp;{getUnitDistance()}</span>
             &nbsp;— 
             {props.steps}&nbsp;<span className="smallprint">steps</span>
+          </IonCardSubtitle>
+        )}
+        {props.description != "" && (
+          <IonCardSubtitle className="ion-margin-top">
+            {props.description}
           </IonCardSubtitle>
         )}
       </IonCardHeader>

@@ -30,6 +30,15 @@ export function getUnitDistance() {
   return 'km';
 }
 
+export function getMinAndSec(totalSeconds) {
+  let minutes = Math.floor(totalSeconds / 60);
+  let seconds = totalSeconds % 60;
+  return {
+    min: minutes,
+    sec: seconds,
+  }
+}
+
 export function getFriendlyTimeOfDay() {
   var now = dayjs();
   var day = now.format('dddd');

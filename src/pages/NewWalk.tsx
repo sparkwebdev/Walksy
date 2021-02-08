@@ -25,6 +25,7 @@ import Progress from "../components/Progress";
 import { Plugins } from "@capacitor/core";
 import { Pedometer } from "@ionic-native/pedometer";
 import {
+  getMinAndSec,
   getFriendlyTimeOfDay,
   getFriendlyWalkDescriptor,
   generateHslaColors,
@@ -99,12 +100,8 @@ const NewWalk: React.FC = () => {
   const startTimer = () => {
     let time = 1;
     ticker = setInterval(function () {
-      let minutes = Math.floor(time / 60);
-      let seconds = time % 60;
-      setTime({
-        min: minutes,
-        sec: seconds,
-      });
+      const minAndSec = getMinAndSec(time);
+      setTime(minAndSec);
       time++;
     }, 1000);
   };
