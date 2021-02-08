@@ -67,3 +67,34 @@ export function getFriendlyWalkDescriptor() {
   ];
   return descriptor[Math.floor(Math.random() * descriptor.length)];
 };
+
+
+export function generateHslaColors(amount = 1, saturation = 95, lightness = 75) {
+  let colors = [];
+  let huedelta = Math.trunc(360 / amount);
+  for (let i = 0; i < amount; i++) {
+    let hue = i * huedelta;
+    colors.push(hslToHex(hue, saturation, lightness));
+  }
+  return colors;
+}
+
+/**
+ * Converts an HSL color value to Hex. Conversion formula
+ * from https://stackoverflow.com/questions/36721830/convert-hsl-to-rgb-and-hex
+ *
+ * @param   {number}  h       The hue
+ * @param   {number}  s       The saturation
+ * @param   {number}  l       The lightness
+ * @return  {strinf}          The RGB representation
+ */
+function hslToHex(h, s, l) {
+  l /= 100;
+  const a = s * Math.min(l, 1 - l) / 100;
+  const f = n => {
+    const k = (n + h / 30) % 12;
+    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, '0');   // convert to Hex and prefix "0" if needed
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
