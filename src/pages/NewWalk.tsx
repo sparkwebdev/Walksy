@@ -24,7 +24,11 @@ import ImagePicker, { Photo } from "../components/ImagePicker";
 import Progress from "../components/Progress";
 import { Plugins } from "@capacitor/core";
 import { Pedometer } from "@ionic-native/pedometer";
-import { getFriendlyTimeOfDay, getFriendlyWalkDescriptor } from "../helpers";
+import {
+  getFriendlyTimeOfDay,
+  getFriendlyWalkDescriptor,
+  generateHslaColors,
+} from "../helpers";
 
 import {
   map as mapIcon,
@@ -37,13 +41,22 @@ const { Geolocation } = Plugins;
 let watch: any = null;
 let ticker: any = null;
 
-const getSuggestedTitle = () => {
+const suggestedTitle = () => {
   return `${getFriendlyTimeOfDay()} ${getFriendlyWalkDescriptor()}`;
+};
+
+const suggestedColours = () => {
+  return generateHslaColors(9);
 };
 
 const NewWalk: React.FC = () => {
   const [isWalking, setIsWalking] = useState(false);
-  const [walkTitle, setWalkTitle] = useState(getSuggestedTitle());
+  const [walkTitle, setWalkTitle] = useState(suggestedTitle());
+  const [walkColours, setWalkColours] = useState(suggestedColours());
+  const randomColour =
+    walkColours[Math.floor(Math.random() * walkColours.length)];
+  const [walkColour, setWalkColour] = useState<"">(randomColour);
+  const [walkDescription, setWalkDescription] = useState("");
   const [chosenWalkType, setChosenWalkType] = useState<WalkType>("user");
 
   const [time, setTime] = useState<{ min: number; sec: number }>({
@@ -125,7 +138,9 @@ const NewWalk: React.FC = () => {
 
   const clearWalkHandler = () => {
     setIsWalking(false);
-    setWalkTitle(getSuggestedTitle());
+    setWalkTitle(suggestedTitle());
+    setWalkColour(randomColour);
+    setWalkDescription("");
     setTime({ min: 0, sec: 0 });
     setSteps(0);
     setDistance(0);
@@ -156,6 +171,8 @@ const NewWalk: React.FC = () => {
     walksCtx.addWalk(
       takenPhoto!,
       walkTitle,
+      walkColour,
+      walkDescription,
       note!,
       chosenWalkType,
       startTime,
@@ -201,16 +218,60 @@ const NewWalk: React.FC = () => {
                   <IonSelectOption value="user">User Walk</IonSelectOption>
                   <IonSelectOption value="guided">Guided Walk</IonSelectOption>
                 </IonSelect>
-                <IonItem>
-                  <IonLabel position="floating">
-                    Give this walk a title...
-                  </IonLabel>
+                <IonLabel className="ion-text-center">
+                  Give this walk a title...
+                </IonLabel>
+                <IonItem className="ion-margin-bottom ion-text-center">
                   <IonInput
                     type="text"
                     value={walkTitle}
                     onIonChange={(event) => setWalkTitle(event.detail!.value!)}
                   ></IonInput>
                 </IonItem>
+                <IonLabel className="ion-text-center">
+                  Give this walk a short description...
+                </IonLabel>
+                <IonItem className="ion-margin-bottom ion-text-center">
+                  <IonInput
+                    type="text"
+                    value={walkDescription}
+                    onIonChange={(event) =>
+                      setWalkDescription(event.detail!.value!)
+                    }
+                  ></IonInput>
+                </IonItem>
+                <IonLabel className="ion-margin-top">
+                  Give this walk a colour...
+                </IonLabel>
+                <ul className="swatches">
+                  {walkColours.map((colour) => {
+                    return (
+                      <li
+                        className={
+                          walkColour === colour
+                            ? "swatches__colour swatches__colour--chosen"
+                            : "swatches__colour"
+                        }
+                        key={colour}
+                        style={{
+                          background: colour,
+                        }}
+                        onClick={() => {
+                          setWalkColour(colour);
+                        }}
+                      ></li>
+                    );
+                  })}
+                </ul>
+                <IonInput
+                  type="text"
+                  value={walkColour}
+                  className="swatches__colour swatches__colour--output"
+                  onIonChange={(event) => setWalkColour(walkColour)}
+                  style={{
+                    background: walkColour,
+                  }}
+                ></IonInput>
                 <IonButton
                   className="ion-margin-top"
                   disabled={walkTitle === ""}

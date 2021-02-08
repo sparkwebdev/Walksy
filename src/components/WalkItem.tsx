@@ -13,6 +13,8 @@ import { getUnitDistance } from "../helpers";
 const WalkItem: React.FC<{
   image: string;
   title: string;
+  colour: string;
+  description: string;
   startTime: string;
   endTime: string;
   steps: number;

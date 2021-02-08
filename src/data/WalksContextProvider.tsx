@@ -15,6 +15,8 @@ const WalksContextProvider: React.FC = (props) => {
       return {
         id: walk.id,
         title: walk.title,
+        colour: walk.title,
+        description: walk.title,
         imagePath: walk.imagePath,
         note: walk.note,
         type: walk.type,
@@ -30,6 +32,8 @@ const WalksContextProvider: React.FC = (props) => {
   const addWalk = async (
     photo: Photo,
     title: string,
+    colour: string,
+    description: string,
     note: string,
     type: WalkType,
     startTime: string,
@@ -49,6 +53,8 @@ const WalksContextProvider: React.FC = (props) => {
     const newWalk: Walk = {
       id: Math.random().toString(),
       title,
+      colour,
+      description,
       note,
       type,
       startTime,
@@ -75,6 +81,8 @@ const WalksContextProvider: React.FC = (props) => {
       loadedWalks.push({
         id: storedWalk.id,
         title: storedWalk.title,
+        colour: storedWalk.colour,
+        description: storedWalk.description,
         note: storedWalk.note,
         type: storedWalk.type,
         startTime: storedWalk.startTime,

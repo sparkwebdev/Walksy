@@ -21,6 +21,8 @@ const WalkPage: React.FC = () => {
         <WalkItem
           image={walk!.base64Url}
           title={walk!.title}
+          colour={walk!.colour}
+          description={walk!.description}
           startTime={walk!.startTime}
           endTime={walk!.endTime}
           steps={walk!.steps}
