@@ -23,7 +23,11 @@ const WalksList: React.FC<{ title: string; type: "user" | "guided" }> = (
       {walks.map((walk) => (
         <IonRow key={walk.id}>
           <IonCol>
-            <IonItem key={walk.id} routerLink={`/walk/${walk.id}`}>
+            <IonItem
+              key={walk.id}
+              routerLink={`/walk/${walk.id}`}
+              detail={false}
+            >
               <WalkItem
                 image={walk.base64Url}
                 title={walk.title}

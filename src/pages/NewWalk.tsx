@@ -138,6 +138,9 @@ const NewWalk: React.FC = () => {
     Pedometer.stopPedometerUpdates();
     if (watch !== null) {
       Geolocation.clearWatch(watch);
+      Geolocation.clearWatch({
+        id: watch,
+      });
     }
   };
 
