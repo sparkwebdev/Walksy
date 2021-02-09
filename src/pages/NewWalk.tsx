@@ -157,6 +157,7 @@ const NewWalk: React.FC = () => {
     setTrackedRoute([]);
     clearTimeout(ticker);
     Pedometer.stopPedometerUpdates();
+    setMoments([]);
     clearMomentHandler();
     if (watch !== null) {
       Geolocation.clearWatch(watch);
@@ -167,8 +168,8 @@ const NewWalk: React.FC = () => {
   };
 
   const clearMomentHandler = () => {
+    // setTakenPhoto(undefined);
     setNote("");
-    setMoments([]);
   };
 
   useEffect(() => {
