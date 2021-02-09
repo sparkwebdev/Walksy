@@ -6,7 +6,7 @@ export type WalkType = 'user' | 'guided';
 
 export interface Moment {
   id: string;
-  imagePath: string;
+  imagePath: string | null;
   note: string;
   lat: number;
   long: number;

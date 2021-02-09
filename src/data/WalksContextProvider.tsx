@@ -31,20 +31,22 @@ const WalksContextProvider: React.FC = (props) => {
   }, [walks]);
 
   const addMoment = async (
-    photo: Photo,
+    photo: Photo | null,
     note: string,
     lat: number,
     long: number,
     timestamp: number
   ) => {
-    const fileName = new Date().getTime() + ".jpeg";
-
-    const base64 = await base64FromPath(photo.preview);
-    Filesystem.writeFile({
-      path: fileName,
-      data: base64,
-      directory: FilesystemDirectory.Data,
-    });
+    let fileName = null;
+    if (photo) {
+      const base64 = await base64FromPath(photo.preview);
+      fileName = new Date().getTime() + ".jpeg";
+      Filesystem.writeFile({
+        path: fileName,
+        data: base64,
+        directory: FilesystemDirectory.Data,
+      });
+    }
 
     const newMoment: Moment = {
       id: Math.random().toString(),

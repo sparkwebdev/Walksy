@@ -183,9 +183,6 @@ const NewWalk: React.FC = () => {
       long = latestLoc.long;
       timestamp = latestLoc.timestamp;
     }
-    if (!takenPhoto) {
-      return;
-    }
     walksCtx.addMoment(takenPhoto!, note, lat, long, timestamp);
     clearMomentHandler();
   };
