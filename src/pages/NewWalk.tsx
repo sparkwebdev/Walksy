@@ -46,16 +46,13 @@ const suggestedTitle = () => {
   return `${getFriendlyTimeOfDay()} ${getFriendlyWalkDescriptor()}`;
 };
 
-const suggestedColours = () => {
-  return generateHslaColors(9);
-};
+const walkColours = generateHslaColors(9);
+const randomColour =
+  walkColours[Math.floor(Math.random() * walkColours.length)];
 
 const NewWalk: React.FC = () => {
   const [isWalking, setIsWalking] = useState(false);
   const [walkTitle, setWalkTitle] = useState(suggestedTitle());
-  const [walkColours, setWalkColours] = useState(suggestedColours());
-  const randomColour =
-    walkColours[Math.floor(Math.random() * walkColours.length)];
   const [walkColour, setWalkColour] = useState<"">(randomColour);
   const [walkDescription, setWalkDescription] = useState("");
   const [chosenWalkType, setChosenWalkType] = useState<WalkType>("user");
