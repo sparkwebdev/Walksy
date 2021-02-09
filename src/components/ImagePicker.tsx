@@ -1,14 +1,14 @@
-import React, { useState, useRef } from 'react';
-import { IonButton, IonIcon, IonLabel } from '@ionic/react';
-import { camera } from 'ionicons/icons';
+import React, { useState, useRef } from "react";
+import { IonButton, IonIcon, IonLabel } from "@ionic/react";
+import { camera } from "ionicons/icons";
 import {
   Plugins,
   CameraResultType,
   CameraSource,
-  Capacitor
-} from '@capacitor/core';
+  Capacitor,
+} from "@capacitor/core";
 
-import './ImagePicker.css';
+import "./ImagePicker.css";
 
 export interface Photo {
   path: string | undefined;
@@ -19,7 +19,7 @@ const { Camera } = Plugins;
 
 const ImagePicker: React.FC<{
   onImagePick: (photo: Photo) => void;
-}> = props => {
+}> = (props) => {
   const [takenPhoto, setTakenPhoto] = useState<Photo>();
 
   const filePickerRef = useRef<HTMLInputElement>(null);
@@ -34,7 +34,7 @@ const ImagePicker: React.FC<{
     fr.onload = () => {
       const photo: Photo = {
         path: undefined,
-        preview: fr.result!.toString()
+        preview: fr.result!.toString(),
       };
       setTakenPhoto(photo);
       props.onImagePick(photo);
@@ -43,7 +43,7 @@ const ImagePicker: React.FC<{
   };
 
   const takePhotoHandler = async () => {
-    if (!Capacitor.isPluginAvailable('Camera')) {
+    if (!Capacitor.isPluginAvailable("Camera")) {
       openFilePicker();
       return;
     }
@@ -52,7 +52,7 @@ const ImagePicker: React.FC<{
         resultType: CameraResultType.Uri,
         source: CameraSource.Camera,
         quality: 80,
-        width: 500
+        width: 500,
       });
 
       if (!photo || !photo.webPath) {
@@ -60,7 +60,7 @@ const ImagePicker: React.FC<{
       }
       const pickedPhoto: Photo = {
         path: photo.path,
-        preview: photo.webPath
+        preview: photo.webPath,
       };
       setTakenPhoto(pickedPhoto);
       props.onImagePick(pickedPhoto);
