@@ -52,8 +52,9 @@ const suggestedTitle = () => {
 };
 
 const walkColours = generateHslaColors(9);
-const randomColour =
-  walkColours[Math.floor(Math.random() * walkColours.length)];
+const randomColour = () => {
+  return walkColours[Math.floor(Math.random() * walkColours.length)];
+};
 
 const NewWalk: React.FC = () => {
   const [isWalking, setIsWalking] = useState(false);
@@ -69,8 +70,8 @@ const NewWalk: React.FC = () => {
   const [steps, setSteps] = useState<number>(0);
   const [distance, setDistance] = useState<number>(0);
 
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [startTime, setStartTime] = useState<string>("");
+  const [endTime, setEndTime] = useState<string>("");
 
   const [trackedRoute, setTrackedRoute] = useState<
     {
@@ -211,12 +212,12 @@ const NewWalk: React.FC = () => {
     console.log("View map");
   };
 
-  const handleCancelWalk = async () => {
-    clearWalkHandler();
-  };
-
   const handleCancelMoment = async () => {
     clearMomentHandler();
+  };
+
+  const handleCancelWalk = async () => {
+    clearWalkHandler();
   };
 
   return (
@@ -374,6 +375,7 @@ const NewWalk: React.FC = () => {
                             expand="block"
                             onClick={addMomentHandler}
                             color="secondary"
+                            disabled={!note && !takenPhoto ? true : false}
                           >
                             <IonIcon slot="start" icon={mapIcon} />
                             Add Moment
