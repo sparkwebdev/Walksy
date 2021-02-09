@@ -82,17 +82,7 @@ const NewWalk: React.FC = () => {
 
   const [takenPhoto, setTakenPhoto] = useState<Photo>();
 
-  const [note, setNote] = useState("");
-  const [moments, setMoments] = useState<
-    {
-      id: string;
-      // takenPhoto: Photo;
-      note: string;
-      lat: number;
-      long: number;
-      timestamp: number;
-    }[]
-  >([]);
+  const [note, setNote] = useState<string>("");
 
   const [cancelWalkAlert, setCancelWalkAlert] = useState(false);
 
@@ -192,16 +182,6 @@ const NewWalk: React.FC = () => {
       long = latestLoc.long;
       timestamp = latestLoc.timestamp;
     }
-    setMoments((current) => [
-      ...current!,
-      {
-        id: Math.random().toString(),
-        note,
-        lat: lat,
-        long: long,
-        timestamp: timestamp,
-      },
-    ]);
     if (!takenPhoto) {
       return;
     }
@@ -456,24 +436,6 @@ const NewWalk: React.FC = () => {
                   <IonIcon slot="start" icon={finishIcon} />
                   Finish
                 </IonButton>
-              </IonCol>
-            </IonRow>
-            <IonRow className="ion-text-center">
-              <IonCol>
-                <IonList>
-                  {moments.map((moment, index) => {
-                    return (
-                      <IonItem key={index}>
-                        <IonLabel text-wrap>
-                          <p>
-                            Lat: {moment.lat}—Long: {moment.long}
-                          </p>
-                          <p>{moment.note}</p>
-                        </IonLabel>
-                      </IonItem>
-                    );
-                  })}
-                </IonList>
               </IonCol>
             </IonRow>
           </IonGrid>

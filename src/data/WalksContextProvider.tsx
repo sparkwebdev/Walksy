@@ -94,6 +94,7 @@ const WalksContextProvider: React.FC = (props) => {
       base64Url: base64,
       moments: moments,
     };
+    setMoments([]);
     setWalks((curWalks) => {
       return [...curWalks, newWalk];
     });
