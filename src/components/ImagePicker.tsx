@@ -69,6 +69,10 @@ const ImagePicker: React.FC<{
     }
   };
 
+  const imageResetHandler = async () => {
+    console.log("here imageResetHandler");
+  };
+
   return (
     <React.Fragment>
       <div className="image" onClick={takePhotoHandler}>
