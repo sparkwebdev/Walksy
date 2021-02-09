@@ -81,6 +81,16 @@ const NewWalk: React.FC = () => {
   const [takenPhoto, setTakenPhoto] = useState<Photo>();
 
   const [note, setNote] = useState("");
+  const [moments, setMoments] = useState<
+    {
+      id: string;
+      // takenPhoto: Photo;
+      note: string;
+      lat: number;
+      long: number;
+      timestamp: number;
+    }[]
+  >([]);
 
   const [cancelWalkAlert, setCancelWalkAlert] = useState(false);
 
@@ -146,6 +156,7 @@ const NewWalk: React.FC = () => {
     setTrackedRoute([]);
     setTakenPhoto(undefined);
     setNote("");
+    setMoments([]);
     clearTimeout(ticker);
     Pedometer.stopPedometerUpdates();
     if (watch !== null) {
@@ -161,6 +172,24 @@ const NewWalk: React.FC = () => {
     clearWalkHandler();
   }, [endTime]);
 
+  const addMomentHandler = () => {
+    // const latestLoc = trackedRoute.slice(-1)[0];
+    setMoments((current) => [
+      ...current!,
+      {
+        id: Math.random().toString(),
+        note,
+        lat: 0.01,
+        long: 0.02,
+        timestamp: 111,
+        // takenPhoto,
+        // lat: latestLoc.lat,
+        // long: latestLoc.long,
+        // timestamp: latestLoc.timestamp,
+      },
+    ]);
+  };
+
   const saveWalkHandler = () => {
     if (!takenPhoto) {
       return;
@@ -175,7 +204,8 @@ const NewWalk: React.FC = () => {
       startTime,
       endTime,
       steps,
-      distance
+      distance,
+      moments
     );
     history.length > 0 ? history.goBack() : history.replace("/user-walks");
   };
@@ -331,6 +361,37 @@ const NewWalk: React.FC = () => {
                     );
                   })}
                 </IonList>
+              </IonCol>
+            </IonRow>
+            <IonRow className="ion-text-center">
+              <IonCol>
+                <IonList>
+                  {moments.map((moment, index) => {
+                    return (
+                      <IonItem key={index}>
+                        <IonLabel text-wrap>
+                          <p>
+                            Lat: {moment.lat}—Long: {moment.long}
+                          </p>
+                          <p>{moment.note}</p>
+                        </IonLabel>
+                      </IonItem>
+                    );
+                  })}
+                </IonList>
+              </IonCol>
+            </IonRow>
+            <IonRow>
+              <IonCol size="12">
+                <IonButton
+                  expand="block"
+                  onClick={addMomentHandler}
+                  class="ion-margin-top ion-margin-bottom"
+                  color="secondary"
+                >
+                  <IonIcon slot="start" icon={mapIcon} />
+                  Add Moment
+                </IonButton>
               </IonCol>
             </IonRow>
             <IonRow>

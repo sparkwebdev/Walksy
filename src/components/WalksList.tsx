@@ -37,6 +37,7 @@ const WalksList: React.FC<{ title: string; type: "user" | "guided" }> = (
                 endTime={walk.endTime}
                 steps={walk.steps}
                 distance={walk.distance}
+                moments={walk.moments}
               />
             </IonItem>
           </IonCol>

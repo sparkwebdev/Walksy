@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Plugins, FilesystemDirectory } from "@capacitor/core";
 import { base64FromPath } from "@ionic/react-hooks/filesystem";
 
-import WalksContext, { Walk, WalkType } from "./walks-context";
+import WalksContext, { Walk, WalkType, Moment } from "./walks-context";
 import { Photo } from "../components/ImagePicker";
 
 const { Storage, Filesystem } = Plugins;
@@ -24,6 +24,7 @@ const WalksContextProvider: React.FC = (props) => {
         endTime: walk.endTime,
         steps: walk.steps,
         distance: walk.distance,
+        moments: walk.moments,
       };
     });
     Storage.set({ key: "walks", value: JSON.stringify(storableWalks) });
@@ -39,7 +40,8 @@ const WalksContextProvider: React.FC = (props) => {
     startTime: string,
     endTime: string,
     steps: number,
-    distance: number
+    distance: number,
+    moments: Moment[]
   ) => {
     const fileName = new Date().getTime() + ".jpeg";
 
@@ -63,6 +65,7 @@ const WalksContextProvider: React.FC = (props) => {
       distance,
       imagePath: fileName,
       base64Url: base64,
+      moments,
     };
     setWalks((curWalks) => {
       return [...curWalks, newWalk];
@@ -91,6 +94,7 @@ const WalksContextProvider: React.FC = (props) => {
         distance: storedWalk.distance,
         imagePath: storedWalk.imagePath,
         base64Url: "data:image/jpeg;base64," + file.data,
+        moments: storedWalk.moments,
       });
     }
     setWalks(loadedWalks);

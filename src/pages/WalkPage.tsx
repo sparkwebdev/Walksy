@@ -27,6 +27,7 @@ const WalkPage: React.FC = () => {
           endTime={walk!.endTime}
           steps={walk!.steps}
           distance={walk!.distance}
+          moments={walk!.moments}
         />
       </IonContent>
     </IonPage>

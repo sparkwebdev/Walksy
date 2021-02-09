@@ -2,9 +2,13 @@ import React from "react";
 import dayjs from "dayjs";
 import {
   IonCard,
+  IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
+  IonItem,
+  IonLabel,
+  IonList,
 } from "@ionic/react";
 
 import "./WalkItem.css";
@@ -19,6 +23,7 @@ const WalkItem: React.FC<{
   endTime: string;
   steps: number;
   distance: number;
+  moments: any;
 }> = (props) => {
   return (
     <IonCard className="walk-item">
@@ -40,12 +45,21 @@ const WalkItem: React.FC<{
             {props.steps}&nbsp;<span className="smallprint">steps</span>
           </IonCardSubtitle>
         )}
-        {props.description != "" && (
+        {props.description !== "" && (
           <IonCardSubtitle className="ion-margin-top">
             {props.description}
           </IonCardSubtitle>
         )}
       </IonCardHeader>
+      <IonCardContent>
+        <IonList>
+          {props.moments.map((moment: any) => (
+            <IonItem key={moment.id}>
+              <IonLabel>{moment.note}</IonLabel>
+            </IonItem>
+          ))}
+        </IonList>
+      </IonCardContent>
     </IonCard>
   );
 };
