@@ -131,6 +131,7 @@ const WalksContextProvider: React.FC = (props) => {
     <WalksContext.Provider
       value={{
         walks,
+        moments,
         addMoment,
         addWalk,
         initContext,

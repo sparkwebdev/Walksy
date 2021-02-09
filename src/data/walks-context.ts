@@ -31,11 +31,13 @@ export interface Walk {
 
 const WalksContext = React.createContext<{
   walks: Walk[];
+  moments: Moment[];
   addMoment: (photo: Photo, note: string, lat: number, long: number, timestamp: number) => void;
   addWalk: (photo: Photo, title: string, colour: string, description: string, type: WalkType, startTime: string, endTime: string, steps: number, distance: number) => void;
   initContext: () => void;
 }>({
   walks: [],
+  moments: [],
   addMoment: () => {},
   addWalk: () => {},
   initContext: () => {}
