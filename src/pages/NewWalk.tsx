@@ -124,16 +124,20 @@ const NewWalk: React.FC = () => {
     });
     watch = Geolocation.watchPosition({}, (position, err) => {
       if (position) {
-        setTrackedRoute((current) => [
-          ...current!,
-          {
-            lat: position.coords.latitude,
-            long: position.coords.longitude,
-            timestamp: position.timestamp,
-          },
-        ]);
+        updateTrackedRoute(position);
       }
     });
+  };
+
+  const updateTrackedRoute = (position: any) => {
+    setTrackedRoute((current) => [
+      ...current!,
+      {
+        lat: position.coords.latitude,
+        long: position.coords.longitude,
+        timestamp: position.timestamp,
+      },
+    ]);
   };
 
   const finishWalkHandler = () => {
@@ -151,11 +155,9 @@ const NewWalk: React.FC = () => {
     setStartTime("");
     setEndTime("");
     setTrackedRoute([]);
-    setTakenPhoto(undefined);
-    setNote("");
-    setMoments([]);
     clearTimeout(ticker);
     Pedometer.stopPedometerUpdates();
+    clearMomentHandler();
     if (watch !== null) {
       Geolocation.clearWatch(watch);
       Geolocation.clearWatch({
@@ -164,27 +166,41 @@ const NewWalk: React.FC = () => {
     }
   };
 
+  const clearMomentHandler = () => {
+    setNote("");
+    setMoments([]);
+  };
+
   useEffect(() => {
     saveWalkHandler();
     clearWalkHandler();
   }, [endTime]);
 
   const addMomentHandler = () => {
-    // const latestLoc = trackedRoute.slice(-1)[0];
+    let lat = 0;
+    let long = 0;
+    let timestamp = 0;
+    if (trackedRoute.length > 0) {
+      const latestLoc = trackedRoute.slice(-1)[0];
+      lat = latestLoc.lat;
+      long = latestLoc.long;
+      timestamp = latestLoc.timestamp;
+    }
     setMoments((current) => [
       ...current!,
       {
         id: Math.random().toString(),
         note,
-        lat: 0.01,
-        long: 0.02,
-        timestamp: 111,
-        // takenPhoto,
-        // lat: latestLoc.lat,
-        // long: latestLoc.long,
-        // timestamp: latestLoc.timestamp,
+        lat: lat,
+        long: long,
+        timestamp: timestamp,
       },
     ]);
+    if (!takenPhoto) {
+      return;
+    }
+    walksCtx.addMoment(takenPhoto!, note, lat, long, timestamp);
+    clearMomentHandler();
   };
 
   const saveWalkHandler = () => {
@@ -196,13 +212,11 @@ const NewWalk: React.FC = () => {
       walkTitle,
       walkColour,
       walkDescription,
-      note!,
       chosenWalkType,
       startTime,
       endTime,
       steps,
-      distance,
-      moments
+      distance
     );
     history.length > 0 ? history.goBack() : history.replace("/user-walks");
   };
@@ -342,7 +356,7 @@ const NewWalk: React.FC = () => {
                 </IonItem>
               </IonCol>
             </IonRow>
-            <IonRow className="ion-text-center">
+            {/* <IonRow className="ion-text-center">
               <IonCol>
                 <IonList>
                   {trackedRoute.map((position, index) => {
@@ -359,25 +373,7 @@ const NewWalk: React.FC = () => {
                   })}
                 </IonList>
               </IonCol>
-            </IonRow>
-            <IonRow className="ion-text-center">
-              <IonCol>
-                <IonList>
-                  {moments.map((moment, index) => {
-                    return (
-                      <IonItem key={index}>
-                        <IonLabel text-wrap>
-                          <p>
-                            Lat: {moment.lat}—Long: {moment.long}
-                          </p>
-                          <p>{moment.note}</p>
-                        </IonLabel>
-                      </IonItem>
-                    );
-                  })}
-                </IonList>
-              </IonCol>
-            </IonRow>
+            </IonRow> */}
             <IonRow>
               <IonCol size="12">
                 <IonButton
@@ -442,6 +438,24 @@ const NewWalk: React.FC = () => {
                   <IonIcon slot="start" icon={finishIcon} />
                   Finish
                 </IonButton>
+              </IonCol>
+            </IonRow>
+            <IonRow className="ion-text-center">
+              <IonCol>
+                <IonList>
+                  {moments.map((moment, index) => {
+                    return (
+                      <IonItem key={index}>
+                        <IonLabel text-wrap>
+                          <p>
+                            Lat: {moment.lat}—Long: {moment.long}
+                          </p>
+                          <p>{moment.note}</p>
+                        </IonLabel>
+                      </IonItem>
+                    );
+                  })}
+                </IonList>
               </IonCol>
             </IonRow>
           </IonGrid>

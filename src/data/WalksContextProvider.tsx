@@ -8,6 +8,7 @@ import { Photo } from "../components/ImagePicker";
 const { Storage, Filesystem } = Plugins;
 
 const WalksContextProvider: React.FC = (props) => {
+  const [moments, setMoments] = useState<Moment[]>([]);
   const [walks, setWalks] = useState<Walk[]>([]);
 
   useEffect(() => {
@@ -15,33 +16,60 @@ const WalksContextProvider: React.FC = (props) => {
       return {
         id: walk.id,
         title: walk.title,
-        colour: walk.title,
-        description: walk.title,
+        colour: walk.colour,
+        description: walk.description,
         imagePath: walk.imagePath,
-        note: walk.note,
         type: walk.type,
         startTime: walk.startTime,
         endTime: walk.endTime,
         steps: walk.steps,
         distance: walk.distance,
-        moments: walk.moments,
+        moments: moments,
       };
     });
     Storage.set({ key: "walks", value: JSON.stringify(storableWalks) });
   }, [walks]);
+
+  const addMoment = async (
+    photo: Photo,
+    note: string,
+    lat: number,
+    long: number,
+    timestamp: number
+  ) => {
+    const fileName = new Date().getTime() + ".jpeg";
+
+    const base64 = await base64FromPath(photo.preview);
+    Filesystem.writeFile({
+      path: fileName,
+      data: base64,
+      directory: FilesystemDirectory.Data,
+    });
+
+    const newMoment: Moment = {
+      id: Math.random().toString(),
+      imagePath: fileName,
+      // base64Url: base64,
+      note: note,
+      lat: lat,
+      long: long,
+      timestamp: timestamp,
+    };
+    setMoments((curWalks) => {
+      return [...curWalks, newMoment];
+    });
+  };
 
   const addWalk = async (
     photo: Photo,
     title: string,
     colour: string,
     description: string,
-    note: string,
     type: WalkType,
     startTime: string,
     endTime: string,
     steps: number,
-    distance: number,
-    moments: Moment[]
+    distance: number
   ) => {
     const fileName = new Date().getTime() + ".jpeg";
 
@@ -57,7 +85,6 @@ const WalksContextProvider: React.FC = (props) => {
       title,
       colour,
       description,
-      note,
       type,
       startTime,
       endTime,
@@ -65,7 +92,7 @@ const WalksContextProvider: React.FC = (props) => {
       distance,
       imagePath: fileName,
       base64Url: base64,
-      moments,
+      moments: moments,
     };
     setWalks((curWalks) => {
       return [...curWalks, newWalk];
@@ -86,7 +113,6 @@ const WalksContextProvider: React.FC = (props) => {
         title: storedWalk.title,
         colour: storedWalk.colour,
         description: storedWalk.description,
-        note: storedWalk.note,
         type: storedWalk.type,
         startTime: storedWalk.startTime,
         endTime: storedWalk.endTime,
@@ -104,6 +130,7 @@ const WalksContextProvider: React.FC = (props) => {
     <WalksContext.Provider
       value={{
         walks,
+        addMoment,
         addWalk,
         initContext,
       }}

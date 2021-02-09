@@ -6,7 +6,7 @@ export type WalkType = 'user' | 'guided';
 
 export interface Moment {
   id: string;
-  // imagePath: string;
+  imagePath: string;
   note: string;
   lat: number;
   long: number;
@@ -20,7 +20,6 @@ export interface Walk {
   title: string;
   colour: string;
   description: string;
-  note: string;
   type: WalkType;
   startTime: string;
   endTime: string;
@@ -32,10 +31,12 @@ export interface Walk {
 
 const WalksContext = React.createContext<{
   walks: Walk[];
-  addWalk: (photo: Photo, title: string, colour: string, description: string, note: string, type: WalkType, startTime: string, endTime: string, steps: number, distance: number, moments: any) => void;
+  addMoment: (photo: Photo, note: string, lat: number, long: number, timestamp: number) => void;
+  addWalk: (photo: Photo, title: string, colour: string, description: string, type: WalkType, startTime: string, endTime: string, steps: number, distance: number) => void;
   initContext: () => void;
 }>({
   walks: [],
+  addMoment: () => {},
   addWalk: () => {},
   initContext: () => {}
 });
