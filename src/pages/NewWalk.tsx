@@ -15,6 +15,11 @@ import {
   IonTextarea,
   IonIcon,
   IonAlert,
+  IonCard,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonCardContent,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import "./NewWalk.css";
@@ -230,6 +235,10 @@ const NewWalk: React.FC = () => {
     clearWalkHandler();
   };
 
+  const handleCancelMoment = async () => {
+    clearMomentHandler();
+  };
+
   return (
     <IonPage>
       <IonContent>
@@ -341,53 +350,62 @@ const NewWalk: React.FC = () => {
             </IonRow>
             <IonRow className="ion-text-center">
               <IonCol>
-                <ImagePicker onImagePick={photoPickHandler} />
+                <IonCard>
+                  <IonCardHeader>
+                    <IonCardTitle>Add a moment</IonCardTitle>
+                    <IonCardSubtitle>
+                      A photo, a note, (or both) to your journey...
+                    </IonCardSubtitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    <IonGrid>
+                      <IonRow className="ion-text-center">
+                        <IonCol>
+                          <ImagePicker onImagePick={photoPickHandler} />
+                        </IonCol>
+                        <IonCol>
+                          <IonItem>
+                            <IonLabel position="floating">
+                              Add a thought or description...
+                            </IonLabel>
+                            <IonTextarea
+                              value={note}
+                              onIonChange={(e) => setNote(e.detail.value!)}
+                            ></IonTextarea>
+                          </IonItem>
+                        </IonCol>
+                      </IonRow>
+                    </IonGrid>
+
+                    <IonGrid>
+                      <IonRow>
+                        <IonCol size="5">
+                          <IonButton
+                            expand="block"
+                            onClick={() => handleCancelMoment()}
+                            color="danger"
+                          >
+                            <IonIcon slot="start" icon={cancelIcon} />
+                            Cancel
+                          </IonButton>
+                        </IonCol>
+                        <IonCol size="7">
+                          <IonButton
+                            expand="block"
+                            onClick={addMomentHandler}
+                            color="secondary"
+                          >
+                            <IonIcon slot="start" icon={mapIcon} />
+                            Add Moment
+                          </IonButton>
+                        </IonCol>
+                      </IonRow>
+                    </IonGrid>
+                  </IonCardContent>
+                </IonCard>
               </IonCol>
             </IonRow>
-            <IonRow className="ion-text-center">
-              <IonCol>
-                <IonItem>
-                  <IonLabel position="floating">
-                    Add a thought or description...
-                  </IonLabel>
-                  <IonTextarea
-                    value={note}
-                    onIonChange={(e) => setNote(e.detail.value!)}
-                  ></IonTextarea>
-                </IonItem>
-              </IonCol>
-            </IonRow>
-            {/* <IonRow className="ion-text-center">
-              <IonCol>
-                <IonList>
-                  {trackedRoute.map((position, index) => {
-                    return (
-                      <IonItem key={index}>
-                        <IonLabel text-wrap>
-                          <p>
-                            Lat: {position.lat}—Long: {position.long}
-                          </p>
-                          <p>{position.timestamp}</p>
-                        </IonLabel>
-                      </IonItem>
-                    );
-                  })}
-                </IonList>
-              </IonCol>
-            </IonRow> */}
-            <IonRow>
-              <IonCol size="12">
-                <IonButton
-                  expand="block"
-                  onClick={addMomentHandler}
-                  class="ion-margin-top ion-margin-bottom"
-                  color="secondary"
-                >
-                  <IonIcon slot="start" icon={mapIcon} />
-                  Add Moment
-                </IonButton>
-              </IonCol>
-            </IonRow>
+
             <IonRow>
               <IonCol size="12">
                 <IonButton
@@ -414,7 +432,6 @@ const NewWalk: React.FC = () => {
                 <IonAlert
                   isOpen={cancelWalkAlert}
                   onDidDismiss={() => setCancelWalkAlert(false)}
-                  cssClass="my-custom-class"
                   header={"Cancel"}
                   subHeader={"Are you sure?"}
                   buttons={[

@@ -71,14 +71,16 @@ const ImagePicker: React.FC<{
 
   return (
     <React.Fragment>
-      <div className="image-preview">
-        {!takenPhoto && <h3>No photo chosen.</h3>}
-        {takenPhoto && <img src={takenPhoto.preview} alt="Preview" />}
+      <div className="image" onClick={takePhotoHandler}>
+        <div className="image-preview">
+          {!takenPhoto && <h3>No photo chosen.</h3>}
+          {takenPhoto && <img src={takenPhoto.preview} alt="Preview" />}
+        </div>
+        <IonButton fill="clear">
+          <IonIcon icon={camera} slot="start"></IonIcon>
+          <IonLabel>Take Photo</IonLabel>
+        </IonButton>
       </div>
-      <IonButton fill="clear" onClick={takePhotoHandler}>
-        <IonIcon icon={camera} slot="start"></IonIcon>
-        <IonLabel>Take Photo</IonLabel>
-      </IonButton>
       <input
         type="file"
         hidden
