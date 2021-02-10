@@ -58,7 +58,7 @@ const randomColour = () => {
 const NewWalk: React.FC = () => {
   const [isWalking, setIsWalking] = useState(false);
   const [walkTitle, setWalkTitle] = useState(suggestedTitle());
-  const [walkColour, setWalkColour] = useState<"">(randomColour);
+  const [walkColour, setWalkColour] = useState<string>(randomColour);
   const [walkDescription, setWalkDescription] = useState("");
   const [chosenWalkType, setChosenWalkType] = useState<WalkType>("user");
 
