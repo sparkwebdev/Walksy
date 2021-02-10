@@ -11,7 +11,6 @@ import {
   IonButton,
   IonSelect,
   IonSelectOption,
-  IonList,
   IonTextarea,
   IonIcon,
   IonAlert,
@@ -95,6 +94,8 @@ const NewWalk: React.FC = () => {
     setTakenPhoto(photo);
   };
 
+  const filePickerChildRef = React.useRef();
+
   const selectWalkTypeHandler = (event: CustomEvent) => {
     const selectedWalkType = event.detail.value;
     setChosenWalkType(selectedWalkType);
@@ -164,7 +165,7 @@ const NewWalk: React.FC = () => {
   };
 
   const clearMomentHandler = () => {
-    // setTakenPhoto(undefined);
+    (filePickerChildRef as any).current!.imageResetHandler();
     setNote("");
   };
 
@@ -339,7 +340,10 @@ const NewWalk: React.FC = () => {
                     <IonGrid>
                       <IonRow className="ion-text-center">
                         <IonCol>
-                          <ImagePicker onImagePick={photoPickHandler} />
+                          <ImagePicker
+                            onImagePick={photoPickHandler}
+                            ref={filePickerChildRef}
+                          />
                         </IonCol>
                         <IonCol>
                           <IonItem>

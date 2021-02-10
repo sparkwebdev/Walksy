@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, forwardRef } from "react";
 import { IonButton, IonIcon, IonLabel } from "@ionic/react";
 import { camera } from "ionicons/icons";
 import {
@@ -19,14 +19,21 @@ const { Camera } = Plugins;
 
 const ImagePicker: React.FC<{
   onImagePick: (photo: Photo) => void;
-}> = (props) => {
-  const [takenPhoto, setTakenPhoto] = useState<Photo>();
+  ref: any;
+}> = forwardRef((props, ref) => {
+  const [takenPhoto, setTakenPhoto] = useState<Photo | null>();
 
   const filePickerRef = useRef<HTMLInputElement>(null);
 
   const openFilePicker = () => {
     filePickerRef.current!.click();
   };
+
+  React.useImperativeHandle(ref, () => ({
+    imageResetHandler: () => {
+      console.log("imageResetHandler");
+    },
+  }));
 
   const pickFileHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target!.files![0];
@@ -69,10 +76,6 @@ const ImagePicker: React.FC<{
     }
   };
 
-  const imageResetHandler = async () => {
-    console.log("here imageResetHandler");
-  };
-
   return (
     <React.Fragment>
       <div className="image" onClick={takePhotoHandler}>
@@ -93,6 +96,6 @@ const ImagePicker: React.FC<{
       />
     </React.Fragment>
   );
-};
+});
 
 export default ImagePicker;
