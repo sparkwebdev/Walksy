@@ -237,14 +237,6 @@ const NewWalk: React.FC = () => {
                   can edit once you’ve finished the walk before then finally
                   uploading to the app.
                 </p>
-                <IonSelect
-                  onIonChange={selectWalkTypeHandler}
-                  value={chosenWalkType}
-                  hidden={true}
-                >
-                  <IonSelectOption value="user">User Walk</IonSelectOption>
-                  <IonSelectOption value="guided">Guided Walk</IonSelectOption>
-                </IonSelect>
                 <IonLabel className="ion-text-center">
                   Give this walk a title...
                 </IonLabel>
