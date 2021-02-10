@@ -9,8 +9,6 @@ import {
   IonLabel,
   IonInput,
   IonButton,
-  IonSelect,
-  IonSelectOption,
   IonTextarea,
   IonIcon,
   IonAlert,
@@ -23,7 +21,7 @@ import {
 import { useHistory } from "react-router-dom";
 import "./NewWalk.css";
 
-import WalksContext, { WalkType } from "../data/walks-context";
+import WalksContext from "../data/walks-context";
 import ImagePicker, { Photo } from "../components/ImagePicker";
 import Progress from "../components/Progress";
 import { Plugins } from "@capacitor/core";
@@ -60,7 +58,6 @@ const NewWalk: React.FC = () => {
   const [walkTitle, setWalkTitle] = useState(suggestedTitle());
   const [walkColour, setWalkColour] = useState<string>(randomColour);
   const [walkDescription, setWalkDescription] = useState("");
-  const [chosenWalkType, setChosenWalkType] = useState<WalkType>("user");
 
   const [time, setTime] = useState<{ min: number; sec: number }>({
     min: 0,
@@ -95,11 +92,6 @@ const NewWalk: React.FC = () => {
   };
 
   const filePickerChildRef = React.useRef();
-
-  const selectWalkTypeHandler = (event: CustomEvent) => {
-    const selectedWalkType = event.detail.value;
-    setChosenWalkType(selectedWalkType);
-  };
 
   const startTimer = () => {
     let time = 1;
@@ -197,7 +189,7 @@ const NewWalk: React.FC = () => {
       walkTitle,
       walkColour,
       walkDescription,
-      chosenWalkType,
+      "user",
       startTime,
       endTime,
       steps,
@@ -306,17 +298,6 @@ const NewWalk: React.FC = () => {
             <IonRow>
               <IonCol>
                 <Progress time={time} distance={distance} steps={steps} />
-              </IonCol>
-            </IonRow>
-            <IonRow>
-              <IonCol>
-                <IonSelect
-                  onIonChange={selectWalkTypeHandler}
-                  value={chosenWalkType}
-                >
-                  <IonSelectOption value="user">User Walk</IonSelectOption>
-                  <IonSelectOption value="guided">Guided Walk</IonSelectOption>
-                </IonSelect>
               </IonCol>
             </IonRow>
             <IonRow className="ion-text-center">
