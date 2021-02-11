@@ -17,6 +17,9 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonCardContent,
+  IonToast,
+  IonLoading,
+  IonList,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import "./NewWalk.css";
@@ -31,6 +34,7 @@ import {
   getFriendlyTimeOfDay,
   getFriendlyWalkDescriptor,
   generateHslaColors,
+  getDistanceBetweenPoints,
 } from "../helpers";
 
 import {
@@ -59,6 +63,12 @@ const NewWalk: React.FC = () => {
   const [walkColour, setWalkColour] = useState<string>(randomColour);
   const [walkDescription, setWalkDescription] = useState("");
 
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<{
+    showError: boolean;
+    message?: string;
+  }>({ showError: false });
+
   const [time, setTime] = useState<{ min: number; sec: number }>({
     min: 0,
     sec: 0,
@@ -69,6 +79,12 @@ const NewWalk: React.FC = () => {
   const [startTime, setStartTime] = useState<string>("");
   const [endTime, setEndTime] = useState<string>("");
 
+  const [initialLocation, setInitialLocation] = useState<{
+    lat: number;
+    long: number;
+    timestamp: number;
+  }>();
+
   const [trackedRoute, setTrackedRoute] = useState<
     {
       lat: number;
@@ -77,7 +93,13 @@ const NewWalk: React.FC = () => {
     }[]
   >([]);
 
-  const [takenPhoto, setTakenPhoto] = useState<Photo>();
+  const trackedRoute2: {
+    lat: number;
+    long: number;
+    timestamp: number;
+  }[] = [];
+
+  const [takenPhoto, setTakenPhoto] = useState<Photo | null>();
 
   const [note, setNote] = useState<string>("");
 
@@ -87,7 +109,7 @@ const NewWalk: React.FC = () => {
 
   const history = useHistory();
 
-  const photoPickHandler = (photo: Photo) => {
+  const photoPickHandler = (photo: Photo | null) => {
     setTakenPhoto(photo);
   };
 
@@ -104,29 +126,42 @@ const NewWalk: React.FC = () => {
 
   const startWalkHandler = () => {
     setIsWalking(true);
+    setLoading(false);
     startTimer();
-    setStartTime(new Date().toISOString());
-
     Pedometer.startPedometerUpdates().subscribe((data) => {
       setSteps(data.numberOfSteps);
       setDistance(data.distance / 1000); // metres to km
     });
-    watch = Geolocation.watchPosition({}, (position, err) => {
-      if (position) {
-        updateTrackedRoute(position);
-      }
-    });
   };
 
-  const updateTrackedRoute = (position: any) => {
-    setTrackedRoute((current) => [
-      ...current!,
-      {
-        lat: position.coords.latitude,
-        long: position.coords.longitude,
-        timestamp: position.timestamp,
-      },
-    ]);
+  const updateTrackedRoute = (lat: number, long: number, timestamp: number) => {
+    if (trackedRoute2.length < 1) {
+      trackedRoute2.push({
+        lat: initialLocation!.lat,
+        long: initialLocation!.long,
+        timestamp: initialLocation!.timestamp,
+      });
+    } else {
+      const latestLoc = trackedRoute2[trackedRoute2.length - 1];
+      const diff = getDistanceBetweenPoints(
+        {
+          lat: latestLoc.lat,
+          long: latestLoc.long,
+        },
+        {
+          lat: lat,
+          long: long,
+        },
+        "km"
+      );
+      if (diff > 0.005) {
+        trackedRoute2.push({
+          lat: lat,
+          long: long,
+          timestamp: timestamp,
+        });
+      }
+    }
   };
 
   const finishWalkHandler = () => {
@@ -134,20 +169,8 @@ const NewWalk: React.FC = () => {
   };
 
   const clearWalkHandler = () => {
-    setIsWalking(false);
-    setWalkTitle(suggestedTitle());
-    setWalkColour(randomColour);
-    setWalkDescription("");
-    setTime({ min: 0, sec: 0 });
-    setSteps(0);
-    setDistance(0);
-    setStartTime("");
-    setEndTime("");
-    setTrackedRoute([]);
     clearTimeout(ticker);
     Pedometer.stopPedometerUpdates();
-    setMoments([]);
-    clearMomentHandler();
     if (watch !== null) {
       Geolocation.clearWatch(watch);
       Geolocation.clearWatch({
@@ -162,8 +185,51 @@ const NewWalk: React.FC = () => {
   };
 
   useEffect(() => {
-    saveWalkHandler();
-    clearWalkHandler();
+    getInitLocation();
+  }, [startTime]);
+
+  useEffect(() => {
+    if (initialLocation?.timestamp) {
+      watch = Geolocation.watchPosition(
+        {
+          enableHighAccuracy: false,
+          timeout: 5000,
+          maximumAge: 10000,
+        },
+        (position, err) => {
+          if (position) {
+            updateTrackedRoute(
+              position.coords.latitude,
+              position.coords.longitude,
+              position.timestamp
+            );
+          }
+        }
+      );
+    }
+  }, [initialLocation]);
+
+  const getInitLocation = async () => {
+    setLoading(true);
+    try {
+      const position = await Geolocation.getCurrentPosition();
+      setInitialLocation({
+        lat: position.coords.latitude,
+        long: position.coords.longitude,
+        timestamp: position.timestamp,
+      });
+      startWalkHandler();
+    } catch (e) {
+      startWalkHandler();
+      setError({ showError: true, message: "Cannot get your location" });
+    }
+  };
+
+  useEffect(() => {
+    if (endTime !== "") {
+      saveWalkHandler();
+      clearWalkHandler();
+    }
   }, [endTime]);
 
   const addMomentHandler = () => {
@@ -286,7 +352,7 @@ const NewWalk: React.FC = () => {
                 <IonButton
                   className="ion-margin-top"
                   disabled={walkTitle === ""}
-                  onClick={() => startWalkHandler()}
+                  onClick={() => setStartTime(new Date().toISOString())}
                 >
                   Start Walk
                 </IonButton>
@@ -361,7 +427,24 @@ const NewWalk: React.FC = () => {
                 </IonCard>
               </IonCol>
             </IonRow>
-
+            {whatsHappening}1
+            <IonRow className="ion-text-center">
+              <IonCol>
+                <IonList>
+                  {trackedRoute2.map((moment, index) => {
+                    return (
+                      <IonItem key={index}>
+                        <IonLabel text-wrap>
+                          <p>
+                            Lat: {moment.lat} —Long: {moment.long}
+                          </p>
+                        </IonLabel>
+                      </IonItem>
+                    );
+                  })}
+                </IonList>
+              </IonCol>
+            </IonRow>
             <IonRow>
               <IonCol size="12">
                 <IonButton
@@ -417,6 +500,18 @@ const NewWalk: React.FC = () => {
           </IonGrid>
         )}
       </IonContent>
+
+      <IonToast
+        isOpen={error.showError}
+        message={error.message}
+        onDidDismiss={() => setError({ showError: false, message: undefined })}
+        duration={3000}
+      />
+      <IonLoading
+        isOpen={loading}
+        message={"Getting location..."}
+        onDidDismiss={() => setLoading(false)}
+      />
     </IonPage>
   );
 };
