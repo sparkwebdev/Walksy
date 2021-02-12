@@ -13,6 +13,7 @@ import {
   IonCardTitle,
   IonCardSubtitle,
   IonCardContent,
+  IonText,
 } from "@ionic/react";
 import "./IntroPage.css";
 
@@ -142,46 +143,33 @@ const Intro: React.FC = () => {
                     src="assets/img/placeholder.png"
                     alt=""
                   />
-                  <IonCard className="ion-margin-top">
-                    <IonCardHeader>
-                      <IonCardTitle>Get Started</IonCardTitle>
-                      <IonCardSubtitle>
-                        Please register to start using the app
-                      </IonCardSubtitle>
-                    </IonCardHeader>
-                    <IonCardContent>
-                      <IonGrid>
-                        <IonRow>
-                          <IonCol
-                            offsetSm="2"
-                            sizeSm="8"
-                            offsetMd="4"
-                            sizeMd="4"
-                          >
-                            <IonButton expand="block" routerLink="/register">
-                              Register
-                            </IonButton>
-                          </IonCol>
-                        </IonRow>
-                        <IonRow>
-                          <IonCol
-                            offsetSm="2"
-                            sizeSm="8"
-                            offsetMd="4"
-                            sizeMd="4"
-                          >
-                            <IonButton
-                              expand="block"
-                              fill="clear"
-                              routerLink="/login"
-                            >
-                              Login
-                            </IonButton>
-                          </IonCol>
-                        </IonRow>
-                      </IonGrid>
-                    </IonCardContent>
-                  </IonCard>
+                  <div className="constrain constrain--medium">
+                    <IonCard>
+                      <IonCardHeader
+                        className="ion-no-padding"
+                        color="tertiary"
+                      >
+                        <IonCardSubtitle className="ion-padding ion-text-uppercase">
+                          Get Started
+                        </IonCardSubtitle>
+                      </IonCardHeader>
+                      <IonCardContent>
+                        <IonText color="dark" className="ion-margin">
+                          <p>Please register to start your journey...</p>
+                        </IonText>
+                        <IonButton expand="block" routerLink="/register">
+                          Register
+                        </IonButton>
+                        <IonButton
+                          expand="block"
+                          fill="clear"
+                          routerLink="/login"
+                        >
+                          Login
+                        </IonButton>
+                      </IonCardContent>
+                    </IonCard>
+                  </div>
                 </IonCol>
               </IonRow>
             </IonGrid>

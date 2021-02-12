@@ -12,16 +12,21 @@ ion-slides {
   margin: 16px auto;
   max-width: 80%;
 }
-.swiper-slide img.intro__logo {
-  max-width: 80%;
+.swiper-slide .intro__panel {
+  max-height: 50vh;
+}
+.swiper-slide .intro__logo {
   max-height: 15vh;
 }
-.swiper-slide img.intro__icon {
-  max-width: 80%;
+.swiper-slide .intro__icon {
   max-height: calc(80vh - 22rem);
 }
-.swiper-slide img.intro__partner {
+.swiper-slide .intro__partner {
   width: 22vh;
+  margin: 0 auto;
+}
+.swiper-slide .intro__panel-2 {
+  max-height: 35vh;
 }
 
 .intro__skip {
