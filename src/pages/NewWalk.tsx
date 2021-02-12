@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import {
   IonPage,
   IonContent,
@@ -91,7 +91,7 @@ const NewWalk: React.FC = () => {
     setTakenPhoto(photo);
   };
 
-  const filePickerChildRef = React.useRef();
+  const filePickerChildRef = useRef();
 
   const startTimer = () => {
     let time = 1;
@@ -316,6 +316,7 @@ const NewWalk: React.FC = () => {
                           <ImagePicker
                             onImagePick={photoPickHandler}
                             ref={filePickerChildRef}
+                            label="Add photo"
                           />
                         </IonCol>
                         <IonCol>
