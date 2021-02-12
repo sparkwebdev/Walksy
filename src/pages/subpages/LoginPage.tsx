@@ -11,17 +11,22 @@ import {
   IonBadge,
   IonCard,
   IonCardHeader,
-  IonCardTitle,
   IonCardContent,
   IonGrid,
   IonRow,
   IonCol,
+  IonText,
+  IonCardSubtitle,
 } from "@ionic/react";
 import React, { useState } from "react";
-import { eye as eyeIcon, eyeOff as eyeOffIcon } from "ionicons/icons";
+import { Redirect } from "react-router";
+import { useAuth } from "../../auth";
+import { auth } from "../../firebase";
 import PageHeader from "../../components/PageHeader";
+import { eye as eyeIcon, eyeOff as eyeOffIcon } from "ionicons/icons";
 
 const LoginPage: React.FC = () => {
+  const { loggedIn } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -35,7 +40,8 @@ const LoginPage: React.FC = () => {
   const handleLogin = async () => {
     try {
       setStatus({ loading: true, error: false, errorMessage: "" });
-      console.log("Authenticate here");
+      const credential = await auth.signInWithEmailAndPassword(email, password);
+      return credential;
     } catch (error) {
       console.log("error: ", error);
       setStatus({ loading: false, error: true, errorMessage: error.message });
@@ -47,77 +53,91 @@ const LoginPage: React.FC = () => {
     showPassword ? sePasswordIcon(eyeIcon) : sePasswordIcon(eyeOffIcon);
   };
 
+  if (loggedIn) {
+    return <Redirect to="/app/home" />;
+  }
   return (
     <IonPage>
       <PageHeader title="Login" />
-      <IonContent>
-        <IonGrid>
-          <IonRow>
-            <IonCol offsetSm="2" sizeSm="8" offsetMd="3" sizeMd="6">
-              <IonCard>
-                <IonCardHeader className="ion-text-center">
-                  <IonCardTitle>Your details</IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent>
-                  <IonList>
-                    <IonItem>
-                      <IonLabel>Email</IonLabel>
-                      <IonInput
-                        type="email"
-                        value={email}
-                        onIonChange={(event) => setEmail(event.detail!.value!)}
-                      />
-                    </IonItem>
-                    <IonItem class="ion-margin-top">
-                      <IonLabel>Password</IonLabel>
-                      <IonInput
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onIonChange={(event) =>
-                          setPassword(event.detail!.value!)
-                        }
-                      />
-                      <IonIcon
-                        slot="end"
-                        icon={showPasswordIcon}
-                        onClick={() => {
-                          toggleShowPassword();
-                        }}
-                      />
-                    </IonItem>
-                  </IonList>
+      <IonContent className="">
+        <div className="centered-content">
+          <div className="constrain constrain--medium">
+            <IonCard>
+              <IonCardHeader className="ion-no-padding" color="tertiary">
+                <IonCardSubtitle className="ion-padding ion-text-uppercase">
+                  Your details
+                </IonCardSubtitle>
+              </IonCardHeader>
+              <IonCardContent className="ion-no-padding">
+                <IonList>
+                  <IonItem>
+                    <IonLabel position="fixed">
+                      <small>Email</small>
+                    </IonLabel>
+                    <IonInput
+                      type="email"
+                      value={email}
+                      onIonChange={(event) => setEmail(event.detail!.value!)}
+                      onIonFocus={() =>
+                        setStatus({ ...status, error: false, errorMessage: "" })
+                      }
+                    />
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel position="fixed">
+                      <small>Password</small>
+                    </IonLabel>
+                    <IonInput
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onIonChange={(event) => setPassword(event.detail!.value!)}
+                      onIonFocus={() =>
+                        setStatus({ ...status, error: false, errorMessage: "" })
+                      }
+                    />
+                    <IonIcon
+                      slot="end"
+                      icon={showPasswordIcon}
+                      onClick={() => {
+                        toggleShowPassword();
+                      }}
+                    />
+                  </IonItem>
+                </IonList>
+
+                {status.error && (
                   <IonList lines="none">
-                    {status.error && (
-                      <IonItem>
-                        <IonBadge slot="start" color="danger">
-                          Error
-                        </IonBadge>
-                        <IonLabel color="danger">
-                          {status.errorMessage}
-                        </IonLabel>
-                      </IonItem>
-                    )}
+                    <IonItem>
+                      <IonGrid className="ion-no-padding">
+                        <IonRow className="ion-margin-top ">
+                          <IonCol size="12">
+                            <IonBadge color="danger">Error</IonBadge>
+                          </IonCol>
+                          <IonCol size="12">
+                            <IonText color="danger">
+                              <small>{status.errorMessage}</small>
+                            </IonText>
+                          </IonCol>
+                        </IonRow>
+                      </IonGrid>
+                    </IonItem>
                   </IonList>
-                  <IonButton
-                    class="ion-margin-top"
-                    expand="block"
-                    onClick={handleLogin}
-                  >
-                    Login
-                  </IonButton>
-                  <IonButton
-                    class="ion-margin-top"
-                    expand="block"
-                    fill="clear"
-                    routerLink="/register"
-                  >
-                    Don't have an account?
-                  </IonButton>
-                </IonCardContent>
-              </IonCard>
-            </IonCol>
-          </IonRow>
-        </IonGrid>
+                )}
+
+                <IonButton
+                  className="ion-margin"
+                  expand="block"
+                  onClick={handleLogin}
+                >
+                  Login
+                </IonButton>
+                <IonButton expand="block" fill="clear" routerLink="/register">
+                  Don't have an account?
+                </IonButton>
+              </IonCardContent>
+            </IonCard>
+          </div>
+        </div>
       </IonContent>
       <IonLoading isOpen={status.loading} />
     </IonPage>
