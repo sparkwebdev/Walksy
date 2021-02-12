@@ -2,6 +2,10 @@
   font-size: 12px;
 }
 
+
+.with-hover-cursor:hover {
+  cursor: pointer;
+}
 .swatches {
   display: flex;
   justify-content: space-around;
