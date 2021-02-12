@@ -1,7 +1,55 @@
+@font-face {
+  font-family: "TheanoDidot";
+  font-style: normal;
+  font-weight: normal;
+  src: url("/src/theme/fonts/TheanoDidot-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Domine";
+  font-style: normal;
+  font-weight: normal;
+  src: url("/src/theme/fonts/Domine-Variable.ttf");
+}
+
+:root[mode="ios"] .text-heading,
+:root[mode="md"] .text-heading {
+  --ion-font-family: "TheanoDidot" !important;
+  font-family: "TheanoDidot" !important;
+}
+:root[mode="ios"] .text-body,
+:root[mode="md"] .text-body {
+  --ion-font-family: "Domine" !important;
+  font-family: "Domine" !important;
+}
+
 .smallprint {
   font-size: 12px;
 }
 
+.text-body {
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: normal;
+}
+
+.constrain {
+  margin-left: auto;
+  margin-right: auto;
+}
+.constrain--medium {
+  max-width: 24rem;
+}
+.centered-content {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 20px;
+}
+.with-hover-cursor:hover {
+  cursor: pointer;
+}
 .swatches {
   display: flex;
   justify-content: space-around;

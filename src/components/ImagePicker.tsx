@@ -20,6 +20,7 @@ const { Camera } = Plugins;
 const ImagePicker: React.FC<{
   onImagePick: (photo: Photo) => void;
   ref: any;
+  label: string;
 }> = forwardRef((props, ref) => {
   const [takenPhoto, setTakenPhoto] = useState<Photo | null>();
 
@@ -83,9 +84,11 @@ const ImagePicker: React.FC<{
           {!takenPhoto && <h3>No photo chosen.</h3>}
           {takenPhoto && <img src={takenPhoto.preview} alt="Preview" />}
         </div>
-        <IonButton fill="clear">
+        <IonButton fill="clear" className="ion-no-margin">
           <IonIcon icon={camera} slot="start"></IonIcon>
-          <IonLabel>Take Photo</IonLabel>
+          <IonLabel>
+            <small>{props.label}</small>
+          </IonLabel>
         </IonButton>
       </div>
       <input

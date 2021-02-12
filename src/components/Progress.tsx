@@ -16,14 +16,14 @@ const Progress: React.FC<ContainerProps> = ({
   distance = 0,
 }) => {
   return (
-    <IonCard class="progress-panel">
-      <IonItem class="progress-panel__item">
+    <IonCard className="progress-panel">
+      <IonItem className="progress-panel__item">
         <IonIcon slot="start" icon={timeIcon} color="primary-contrast" />
         {time["min"]}&nbsp;<span className="smallprint">min</span>&nbsp;
         {("0" + time["sec"]).slice(-2)}&nbsp;
         <span className="smallprint">sec</span>
       </IonItem>
-      <IonItem class="progress-panel__item">
+      <IonItem className="progress-panel__item">
         <IonIcon slot="start" icon={walkIcon} color="primary-contrast" />
         {distance?.toFixed(1)}
         <span className="smallprint">&nbsp;{getUnitDistance()}</span>&nbsp;— 

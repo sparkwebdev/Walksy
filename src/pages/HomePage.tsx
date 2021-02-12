@@ -9,9 +9,6 @@ const HomePage: React.FC = () => {
       <PageHeader title="Home" />
       <IonContent>
         <IonList>
-          <IonItem routerLink="/intro">Intro</IonItem>
-          <IonItem routerLink="/login">Login</IonItem>
-          <IonItem routerLink="/register">Register</IonItem>
           <WalksList title="User Walks" type="user" />
           <WalksList title="Guided Walks" type="guided" />
         </IonList>

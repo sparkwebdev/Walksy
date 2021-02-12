@@ -3,7 +3,7 @@
   background-color: #fff;
   display: inline-flex;
   flex-direction: column;
-  padding: 10px;
+  padding: 6px 6px 0;
 }
 .image:hover {
   cursor: pointer;
@@ -19,11 +19,6 @@
   justify-content: center;
   align-items: center;
   margin: auto;
-}
-
-.image-preview h3 {
-  font-size: 1rem;
-  font-weight: normal;
 }
 
 .image-preview img {

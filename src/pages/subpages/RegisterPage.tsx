@@ -18,20 +18,33 @@ import {
   IonRow,
   IonCol,
   IonText,
+  IonCardSubtitle,
 } from "@ionic/react";
 import React, { useState } from "react";
-import { eye as eyeIcon, eyeOff as eyeOffIcon } from "ionicons/icons";
+import { Redirect } from "react-router";
+import { useAuth } from "../../auth";
+import { auth } from "../../firebase";
 import { appData } from "../../data/appData";
 import PageHeader from "../../components/PageHeader";
+import { eye as eyeIcon, eyeOff as eyeOffIcon } from "ionicons/icons";
+import { createUserProfileDocument } from "../../firebase";
+
+import { Plugins } from "@capacitor/core";
+
+const { Network } = Plugins;
 
 const RegisterPage: React.FC = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [firstname, setFirstName] = useState("");
-  const [lastname, setLastName] = useState("");
-  const [age, setAge] = useState<Number>(0);
+  const { loggedIn } = useAuth();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [firstname, setFirstName] = useState<string>("");
+  const [lastname, setLastName] = useState<string>("");
+  const [age, setAge] = useState<string>("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showPasswordIcon, sePasswordIcon] = useState(eyeIcon);
+  const [showPasswordIcon, setPasswordIcon] = useState(eyeIcon);
+  const [userHasProfile, setUserHasProfile] = useState<boolean | undefined>(
+    undefined
+  );
   const [status, setStatus] = useState({
     loading: false,
     error: false,
@@ -39,160 +52,233 @@ const RegisterPage: React.FC = () => {
   });
   const [showModal, setShowModal] = useState(false);
 
+  const getNetworkStatus = async () => {
+    let networkStatus = await Network.getStatus();
+    return networkStatus;
+  };
+
   const handleRegister = async () => {
-    if (!firstname || !lastname) {
+    setUserHasProfile(false);
+    if (!email || !password) {
       return setStatus({
         loading: false,
         error: true,
-        errorMessage: "Please enter a first name and last name",
+        errorMessage: "Please enter an email and password.",
+      });
+    } else if (password.length < 6) {
+      return setStatus({
+        loading: false,
+        error: true,
+        errorMessage: "Please enter a password with at least 6 characters.",
+      });
+    } else if (!firstname || !lastname) {
+      return setStatus({
+        loading: false,
+        error: true,
+        errorMessage: "Please enter a first name and last name.",
       });
     }
     try {
-      console.log("Authenticate here");
+      setStatus({ loading: true, error: false, errorMessage: "" });
+      console.log(getNetworkStatus());
+      const credential = await auth
+        .createUserWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          if (userCredential.user) {
+            createUserProfileDocument(userCredential.user, {
+              firstName: firstname,
+              lastName: lastname,
+              // location: location,
+              age: age,
+            });
+          } else {
+            console.log("error creating user");
+          }
+        })
+        .then(() => {
+          setUserHasProfile(true);
+        });
+      return credential;
     } catch (error) {
-      console.log("error: ", error);
       setStatus({ loading: false, error: true, errorMessage: error.message });
     }
   };
 
   const toggleShowPassword = () => {
     setShowPassword(!showPassword);
-    showPassword ? sePasswordIcon(eyeIcon) : sePasswordIcon(eyeOffIcon);
+    showPassword ? setPasswordIcon(eyeIcon) : setPasswordIcon(eyeOffIcon);
   };
 
+  if (loggedIn && userHasProfile !== false) {
+    return <Redirect to="/app/home" />;
+  }
   return (
     <IonPage>
       <PageHeader title="Register" />
-      <IonContent className="ion-padding">
-        <IonGrid>
-          <IonRow>
-            <IonCol offsetSm="2" sizeSm="8" offsetMd="3" sizeMd="6">
-              <IonCard>
-                <IonCardHeader className="ion-text-center">
-                  <IonCardTitle>Your details</IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent>
-                  <IonList>
-                    <IonItem>
-                      <IonLabel>Email</IonLabel>
-                      <IonInput
-                        type="email"
-                        value={email}
-                        onIonChange={(event) => setEmail(event.detail!.value!)}
-                      />
-                    </IonItem>
-                    <IonItem class="ion-margin-top">
-                      <IonLabel>Password</IonLabel>
-                      <IonInput
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onIonChange={(event) =>
-                          setPassword(event.detail!.value!)
-                        }
-                      />
-                      <IonIcon
-                        slot="end"
-                        icon={showPasswordIcon}
-                        onClick={() => {
-                          toggleShowPassword();
-                        }}
-                      />
-                    </IonItem>
-                    <IonItem class="ion-margin-top">
-                      <IonLabel>First Name</IonLabel>
-                      <IonInput
-                        type="text"
-                        value={firstname}
-                        onIonChange={(event) =>
-                          setFirstName(event.detail!.value!)
-                        }
-                      />
-                    </IonItem>
-                    <IonItem class="ion-margin-top">
-                      <IonLabel>Last Name</IonLabel>
-                      <IonInput
-                        type="text"
-                        value={lastname}
-                        onIonChange={(event) =>
-                          setLastName(event.detail!.value!)
-                        }
-                      />
-                    </IonItem>
-                    <IonItem class="ion-margin-top">
-                      <IonLabel>Age?</IonLabel>
-                      <IonInput
-                        type="number"
-                        value={age.toString()}
-                        onIonChange={(event) =>
-                          setAge(parseInt(event.detail!.value!))
-                        }
-                      />
-                    </IonItem>
-                  </IonList>
+      <IonContent>
+        <div className="centered-content">
+          <div className="constrain constrain--medium">
+            <IonCard>
+              <IonCardHeader className="ion-no-padding" color="tertiary">
+                <IonCardSubtitle className="ion-padding ion-text-uppercase">
+                  Your details
+                </IonCardSubtitle>
+              </IonCardHeader>
+              <IonCardContent className="ion-no-padding">
+                <IonList>
+                  <IonItem>
+                    <IonLabel position="fixed">
+                      <small>Email</small>
+                    </IonLabel>
+                    <IonInput
+                      type="email"
+                      value={email}
+                      onIonChange={(event) => setEmail(event.detail!.value!)}
+                      onIonFocus={() =>
+                        setStatus({ ...status, error: false, errorMessage: "" })
+                      }
+                    />
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel position="fixed">
+                      <small>Password</small>
+                    </IonLabel>
+                    <IonInput
+                      type={showPassword ? "text" : "password"}
+                      value={password}
+                      onIonChange={(event) => setPassword(event.detail!.value!)}
+                      onIonFocus={() =>
+                        setStatus({ ...status, error: false, errorMessage: "" })
+                      }
+                    />
+                    <IonIcon
+                      slot="end"
+                      icon={showPasswordIcon}
+                      onClick={() => {
+                        toggleShowPassword();
+                      }}
+                    />
+                  </IonItem>
+                  <IonText>
+                    <small className="ion-padding-start">
+                      &nbsp;6 characters or more.
+                    </small>
+                  </IonText>
+                  <IonItem>
+                    <IonLabel position="fixed">
+                      <small>First Name</small>
+                    </IonLabel>
+                    <IonInput
+                      type="text"
+                      value={firstname}
+                      onIonChange={(event) =>
+                        setFirstName(event.detail!.value!)
+                      }
+                      onIonFocus={() =>
+                        setStatus({ ...status, error: false, errorMessage: "" })
+                      }
+                    />
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel position="fixed">
+                      <small>Last Name</small>
+                    </IonLabel>
+                    <IonInput
+                      type="text"
+                      value={lastname}
+                      onIonChange={(event) => setLastName(event.detail!.value!)}
+                      onIonFocus={() =>
+                        setStatus({ ...status, error: false, errorMessage: "" })
+                      }
+                    />
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel position="fixed">
+                      <small>Age (optional)</small>
+                    </IonLabel>
+                    <IonInput
+                      type="number"
+                      min="1"
+                      max="135"
+                      value={age?.toString()}
+                      onIonChange={(event) => setAge(event.detail!.value!)}
+                      onIonFocus={() =>
+                        setStatus({ ...status, error: false, errorMessage: "" })
+                      }
+                    />
+                  </IonItem>
+                </IonList>
 
-                  <IonList lines="none">
-                    {status.error && (
-                      <IonItem>
-                        <IonBadge slot="start" color="danger">
-                          Error
-                        </IonBadge>
-                        <IonLabel color="danger">
-                          {status.errorMessage}
-                        </IonLabel>
-                      </IonItem>
-                    )}
-                    <IonItem class="ion-margin-top">
-                      <IonBadge slot="start" color="light">
-                        Please Note
-                      </IonBadge>
-                      <small>
-                        By registering for an account, you agree to our{" "}
-                        <IonText
-                          color="primary"
-                          onClick={() => setShowModal(true)}
-                        >
-                          Terms and Conditions
-                        </IonText>
-                      </small>
-                    </IonItem>
-                  </IonList>
-                  <IonButton
-                    class="ion-margin-top"
-                    expand="block"
-                    onClick={handleRegister}
-                  >
-                    Create Account
-                  </IonButton>
-                  <IonButton
-                    class="ion-margin-top"
-                    expand="block"
-                    fill="clear"
-                    routerLink="/login"
-                  >
-                    Already have an account?
-                  </IonButton>
-                  <IonCardContent></IonCardContent>
-                </IonCardContent>
-              </IonCard>
-            </IonCol>
-          </IonRow>
-        </IonGrid>
-
-        <IonModal isOpen={showModal}>
-          <IonContent class="ion-padding">
-            {appData.privacyPolicy}
-            <IonButton
-              expand="block"
-              class="ion-margin-top"
-              onClick={() => setShowModal(false)}
-            >
-              Close
-            </IonButton>
-          </IonContent>
-        </IonModal>
-
-        <IonLoading isOpen={status.loading} />
+                <IonList lines="none">
+                  <IonItem>
+                    <IonGrid className="ion-no-padding">
+                      {status.error && (
+                        <IonRow className="ion-margin-top ion-align-items-center">
+                          <IonCol size="12">
+                            <IonBadge color="danger">Error</IonBadge>
+                          </IonCol>
+                          <IonCol size="12">
+                            <IonText color="danger">
+                              <small>{status.errorMessage}</small>
+                            </IonText>
+                          </IonCol>
+                        </IonRow>
+                      )}
+                      <IonRow className="ion-margin-top ion-align-items-center">
+                        <IonCol size="12">
+                          <IonBadge color="warning">Please Note</IonBadge>
+                        </IonCol>
+                        <IonCol size="12">
+                          <small>
+                            By registering for an account, you agree to our{" "}
+                            <IonText
+                              color="primary"
+                              onClick={() => setShowModal(true)}
+                              className="with-hover-cursor"
+                            >
+                              Terms&nbsp;and&nbsp;Conditions
+                            </IonText>
+                          </small>
+                        </IonCol>
+                      </IonRow>
+                    </IonGrid>
+                  </IonItem>
+                </IonList>
+                <IonButton
+                  className="ion-margin"
+                  expand="block"
+                  onClick={handleRegister}
+                >
+                  Create Account
+                </IonButton>
+                <IonButton
+                  className="ion-margin"
+                  expand="block"
+                  fill="clear"
+                  routerLink="/login"
+                >
+                  Already have an account?
+                </IonButton>
+              </IonCardContent>
+            </IonCard>
+          </div>
+        </div>
       </IonContent>
+
+      <IonModal isOpen={showModal}>
+        <IonContent className="ion-padding">
+          {appData.privacyPolicy}
+          <IonButton
+            expand="block"
+            className="ion-margin-top"
+            onClick={() => setShowModal(false)}
+          >
+            Accept
+          </IonButton>
+        </IonContent>
+      </IonModal>
+
+      <IonLoading isOpen={status.loading} />
     </IonPage>
   );
 };
