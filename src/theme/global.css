@@ -1,5 +1,36 @@
+@font-face {
+  font-family: "TheanoDidot";
+  font-style: normal;
+  font-weight: normal;
+  src: url("/src/theme/fonts/TheanoDidot-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Domine";
+  font-style: normal;
+  font-weight: normal;
+  src: url("/src/theme/fonts/Domine-Variable.ttf");
+}
+
+:root[mode="ios"] .text-heading,
+:root[mode="md"] .text-heading {
+  --ion-font-family: "TheanoDidot" !important;
+  font-family: "TheanoDidot" !important;
+}
+:root[mode="ios"] .text-body,
+:root[mode="md"] .text-body {
+  --ion-font-family: "Domine" !important;
+  font-family: "Domine" !important;
+}
+
 .smallprint {
   font-size: 12px;
+}
+
+.text-body {
+  font-size: 14px;
+  line-height: 1.5;
+  font-weight: normal;
 }
 
 .constrain {
