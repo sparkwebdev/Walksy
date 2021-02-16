@@ -87,12 +87,18 @@ export function getFriendlyWalkDescriptor() {
 export function generateHslaColors(
   amount = 1,
   saturation = 95,
-  lightness = 75
+  lightness = 75,
+  randomise = false
 ) {
   let colors = [];
   let huedelta = Math.trunc(360 / amount);
+
+  var ranNum = Math.ceil(Math.random() * (180 / amount)) * (Math.round(Math.random()) ? 1 : -1);
   for (let i = 0; i < amount; i++) {
     let hue = i * huedelta;
+    if (randomise) {
+      hue = hue + ranNum;
+    }
     colors.push(hslToHex(hue, saturation, lightness));
   }
   return colors;
