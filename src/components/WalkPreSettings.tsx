@@ -27,20 +27,16 @@ const suggestedTitle = () => {
   return `${getFriendlyTimeOfDay()} ${getFriendlyWalkDescriptor()}`;
 };
 
-const walkColours = generateHslaColors(9, undefined, undefined, true);
+const colours = generateHslaColors(9, undefined, undefined, true);
 const randomColour = () => {
-  return walkColours[Math.floor(Math.random() * walkColours.length)];
+  return colours[Math.floor(Math.random() * colours.length)];
 };
 
 const WalkPreSettings: React.FC<{
-  onStart: (
-    walkTitle: string,
-    walkColour: string,
-    location?: Location | null
-  ) => void;
+  onStart: (title: string, colour: string, location?: Location | null) => void;
 }> = (props) => {
-  const [walkTitle, setWalkTitle] = useState(suggestedTitle());
-  const [walkColour, setWalkColour] = useState<string>(randomColour);
+  const [title, setTitle] = useState(suggestedTitle());
+  const [colour, setColour] = useState<string>(randomColour);
   const [location, setLocation] = useState<Location | null | undefined>(
     undefined
   );
@@ -64,7 +60,7 @@ const WalkPreSettings: React.FC<{
 
   useEffect(() => {
     if (location !== undefined) {
-      props.onStart(walkTitle, walkColour, location);
+      props.onStart(title, colour, location);
     }
   }, [location]);
 
@@ -88,8 +84,8 @@ const WalkPreSettings: React.FC<{
                 </IonLabel>
                 <IonInput
                   type="text"
-                  value={walkTitle}
-                  onIonChange={(event) => setWalkTitle(event.detail!.value!)}
+                  value={title}
+                  onIonChange={(event) => setTitle(event.detail!.value!)}
                 />
               </IonItem>
             </IonList>
@@ -99,11 +95,11 @@ const WalkPreSettings: React.FC<{
                   Give this walk a colour...
                 </IonLabel>
                 <ul className="swatches">
-                  {walkColours.map((colour) => {
+                  {colours.map((colour) => {
                     return (
                       <li
                         className={
-                          walkColour === colour
+                          colour === colour
                             ? "swatches__colour swatches__colour--chosen"
                             : "swatches__colour"
                         }
@@ -112,7 +108,7 @@ const WalkPreSettings: React.FC<{
                           background: colour,
                         }}
                         onClick={() => {
-                          setWalkColour(colour);
+                          setColour(colour);
                         }}
                       ></li>
                     );
@@ -122,12 +118,12 @@ const WalkPreSettings: React.FC<{
               <IonItem lines="none">
                 <IonInput
                   type="text"
-                  value={walkColour}
+                  value={colour}
                   className="swatches__colour swatches__colour--output"
-                  onIonChange={() => setWalkColour(walkColour)}
+                  onIonChange={() => setColour(colour)}
                   disabled={true}
                   style={{
-                    background: walkColour,
+                    background: colour,
                   }}
                 ></IonInput>
               </IonItem>
@@ -135,7 +131,7 @@ const WalkPreSettings: React.FC<{
             <IonButton
               className="ion-margin"
               expand="block"
-              disabled={walkTitle === ""}
+              disabled={title === ""}
               onClick={() => {
                 getLocation();
               }}
