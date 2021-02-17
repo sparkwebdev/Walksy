@@ -1,4 +1,4 @@
-import { IonPage, IonContent, IonList, IonItem } from "@ionic/react";
+import { IonPage, IonContent, IonList } from "@ionic/react";
 import React from "react";
 import PageHeader from "../components/PageHeader";
 import WalksList from "../components/WalksList";

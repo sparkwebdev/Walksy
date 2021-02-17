@@ -15,7 +15,6 @@ const App: React.FC = () => {
   if (loading) {
     return <IonLoading isOpen />;
   }
-  console.log("Rendering app with auth: ", auth);
 
   return (
     <IonApp>
