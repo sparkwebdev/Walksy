@@ -1,14 +1,15 @@
+// @ts-nocheck
 import React, { useState, useEffect } from "react";
 import { IonPage, IonContent, IonToast } from "@ionic/react";
 import "./NewWalk.css";
-import PageHeader from "../components/PageHeader";
 import WalkTutorial from "../components/WalkTutorial";
+import PageHeader from "../components/PageHeader";
 import WalkPreSettings from "../components/WalkPreSettings";
+import WalkInProgress from "../components/WalkInProgress";
+import WalkPostSettings from "../components/WalkPostSettings";
 import { Plugins } from "@capacitor/core";
-import { Pedometer } from "@ionic-native/pedometer";
 
 import { Location, Time } from "../data/models";
-import { getMinAndSec } from "../helpers";
 
 const { Storage } = Plugins;
 
@@ -35,10 +36,10 @@ const NewWalk: React.FC = () => {
   }, [showTutorial]);
 
   // Walk view state - Is Walking
-  const [isWalking, setIsWalking] = useState<boolean>(false);
-  const [startTime, setStartTime] = useState<string>("");
-  const [walkTitle, setWalkTitle] = useState<string>("");
-  const [walkColour, setWalkColour] = useState<string>("");
+  // const [isWalking, setIsWalking] = useState<boolean>(false);
+  const [title, setTitle] = useState<string>("");
+  const [colour, setColour] = useState<string>("");
+  const [start, setStart] = useState<string>("");
   const [startLocation, setStartLocation] = useState<Location | null>();
   const [time, setTime] = useState<Time>({
     min: 0,
@@ -46,13 +47,15 @@ const NewWalk: React.FC = () => {
   });
   const [steps, setSteps] = useState<number>(0);
   const [distance, setDistance] = useState<number>(0);
+  const [endLocation, setEndLocation] = useState<Location | null>();
+  const [end, setEnd] = useState<string>("");
 
-  const startWalkHandler = (
-    walkTitle: string,
-    walkColour: string,
+  const startHandler = (
+    title: string,
+    colour: string,
     location?: Location | null
   ) => {
-    if (location) {
+    if (location !== undefined) {
       setStartLocation(location);
     } else {
       setError({
@@ -60,32 +63,53 @@ const NewWalk: React.FC = () => {
         message: "Cannot get your location",
       });
     }
-    setWalkTitle(walkTitle);
-    setWalkColour(walkColour);
-    setStartTime(new Date().toISOString());
-    setIsWalking(true);
+    setTitle(title);
+    setColour(colour);
+    setStart(new Date().toISOString());
   };
 
-  useEffect(() => {
-    let ticker: number;
-    let seconds: number = 0;
-    if (isWalking) {
-      ticker = window.setTimeout(() => {
-        seconds++;
-        const minAndSec = getMinAndSec(seconds);
-        setTime(minAndSec);
-      }, 1000);
-      Pedometer.startPedometerUpdates().subscribe((data) => {
-        setSteps(data.numberOfSteps);
-        setDistance(data.distance / 1000); // metres to km
+  const finishHandler = (
+    time: Time,
+    steps: number,
+    distance: number,
+    endLocation?: Location | null
+  ) => {
+    if (endLocation !== undefined) {
+      setEndLocation(endLocation);
+    } else {
+      setError({
+        showError: true,
+        message: "Cannot get your location",
       });
     }
-    return () => {
-      clearInterval(ticker);
-      Pedometer.stopPedometerUpdates();
-      setIsWalking(false);
+    setTime(time);
+    setSteps(steps);
+    setDistance(distance);
+    setEnd(new Date().toISOString());
+  };
+
+  const cancelHandler = () => {
+    setStart("");
+    setEnd("");
+  };
+
+  // Walk view state - Finished Walking
+  const saveHandler = (description: string) => {
+    const saveObject = {
+      takenPhoto: null,
+      title,
+      colour,
+      description,
+      type: "user",
+      start,
+      end,
+      steps,
+      distance,
+      startLocation,
+      endLocation,
     };
-  }, [isWalking]);
+    console.log(saveObject);
+  };
 
   const [error, setError] = useState<{
     showError: boolean;
@@ -97,8 +121,28 @@ const NewWalk: React.FC = () => {
       <PageHeader title="Walk" />
       <IonContent>
         {showTutorial && <WalkTutorial onFinish={finishTutorialHandler} />}
-        {!isWalking && showTutorial === false && (
-          <WalkPreSettings onStart={startWalkHandler} />
+        {!start && !end && showTutorial === false && (
+          <WalkPreSettings onStart={startHandler} />
+        )}
+        {start && !end && (
+          <WalkInProgress
+            title={title}
+            colour={colour}
+            onCancel={cancelHandler}
+            onFinish={finishHandler}
+          />
+        )}
+        {start && end && (
+          <WalkPostSettings
+            title={title}
+            colour={colour}
+            start={start}
+            end={end}
+            time={time}
+            distance={distance}
+            steps={steps}
+            onSave={saveHandler}
+          />
         )}
       </IonContent>
       <IonToast
