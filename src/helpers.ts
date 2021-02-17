@@ -94,7 +94,7 @@ export function generateHslaColors(
   let huedelta = Math.trunc(360 / amount);
 
   var ranNum = Math.ceil(Math.random() * (180 / amount)) * (Math.round(Math.random()) ? 1 : -1);
-  for (let i = 0; i < amount; i++) {
+  for (let i = amount; i > 0; i--) {
     let hue = i * huedelta;
     if (randomise) {
       hue = hue + ranNum;

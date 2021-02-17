@@ -4,11 +4,14 @@ import {
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
+  IonCol,
+  IonGrid,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
   IonLoading,
+  IonRow,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import {
@@ -35,8 +38,8 @@ const randomColour = () => {
 const WalkPreSettings: React.FC<{
   onStart: (title: string, colour: string, location?: Location | null) => void;
 }> = (props) => {
-  const [title, setTitle] = useState(suggestedTitle());
-  const [colour, setColour] = useState<string>(randomColour);
+  const [chosenTitle, setChosenTitle] = useState(suggestedTitle());
+  const [chosenColour, setChosenColour] = useState<string>(randomColour);
   const [location, setLocation] = useState<Location | null | undefined>(
     undefined
   );
@@ -45,7 +48,7 @@ const WalkPreSettings: React.FC<{
     setLoading(true);
     try {
       const position = await Geolocation.getCurrentPosition();
-      let currentLocation = {
+      const currentLocation: Location = {
         lat: position.coords.latitude,
         long: position.coords.longitude,
         timestamp: position.timestamp,
@@ -60,7 +63,7 @@ const WalkPreSettings: React.FC<{
 
   useEffect(() => {
     if (location !== undefined) {
-      props.onStart(title, colour, location);
+      props.onStart(chosenTitle, chosenColour, location);
     }
   }, [location]);
 
@@ -70,12 +73,19 @@ const WalkPreSettings: React.FC<{
     <div className="centered-content">
       <div className="constrain constrain--medium">
         <IonCard>
-          <IonCardHeader className="ion-no-padding" color="tertiary">
-            <IonCardSubtitle className="ion-padding ion-text-uppercase">
+          <IonCardHeader
+            className="ion-no-padding"
+            style={{
+              backgroundColor: chosenColour,
+            }}
+          >
+            <IonCardSubtitle
+              className="ion-padding ion-text-uppercase"
+              color="dark"
+            >
               Start your walk...
             </IonCardSubtitle>
           </IonCardHeader>
-
           <IonCardContent className="ion-no-padding">
             <IonList>
               <IonItem>
@@ -84,8 +94,8 @@ const WalkPreSettings: React.FC<{
                 </IonLabel>
                 <IonInput
                   type="text"
-                  value={title}
-                  onIonChange={(event) => setTitle(event.detail!.value!)}
+                  value={chosenTitle}
+                  onIonChange={(event) => setChosenTitle(event.detail!.value!)}
                 />
               </IonItem>
             </IonList>
@@ -99,7 +109,7 @@ const WalkPreSettings: React.FC<{
                     return (
                       <li
                         className={
-                          colour === colour
+                          colour === chosenColour
                             ? "swatches__colour swatches__colour--chosen"
                             : "swatches__colour"
                         }
@@ -108,37 +118,50 @@ const WalkPreSettings: React.FC<{
                           background: colour,
                         }}
                         onClick={() => {
-                          setColour(colour);
+                          setChosenColour(colour);
                         }}
                       ></li>
                     );
                   })}
                 </ul>
               </IonItem>
-              <IonItem lines="none">
+              <IonItem lines="none" className="ion-hide ion-margin-bottom">
                 <IonInput
                   type="text"
-                  value={colour}
+                  value={chosenColour}
                   className="swatches__colour swatches__colour--output"
-                  onIonChange={() => setColour(colour)}
+                  onIonChange={() => setChosenColour(chosenColour)}
                   disabled={true}
-                  style={{
-                    background: colour,
-                  }}
+                  hidden={true}
+                  // style={{
+                  //   background: chosenColour,
+                  // }}
                 ></IonInput>
               </IonItem>
             </IonList>
-            <IonButton
-              className="ion-margin"
-              expand="block"
-              disabled={title === ""}
-              onClick={() => {
-                getLocation();
-              }}
-            >
-              Start
-            </IonButton>
           </IonCardContent>
+          <IonCardHeader
+            className="ion-margin-top ion-no-padding"
+            color="light"
+          >
+            <IonCardSubtitle>
+              <IonGrid>
+                <IonRow>
+                  <IonCol size="12" sizeSm="8" offsetSm="2">
+                    <IonButton
+                      expand="block"
+                      disabled={chosenTitle === ""}
+                      onClick={() => {
+                        getLocation();
+                      }}
+                    >
+                      Start
+                    </IonButton>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+            </IonCardSubtitle>
+          </IonCardHeader>
         </IonCard>
       </div>
       <IonLoading message={"Getting your location..."} isOpen={loading} />

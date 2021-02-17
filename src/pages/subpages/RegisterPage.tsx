@@ -12,7 +12,6 @@ import {
   IonModal,
   IonCard,
   IonCardHeader,
-  IonCardTitle,
   IonCardContent,
   IonGrid,
   IonRow,
