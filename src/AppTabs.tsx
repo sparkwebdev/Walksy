@@ -51,9 +51,6 @@ const AppTabs: React.FC = () => {
         </Route>
 
         <React.Suspense fallback={<IonSpinner />}>
-          <Route path="/app/walk">
-            <NewWalk />
-          </Route>
           <Route exact path="/app/walk/:id">
             <WalkPage />
           </Route>

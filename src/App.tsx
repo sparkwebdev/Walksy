@@ -9,6 +9,7 @@ import IntroPage from "./pages/subpages/IntroPage";
 import LoginPage from "./pages/subpages/LoginPage";
 import RegisterPage from "./pages/subpages/RegisterPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import NewWalk from "./pages/NewWalk";
 
 const App: React.FC = () => {
   const { loading, auth } = useAuthInit();
@@ -29,6 +30,9 @@ const App: React.FC = () => {
             </Route>
             <Route exact path="/register">
               <RegisterPage />
+            </Route>
+            <Route path="/app/walk">
+              <NewWalk />
             </Route>
             <Route path="/app">
               <AppTabs />
