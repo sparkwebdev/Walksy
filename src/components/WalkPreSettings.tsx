@@ -30,7 +30,7 @@ const suggestedTitle = () => {
   return `${getFriendlyTimeOfDay()} ${getFriendlyWalkDescriptor()}`;
 };
 
-const colours = generateHslaColors(9, undefined, undefined, true);
+const colours = generateHslaColors(14, undefined, undefined, true);
 const randomColour = () => {
   return colours[Math.floor(Math.random() * colours.length)];
 };
@@ -100,30 +100,35 @@ const WalkPreSettings: React.FC<{
               </IonItem>
             </IonList>
             <IonList lines="none">
-              <IonItem>
+              <IonItem className="ion-margin-top">
                 <IonLabel position="stacked">
                   Give this walk a colour...
                 </IonLabel>
-                <ul className="swatches">
-                  {colours.map((colour) => {
-                    return (
-                      <li
-                        className={
-                          colour === chosenColour
-                            ? "swatches__colour swatches__colour--chosen"
-                            : "swatches__colour"
-                        }
-                        key={colour}
-                        style={{
-                          background: colour,
-                        }}
-                        onClick={() => {
-                          setChosenColour(colour);
-                        }}
-                      ></li>
-                    );
-                  })}
-                </ul>
+                <IonGrid
+                  className="swatches ion-margin-top ion-justify-content-center"
+                  style={{ backgroundColor: "var(--ion-color-light)" }}
+                >
+                  <IonRow className="ion-justify-content-between">
+                    {colours.map((colour) => {
+                      return (
+                        <IonCol
+                          className={
+                            colour === chosenColour
+                              ? "swatches__colour swatches__colour--chosen"
+                              : "swatches__colour"
+                          }
+                          key={colour}
+                          style={{
+                            background: colour,
+                          }}
+                          onClick={() => {
+                            setChosenColour(colour);
+                          }}
+                        ></IonCol>
+                      );
+                    })}
+                  </IonRow>
+                </IonGrid>
               </IonItem>
               <IonItem lines="none" className="ion-hide ion-margin-bottom">
                 <IonInput
