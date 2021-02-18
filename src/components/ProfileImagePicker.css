@@ -1,0 +1,28 @@
+.image {
+  border: 1px solid #ccc;
+  background-color: #fff;
+  display: inline-flex;
+  flex-direction: column;
+  padding: 6px 6px 0;
+}
+.image:hover {
+  cursor: pointer;
+}
+
+.image-preview {
+  width: 150px;
+  max-width: 100%;
+  height: 150px;
+  border: 1px solid #ccc;
+  background-color: #eee;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
