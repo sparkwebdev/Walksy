@@ -1,5 +1,5 @@
 import React, { useState, useRef, forwardRef } from "react";
-import { IonButton, IonIcon, IonLabel } from "@ionic/react";
+import { IonButton, IonIcon, IonLabel, IonText } from "@ionic/react";
 import { camera } from "ionicons/icons";
 import {
   Plugins,
@@ -79,17 +79,17 @@ const ImagePicker: React.FC<{
 
   return (
     <React.Fragment>
-      <div className="image" onClick={takePhotoHandler}>
-        <div className="image-preview">
-          {!takenPhoto && <h3>No photo chosen.</h3>}
-          {takenPhoto && <img src={takenPhoto.preview} alt="Preview" />}
-        </div>
-        <IonButton fill="clear" className="ion-no-margin">
-          <IonIcon icon={camera} slot="start"></IonIcon>
-          <IonLabel>
-            <small>{props.label}</small>
-          </IonLabel>
-        </IonButton>
+      <div className="image-picker" onClick={takePhotoHandler}>
+        {!takenPhoto && (
+          <IonText className="image-picker__label">No photo chosen</IonText>
+        )}
+        {takenPhoto && (
+          <img
+            className="image-picker__preview"
+            src={takenPhoto.preview}
+            alt="Preview"
+          />
+        )}
       </div>
       <input
         type="file"
