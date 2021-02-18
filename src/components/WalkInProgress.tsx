@@ -106,7 +106,7 @@ const WalkInProgress: React.FC<{
             }}
           >
             <IonCardSubtitle
-              className="ion-padding ion-text-uppercase"
+              className="ion-padding ion-no-margin ion-text-uppercase"
               color="dark"
             >
               {props.title}
@@ -114,7 +114,7 @@ const WalkInProgress: React.FC<{
           </IonCardHeader>
           <IonCardContent className="ion-no-padding">
             <Progress time={time} distance={distance} steps={steps} />
-            <AddMoment />
+            <AddMoment colour={props.colour} />
           </IonCardContent>
           <IonCardHeader className="ion-no-padding" color="light">
             <IonGrid>

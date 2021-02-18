@@ -42,7 +42,7 @@ const WalkPostSettings: React.FC<{
               backgroundColor: props.colour,
             }}
           >
-            <IonCardSubtitle className="ion-padding ion-text-uppercase">
+            <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase">
               Well done!
             </IonCardSubtitle>
           </IonCardHeader>

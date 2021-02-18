@@ -119,7 +119,7 @@ const RegisterPage: React.FC = () => {
           <div className="constrain constrain--medium">
             <IonCard>
               <IonCardHeader className="ion-no-padding" color="tertiary">
-                <IonCardSubtitle className="ion-padding ion-text-uppercase">
+                <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase">
                   Your details
                 </IonCardSubtitle>
               </IonCardHeader>
