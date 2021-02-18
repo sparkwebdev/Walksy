@@ -100,7 +100,7 @@ const WalkInProgress: React.FC<{
       <div className="constrain constrain--medium">
         <IonCard>
           <IonCardHeader
-            className="ion-no-padding ion-margin-bottom"
+            className="ion-no-padding"
             style={{
               backgroundColor: props.colour,
             }}
@@ -112,59 +112,54 @@ const WalkInProgress: React.FC<{
               {props.title}
             </IonCardSubtitle>
           </IonCardHeader>
-          <IonCardContent>
+          <IonCardContent className="ion-no-padding">
             <Progress time={time} distance={distance} steps={steps} />
             <AddMoment />
           </IonCardContent>
-          <IonCardHeader
-            className="ion-margin-top ion-no-padding"
-            color="light"
-          >
-            <IonCardSubtitle>
-              <IonGrid>
-                <IonRow>
-                  <IonCol size="5">
-                    <IonButton
-                      expand="block"
-                      color="danger"
-                      onClick={() => setCancelAlert(true)}
-                    >
-                      <IonIcon slot="start" icon={cancelIcon} />
-                      Cancel
-                    </IonButton>
-                    <IonAlert
-                      header={"Cancel"}
-                      subHeader={"Are you sure?"}
-                      buttons={[
-                        {
-                          text: "No",
-                          role: "cancel",
-                        },
-                        {
-                          text: "Yes",
-                          cssClass: "secondary",
-                          handler: props.onCancel,
-                        },
-                      ]}
-                      isOpen={cancelAlert}
-                      onDidDismiss={() => setCancelAlert(false)}
-                    />
-                  </IonCol>
-                  <IonCol size="7">
-                    <IonButton
-                      expand="block"
-                      color="success"
-                      onClick={() => {
-                        setFinished(true);
-                      }}
-                    >
-                      <IonIcon slot="start" icon={finishIcon} />
-                      Finish
-                    </IonButton>
-                  </IonCol>
-                </IonRow>
-              </IonGrid>
-            </IonCardSubtitle>
+          <IonCardHeader className="ion-no-padding" color="light">
+            <IonGrid>
+              <IonRow>
+                <IonCol size="5">
+                  <IonButton
+                    expand="block"
+                    color="danger"
+                    onClick={() => setCancelAlert(true)}
+                  >
+                    <IonIcon slot="start" icon={cancelIcon} />
+                    Cancel
+                  </IonButton>
+                  <IonAlert
+                    header={"Cancel"}
+                    subHeader={"Are you sure?"}
+                    buttons={[
+                      {
+                        text: "No",
+                        role: "cancel",
+                      },
+                      {
+                        text: "Yes",
+                        cssClass: "secondary",
+                        handler: props.onCancel,
+                      },
+                    ]}
+                    isOpen={cancelAlert}
+                    onDidDismiss={() => setCancelAlert(false)}
+                  />
+                </IonCol>
+                <IonCol size="7">
+                  <IonButton
+                    expand="block"
+                    color="success"
+                    onClick={() => {
+                      setFinished(true);
+                    }}
+                  >
+                    <IonIcon slot="start" icon={finishIcon} />
+                    End Walk
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
           </IonCardHeader>
         </IonCard>
       </div>
