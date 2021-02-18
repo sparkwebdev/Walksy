@@ -1,5 +1,5 @@
 .progress-panel {
-  --ion-item-background: var(--ion-color-primary);
+  --ion-item-background: var(--ion-color-dark);
   --background-activated: var(--ion-color-primary);
   --background-focused: var(--ion-color-primary);
   --ion-item-color: var(--ion-color-primary-contrast);
