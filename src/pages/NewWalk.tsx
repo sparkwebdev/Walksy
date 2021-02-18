@@ -18,9 +18,11 @@ const NewWalk: React.FC = () => {
   const [showTutorial, setShowTutorial] = useState<boolean | undefined>(
     undefined
   );
+  const [showHelp, setShowHelp] = useState<boolean>(false);
 
   const finishTutorialHandler = () => {
     setShowTutorial(false);
+    setShowHelp(false);
     Storage.set({
       key: "showWalkTutorial",
       value: JSON.stringify(false),
@@ -36,7 +38,6 @@ const NewWalk: React.FC = () => {
   }, [showTutorial]);
 
   // Walk view state - Is Walking
-  // const [isWalking, setIsWalking] = useState<boolean>(false);
   const [title, setTitle] = useState<string>("");
   const [colour, setColour] = useState<string>("");
   const [start, setStart] = useState<string>("");
@@ -116,11 +117,25 @@ const NewWalk: React.FC = () => {
     message?: string;
   }>({ showError: false });
 
+  const getHelpHandler = () => {
+    setShowHelp(true);
+  };
+
   return (
     <IonPage>
-      <PageHeader title="Walk" />
+      {!start && !end && (
+        <PageHeader
+          title="Walk"
+          back={!start && !end}
+          showTool={!start && !end}
+          toolText="Help"
+          toolAction={getHelpHandler}
+        />
+      )}
       <IonContent>
-        {showTutorial && <WalkTutorial onFinish={finishTutorialHandler} />}
+        {(showTutorial || showHelp) && (
+          <WalkTutorial onFinish={finishTutorialHandler} />
+        )}
         {!start && !end && showTutorial === false && (
           <WalkPreSettings onStart={startHandler} />
         )}
