@@ -138,6 +138,7 @@ const WalksContextProvider: React.FC = (props) => {
         walks,
         moments,
         addMoment,
+        resetMoments,
         addWalk,
         initContext,
       }}
