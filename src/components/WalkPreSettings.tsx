@@ -30,16 +30,20 @@ const suggestedTitle = () => {
   return `${getFriendlyTimeOfDay()} ${getFriendlyWalkDescriptor()}`;
 };
 
-const colours = generateHslaColors(14, undefined, undefined, true);
-const randomColour = () => {
-  return colours[Math.floor(Math.random() * colours.length)];
-};
+let colours = generateHslaColors(14, undefined, undefined, true);
+function shift(arr: any) {
+  const shiftByRandom = Math.floor(Math.random() * colours.length);
+  return arr.map(
+    (_: any, i: any, a: any) => a[(i + a.length - shiftByRandom) % a.length]
+  );
+}
+colours = shift(colours);
 
 const WalkPreSettings: React.FC<{
   onStart: (title: string, colour: string, location?: Location | null) => void;
 }> = (props) => {
   const [chosenTitle, setChosenTitle] = useState(suggestedTitle());
-  const [chosenColour, setChosenColour] = useState<string>(randomColour);
+  const [chosenColour, setChosenColour] = useState<string>(colours[0]);
   const [location, setLocation] = useState<Location | null | undefined>(
     undefined
   );
