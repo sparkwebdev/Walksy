@@ -13,16 +13,15 @@ import {
   IonLoading,
   IonRow,
 } from "@ionic/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   generateHslaColors,
   getFriendlyTimeOfDay,
   getFriendlyWalkDescriptor,
 } from "../helpers";
-
 import { Plugins } from "@capacitor/core";
-
 import { Location } from "../data/models";
+import WalksContext from "../data/walks-context";
 
 const { Geolocation } = Plugins;
 
@@ -47,9 +46,11 @@ const WalkPreSettings: React.FC<{
   const [location, setLocation] = useState<Location | null | undefined>(
     undefined
   );
+  const walksCtx = useContext(WalksContext);
 
   const getLocation = async () => {
     setLoading(true);
+    walksCtx.resetMoments();
     try {
       const position = await Geolocation.getCurrentPosition();
       const currentLocation: Location = {
@@ -92,7 +93,7 @@ const WalkPreSettings: React.FC<{
           </IonCardHeader>
           <IonCardContent className="ion-no-padding">
             <IonList>
-              <IonItem>
+              <IonItem className="ion-margin-top">
                 <IonLabel position="stacked">
                   Give this walk a title...
                 </IonLabel>

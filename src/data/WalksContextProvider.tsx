@@ -62,6 +62,10 @@ const WalksContextProvider: React.FC = (props) => {
     });
   };
 
+  const resetMoments = () => {
+    setMoments([]);
+  };
+
   const addWalk = async (
     photo: Photo,
     title: string,
