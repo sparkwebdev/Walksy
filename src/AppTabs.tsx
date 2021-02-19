@@ -49,7 +49,6 @@ const AppTabs: React.FC = () => {
         <Route exact path="/app/home">
           <HomePage />
         </Route>
-
         <React.Suspense fallback={<IonSpinner />}>
           <Route exact path="/app/walk/:id">
             <WalkPage />
@@ -73,13 +72,13 @@ const AppTabs: React.FC = () => {
           <IonIcon icon={homeIcon} />
           <IonLabel>Home</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="walk" href="/app/walk">
-          <IonIcon icon={walkIcon} />
-          <IonLabel>Walk</IonLabel>
-        </IonTabButton>
         <IonTabButton tab="dashboard" href="/app/dashboard">
           <IonIcon icon={personIcon} />
           <IonLabel>Dashboard</IonLabel>
+        </IonTabButton>
+        <IonTabButton tab="walk" href="/app/new-walk">
+          <IonIcon icon={walkIcon} />
+          <IonLabel>Walk</IonLabel>
         </IonTabButton>
         <IonTabButton tab="discover" href="/app/discover">
           <IonIcon icon={imagesIcon} />

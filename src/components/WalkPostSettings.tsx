@@ -37,7 +37,6 @@ const WalkPostSettings: React.FC<{
         <IonCard>
           <IonCardHeader
             className="ion-no-padding"
-            color="tertiary"
             style={{
               backgroundColor: props.colour,
             }}

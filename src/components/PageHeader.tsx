@@ -30,8 +30,8 @@ const PageHeader: React.FC<ContainerProps> = ({
     <IonHeader>
       <IonToolbar>
         {back && (
-          <IonButtons slot="start">
-            <IonBackButton defaultHref="/app/home" />
+          <IonButtons slot="secondary">
+            <IonBackButton defaultHref="/app/home" text="" />
           </IonButtons>
         )}
         <IonTitle className="ion-text-center">{title}</IonTitle>

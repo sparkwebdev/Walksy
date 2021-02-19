@@ -31,7 +31,7 @@ const App: React.FC = () => {
             <Route exact path="/register">
               <RegisterPage />
             </Route>
-            <Route path="/app/walk">
+            <Route path="/app/new-walk">
               <NewWalk />
             </Route>
             <Route path="/app">
