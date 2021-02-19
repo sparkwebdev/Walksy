@@ -5,6 +5,8 @@ import { base64FromPath } from "@ionic/react-hooks/filesystem";
 import WalksContext, { Walk, WalkType, Moment } from "./walks-context";
 import { Photo } from "../components/ImagePicker";
 
+import { Location } from "../data/models";
+
 const { Storage, Filesystem } = Plugins;
 
 const WalksContextProvider: React.FC = (props) => {
@@ -33,9 +35,7 @@ const WalksContextProvider: React.FC = (props) => {
   const addMoment = async (
     photo: Photo | null,
     note: string,
-    lat: number,
-    long: number,
-    timestamp: number
+    location: Location | null
   ) => {
     let fileName = null;
     if (photo) {
@@ -49,13 +49,11 @@ const WalksContextProvider: React.FC = (props) => {
     }
 
     const newMoment: Moment = {
-      id: Math.random().toString(),
+      id: new Date().getTime().toString(),
       imagePath: fileName,
       // base64Url: base64,
-      note: note,
-      lat: lat,
-      long: long,
-      timestamp: timestamp,
+      note,
+      location,
     };
     setMoments((curWalks) => {
       return [...curWalks, newMoment];
@@ -87,7 +85,7 @@ const WalksContextProvider: React.FC = (props) => {
     });
 
     const newWalk: Walk = {
-      id: Math.random().toString(),
+      id: new Date().getTime().toString(),
       title,
       colour,
       description,
