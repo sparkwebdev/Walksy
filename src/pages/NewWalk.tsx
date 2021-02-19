@@ -1,6 +1,7 @@
 // @ts-nocheck
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { IonPage, IonContent, IonToast } from "@ionic/react";
+import { useHistory } from "react-router-dom";
 import "./NewWalk.css";
 import WalkTutorial from "../components/WalkTutorial";
 import PageHeader from "../components/PageHeader";
@@ -10,15 +11,20 @@ import WalkPostSettings from "../components/WalkPostSettings";
 import { Plugins } from "@capacitor/core";
 
 import { Location, Time } from "../data/models";
+import WalksContext from "../data/walks-context";
 
 const { Storage } = Plugins;
 
 const NewWalk: React.FC = () => {
+  const history = useHistory();
   // Walk view state - Tutorial
   const [showTutorial, setShowTutorial] = useState<boolean | undefined>(
     undefined
   );
   const [showHelp, setShowHelp] = useState<boolean>(false);
+  const walksCtx = useContext(WalksContext);
+
+  const moments = walksCtx.moments;
 
   const finishTutorialHandler = () => {
     setShowTutorial(false);
@@ -96,20 +102,19 @@ const NewWalk: React.FC = () => {
 
   // Walk view state - Finished Walking
   const saveHandler = (description: string) => {
-    const saveObject = {
-      takenPhoto: null,
+    walksCtx.addWalk(
+      // null,
       title,
       colour,
       description,
-      type: "user",
+      "user",
       start,
       end,
       steps,
-      distance,
-      startLocation,
-      endLocation,
-    };
-    console.log(saveObject);
+      distance
+      // [startLocation, endLocation]
+    );
+    history.replace("/app/home");
   };
 
   const [error, setError] = useState<{
@@ -127,7 +132,7 @@ const NewWalk: React.FC = () => {
         <PageHeader
           title="Walk"
           back={!start && !end}
-          showTool={!start && !end}
+          showTool={!start && !end && !showTutorial}
           toolText="Help"
           toolAction={getHelpHandler}
         />
@@ -136,7 +141,7 @@ const NewWalk: React.FC = () => {
         {(showTutorial || showHelp) && (
           <WalkTutorial onFinish={finishTutorialHandler} />
         )}
-        {!start && !end && showTutorial === false && (
+        {!start && !end && showTutorial === false && !showHelp && (
           <WalkPreSettings onStart={startHandler} />
         )}
         {start && !end && (
