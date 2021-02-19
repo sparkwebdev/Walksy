@@ -3,11 +3,12 @@ import {
   IonButton,
   IonButtons,
   IonHeader,
+  IonIcon,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
-import { attachProps } from "@ionic/react/dist/types/components/utils";
 import { useLocation } from "react-router-dom";
+import { settingsOutline as settingsIcon } from "ionicons/icons";
 
 interface ContainerProps {
   title: string;
@@ -44,6 +45,13 @@ const PageHeader: React.FC<ContainerProps> = ({
               >
                 {toolText}
               </span>
+            </IonButton>
+          </IonButtons>
+        )}
+        {!showTool && !toolAction && (
+          <IonButtons slot="primary">
+            <IonButton href="/app/settings">
+              <IonIcon slot="icon-only" icon={settingsIcon} size="small" />
             </IonButton>
           </IonButtons>
         )}
