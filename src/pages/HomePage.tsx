@@ -8,10 +8,8 @@ const HomePage: React.FC = () => {
     <IonPage>
       <PageHeader title="Home" />
       <IonContent>
-        <IonList>
-          <WalksList title="User Walks" type="user" />
-          <WalksList title="Guided Walks" type="guided" />
-        </IonList>
+        <WalksList title="" type="user" />
+        <WalksList title="Guided Walks" type="guided" />
       </IonContent>
     </IonPage>
   );

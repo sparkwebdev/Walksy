@@ -3,12 +3,16 @@ import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 dayjs.extend(isSameOrAfter);
 
 /* Date/time functions */
-export function formatDate(isoString: string) {
-  return new Date(isoString).toLocaleDateString("en-GB", {
+export function formatDate(isoString: string, showYear: boolean = true) {
+  const format = showYear ? {
     day: "numeric",
     month: "short",
     year: "numeric",
-  });
+  } : {
+    day: "numeric",
+    month: "short",
+  }
+  return new Date(isoString).toLocaleDateString("en-GB", format);
 }
 export function formatTime(isoString: string) {
   return new Date(isoString).toLocaleDateString("en-GB", {
