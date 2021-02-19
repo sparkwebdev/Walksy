@@ -64,7 +64,7 @@ const LoginPage: React.FC = () => {
           <div className="constrain constrain--medium">
             <IonCard>
               <IonCardHeader className="ion-no-padding" color="tertiary">
-                <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase">
+                <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
                   Your details
                 </IonCardSubtitle>
               </IonCardHeader>

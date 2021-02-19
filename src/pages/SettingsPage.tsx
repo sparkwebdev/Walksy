@@ -72,7 +72,7 @@ const SettingsPage: React.FC = () => {
                 <IonGrid className="ion-no-padding">
                   <IonRow className="ion-align-items-center">
                     <IonCol>
-                      <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase">
+                      <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
                         Your Profile
                       </IonCardSubtitle>
                     </IonCol>
@@ -159,7 +159,7 @@ const SettingsPage: React.FC = () => {
             </IonCard>
             <IonCard className="ion-padding-bottom constrain-medium">
               <IonCardHeader className="ion-no-padding" color="tertiary">
-                <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase">
+                <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
                   Your Preferences
                 </IonCardSubtitle>
               </IonCardHeader>
@@ -194,7 +194,7 @@ const SettingsPage: React.FC = () => {
                 <IonGrid className="ion-no-padding">
                   <IonRow className="ion-align-items-center">
                     <IonCol>
-                      <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase">
+                      <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
                         Your Account
                       </IonCardSubtitle>
                     </IonCol>

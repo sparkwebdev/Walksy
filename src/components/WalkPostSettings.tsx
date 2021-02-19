@@ -42,20 +42,18 @@ const WalkPostSettings: React.FC<{
               backgroundColor: props.colour,
             }}
           >
-            <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase">
+            <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
               Well done!
             </IonCardSubtitle>
           </IonCardHeader>
           <IonCardContent className="ion-no-padding">
-            <div className="ion-padding">
-              <Progress
-                time={props.time}
-                distance={props.distance}
-                steps={props.steps}
-              />
-            </div>
+            <Progress
+              time={props.time}
+              distance={props.distance}
+              steps={props.steps}
+            />
             <IonList>
-              <IonItem>
+              <IonItem className="ion-margin-top">
                 <IonLabel position="stacked">
                   Give this walk a short description...
                 </IonLabel>

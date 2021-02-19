@@ -80,7 +80,7 @@ const WalkPreSettings: React.FC<{
             }}
           >
             <IonCardSubtitle
-              className="ion-padding ion-no-margin ion-text-uppercase"
+              className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
               color="dark"
             >
               Start your walk...
