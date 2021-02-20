@@ -30,7 +30,7 @@ const PageHeader: React.FC<ContainerProps> = ({
     <IonHeader>
       <IonToolbar>
         {back && (
-          <IonButtons slot="secondary">
+          <IonButtons slot="start">
             <IonBackButton defaultHref="/app/home" text="" />
           </IonButtons>
         )}
@@ -49,7 +49,7 @@ const PageHeader: React.FC<ContainerProps> = ({
           </IonButtons>
         )}
         {!showTool && !toolAction && (
-          <IonButtons slot="primary">
+          <IonButtons slot="end">
             <IonButton href="/app/settings">
               <IonIcon slot="icon-only" icon={settingsIcon} size="small" />
             </IonButton>
