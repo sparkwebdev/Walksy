@@ -15,7 +15,6 @@ import {
   IonRow,
   IonText,
   IonTextarea,
-  IonTitle,
 } from "@ionic/react";
 import React, { useState, useRef, useContext, useEffect } from "react";
 import ImagePicker from "../components/ImagePicker";
