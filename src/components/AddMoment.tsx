@@ -170,7 +170,6 @@ const AddMoment: React.FC<{
                     <ImagePicker
                       onImagePick={photoPickHandler}
                       ref={filePickerChildRef}
-                      label="Add photo"
                     ></ImagePicker>
                   )}
                   {addMomentCurrent === "Audio" && (

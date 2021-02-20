@@ -20,7 +20,6 @@ const { Camera } = Plugins;
 const ImagePicker: React.FC<{
   onImagePick: (photo: Photo) => void;
   ref: any;
-  label: string;
 }> = forwardRef((props, ref) => {
   const [takenPhoto, setTakenPhoto] = useState<Photo | null>();
 

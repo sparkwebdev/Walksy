@@ -16,7 +16,7 @@ const WalkPage: React.FC = () => {
   const walk = walksCtx.walks.find((walk) => walk.id === id);
   return (
     <IonPage>
-      <PageHeader title="Walk" />
+      <PageHeader title="Walk" back={true} />
       <IonContent>
         <WalkItem
           image={walk!.base64Url}

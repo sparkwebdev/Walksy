@@ -21,7 +21,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { auth } from "../firebase";
 import { useAuth } from "../auth";
 import { firestore } from "../firebase";
-import ImagePicker, { Photo } from "../components/ImagePicker";
+import ProfileImagePicker, { Photo } from "../components/ProfileImagePicker";
 import PageHeader from "../components/PageHeader";
 
 const SettingsPage: React.FC = () => {
@@ -114,7 +114,7 @@ const SettingsPage: React.FC = () => {
               </IonCardHeader>
               <IonCardContent className="ion-no-padding">
                 <div className="ion-margin">
-                  <ImagePicker
+                  <ProfileImagePicker
                     onImagePick={photoPickHandler}
                     ref={filePickerChildRef}
                     label="Change photo"
