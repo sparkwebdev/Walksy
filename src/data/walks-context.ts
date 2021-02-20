@@ -1,32 +1,6 @@
 import React from 'react';
 
-import { Photo } from '../components/ImagePicker';
-import { Location } from './models';
-
-export type WalkType = 'user' | 'guided';
-
-export interface Moment {
-  id: string;
-  imagePath: string | null;
-  note: string;
-  location: Location | null;
-  // base64Url: string;
-}
-
-export interface Walk {
-  id: string;
-  imagePath: string;
-  title: string;
-  colour: string;
-  description: string;
-  type: WalkType;
-  startTime: string;
-  endTime: string;
-  steps: number;
-  distance: number;
-  base64Url: string;
-  moments: Moment[];
-}
+import { Photo, Location, WalkType, Walk, Moment } from "../data/models";
 
 const WalksContext = React.createContext<{
   walks: Walk[];

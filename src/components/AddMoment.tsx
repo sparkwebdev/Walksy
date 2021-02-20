@@ -18,7 +18,9 @@ import {
   IonTitle,
 } from "@ionic/react";
 import React, { useState, useRef, useContext, useEffect } from "react";
-import ImagePicker, { Photo } from "../components/ImagePicker";
+import ImagePicker from "../components/ImagePicker";
+import { Photo } from "../data/models";
+
 import WalksContext from "../data/walks-context";
 
 import { Plugins } from "@capacitor/core";

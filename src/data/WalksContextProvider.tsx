@@ -2,10 +2,8 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Plugins, FilesystemDirectory } from "@capacitor/core";
 import { base64FromPath } from "@ionic/react-hooks/filesystem";
 
-import WalksContext, { Walk, WalkType, Moment } from "./walks-context";
-import { Photo } from "../components/ImagePicker";
-
-import { Location } from "../data/models";
+import WalksContext from "./walks-context";
+import { Photo, Location, Walk, WalkType, Moment } from "../data/models";
 
 const { Storage, Filesystem } = Plugins;
 

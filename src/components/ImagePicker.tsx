@@ -7,13 +7,9 @@ import {
   CameraSource,
   Capacitor,
 } from "@capacitor/core";
+import { Photo } from "../data/models";
 
 import "./ImagePicker.css";
-
-export interface Photo {
-  path: string | undefined;
-  preview: string;
-}
 
 const { Camera } = Plugins;
 

@@ -15,7 +15,7 @@ import {
 import "./WalkItem.css";
 import { getUnitDistance } from "../helpers";
 
-import { Moment } from "../data/walks-context";
+import { Moment } from "../data/models";
 
 import {
   chevronDown as chevronDownIcon,
