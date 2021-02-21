@@ -8,7 +8,7 @@ import {
   IonToolbar,
 } from "@ionic/react";
 import { useLocation } from "react-router-dom";
-import { settingsOutline as settingsIcon } from "ionicons/icons";
+import { informationCircleOutline as informationIcon } from "ionicons/icons";
 
 interface ContainerProps {
   title: string;
@@ -35,7 +35,7 @@ const PageHeader: React.FC<ContainerProps> = ({
           </IonButtons>
         )}
         <IonTitle className="ion-text-center">{title}</IonTitle>
-        {location.pathname === "/app/walk" && showTool && toolAction && (
+        {location.pathname === "/app/new-walk" && showTool && toolAction && (
           <IonButtons slot="end">
             <IonButton>
               <span
@@ -50,8 +50,8 @@ const PageHeader: React.FC<ContainerProps> = ({
         )}
         {!showTool && !toolAction && (
           <IonButtons slot="end">
-            <IonButton href="/app/settings">
-              <IonIcon slot="icon-only" icon={settingsIcon} size="small" />
+            <IonButton href="/app/about">
+              <IonIcon slot="icon-only" icon={informationIcon} />
             </IonButton>
           </IonButtons>
         )}

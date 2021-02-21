@@ -5,7 +5,7 @@ import PageHeader from "../components/PageHeader";
 const DashboardPage: React.FC = () => {
   return (
     <IonPage>
-      <PageHeader title="Dashboard" />
+      <PageHeader title="My Walks" />
       <IonContent></IonContent>
     </IonPage>
   );

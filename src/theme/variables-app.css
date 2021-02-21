@@ -3,8 +3,8 @@
   --ion-toolbar-background: var(--ion-color-primary);
   --ion-toolbar-color: var(--ion-color-primary-contrast);
   --ion-tab-bar-background: var(--ion-color-secondary);
-  --ion-tab-bar-color: var(--ion-color-primary-contrast);
-  --ion-tab-bar-color-selected: var(--ion-color-tertiary);
+  --ion-tab-bar-color: var(--ion-color-tertiary);
+  --ion-tab-bar-color-selected: var(--ion-color-primary);
 }
 
 ion-content {
@@ -19,7 +19,36 @@ ion-list {
 
 :root * {
   border-radius: 0 !important;
+  /* font-family: "Domine"; */
 }
 ion-button {
   border-radius: 0;
+}
+
+ion-header ion-title,
+ion-card-subtitle {
+  font-family: "Domine" !important;
+  font-weight: bold;
+}
+
+ion-tab-bar {
+  height: 68px;
+}
+ion-tab-button ion-icon {
+  position: relative;
+  height: 1.8em;
+  width: 1.8em;
+  background: var(--ion-color-medium);
+}
+:root ion-tab-button ion-icon {
+  border-radius: 5px !important;
+}
+ion-tab-button ion-icon .ion-inner {
+  border: solid red;
+}
+ion-tab-button ion-label {
+  font-size: 15px;
+  font-weight: bold;
+  font-family: "TheanoDidot" !important;
+  color: var(--ion-color-medium);
 }

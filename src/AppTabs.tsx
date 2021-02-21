@@ -5,7 +5,6 @@ import {
   IonTabButton,
   IonLabel,
   IonIcon,
-  IonSpinner,
 } from "@ionic/react";
 import React, { useContext, useEffect } from "react";
 import { Redirect, Route } from "react-router";
@@ -18,12 +17,11 @@ import DiscoverPage from "./pages/DiscoverPage";
 import SettingsPage from "./pages/SettingsPage";
 
 import {
-  home as homeIcon,
-  walk as walkIcon,
-  person as personIcon,
-  images as imagesIcon,
-  information as informationIcon,
-  settings as settingsIcon,
+  eye as browseIcon,
+  analytics as discoverIcon,
+  footsteps as walkIcon,
+  time as dashboardIcon,
+  person as profileIcon,
 } from "ionicons/icons";
 
 import WalksContext from "./data/walks-context";
@@ -69,24 +67,24 @@ const AppTabs: React.FC = () => {
       </IonRouterOutlet>
       <IonTabBar slot="bottom">
         <IonTabButton tab="home" href="/app/home">
-          <IonIcon icon={homeIcon} />
-          <IonLabel>Home</IonLabel>
+          <IonIcon icon={browseIcon} />
+          <IonLabel>Browse</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="dashboard" href="/app/dashboard">
-          <IonIcon icon={personIcon} />
-          <IonLabel>Dashboard</IonLabel>
+        <IonTabButton tab="discover" href="/app/discover">
+          <IonIcon icon={discoverIcon} />
+          <IonLabel>Discover</IonLabel>
         </IonTabButton>
         <IonTabButton tab="walk" href="/app/new-walk">
           <IonIcon icon={walkIcon} />
           <IonLabel>Walk</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="discover" href="/app/discover">
-          <IonIcon icon={imagesIcon} />
-          <IonLabel>Discover</IonLabel>
+        <IonTabButton tab="dashboard" href="/app/dashboard">
+          <IonIcon icon={dashboardIcon} />
+          <IonLabel>My Walks</IonLabel>
         </IonTabButton>
-        <IonTabButton tab="about" href="/app/about">
-          <IonIcon icon={informationIcon} />
-          <IonLabel>About</IonLabel>
+        <IonTabButton tab="about" href="/app/settings">
+          <IonIcon icon={profileIcon} />
+          <IonLabel>Profile</IonLabel>
         </IonTabButton>
       </IonTabBar>
     </IonTabs>
