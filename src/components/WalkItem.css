@@ -18,3 +18,7 @@
 .walk-item__content * {
   color: var(--ion-color-dark-contrast);
 }
+
+.walk-item__moment-image {
+  display: block;
+}
