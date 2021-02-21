@@ -9,7 +9,7 @@ const HomePage: React.FC = () => {
       <PageHeader title="Home" />
       <IonContent>
         <WalksList title="" type="user" />
-        <WalksList title="Guided Walks" type="guided" />
+        <WalksList title="" type="guided" />
       </IonContent>
     </IonPage>
   );

@@ -1,14 +1,10 @@
 import {
   IonPage,
   IonContent,
-  IonHeader,
-  IonTitle,
-  IonToolbar,
   IonCard,
   IonCardHeader,
   IonCardSubtitle,
   IonCardContent,
-  IonText,
 } from "@ionic/react";
 import React from "react";
 import PageHeader from "../components/PageHeader";

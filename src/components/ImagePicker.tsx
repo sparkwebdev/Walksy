@@ -1,6 +1,5 @@
 import React, { useState, useRef, forwardRef } from "react";
-import { IonButton, IonIcon, IonLabel, IonText } from "@ionic/react";
-import { camera } from "ionicons/icons";
+import { IonText } from "@ionic/react";
 import {
   Plugins,
   CameraResultType,

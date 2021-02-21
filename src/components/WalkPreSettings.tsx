@@ -100,9 +100,13 @@ const WalkPreSettings: React.FC<{
                 <IonInput
                   type="text"
                   value={chosenTitle}
+                  maxlength={40}
                   onIonChange={(event) => setChosenTitle(event.detail!.value!)}
                 />
               </IonItem>
+              <p className="ion-padding-start">
+                <small>{40 - chosenTitle.length} characters remaining</small>
+              </p>
             </IonList>
             <IonList lines="none">
               <IonItem className="ion-margin-top">

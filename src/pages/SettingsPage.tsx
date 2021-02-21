@@ -21,7 +21,8 @@ import React, { useEffect, useState, useRef } from "react";
 import { auth } from "../firebase";
 import { useAuth } from "../auth";
 import { firestore } from "../firebase";
-import ProfileImagePicker, { Photo } from "../components/ProfileImagePicker";
+import ProfileImagePicker from "../components/ProfileImagePicker";
+import { Photo } from "../data/models";
 import PageHeader from "../components/PageHeader";
 
 const SettingsPage: React.FC = () => {
@@ -32,7 +33,7 @@ const SettingsPage: React.FC = () => {
   // const [location, setLocation] = useState("");
   const [distance, setDistance] = useState("");
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  // const [password, setPassword] = useState("");
   const [metric, setMetric] = useState(true);
   const [editing, setEditing] = useState(false);
 

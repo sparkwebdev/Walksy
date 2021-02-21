@@ -24,8 +24,6 @@ const NewWalk: React.FC = () => {
   const [showHelp, setShowHelp] = useState<boolean>(false);
   const walksCtx = useContext(WalksContext);
 
-  const moments = walksCtx.moments;
-
   const finishTutorialHandler = () => {
     setShowTutorial(false);
     setShowHelp(false);
