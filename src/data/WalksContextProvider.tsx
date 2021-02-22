@@ -3,12 +3,11 @@ import { Plugins, FilesystemDirectory } from "@capacitor/core";
 import { base64FromPath } from "@ionic/react-hooks/filesystem";
 
 import WalksContext from "./walks-context";
-import { Photo, Location, Walk, WalkType, Moment } from "../data/models";
+import { Walk, WalkType, Moment } from "../data/models";
 
 const { Storage, Filesystem } = Plugins;
 
 const WalksContextProvider: React.FC = (props) => {
-  const [moments, setMoments] = useState<Moment[]>([]);
   const [walks, setWalks] = useState<Walk[]>([]);
 
   useEffect(() => {
@@ -23,42 +22,11 @@ const WalksContextProvider: React.FC = (props) => {
         endTime: walk.endTime,
         steps: walk.steps,
         distance: walk.distance,
-        moments: moments,
+        moments: walk.moments,
       };
     });
     Storage.set({ key: "walks", value: JSON.stringify(storableWalks) });
   }, [walks]);
-
-  const addMoment = async (
-    photo: Photo | null,
-    note: string,
-    location: Location | null
-  ) => {
-    let fileName = null;
-    if (photo !== null) {
-      const base64 = await base64FromPath(photo.preview);
-      fileName = new Date().getTime() + ".jpeg";
-      Filesystem.writeFile({
-        path: fileName,
-        data: base64,
-        directory: FilesystemDirectory.Data,
-      });
-    }
-
-    const newMoment: Moment = {
-      id: new Date().getTime().toString(),
-      imagePath: fileName,
-      note,
-      location,
-    };
-    setMoments((curWalks) => {
-      return [...curWalks, newMoment];
-    });
-  };
-
-  const resetMoments = () => {
-    setMoments([]);
-  };
 
   const addWalk = async (
     title: string,
@@ -68,7 +36,8 @@ const WalksContextProvider: React.FC = (props) => {
     startTime: string,
     endTime: string,
     steps: number,
-    distance: number
+    distance: number,
+    moments: Moment[] | null
   ) => {
     /* Redundant — needs fixed */
     const fileName = new Date().getTime() + ".jpeg";
@@ -90,7 +59,7 @@ const WalksContextProvider: React.FC = (props) => {
       endTime,
       steps,
       distance,
-      moments: moments,
+      moments,
     };
     setWalks((curWalks) => {
       return [...curWalks, newWalk];
@@ -122,9 +91,6 @@ const WalksContextProvider: React.FC = (props) => {
     <WalksContext.Provider
       value={{
         walks,
-        moments,
-        addMoment,
-        resetMoments,
         addWalk,
         initContext,
       }}
