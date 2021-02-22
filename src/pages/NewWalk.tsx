@@ -146,6 +146,7 @@ const NewWalk: React.FC = () => {
           <WalkInProgress
             title={title}
             colour={colour}
+            start={start}
             onCancel={cancelHandler}
             onFinish={finishHandler}
           />

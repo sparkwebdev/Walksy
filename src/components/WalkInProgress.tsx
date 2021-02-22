@@ -16,7 +16,7 @@ import Progress from "./Progress";
 
 import { Plugins } from "@capacitor/core";
 import { Pedometer } from "@ionic-native/pedometer";
-import { getMinAndSec } from "../helpers";
+import { getMinAndSec, getTimeDiff } from "../helpers";
 
 import { Time, Location } from "../data/models";
 
@@ -28,6 +28,7 @@ const { Geolocation } = Plugins;
 const WalkInProgress: React.FC<{
   title: string;
   colour: string;
+  start: string;
   onCancel: () => void;
   onFinish: (
     time: Time,
@@ -68,10 +69,12 @@ const WalkInProgress: React.FC<{
   useEffect(() => {
     let ticker: any = null;
     if (!finished) {
-      let seconds: number = 0;
+      // let seconds: number = 0;
       ticker = setInterval(() => {
-        seconds++;
-        const minAndSec = getMinAndSec(seconds);
+        // seconds++;
+        const timeDiff = getTimeDiff(props.start, new Date().toISOString());
+        // const minAndSec = getMinAndSec(seconds);
+        const minAndSec = getMinAndSec(timeDiff);
         setTime(minAndSec);
       }, 1000);
       Pedometer.startPedometerUpdates().subscribe((data) => {
