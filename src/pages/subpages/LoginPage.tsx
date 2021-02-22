@@ -71,7 +71,7 @@ const LoginPage: React.FC = () => {
               <IonCardContent className="ion-no-padding">
                 <IonList>
                   <IonItem>
-                    <IonLabel position="fixed">
+                    <IonLabel position="stacked">
                       <small>Email</small>
                     </IonLabel>
                     <IonInput
@@ -84,7 +84,7 @@ const LoginPage: React.FC = () => {
                     />
                   </IonItem>
                   <IonItem>
-                    <IonLabel position="fixed">
+                    <IonLabel position="stacked">
                       <small>Password</small>
                     </IonLabel>
                     <IonInput

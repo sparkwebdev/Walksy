@@ -26,7 +26,9 @@
 .smallprint {
   font-size: 12px;
 }
-
+small {
+  font-size: 12px;
+}
 .text-body {
   font-size: 14px;
   line-height: 1.5;

@@ -1,7 +1,9 @@
 ion-slides {
   height: 100%;
 }
-
+.swiper-pagination {
+  margin-bottom: 20px;
+}
 .swiper-pagination-bullet,
 .swiper-pagination-bullet-active {
   background: var(--ion-color-primary);
@@ -13,7 +15,7 @@ ion-slides {
 .swiper-slide {
   flex-direction: column;
   padding-top: 20px;
-  padding-bottom: 40px;
+  padding-bottom: 50px;
 }
 .swiper-slide img {
   display: block;
@@ -21,7 +23,7 @@ ion-slides {
   max-width: 80%;
 }
 .swiper-slide .intro__panel {
-  max-height: 50vh;
+  max-height: 45vh;
 }
 .swiper-slide .intro__logo {
   max-height: 15vh;
@@ -34,7 +36,7 @@ ion-slides {
   margin: 0 auto;
 }
 .swiper-slide .intro__panel-2 {
-  max-height: 35vh;
+  max-height: 28vh;
 }
 
 .intro__skip {

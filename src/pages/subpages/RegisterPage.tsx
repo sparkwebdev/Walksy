@@ -58,7 +58,13 @@ const RegisterPage: React.FC = () => {
 
   const handleRegister = async () => {
     setUserHasProfile(false);
-    if (!email || !password) {
+    if (!firstname || !lastname) {
+      return setStatus({
+        loading: false,
+        error: true,
+        errorMessage: "Please enter a first name and last name.",
+      });
+    } else if (!email || !password) {
       return setStatus({
         loading: false,
         error: true,
@@ -69,12 +75,6 @@ const RegisterPage: React.FC = () => {
         loading: false,
         error: true,
         errorMessage: "Please enter a password with at least 6 characters.",
-      });
-    } else if (!firstname || !lastname) {
-      return setStatus({
-        loading: false,
-        error: true,
-        errorMessage: "Please enter a first name and last name.",
       });
     }
     try {
@@ -125,8 +125,79 @@ const RegisterPage: React.FC = () => {
               </IonCardHeader>
               <IonCardContent className="ion-no-padding">
                 <IonList>
+                  <IonGrid className="ion-no-padding">
+                    <IonRow>
+                      <IonCol>
+                        <IonItem>
+                          <IonLabel position="stacked">
+                            <small>First Name</small>
+                          </IonLabel>
+                          <IonInput
+                            type="text"
+                            value={firstname}
+                            onIonChange={(event) =>
+                              setFirstName(event.detail!.value!)
+                            }
+                            onIonFocus={() =>
+                              setStatus({
+                                ...status,
+                                error: false,
+                                errorMessage: "",
+                              })
+                            }
+                          />
+                        </IonItem>
+                      </IonCol>
+                      <IonCol>
+                        <IonItem>
+                          <IonLabel position="stacked">
+                            <small>Last Name</small>
+                          </IonLabel>
+                          <IonInput
+                            type="text"
+                            value={lastname}
+                            onIonChange={(event) =>
+                              setLastName(event.detail!.value!)
+                            }
+                            onIonFocus={() =>
+                              setStatus({
+                                ...status,
+                                error: false,
+                                errorMessage: "",
+                              })
+                            }
+                          />
+                        </IonItem>
+                      </IonCol>
+                    </IonRow>
+                    <IonRow>
+                      <IonCol size="6">
+                        <IonItem>
+                          <IonLabel position="stacked">
+                            <small>Age (optional)</small>
+                          </IonLabel>
+                          <IonInput
+                            type="number"
+                            min="1"
+                            max="135"
+                            value={age?.toString()}
+                            onIonChange={(event) =>
+                              setAge(event.detail!.value!)
+                            }
+                            onIonFocus={() =>
+                              setStatus({
+                                ...status,
+                                error: false,
+                                errorMessage: "",
+                              })
+                            }
+                          />
+                        </IonItem>
+                      </IonCol>
+                    </IonRow>
+                  </IonGrid>
                   <IonItem>
-                    <IonLabel position="fixed">
+                    <IonLabel position="stacked">
                       <small>Email</small>
                     </IonLabel>
                     <IonInput
@@ -139,7 +210,7 @@ const RegisterPage: React.FC = () => {
                     />
                   </IonItem>
                   <IonItem>
-                    <IonLabel position="fixed">
+                    <IonLabel position="stacked">
                       <small>Password</small>
                     </IonLabel>
                     <IonInput
@@ -163,49 +234,6 @@ const RegisterPage: React.FC = () => {
                       &nbsp;6 characters or more.
                     </small>
                   </IonText>
-                  <IonItem>
-                    <IonLabel position="fixed">
-                      <small>First Name</small>
-                    </IonLabel>
-                    <IonInput
-                      type="text"
-                      value={firstname}
-                      onIonChange={(event) =>
-                        setFirstName(event.detail!.value!)
-                      }
-                      onIonFocus={() =>
-                        setStatus({ ...status, error: false, errorMessage: "" })
-                      }
-                    />
-                  </IonItem>
-                  <IonItem>
-                    <IonLabel position="fixed">
-                      <small>Last Name</small>
-                    </IonLabel>
-                    <IonInput
-                      type="text"
-                      value={lastname}
-                      onIonChange={(event) => setLastName(event.detail!.value!)}
-                      onIonFocus={() =>
-                        setStatus({ ...status, error: false, errorMessage: "" })
-                      }
-                    />
-                  </IonItem>
-                  <IonItem>
-                    <IonLabel position="fixed">
-                      <small>Age (optional)</small>
-                    </IonLabel>
-                    <IonInput
-                      type="number"
-                      min="1"
-                      max="135"
-                      value={age?.toString()}
-                      onIonChange={(event) => setAge(event.detail!.value!)}
-                      onIonFocus={() =>
-                        setStatus({ ...status, error: false, errorMessage: "" })
-                      }
-                    />
-                  </IonItem>
                 </IonList>
 
                 <IonList lines="none">
@@ -214,9 +242,7 @@ const RegisterPage: React.FC = () => {
                       {status.error && (
                         <IonRow className="ion-margin-top ion-align-items-center">
                           <IonCol size="12">
-                            <IonBadge color="danger">Error</IonBadge>
-                          </IonCol>
-                          <IonCol size="12">
+                            <IonBadge color="danger">Error</IonBadge>&nbsp;
                             <IonText color="danger">
                               <small>{status.errorMessage}</small>
                             </IonText>
@@ -225,9 +251,7 @@ const RegisterPage: React.FC = () => {
                       )}
                       <IonRow className="ion-margin-top ion-align-items-center">
                         <IonCol size="12">
-                          <IonBadge color="warning">Please Note</IonBadge>
-                        </IonCol>
-                        <IonCol size="12">
+                          <IonBadge color="warning">Please Note</IonBadge>&nbsp;
                           <small>
                             By registering for an account, you agree to our{" "}
                             <IonText
@@ -237,6 +261,7 @@ const RegisterPage: React.FC = () => {
                             >
                               Terms&nbsp;and&nbsp;Conditions
                             </IonText>
+                            .
                           </small>
                         </IonCol>
                       </IonRow>
@@ -250,12 +275,7 @@ const RegisterPage: React.FC = () => {
                 >
                   Create Account
                 </IonButton>
-                <IonButton
-                  className="ion-margin"
-                  expand="block"
-                  fill="clear"
-                  routerLink="/login"
-                >
+                <IonButton expand="block" fill="clear" routerLink="/login">
                   Already have an account?
                 </IonButton>
               </IonCardContent>
@@ -266,14 +286,34 @@ const RegisterPage: React.FC = () => {
 
       <IonModal isOpen={showModal}>
         <IonContent className="ion-padding">
-          {appData.privacyPolicy}
-          <IonButton
-            expand="block"
-            className="ion-margin-top"
-            onClick={() => setShowModal(false)}
-          >
-            Accept
-          </IonButton>
+          <div className="centered-content">
+            <div className="constrain constrain--medium">
+              <IonCard>
+                <IonCardHeader className="ion-no-padding" color="tertiary">
+                  <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
+                    Terms and Conditions
+                  </IonCardSubtitle>
+                </IonCardHeader>
+                <IonCardContent className="ion-margin-top small-print">
+                  {appData.privacyPolicy}
+                </IonCardContent>
+                <IonCardHeader className="ion-no-padding" color="light">
+                  <IonGrid>
+                    <IonRow>
+                      <IonCol size="8" offset="2">
+                        <IonButton
+                          expand="block"
+                          onClick={() => setShowModal(false)}
+                        >
+                          Accept
+                        </IonButton>
+                      </IonCol>
+                    </IonRow>
+                  </IonGrid>
+                </IonCardHeader>
+              </IonCard>
+            </div>
+          </div>
         </IonContent>
       </IonModal>
 

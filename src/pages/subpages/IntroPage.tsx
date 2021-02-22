@@ -13,6 +13,9 @@ import {
   IonCardSubtitle,
   IonCardContent,
   IonText,
+  IonHeader,
+  IonToolbar,
+  IonButtons,
 } from "@ionic/react";
 import "./IntroPage.css";
 
@@ -32,7 +35,16 @@ const Intro: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent>
+      <IonHeader translucent={true}>
+        <IonToolbar color="medium">
+          <IonButtons slot="end">
+            {onLastSlide === false && (
+              <IonButton onClick={() => skipIntro()}>Skip</IonButton>
+            )}
+          </IonButtons>
+        </IonToolbar>
+      </IonHeader>
+      <IonContent scrollY={false}>
         <IonSlides
           pager={true}
           options={slideOpts}
@@ -45,12 +57,12 @@ const Intro: React.FC = () => {
               src="assets/img/walksy-panel.svg"
               alt=""
             />
-            <div className="constrain constrain--medium">
+            <div className="constrain constrain--medium ion-padding">
               <h2 className="text-heading">&#8216;Walk &amp; See&#8217;</h2>
               <p className="text-body">
                 A fun way to do more walking, and to record those things we
-                observe as we walk our local landscapes. <br />
-                Find, Explore, and Record walks in your nearby.
+                observe as we walk our local landscapes. Find, Explore, and
+                Record walks in your nearby.
               </p>
             </div>
           </IonSlide>
@@ -60,7 +72,7 @@ const Intro: React.FC = () => {
               src="assets/img/walksy-logo.svg"
               alt=""
             />
-            <div className="constrain constrain--medium">
+            <div className="constrain constrain--medium ion-padding">
               <h3 className="text-heading">
                 <span>Browse</span> <br />
                 <span className="text-body">
@@ -85,7 +97,7 @@ const Intro: React.FC = () => {
               src="assets/img/walksy-logo.svg"
               alt=""
             />
-            <div className="constrain constrain--medium">
+            <div className="constrain constrain--medium ion-padding">
               <p className="text-body">
                 The &#8216;Walksy&#8217; (Walk &amp; See) App has been devised
                 and created by Art Walk Projects (Edinburgh) offering a creative
@@ -143,16 +155,6 @@ const Intro: React.FC = () => {
             </div>
           </IonSlide>
         </IonSlides>
-
-        {!onLastSlide && (
-          <IonButton
-            className="intro__skip"
-            fill="clear"
-            onClick={() => skipIntro()}
-          >
-            Skip
-          </IonButton>
-        )}
       </IonContent>
     </IonPage>
   );

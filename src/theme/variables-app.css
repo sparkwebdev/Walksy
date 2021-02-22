@@ -22,7 +22,8 @@ ion-list {
   /* font-family: "Domine"; */
 }
 ion-button {
-  border-radius: 0;
+  --border-radius: 0;
+  font-family: "Domine";
 }
 
 ion-header ion-title,
@@ -42,9 +43,6 @@ ion-tab-button ion-icon {
 }
 :root ion-tab-button ion-icon {
   border-radius: 5px !important;
-}
-ion-tab-button ion-icon .ion-inner {
-  border: solid red;
 }
 ion-tab-button ion-label {
   font-size: 15px;
