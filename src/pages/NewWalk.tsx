@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import {
   IonPage,
   IonContent,
@@ -18,6 +18,9 @@ import {
   IonButton,
   IonIcon,
   IonAlert,
+  IonModal,
+  IonTextarea,
+  IonText,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import "./NewWalk.css";
@@ -26,12 +29,12 @@ import PageHeader from "../components/PageHeader";
 // import WalkPreSettings from "../components/WalkPreSettings";
 // import WalkInProgress from "../components/WalkInProgress";
 // import WalkPostSettings from "../components/WalkPostSettings";
-import { Plugins } from "@capacitor/core";
+// import AddMoment from "../components/AddMoment";
+import { Filesystem, FilesystemDirectory, Plugins } from "@capacitor/core";
 import { Pedometer } from "@ionic-native/pedometer";
 import Progress from "../components/Progress";
-import AddMoment from "../components/AddMoment";
 
-import { Location, Time } from "../data/models";
+import { Location, Moment, Photo, Time } from "../data/models";
 import WalksContext from "../data/walks-context";
 import {
   generateHslaColors,
@@ -41,7 +44,15 @@ import {
   getTimeDiff,
 } from "../helpers";
 
-import { checkmark as finishIcon, close as cancelIcon } from "ionicons/icons";
+import {
+  checkmark as finishIcon,
+  close as cancelIcon,
+  chevronDown as chevronDownIcon,
+  flagOutline as flagIcon,
+  map as mapIcon,
+} from "ionicons/icons";
+import ImagePicker from "../components/ImagePicker";
+import { base64FromPath } from "@ionic/react-hooks/filesystem";
 
 const { Storage } = Plugins;
 const { Geolocation } = Plugins;
@@ -147,10 +158,23 @@ const NewWalk: React.FC = () => {
     }
   };
 
+  const getLocationBackground = async () => {
+    try {
+      const position = await Geolocation.getCurrentPosition();
+      const currentLocation: Location = {
+        lat: position.coords.latitude,
+        long: position.coords.longitude,
+        timestamp: position.timestamp,
+      };
+      setCurrentLocation(currentLocation);
+    } catch (e) {
+      setCurrentLocation(null);
+    }
+  };
+
   useEffect(() => {
     if (currentLocation !== undefined) {
       if (!start) {
-        walksCtx.resetMoments();
         setStart(new Date().toISOString());
       }
       if (
@@ -165,11 +189,8 @@ const NewWalk: React.FC = () => {
   useEffect(() => {
     let ticker: any = null;
     if (start) {
-      // let seconds: number = 0;
       ticker = setInterval(() => {
-        // seconds++;
         const timeDiff = getTimeDiff(start, new Date().toISOString());
-        // const minAndSec = getMinAndSec(seconds);
         const minAndSec = getMinAndSec(timeDiff);
         setTime(minAndSec);
       }, 1000);
@@ -194,8 +215,9 @@ const NewWalk: React.FC = () => {
         start,
         end,
         steps,
-        distance
-        // [startLocation, endLocation]
+        distance,
+        moments
+        // locations
       );
     }
   }, [end]);
@@ -204,6 +226,70 @@ const NewWalk: React.FC = () => {
   const saveHandler = (description: string) => {
     console.log("should update description and cover");
     history.replace("/app/home");
+  };
+
+  // Add Moment
+  const [moments, setMoments] = useState<Moment[]>([]);
+  const [note, setNote] = useState<string>("");
+  const [location, setLocation] = useState<Location | null | undefined>(
+    undefined
+  );
+  const [addMomentModal, setAddMomentModal] = useState<boolean>(false);
+  const [addMomentCurrent, setAddMomentCurrent] = useState<string>("");
+  const [takenPhoto, setTakenPhoto] = useState<Photo | null>(null);
+  const [takenPhotoPath, setTakenPhotoPath] = useState<string>("");
+
+  const filePickerChildRef = useRef();
+
+  const addMomentHandler = (type: string) => {
+    setAddMomentModal(true);
+    setAddMomentCurrent(type);
+    getLocationBackground();
+  };
+
+  const photoPickHandler = (photo: Photo | null) => {
+    if (photo) {
+      savePhoto(photo).then((path) => {
+        setTakenPhotoPath(path);
+      });
+    }
+    setTakenPhoto(photo);
+  };
+
+  const savePhoto = async (photo: Photo) => {
+    const base64 = await base64FromPath(photo.preview);
+    let fileName = new Date().getTime() + ".jpeg";
+    Filesystem.writeFile({
+      path: fileName,
+      data: base64,
+      directory: FilesystemDirectory.Data,
+    });
+    return fileName;
+  };
+
+  const resetMoments = () => {
+    setMoments([]);
+  };
+
+  const saveMomentHandler = () => {
+    const newMoment: Moment = {
+      imagePath: takenPhotoPath,
+      note: note,
+      location: currentLocation!,
+    };
+    setMoments([...moments, newMoment]);
+    clearMomentHandler();
+  };
+
+  const viewMapHandler = async () => {
+    console.log("View map");
+  };
+
+  const clearMomentHandler = () => {
+    setNote("");
+    setTakenPhoto(null);
+    setTakenPhotoPath("");
+    setAddMomentModal(false);
   };
 
   return (
@@ -367,8 +453,243 @@ const NewWalk: React.FC = () => {
                   </IonCardSubtitle>
                 </IonCardHeader>
                 <IonCardContent className="ion-no-padding">
+                  {/* 
+                  *
+                  *
+                  Progress
+                  *
+                  *
+                  */}
                   <Progress time={time} distance={distance} steps={steps} />
-                  {/* <AddMoment colour={colour} /> */}
+                  {/* 
+                  *
+                  *
+                  Add Moment
+                  *
+                  *
+                  */}
+                  <IonCard className="moment-panel ion-no-margin">
+                    <IonCardContent>
+                      <IonGrid>
+                        <IonRow>
+                          <IonCol
+                            onClick={() => {
+                              addMomentHandler("Photo");
+                            }}
+                          >
+                            <img src="assets/img/icon-camera.svg" alt="" />
+                            <h3 className="text-heading ion-text-center">
+                              <strong>Add Photo</strong>
+                            </h3>
+                          </IonCol>
+                          <IonCol
+                            onClick={() => {
+                              addMomentHandler("Audio");
+                            }}
+                          >
+                            <img src="assets/img/icon-audio.svg" alt="" />
+                            <h3 className="text-heading ion-text-center">
+                              <strong>Add Sound</strong>
+                            </h3>
+                          </IonCol>
+                          <IonCol
+                            onClick={() => {
+                              addMomentHandler("Note");
+                            }}
+                          >
+                            <img src="assets/img/icon-note.svg" alt="" />
+                            <h3 className="text-heading ion-text-center">
+                              <strong>Add Note</strong>
+                            </h3>
+                          </IonCol>
+                        </IonRow>
+                      </IonGrid>
+
+                      <IonModal isOpen={addMomentModal}>
+                        <div className="constrain constrain--medium">
+                          <IonCard color="medium">
+                            <IonCardHeader
+                              className="ion-no-padding"
+                              style={{
+                                backgroundColor: colour,
+                              }}
+                            >
+                              <IonCardSubtitle
+                                className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
+                                color="dark"
+                              >
+                                Add {addMomentCurrent}
+                              </IonCardSubtitle>
+                            </IonCardHeader>
+                            <IonCardContent className="ion-no-padding">
+                              {addMomentCurrent === "Photo" && (
+                                <ImagePicker
+                                  onImagePick={photoPickHandler}
+                                  ref={filePickerChildRef}
+                                ></ImagePicker>
+                              )}
+                              {addMomentCurrent === "Audio" && (
+                                <IonItem>
+                                  <IonLabel position="floating">
+                                    Add a sound...
+                                  </IonLabel>
+                                </IonItem>
+                              )}
+                              {addMomentCurrent === "Note" && (
+                                <div>
+                                  <IonLabel hidden={true}>
+                                    Add a note...
+                                  </IonLabel>
+                                  <IonTextarea
+                                    placeholder="A thought or description..."
+                                    autoGrow={true}
+                                    maxlength={280}
+                                    rows={4}
+                                    style={{
+                                      padding: "10px 20px",
+                                      backgroundColor: "white",
+                                    }}
+                                    value={note}
+                                    onIonChange={(event) => {
+                                      setNote(event.detail.value!);
+                                    }}
+                                  ></IonTextarea>
+                                  <p className="ion-padding">
+                                    <small>
+                                      {280 - note.length} characters remaining
+                                    </small>
+                                  </p>
+                                </div>
+                              )}
+                            </IonCardContent>
+
+                            <IonCardHeader
+                              className="ion-no-padding"
+                              color="light"
+                            >
+                              <IonGrid>
+                                <IonRow>
+                                  <IonCol size="5">
+                                    <IonButton
+                                      expand="block"
+                                      color="danger"
+                                      onClick={() => {
+                                        if (note.length > 0) {
+                                          setCancelAlert(true);
+                                        } else {
+                                          setAddMomentModal(false);
+                                        }
+                                      }}
+                                    >
+                                      <IonIcon slot="start" icon={cancelIcon} />
+                                      Cancel
+                                    </IonButton>
+                                    <IonAlert
+                                      header={"Cancel"}
+                                      subHeader={"Are you sure?"}
+                                      buttons={[
+                                        {
+                                          text: "No",
+                                          role: "cancel",
+                                        },
+                                        {
+                                          text: "Yes",
+                                          cssClass: "secondary",
+                                          handler: clearMomentHandler,
+                                        },
+                                      ]}
+                                      isOpen={cancelAlert}
+                                      onDidDismiss={() => setCancelAlert(false)}
+                                    />
+                                  </IonCol>
+                                  <IonCol size="7">
+                                    <IonButton
+                                      expand="block"
+                                      color="success"
+                                      onClick={() => {
+                                        saveMomentHandler();
+                                      }}
+                                    >
+                                      <IonIcon slot="start" icon={finishIcon} />
+                                      Add {addMomentCurrent}
+                                    </IonButton>
+                                  </IonCol>
+                                </IonRow>
+                              </IonGrid>
+                            </IonCardHeader>
+                          </IonCard>
+                        </div>
+                      </IonModal>
+
+                      {moments.length > 0 ? (
+                        <IonGrid>
+                          <IonRow>
+                            <IonCol size="12" className="ion-text-center">
+                              {moments.length > 0 && (
+                                <IonText className="text-body">
+                                  <p>
+                                    <IonIcon
+                                      icon={flagIcon}
+                                      className="icon-large"
+                                    />
+                                  </p>
+                                  {moments.length} moment
+                                  {moments.length !== 1 && "s"}
+                                  <p>
+                                    <IonIcon
+                                      icon={chevronDownIcon}
+                                      className="icon-small"
+                                    />
+                                  </p>
+                                </IonText>
+                              )}
+                            </IonCol>
+                          </IonRow>
+                          <IonRow>
+                            <IonCol
+                              className="ion-no-margin ion-no-padding"
+                              size="12"
+                              sizeSm="8"
+                              offsetSm="2"
+                            >
+                              <IonButton
+                                expand="block"
+                                onClick={viewMapHandler}
+                              >
+                                <IonIcon slot="start" icon={mapIcon} />
+                                View on Map
+                              </IonButton>
+                            </IonCol>
+                          </IonRow>
+                        </IonGrid>
+                      ) : (
+                        <IonGrid>
+                          <IonRow>
+                            <IonCol size="12" className="ion-text-center">
+                              <IonText className="ion-margin-bottom">
+                                <h1 className="text-heading">
+                                  What do you notice as&nbsp;you&nbsp;walk?
+                                </h1>
+                              </IonText>
+                              <p
+                                className="text-body"
+                                style={{
+                                  marginTop: "10px",
+                                }}
+                              >
+                                Record anything that draws your attention, or
+                                that you see or hear.
+                              </p>
+                            </IonCol>
+                          </IonRow>
+                        </IonGrid>
+                      )}
+                    </IonCardContent>
+                    <IonLoading
+                      message={"Getting your location..."}
+                      isOpen={loading}
+                    />
+                  </IonCard>
                 </IonCardContent>
                 <IonCardHeader className="ion-no-padding" color="light">
                   <IonGrid>
