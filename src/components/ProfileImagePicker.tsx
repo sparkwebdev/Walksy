@@ -17,10 +17,9 @@ export interface Photo {
 
 const { Camera } = Plugins;
 
-const ImagePicker: React.FC<{
+const ProfileImagePicker: React.FC<{
   onImagePick: (photo: Photo) => void;
   ref: any;
-  label: string;
 }> = forwardRef((props, ref) => {
   const [takenPhoto, setTakenPhoto] = useState<Photo | null>();
 
@@ -87,7 +86,7 @@ const ImagePicker: React.FC<{
         <IonButton fill="clear" className="ion-no-margin">
           <IonIcon icon={camera} slot="start"></IonIcon>
           <IonLabel>
-            <small>{props.label}</small>
+            <small>Pick a photo</small>
           </IonLabel>
         </IonButton>
       </div>
@@ -101,4 +100,4 @@ const ImagePicker: React.FC<{
   );
 });
 
-export default ImagePicker;
+export default ProfileImagePicker;

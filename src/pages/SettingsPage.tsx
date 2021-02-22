@@ -118,7 +118,6 @@ const SettingsPage: React.FC = () => {
                   <ProfileImagePicker
                     onImagePick={photoPickHandler}
                     ref={filePickerChildRef}
-                    label="Change photo"
                   />
                 </div>
                 <IonList>
