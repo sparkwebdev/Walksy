@@ -24,13 +24,17 @@ import {
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 import "./NewWalk.css";
+import "../components/ImagePicker.css";
+import {
+  Plugins,
+  CameraResultType,
+  CameraSource,
+  Capacitor,
+  Filesystem,
+  FilesystemDirectory,
+} from "@capacitor/core";
 import WalkTutorial from "../components/WalkTutorial";
 import PageHeader from "../components/PageHeader";
-// import WalkPreSettings from "../components/WalkPreSettings";
-// import WalkInProgress from "../components/WalkInProgress";
-// import WalkPostSettings from "../components/WalkPostSettings";
-// import AddMoment from "../components/AddMoment";
-import { Filesystem, FilesystemDirectory, Plugins } from "@capacitor/core";
 import { Pedometer } from "@ionic-native/pedometer";
 import Progress from "../components/Progress";
 
@@ -51,11 +55,10 @@ import {
   flagOutline as flagIcon,
   map as mapIcon,
 } from "ionicons/icons";
-import ImagePicker from "../components/ImagePicker";
+
 import { base64FromPath } from "@ionic/react-hooks/filesystem";
 
-const { Storage } = Plugins;
-const { Geolocation } = Plugins;
+const { Storage, Geolocation, Camera } = Plugins;
 
 const suggestedTitle = () => {
   return `${getFriendlyTimeOfDay()} ${getFriendlyWalkDescriptor()}`;
@@ -88,7 +91,7 @@ const NewWalk: React.FC = () => {
   const [currentLocation, setCurrentLocation] = useState<
     Location | null | undefined
   >(undefined);
-  const [locations, setLocations] = useState<Location[]>([]);
+  const [locations, setLocations] = useState<Location[] | null>(null);
   const [time, setTime] = useState<Time>({
     min: 0,
     sec: 0,
@@ -179,6 +182,7 @@ const NewWalk: React.FC = () => {
       }
       if (
         currentLocation !== null &&
+        locations !== null &&
         currentLocation !== locations[locations.length - 1]
       ) {
         setLocations([...locations, currentLocation]);
@@ -214,6 +218,13 @@ const NewWalk: React.FC = () => {
       if (firstMomentImage?.imagePath) {
         coverImage = firstMomentImage.imagePath;
       }
+      const locations = [
+        {
+          lat: 0,
+          long: 0,
+          timestamp: 0,
+        },
+      ];
       walksCtx.addWalk(
         title,
         colour,
@@ -224,8 +235,8 @@ const NewWalk: React.FC = () => {
         steps,
         distance,
         moments,
-        coverImage
-        // locations
+        coverImage,
+        locations
       );
     }
   }, [end]);
@@ -253,6 +264,9 @@ const NewWalk: React.FC = () => {
     setAddMomentModal(true);
     setAddMomentCurrent(type);
     getLocationBackground();
+    // if (type === "Photo") {
+    //   (filePickerChildRef as any).current.openFilePicker();
+    // }
   };
 
   const photoPickHandler = (photo: Photo | null) => {
@@ -298,6 +312,51 @@ const NewWalk: React.FC = () => {
     setTakenPhoto(null);
     setTakenPhotoPath("");
     setAddMomentModal(false);
+  };
+
+  const filePickerRef = useRef<HTMLInputElement>(null);
+
+  const openFilePicker = () => {
+    filePickerRef.current!.click();
+  };
+
+  const pickFileHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target!.files![0];
+    const fr = new FileReader();
+    fr.onload = () => {
+      const photo: Photo = {
+        path: undefined,
+        preview: fr.result!.toString(),
+      };
+      setTakenPhoto(photo);
+    };
+    fr.readAsDataURL(file);
+  };
+
+  const takePhotoHandler = async () => {
+    if (!Capacitor.isPluginAvailable("Camera")) {
+      openFilePicker();
+      return;
+    }
+    try {
+      const photo = await Camera.getPhoto({
+        resultType: CameraResultType.Uri,
+        source: CameraSource.Prompt,
+        quality: 80,
+        width: 800,
+      });
+
+      if (!photo || !photo.webPath) {
+        return;
+      }
+      const pickedPhoto: Photo = {
+        path: photo.path,
+        preview: photo.webPath,
+      };
+      setTakenPhoto(pickedPhoto);
+    } catch (error) {
+      openFilePicker();
+    }
   };
 
   return (
@@ -531,10 +590,28 @@ const NewWalk: React.FC = () => {
                             </IonCardHeader>
                             <IonCardContent className="ion-no-padding">
                               {addMomentCurrent === "Photo" && (
-                                <ImagePicker
-                                  onImagePick={photoPickHandler}
-                                  ref={filePickerChildRef}
-                                ></ImagePicker>
+                                <div
+                                  className="image-picker"
+                                  onClick={takePhotoHandler}
+                                >
+                                  {!takenPhoto && (
+                                    <IonText className="image-picker__label">
+                                      No photo chosen
+                                    </IonText>
+                                  )}
+                                  {takenPhoto && (
+                                    <img
+                                      className="image-picker__preview"
+                                      src={takenPhoto.preview}
+                                      alt="Preview"
+                                    />
+                                  )}
+                                  <input
+                                    type="file"
+                                    hidden
+                                    ref={filePickerRef}
+                                  />
+                                </div>
                               )}
                               {addMomentCurrent === "Audio" && (
                                 <IonItem>
@@ -550,11 +627,11 @@ const NewWalk: React.FC = () => {
                                   </IonLabel>
                                   <IonTextarea
                                     placeholder="A thought or description..."
-                                    autoGrow={true}
                                     maxlength={280}
-                                    rows={4}
+                                    rows={8}
                                     style={{
                                       padding: "10px 20px",
+                                      margin: "0",
                                       backgroundColor: "white",
                                     }}
                                     value={note}
