@@ -50,6 +50,12 @@ export function getMinAndSec(totalSeconds: number) {
   };
 }
 
+export function getTimeDiff(startTime: string, endTime: string) {
+  const start = dayjs(startTime);
+  const end = dayjs(endTime);
+  return end.diff(start, "second");
+}
+
 export function getFriendlyTimeOfDay() {
   var now = dayjs();
   var day = now.format("dddd");
