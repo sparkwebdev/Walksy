@@ -50,6 +50,7 @@ const Intro: React.FC = () => {
           options={slideOpts}
           ref={slides}
           onIonSlideReachEnd={(event: any) => setOnLastSlide(true)}
+          className="intro"
         >
           <IonSlide>
             <img

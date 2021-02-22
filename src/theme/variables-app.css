@@ -37,9 +37,12 @@ ion-tab-bar {
 }
 ion-tab-button ion-icon {
   position: relative;
-  height: 1.8em;
-  width: 1.8em;
+  height: 1.2em;
+  width: 1.2em;
   background: var(--ion-color-medium);
+  border: solid var(--ion-color-medium);
+  margin-top: 5px;
+  margin-bottom: 0;
 }
 :root ion-tab-button ion-icon {
   border-radius: 5px !important;

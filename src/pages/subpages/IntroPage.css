@@ -2,7 +2,6 @@ ion-slides {
   height: 100%;
 }
 .swiper-pagination {
-  margin-bottom: 20px;
 }
 .swiper-pagination-bullet,
 .swiper-pagination-bullet-active {
@@ -11,6 +10,9 @@ ion-slides {
 
 .swiper-wrapper {
   align-items: center;
+}
+.intro > .swiper-pagination-bullets {
+  margin-bottom: 20px;
 }
 .swiper-slide {
   flex-direction: column;
@@ -37,11 +39,4 @@ ion-slides {
 }
 .swiper-slide .intro__panel-2 {
   max-height: 28vh;
-}
-
-.intro__skip {
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 9;
 }
