@@ -19,6 +19,7 @@ export interface Walk {
   steps: number;
   distance: number;
   moments: Moment[] | null;
+  coverImage: string;
 }
 
 export interface Location {

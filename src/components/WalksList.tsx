@@ -1,9 +1,8 @@
 import React, { useContext } from "react";
-import { IonRow, IonCol, IonGrid, IonItem } from "@ionic/react";
-
 import WalkItem from "./WalkItem";
 import WalksContext from "../data/walks-context";
 import { Link } from "react-router-dom";
+import WalkItemPreview from "./WalkItemPreview";
 
 const WalksList: React.FC<{ title: string; type: "user" | "guided" }> = (
   props
@@ -21,8 +20,7 @@ const WalksList: React.FC<{ title: string; type: "user" | "guided" }> = (
           to={`/app/walk/${walk.id}`}
           className="ion-no-margin ion-no-padding"
         >
-          <WalkItem
-            // image={walk.base64Url}
+          <WalkItemPreview
             title={walk.title}
             colour={walk.colour}
             description={walk.description}
@@ -30,8 +28,7 @@ const WalksList: React.FC<{ title: string; type: "user" | "guided" }> = (
             endTime={walk.endTime}
             steps={walk.steps}
             distance={walk.distance}
-            moments={walk!.moments}
-            displayMoments={false}
+            coverImage={walk!.coverImage}
           />
         </Link>
       ))}

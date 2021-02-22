@@ -207,6 +207,13 @@ const NewWalk: React.FC = () => {
 
   useEffect(() => {
     if (end) {
+      let coverImage: string = "";
+      let firstMomentImage = moments.find((moment) => {
+        return moment.imagePath !== null;
+      });
+      if (firstMomentImage?.imagePath) {
+        coverImage = firstMomentImage.imagePath;
+      }
       walksCtx.addWalk(
         title,
         colour,
@@ -216,7 +223,8 @@ const NewWalk: React.FC = () => {
         end,
         steps,
         distance,
-        moments
+        moments,
+        coverImage
         // locations
       );
     }

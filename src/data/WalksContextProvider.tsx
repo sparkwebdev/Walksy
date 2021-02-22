@@ -23,6 +23,7 @@ const WalksContextProvider: React.FC = (props) => {
         steps: walk.steps,
         distance: walk.distance,
         moments: walk.moments,
+        coverImage: walk.coverImage,
       };
     });
     Storage.set({ key: "walks", value: JSON.stringify(storableWalks) });
@@ -37,7 +38,8 @@ const WalksContextProvider: React.FC = (props) => {
     endTime: string,
     steps: number,
     distance: number,
-    moments: Moment[] | null
+    moments: Moment[] | null,
+    coverImage: string
   ) => {
     /* Redundant — needs fixed */
     const fileName = new Date().getTime() + ".jpeg";
@@ -60,6 +62,7 @@ const WalksContextProvider: React.FC = (props) => {
       steps,
       distance,
       moments,
+      coverImage,
     };
     setWalks((curWalks) => {
       return [...curWalks, newWalk];
@@ -82,6 +85,7 @@ const WalksContextProvider: React.FC = (props) => {
         steps: storedWalk.steps,
         distance: storedWalk.distance,
         moments: storedWalk.moments,
+        coverImage: storedWalk.coverImage,
       });
     }
     setWalks(loadedWalks);

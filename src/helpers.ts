@@ -1,6 +1,16 @@
+import { Filesystem, FilesystemDirectory } from "@capacitor/core";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 dayjs.extend(isSameOrAfter);
+
+/* File functions */
+export const loadImage = async (imagePath: string) => {
+  const file = await Filesystem.readFile({
+    path: imagePath,
+    directory: FilesystemDirectory.Data,
+  });
+  return "data:image/jpeg;base64," + file.data;
+};
 
 /* Date/time functions */
 export function formatDate(isoString: string, showYear: boolean = true) {

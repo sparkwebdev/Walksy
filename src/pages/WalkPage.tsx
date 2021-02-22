@@ -19,7 +19,6 @@ const WalkPage: React.FC = () => {
       <PageHeader title="Walk" back={true} />
       <IonContent>
         <WalkItem
-          // image={walk!.base64Url}
           title={walk!.title}
           colour={walk!.colour}
           description={walk!.description}
@@ -28,7 +27,6 @@ const WalkPage: React.FC = () => {
           steps={walk!.steps}
           distance={walk!.distance}
           moments={walk!.moments}
-          displayMoments={true}
         />
       </IonContent>
     </IonPage>
