@@ -18,7 +18,6 @@ const WalksContextProvider: React.FC = (props) => {
         title: walk.title,
         colour: walk.colour,
         description: walk.description,
-        imagePath: walk.imagePath,
         type: walk.type,
         startTime: walk.startTime,
         endTime: walk.endTime,
@@ -36,7 +35,7 @@ const WalksContextProvider: React.FC = (props) => {
     location: Location | null
   ) => {
     let fileName = null;
-    if (photo) {
+    if (photo !== null) {
       const base64 = await base64FromPath(photo.preview);
       fileName = new Date().getTime() + ".jpeg";
       Filesystem.writeFile({
@@ -49,7 +48,6 @@ const WalksContextProvider: React.FC = (props) => {
     const newMoment: Moment = {
       id: new Date().getTime().toString(),
       imagePath: fileName,
-      // base64Url: base64,
       note,
       location,
     };
@@ -63,7 +61,6 @@ const WalksContextProvider: React.FC = (props) => {
   };
 
   const addWalk = async (
-    photo: Photo,
     title: string,
     colour: string,
     description: string,
@@ -73,14 +70,15 @@ const WalksContextProvider: React.FC = (props) => {
     steps: number,
     distance: number
   ) => {
+    /* Redundant — needs fixed */
     const fileName = new Date().getTime() + ".jpeg";
-
-    const base64 = await base64FromPath(photo.preview);
+    const base64 = await base64FromPath("");
     Filesystem.writeFile({
       path: fileName,
       data: base64,
       directory: FilesystemDirectory.Data,
     });
+    /* Redundant — needs fixed */
 
     const newWalk: Walk = {
       id: new Date().getTime().toString(),
@@ -92,8 +90,6 @@ const WalksContextProvider: React.FC = (props) => {
       endTime,
       steps,
       distance,
-      imagePath: fileName,
-      base64Url: base64,
       moments: moments,
     };
     setWalks((curWalks) => {
@@ -106,10 +102,6 @@ const WalksContextProvider: React.FC = (props) => {
     const storedWalks = walksData.value ? JSON.parse(walksData.value) : [];
     const loadedWalks: Walk[] = [];
     for (const storedWalk of storedWalks) {
-      const file = await Filesystem.readFile({
-        path: storedWalk.imagePath,
-        directory: FilesystemDirectory.Data,
-      });
       loadedWalks.push({
         id: storedWalk.id,
         title: storedWalk.title,
@@ -120,8 +112,6 @@ const WalksContextProvider: React.FC = (props) => {
         endTime: storedWalk.endTime,
         steps: storedWalk.steps,
         distance: storedWalk.distance,
-        imagePath: storedWalk.imagePath,
-        base64Url: "data:image/jpeg;base64," + file.data,
         moments: storedWalk.moments,
       });
     }

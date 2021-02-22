@@ -24,7 +24,6 @@ import {
 } from "ionicons/icons";
 
 const WalkItem: React.FC<{
-  // image: string;
   title: string;
   colour: string;
   description: string;

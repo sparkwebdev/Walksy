@@ -19,7 +19,7 @@ const WalkPage: React.FC = () => {
       <PageHeader title="Walk" back={true} />
       <IonContent>
         <WalkItem
-          image={walk!.base64Url}
+          // image={walk!.base64Url}
           title={walk!.title}
           colour={walk!.colour}
           description={walk!.description}

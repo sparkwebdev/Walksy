@@ -7,12 +7,10 @@ export interface Moment {
   imagePath: string | null;
   note: string;
   location: Location | null;
-  // base64Url: string;
 }
 
 export interface Walk {
   id: string;
-  imagePath: string;
   title: string;
   colour: string;
   description: string;
@@ -21,7 +19,6 @@ export interface Walk {
   endTime: string;
   steps: number;
   distance: number;
-  base64Url: string;
   moments: Moment[];
 }
 
@@ -30,6 +27,7 @@ export interface Location {
   long: number;
   timestamp: number;
 }
+
 export interface Time { 
   min: number;
   sec: number
