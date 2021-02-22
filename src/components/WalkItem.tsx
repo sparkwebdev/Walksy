@@ -1,6 +1,5 @@
-import React from "react";
-import { formatDate, getMinAndSec } from "../helpers";
-import dayjs from "dayjs";
+import React, { useEffect, useState } from "react";
+import { formatDate, getMinAndSec, getTimeDiff } from "../helpers";
 import {
   IonButton,
   IonCard,
@@ -22,8 +21,10 @@ import {
   flagOutline as flagIcon,
   map as mapIcon,
 } from "ionicons/icons";
+import { Filesystem, FilesystemDirectory } from "@capacitor/core";
 
 const WalkItem: React.FC<{
+  displayMoments: boolean;
   title: string;
   colour: string;
   description: string;
@@ -33,21 +34,62 @@ const WalkItem: React.FC<{
   distance: number;
   moments?: Moment[];
 }> = (props) => {
-  const coverImage = "assets/img/placeholder.png";
-  const start = dayjs(props.startTime);
-  const end = dayjs(props.endTime);
-  const diff = end.diff(start, "second");
-  const time = getMinAndSec(diff);
+  const [coverImageSrc, setCoverImageSrc] = useState<string>(
+    "assets/img/placeholder.png"
+  );
+  const [momentsNew, setMomentsNew] = useState<Moment[] | null>();
+  const timeDiff = getTimeDiff(props.startTime, props.endTime);
+  const time = getMinAndSec(timeDiff);
   const viewMapHandler = async () => {
     console.log("View map");
   };
+  const getCoverImage = async (imagePath: string) => {
+    const file = await Filesystem.readFile({
+      path: imagePath,
+      directory: FilesystemDirectory.Data,
+    });
+    return "data:image/jpeg;base64," + file.data;
+  };
+
+  const momentsWithImages = async (moments: Moment[]) => {
+    return Promise.all(
+      moments.map((moment: Moment) => {
+        var temp = Object.assign({}, moment);
+        getCoverImage(moment!.imagePath!).then((data) => {
+          temp.imagePath = data;
+        });
+        return temp;
+      })
+    ).then((data) => {
+      setMomentsNew(data);
+    });
+  };
+
+  useEffect(() => {
+    if (props.moments) {
+      const firstMomentImage = props.moments.find((moment) => {
+        return moment.imagePath !== null;
+      });
+      if (firstMomentImage) {
+        const firstMomentImageSrc = getCoverImage(
+          firstMomentImage!.imagePath!
+        ).then((data) => {
+          setCoverImageSrc(data);
+        });
+      }
+      if (props.displayMoments) {
+        momentsWithImages(props!.moments!);
+      }
+    }
+  }, []);
+
   return (
     <>
       <IonCard className="walk-item ion-no-margin">
-        {coverImage && (
+        {coverImageSrc && (
           <img
             className="walk-item__cover-image"
-            src={coverImage}
+            src={coverImageSrc}
             alt={props.title}
           />
         )}
@@ -89,22 +131,27 @@ const WalkItem: React.FC<{
         </IonCardContent>
       </IonCard>
 
-      {props.moments && (
-        <>
+      {momentsNew && props.displayMoments && (
+        <div className="constrain constrain--medium">
           <IonText className="text-body ion-text-center">
             <p>
               <IonIcon icon={flagIcon} className="icon-large" />
               <br />
-              {props.moments.length} moment
-              {props.moments.length !== 1 && "s"}
+              {momentsNew.length} moment
+              {momentsNew.length !== 1 && "s"}
               <br />
               <IonIcon icon={chevronDownIcon} className="icon-small" />
             </p>
           </IonText>
-          {props.moments.map((moment: Moment) => (
+          {momentsNew.map((moment: Moment) => (
             <IonCard key={moment.id} className="walk-item__moment">
+              {moment.imagePath}
               {moment.imagePath && (
-                <img className="walk-item__moment-image" src="" />
+                <img
+                  className="walk-item__moment-image"
+                  src={moment.imagePath}
+                  alt=""
+                />
               )}
               {moment.note && (
                 <IonCardContent className="walk-item__moment-note">
@@ -124,7 +171,7 @@ const WalkItem: React.FC<{
               </IonCol>
             </IonRow>
           </IonGrid>
-        </>
+        </div>
       )}
     </>
   );
