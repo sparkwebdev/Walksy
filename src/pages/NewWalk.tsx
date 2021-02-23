@@ -51,6 +51,8 @@ import {
 import {
   checkmark as finishIcon,
   close as cancelIcon,
+  micCircleOutline as recordlIcon,
+  stopCircleOutline as stopIcon,
   chevronDown as chevronDownIcon,
   flagOutline as flagIcon,
   map as mapIcon,
