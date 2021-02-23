@@ -93,7 +93,7 @@ const NewWalk: React.FC = () => {
   const [currentLocation, setCurrentLocation] = useState<
     Location | null | undefined
   >(undefined);
-  const [locations, setLocations] = useState<Location[] | null>(null);
+  const [locations, setLocations] = useState<Location[] | []>([]);
   const [time, setTime] = useState<Time>({
     min: 0,
     sec: 0,
@@ -152,7 +152,7 @@ const NewWalk: React.FC = () => {
       const position = await Geolocation.getCurrentPosition();
       const currentLocation: Location = {
         lat: position.coords.latitude,
-        long: position.coords.longitude,
+        lng: position.coords.longitude,
         timestamp: position.timestamp,
       };
       setCurrentLocation(currentLocation);
@@ -168,7 +168,7 @@ const NewWalk: React.FC = () => {
       const position = await Geolocation.getCurrentPosition();
       const currentLocation: Location = {
         lat: position.coords.latitude,
-        long: position.coords.longitude,
+        lng: position.coords.longitude,
         timestamp: position.timestamp,
       };
       setCurrentLocation(currentLocation);
@@ -184,8 +184,8 @@ const NewWalk: React.FC = () => {
       }
       if (
         currentLocation !== null &&
-        locations !== null &&
-        currentLocation !== locations[locations.length - 1]
+        (locations.length == 0 ||
+          currentLocation !== locations[locations.length - 1])
       ) {
         setLocations([...locations, currentLocation]);
       }
@@ -220,13 +220,6 @@ const NewWalk: React.FC = () => {
       if (firstMomentImage?.imagePath) {
         coverImage = firstMomentImage.imagePath;
       }
-      const locations = [
-        {
-          lat: 0,
-          long: 0,
-          timestamp: 0,
-        },
-      ];
       walksCtx.addWalk(
         title,
         colour,
@@ -304,6 +297,7 @@ const NewWalk: React.FC = () => {
 
   const saveMomentHandler = () => {
     const newMoment: Moment = {
+      id: new Date().toString(),
       imagePath: takenPhotoPath,
       note: note,
       location: currentLocation!,

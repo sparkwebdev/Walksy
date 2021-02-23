@@ -39,9 +39,9 @@ const WalksContextProvider: React.FC = (props) => {
     endTime: string,
     steps: number,
     distance: number,
-    moments: Moment[] | null,
+    moments: Moment[] | [],
     coverImage: string,
-    locations: Location[] | null
+    locations: Location[] | []
   ) => {
     /* Redundant — needs fixed */
     const fileName = new Date().getTime() + ".jpeg";

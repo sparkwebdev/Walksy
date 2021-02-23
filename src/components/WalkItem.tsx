@@ -34,7 +34,7 @@ const WalkItem: React.FC<{
   endTime: string;
   steps: number;
   distance: number;
-  moments: Moment[] | null;
+  moments: Moment[] | [];
 }> = (props) => {
   const timeDiff = getTimeDiff(props.startTime, props.endTime);
   const time = getMinAndSec(timeDiff);

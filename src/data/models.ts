@@ -3,6 +3,7 @@ import React from 'react';
 export type WalkType = 'user' | 'guided';
 
 export interface Moment {
+  id: string;
   imagePath: string | null;
   note: string;
   location: Location | null;
@@ -18,14 +19,14 @@ export interface Walk {
   endTime: string;
   steps: number;
   distance: number;
-  moments: Moment[] | null;
+  moments: Moment[] | [];
   coverImage: string;
-  locations: Location[] | null;
+  locations: Location[] | [];
 }
 
 export interface Location {
   lat: number;
-  long: number;
+  lng: number;
   timestamp: number;
 }
 
