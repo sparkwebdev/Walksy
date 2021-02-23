@@ -15,6 +15,7 @@ import DashboardPage from "./pages/DashboardPage";
 import AboutPage from "./pages/AboutPage";
 import DiscoverPage from "./pages/DiscoverPage";
 import SettingsPage from "./pages/SettingsPage";
+import EntryPage from "./components/EntryPage";
 
 import {
   eye as browseIcon,
@@ -63,6 +64,9 @@ const AppTabs: React.FC = () => {
         </Route>
         <Route exact path="/app/settings">
           <SettingsPage />
+        </Route>
+        <Route exact path="/app/entries/:id">
+          <EntryPage />
         </Route>
       </IonRouterOutlet>
       <IonTabBar slot="bottom">

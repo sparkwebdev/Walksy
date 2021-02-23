@@ -39,3 +39,15 @@ export interface Photo {
   path: string | undefined;
   preview: string;
 }
+
+export interface Entry {
+  id: string;
+  title: string;
+  excerpt: string;
+  date: string;
+  content: string;
+}
+
+export function toEntry(doc: firebase.default.firestore.DocumentSnapshot): Entry {
+  return  { id: doc.id, ...doc.data() } as Entry;
+}
