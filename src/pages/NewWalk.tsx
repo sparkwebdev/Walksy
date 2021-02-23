@@ -257,6 +257,8 @@ const NewWalk: React.FC = () => {
   const [addMomentCurrent, setAddMomentCurrent] = useState<string>("");
   const [takenPhoto, setTakenPhoto] = useState<Photo | null>(null);
   const [takenPhotoPath, setTakenPhotoPath] = useState<string>("");
+  const [recordingAudio, setRecordingAudio] = useState<boolean>(false);
+  const [audio, setAudio] = useState<boolean>(false);
 
   const filePickerChildRef = useRef();
 
@@ -276,6 +278,11 @@ const NewWalk: React.FC = () => {
       });
     }
     setTakenPhoto(photo);
+  };
+
+  const recordAudioHandler = () => {
+    setRecordingAudio(!recordingAudio);
+    setAudio(true);
   };
 
   const savePhoto = async (photo: Photo) => {
@@ -361,16 +368,14 @@ const NewWalk: React.FC = () => {
 
   return (
     <IonPage>
-      {!start && !end && (
-        <PageHeader
-          title="Walk"
-          back={!start && !end}
-          showTool={!start && !end && !showTutorial}
-          toolText="Help"
-          toolAction={getHelpHandler}
-        />
-      )}
-      <IonContent>
+      <PageHeader
+        title="Walk"
+        back={!start && !end}
+        showTool={!start && !end && !showTutorial}
+        toolText="Help"
+        toolAction={getHelpHandler}
+      />
+      <IonContent scrollY={false}>
         {/* 
         *
         *
@@ -389,7 +394,7 @@ const NewWalk: React.FC = () => {
         *
         */}
         {!start && !end && showTutorial === false && !showHelp && (
-          <div className="centered-content">
+          <div className="centered-content centered-content--no-toolbar">
             <div className="constrain constrain--medium">
               <IonCard>
                 <IonCardHeader
@@ -472,7 +477,7 @@ const NewWalk: React.FC = () => {
                   className="ion-margin-top ion-no-padding"
                   color="light"
                 >
-                  <IonCardSubtitle>
+                  <IonCardSubtitle className="ion-no-margin">
                     <IonGrid>
                       <IonRow>
                         <IonCol size="12" sizeSm="8" offsetSm="2">
@@ -503,7 +508,7 @@ const NewWalk: React.FC = () => {
         *
         */}
         {start && !end && (
-          <div className="centered-content">
+          <div className="centered-content centered-content--no-toolbar">
             <div className="constrain constrain--medium">
               <IonCard>
                 <IonCardHeader
@@ -572,137 +577,182 @@ const NewWalk: React.FC = () => {
                         </IonRow>
                       </IonGrid>
 
-                      <IonModal isOpen={addMomentModal}>
-                        <div className="constrain constrain--medium">
-                          <IonCard color="medium">
-                            <IonCardHeader
-                              className="ion-no-padding"
-                              style={{
-                                backgroundColor: colour,
-                              }}
-                            >
-                              <IonCardSubtitle
-                                className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
-                                color="dark"
-                              >
-                                Add {addMomentCurrent}
-                              </IonCardSubtitle>
-                            </IonCardHeader>
-                            <IonCardContent className="ion-no-padding">
-                              {addMomentCurrent === "Photo" && (
-                                <div
-                                  className="image-picker"
-                                  onClick={takePhotoHandler}
+                      <IonModal
+                        isOpen={addMomentModal}
+                        onDidPresent={() => {
+                          if (addMomentCurrent === "Photo" && !takenPhoto) {
+                            filePickerRef.current!.click();
+                          }
+                        }}
+                      >
+                        <div className="centered-content centered-content--no-toolbar-no-header">
+                          <div className="constrain constrain--medium">
+                            <div className="ion-padding-top ion-margin-top">
+                              <IonCard color="medium">
+                                <IonCardHeader
+                                  className="ion-no-padding"
+                                  style={{
+                                    backgroundColor: colour,
+                                  }}
                                 >
-                                  {!takenPhoto && (
-                                    <IonText className="image-picker__label">
-                                      No photo chosen
-                                    </IonText>
+                                  <IonCardSubtitle
+                                    className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
+                                    color="dark"
+                                  >
+                                    Add {addMomentCurrent}
+                                  </IonCardSubtitle>
+                                </IonCardHeader>
+                                <IonCardContent className="ion-no-padding">
+                                  {addMomentCurrent === "Photo" && (
+                                    <div
+                                      className="image-picker"
+                                      onClick={takePhotoHandler}
+                                    >
+                                      {!takenPhoto && (
+                                        <IonText className="image-picker__label">
+                                          No photo chosen
+                                        </IonText>
+                                      )}
+                                      {takenPhoto && (
+                                        <img
+                                          className="image-picker__preview"
+                                          src={takenPhoto.preview}
+                                          alt="Preview"
+                                        />
+                                      )}
+                                      <input
+                                        type="file"
+                                        hidden
+                                        ref={filePickerRef}
+                                      />
+                                    </div>
                                   )}
-                                  {takenPhoto && (
-                                    <img
-                                      className="image-picker__preview"
-                                      src={takenPhoto.preview}
-                                      alt="Preview"
-                                    />
-                                  )}
-                                  <input
-                                    type="file"
-                                    hidden
-                                    ref={filePickerRef}
-                                  />
-                                </div>
-                              )}
-                              {addMomentCurrent === "Audio" && (
-                                <IonItem>
-                                  <IonLabel position="floating">
-                                    Add a sound...
-                                  </IonLabel>
-                                </IonItem>
-                              )}
-                              {addMomentCurrent === "Note" && (
-                                <div>
-                                  <IonLabel hidden={true}>
-                                    Add a note...
-                                  </IonLabel>
-                                  <IonTextarea
-                                    placeholder="A thought or description..."
-                                    maxlength={280}
-                                    rows={8}
-                                    style={{
-                                      padding: "10px 20px",
-                                      margin: "0",
-                                      backgroundColor: "white",
-                                    }}
-                                    value={note}
-                                    onIonChange={(event) => {
-                                      setNote(event.detail.value!);
-                                    }}
-                                  ></IonTextarea>
-                                  <p className="ion-padding">
-                                    <small>
-                                      {280 - note.length} characters remaining
-                                    </small>
-                                  </p>
-                                </div>
-                              )}
-                            </IonCardContent>
-
-                            <IonCardHeader
-                              className="ion-no-padding"
-                              color="light"
-                            >
-                              <IonGrid>
-                                <IonRow>
-                                  <IonCol size="5">
-                                    <IonButton
-                                      expand="block"
-                                      color="danger"
+                                  {addMomentCurrent === "Audio" && (
+                                    <p
+                                      style={{
+                                        margin: "0 auto",
+                                        padding: "30px 0",
+                                        background: "white",
+                                        textAlign: "center",
+                                      }}
                                       onClick={() => {
-                                        if (note.length > 0) {
-                                          setCancelAlert(true);
-                                        } else {
-                                          setAddMomentModal(false);
+                                        setRecordingAudio(!recordingAudio);
+                                      }}
+                                    >
+                                      <IonIcon
+                                        slot="start"
+                                        icon={
+                                          recordingAudio
+                                            ? stopIcon
+                                            : recordlIcon
                                         }
-                                      }}
-                                    >
-                                      <IonIcon slot="start" icon={cancelIcon} />
-                                      Cancel
-                                    </IonButton>
-                                    <IonAlert
-                                      header={"Cancel"}
-                                      subHeader={"Are you sure?"}
-                                      buttons={[
-                                        {
-                                          text: "No",
-                                          role: "cancel",
-                                        },
-                                        {
-                                          text: "Yes",
-                                          cssClass: "secondary",
-                                          handler: clearMomentHandler,
-                                        },
-                                      ]}
-                                      isOpen={cancelAlert}
-                                      onDidDismiss={() => setCancelAlert(false)}
-                                    />
-                                  </IonCol>
-                                  <IonCol size="7">
-                                    <IonButton
-                                      expand="block"
-                                      color="success"
-                                      onClick={() => {
-                                        saveMomentHandler();
-                                      }}
-                                    >
-                                      <IonIcon slot="start" icon={finishIcon} />
-                                      Add {addMomentCurrent}
-                                    </IonButton>
-                                  </IonCol>
-                                </IonRow>
-                              </IonGrid>
-                            </IonCardHeader>
-                          </IonCard>
+                                        color={
+                                          recordingAudio ? "danger" : "success"
+                                        }
+                                        style={{
+                                          fontSize: "65px",
+                                        }}
+                                      />
+                                      <br />
+                                      <strong>
+                                        {recordingAudio ? "Stop" : "Record"}
+                                      </strong>
+                                    </p>
+                                  )}
+                                  {addMomentCurrent === "Note" && (
+                                    <div>
+                                      <IonLabel hidden={true}>
+                                        Add a note...
+                                      </IonLabel>
+                                      <IonTextarea
+                                        placeholder="A thought or description..."
+                                        maxlength={280}
+                                        rows={8}
+                                        style={{
+                                          padding: "10px 20px",
+                                          margin: "0",
+                                          backgroundColor: "white",
+                                        }}
+                                        value={note}
+                                        onIonChange={(event) => {
+                                          setNote(event.detail.value!);
+                                        }}
+                                      ></IonTextarea>
+                                      <p className="ion-padding">
+                                        <small>
+                                          {280 - note.length} characters
+                                          remaining
+                                        </small>
+                                      </p>
+                                    </div>
+                                  )}
+                                </IonCardContent>
+
+                                <IonCardHeader
+                                  className="ion-no-padding"
+                                  color="light"
+                                >
+                                  <IonGrid>
+                                    <IonRow>
+                                      <IonCol size="5">
+                                        <IonButton
+                                          expand="block"
+                                          color="danger"
+                                          onClick={() => {
+                                            if (note.length > 0) {
+                                              setCancelAlert(true);
+                                            } else {
+                                              setAddMomentModal(false);
+                                            }
+                                          }}
+                                        >
+                                          <IonIcon
+                                            slot="start"
+                                            icon={cancelIcon}
+                                          />
+                                          Cancel
+                                        </IonButton>
+                                        <IonAlert
+                                          header={"Cancel"}
+                                          subHeader={"Are you sure?"}
+                                          buttons={[
+                                            {
+                                              text: "No",
+                                              role: "cancel",
+                                            },
+                                            {
+                                              text: "Yes",
+                                              cssClass: "secondary",
+                                              handler: clearMomentHandler,
+                                            },
+                                          ]}
+                                          isOpen={cancelAlert}
+                                          onDidDismiss={() =>
+                                            setCancelAlert(false)
+                                          }
+                                        />
+                                      </IonCol>
+                                      <IonCol size="7">
+                                        <IonButton
+                                          expand="block"
+                                          color="success"
+                                          onClick={() => {
+                                            saveMomentHandler();
+                                          }}
+                                        >
+                                          <IonIcon
+                                            slot="start"
+                                            icon={finishIcon}
+                                          />
+                                          Add {addMomentCurrent}
+                                        </IonButton>
+                                      </IonCol>
+                                    </IonRow>
+                                  </IonGrid>
+                                </IonCardHeader>
+                              </IonCard>
+                            </div>
+                          </div>
                         </div>
                       </IonModal>
 
@@ -844,7 +894,7 @@ const NewWalk: React.FC = () => {
           //   steps={steps}
           //   onSave={saveHandler}
           // />
-          <div className="centered-content">
+          <div className="centered-content centered-content--no-toolbar-no-header">
             <div className="constrain constrain--medium">
               <IonCard>
                 <IonCardHeader
