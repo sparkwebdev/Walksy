@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  useCallback,
+} from "react";
 import {
   IonPage,
   IonContent,
@@ -153,7 +159,6 @@ const NewWalk: React.FC = () => {
       const currentLocation: Location = {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
-        timestamp: position.timestamp,
       };
       setCurrentLocation(currentLocation);
       setLoading(false);
@@ -169,7 +174,6 @@ const NewWalk: React.FC = () => {
       const currentLocation: Location = {
         lat: position.coords.latitude,
         lng: position.coords.longitude,
-        timestamp: position.timestamp,
       };
       setCurrentLocation(currentLocation);
     } catch (e) {
@@ -237,9 +241,9 @@ const NewWalk: React.FC = () => {
   }, [end]);
 
   // Walk view state - Finished Walking
-  const saveHandler = (description: string) => {
-    console.log("should update description and cover");
-    history.replace("/app/home");
+  const saveHandler = (description: string, coverImage: string) => {
+    console.log("should update description and cover", description, coverImage);
+    history.replace("/app/dashboard");
   };
 
   // Add Moment
@@ -253,6 +257,7 @@ const NewWalk: React.FC = () => {
   const [takenPhoto, setTakenPhoto] = useState<Photo | null>(null);
   const [takenPhotoPath, setTakenPhotoPath] = useState<string>("");
   const [recordingAudio, setRecordingAudio] = useState<boolean>(false);
+  const [takenAudioPath, setTakenAudioPath] = useState<string>("");
   const [audio, setAudio] = useState<boolean>(false);
 
   const filePickerChildRef = useRef();
@@ -292,22 +297,20 @@ const NewWalk: React.FC = () => {
   };
 
   const resetMoments = () => {
-    setMoments([]);
+    // setMoments([]);
   };
 
   const saveMomentHandler = () => {
     const newMoment: Moment = {
-      id: new Date().toString(),
+      walkId: "",
       imagePath: takenPhotoPath,
+      audioPath: takenAudioPath,
       note: note,
       location: currentLocation!,
+      timestamp: new Date().toString(),
     };
     setMoments([...moments, newMoment]);
     clearMomentHandler();
-  };
-
-  const viewMapHandler = async () => {
-    console.log("View map");
   };
 
   const clearMomentHandler = () => {
