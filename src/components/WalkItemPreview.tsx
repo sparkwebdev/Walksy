@@ -1,35 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { formatDate, getMinAndSec, getTimeDiff, loadImage } from "../helpers";
+import React from "react";
+import { formatDate, getMinAndSec, getTimeDiff } from "../helpers";
 import { IonCard, IonCardContent, IonText } from "@ionic/react";
 
 import "./WalkItem.css";
 import { getUnitDistance } from "../helpers";
 
-import { Filesystem, FilesystemDirectory } from "@capacitor/core";
-
 const WalkItemPreview: React.FC<{
   title: string;
   colour: string;
   description: string;
-  startTime: string;
-  endTime: string;
+  start: string;
+  end: string;
   steps: number;
   distance: number;
   coverImage: string;
 }> = (props) => {
-  const [coverImageSrc, setCoverImageSrc] = useState<string>(
-    "assets/img/placeholder.png"
-  );
-  const timeDiff = getTimeDiff(props.startTime, props.endTime);
+  const timeDiff = getTimeDiff(props.start, props.end);
   const time = getMinAndSec(timeDiff);
-
-  useEffect(() => {
-    if (props.coverImage) {
-      const coverImage = loadImage(props.coverImage).then((newSrc) => {
-        setCoverImageSrc(newSrc);
-      });
-    }
-  }, [coverImageSrc]);
 
   return (
     <>
@@ -37,19 +24,19 @@ const WalkItemPreview: React.FC<{
         {props.coverImage && (
           <img
             className="walk-item__cover-image"
-            src={coverImageSrc}
+            src={props.coverImage}
             alt={props.title}
           />
         )}
         <IonCardContent
           className="walk-item__content"
           style={{
-            borderBottom: "solid 10px " + props.colour,
+            borderBottom: "solid 6px " + props.colour,
           }}
         >
           <IonText className="text-heading">
             <small className="ion-text-uppercase">
-              {formatDate(props.startTime, false)}
+              {formatDate(props.start, false)}
             </small>
             {props.title && (
               <h2>
@@ -68,9 +55,10 @@ const WalkItemPreview: React.FC<{
               <span className="smallprint">&nbsp;{getUnitDistance()}</span>
               &nbsp;— 
               {props.steps}&nbsp;<span className="smallprint">steps</span>
-              &nbsp;— 
+              &nbsp;
               {time["min"] > 0 && (
                 <span>
+                  — 
                   {time["min"]}&nbsp;<span className="smallprint">min</span>
                 </span>
               )}

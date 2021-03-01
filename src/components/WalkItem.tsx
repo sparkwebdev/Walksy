@@ -1,158 +1,133 @@
 import React, { useEffect, useState } from "react";
 import { formatDate, getMinAndSec, getTimeDiff, loadImage } from "../helpers";
 import {
-  IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
-  IonCol,
-  IonGrid,
-  IonIcon,
-  IonRow,
   IonText,
 } from "@ionic/react";
 
 import "./WalkItem.css";
 import { getUnitDistance } from "../helpers";
 
-import { Moment } from "../data/models";
+import { Moment, toMoment } from "../data/models";
 
-import {
-  chevronDown as chevronDownIcon,
-  flagOutline as flagIcon,
-  map as mapIcon,
-} from "ionicons/icons";
-import { Filesystem, FilesystemDirectory } from "@capacitor/core";
+// import { playCircleOutline as playIcon } from "ionicons/icons";
+import { firestore } from "../firebase";
 
 const WalkItem: React.FC<{
-  title: string;
-  colour: string;
-  description: string;
-  startTime: string;
-  endTime: string;
-  steps: number;
-  distance: number;
-  moments: Moment[] | [];
+  id?: string;
+  title?: string;
+  colour?: string;
+  description?: string;
+  start?: string;
+  end?: string;
+  steps?: number;
+  distance?: number;
+  coverImage?: string;
 }> = (props) => {
-  const timeDiff = getTimeDiff(props.startTime, props.endTime);
+  // const { userId } = useAuth(); // Should auth this doc
+  const timeDiff =
+    props.end && props.start ? getTimeDiff(props.start, props.end) : 0;
   const time = getMinAndSec(timeDiff);
   const [moments, setMoments] = useState<Moment[]>([]);
 
-  const momentsWithImages = async (moments: Moment[]) => {
-    return Promise.all(
-      moments.map((moment: Moment) => {
-        var temp = Object.assign({}, moment);
-        if (moment.imagePath) {
-          loadImage(moment!.imagePath!).then((data) => {
-            temp.imagePath = data;
-          });
-        }
-        return temp;
-      })
-    ).then((data) => {
-      // setMoments(data);
-    });
-  };
-
   useEffect(() => {
-    if (props.moments) {
-      momentsWithImages(props.moments);
-    }
+    const momentsRef = firestore
+      .collection("users-moments")
+      .where("walkId", "==", props.id);
+    return momentsRef.orderBy("timestamp").onSnapshot(({ docs }) => {
+      setMoments(docs.map(toMoment));
+    });
   }, []);
 
   return (
     <>
-      <IonCard className="ion-no-margin">
-        <IonCardHeader>
-          <small className="ion-text-uppercase">
-            {formatDate(props.startTime, false)}
-          </small>
-          {props.title && <IonCardTitle>{props.title}</IonCardTitle>}
-          {props.description && (
-            <IonCardSubtitle>{props.description}</IonCardSubtitle>
-          )}
-          {(props.steps > 0 || time["min"] > 0) && (
-            <p>
-              {props.distance?.toFixed(2)}
-              <span className="smallprint">&nbsp;{getUnitDistance()}</span>
-              &nbsp;— 
-              {props.steps}&nbsp;<span className="smallprint">steps</span>
-              &nbsp;— 
-              <span>
-                {time["min"]}&nbsp;<span className="smallprint">min</span>
-              </span>
-            </p>
-          )}
-        </IonCardHeader>
+      <IonCard className="ion-no-margin walk-item-new" color="medium">
+        {props.title && (
+          <IonCardHeader color="primary">
+            <IonCardTitle>
+              <IonText color="medium" className="text-heading">
+                {props.title}
+              </IonText>
+            </IonCardTitle>
+          </IonCardHeader>
+        )}
         <IonCardContent
+          className="walk-item-new__content ion-no-padding"
           style={{
-            borderTop: "solid 10px " + props.colour,
+            borderTop: "solid 6px " + props.colour,
           }}
         >
-          {moments.map((moment: Moment, index) => (
-            <IonCard key={index} className="walk-item__moment">
-              {moment.imagePath}
-              {moment.imagePath && (
-                <img
-                  className="walk-item__moment-image"
-                  src={moment.imagePath}
-                  alt=""
-                />
-              )}
-              {moment.note && (
-                <IonCardContent className="walk-item__moment-note">
-                  <IonText>{moment.note}</IonText>
-                </IonCardContent>
-              )}
-            </IonCard>
-          ))}
+          {props.coverImage && (
+            <img
+              src={props.coverImage}
+              alt=""
+              className="walk-item-new__image"
+            />
+          )}
+          <div className="walk-item-new__details">
+            {props.start && (
+              <small className="ion-text-uppercase">
+                {formatDate(props.start, false)}
+              </small>
+            )}
+            {props.description && (
+              <IonCardSubtitle>{props.description}</IonCardSubtitle>
+            )}
+            {((props.steps && props.steps > 0) || time["min"] > 0) && (
+              <p>
+                {props.distance?.toFixed(2)}
+                <span className="smallprint">&nbsp;{getUnitDistance()}</span>
+                &nbsp;— 
+                {props.steps}&nbsp;<span className="smallprint">steps</span>
+                &nbsp;— 
+                <span>
+                  {time["min"]}&nbsp;<span className="smallprint">min</span>
+                </span>
+              </p>
+            )}
+          </div>
         </IonCardContent>
-        {/* 
-      </IonCard> */}
-        {/* {momentsNew && props.displayMoments && (
-        <div className="constrain constrain--medium">
-          <IonText className="text-body ion-text-center">
-            <p>
-              <IonIcon icon={flagIcon} className="icon-large" />
-              <br />
-              {momentsNew.length} moment
-              {momentsNew.length !== 1 && "s"}
-              <br />
-              <IonIcon icon={chevronDownIcon} className="icon-small" />
-            </p>
-          </IonText>
-          {momentsNew.map((moment: Moment, index) => (
-            <IonCard key={index} className="walk-item__moment">
-              {moment.imagePath}
-              {moment.imagePath && (
-                <img
-                  className="walk-item__moment-image"
-                  src={moment.imagePath}
-                  alt=""
-                />
-              )}
-              {moment.note && (
-                <IonCardContent className="walk-item__moment-note">
-                  <IonText>{moment.note}</IonText>
-                </IonCardContent>
-              )}
-            </IonCard>
-          ))} 
-          <IonGrid>
-            <IonRow>
-              <IonCol className="" size="12" sizeSm="8" offsetSm="2">
-                <IonButton expand="block" onClick={viewMapHandler}>
-                  <IonIcon slot="start" icon={mapIcon} />
-                  View on Map
-                </IonButton>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-        </div>
-      )} */}
       </IonCard>
+      {moments.map((moment: Moment) => (
+        <IonCard
+          key={moment.timestamp}
+          className="walk-item__moment ion-no-margin"
+          color="medium"
+        >
+          {moment.imagePath && (
+            <img
+              className="walk-item__moment-image"
+              src={moment.imagePath}
+              alt=""
+            />
+          )}
+          {moment.audioPath && (
+            <IonCardContent className="walk-item__moment-audio">
+              <IonText>Listen:</IonText>
+              <audio controls className="ion-margin">
+                <source src={moment.audioPath} type="audio/mpeg" />
+              </audio>
+              {/* <IonIcon
+                slot="start"
+                icon={playIcon}
+                color="success"
+                style={{
+                  fontSize: "65px",
+                }}
+              /> */}
+            </IonCardContent>
+          )}
+          {moment.note && (
+            <IonCardContent className="walk-item__moment-note ion-text-center text-body">
+              <IonText className=" ion-padding">{moment.note}</IonText>
+            </IonCardContent>
+          )}
+        </IonCard>
+      ))}
     </>
   );
 };
