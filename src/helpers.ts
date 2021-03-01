@@ -60,10 +60,8 @@ export function getMinAndSec(totalSeconds: number) {
   };
 }
 
-export function getTimeDiff(startTime: string, endTime: string) {
-  const start = dayjs(startTime);
-  const end = dayjs(endTime);
-  return end.diff(start, "second");
+export function getTimeDiff(start: string, end: string) {
+  return dayjs(end).diff(dayjs(start), "second");
 }
 
 export function getFriendlyTimeOfDay() {
