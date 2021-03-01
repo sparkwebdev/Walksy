@@ -1,12 +1,12 @@
-import React from 'react';
-
 export type WalkType = 'user' | 'guided';
 
 export interface Moment {
-  id: string;
-  imagePath: string | null;
+  walkId: string;
+  imagePath: string;
+  audioPath: string;
   note: string;
-  location: Location | null;
+  location: Location;
+  timestamp: string;
 }
 
 export interface Walk {
@@ -15,11 +15,10 @@ export interface Walk {
   colour: string;
   description: string;
   type: WalkType;
-  startTime: string;
-  endTime: string;
+  start: string;
+  end: string;
   steps: number;
   distance: number;
-  moments: Moment[] | [];
   coverImage: string;
   locations: Location[] | [];
 }
@@ -27,7 +26,6 @@ export interface Walk {
 export interface Location {
   lat: number;
   lng: number;
-  timestamp: number;
 }
 
 export interface Time { 
@@ -51,3 +49,11 @@ export interface Entry {
 export function toEntry(doc: firebase.default.firestore.DocumentSnapshot): Entry {
   return  { id: doc.id, ...doc.data() } as Entry;
 }
+
+export function toWalk(doc: firebase.default.firestore.DocumentSnapshot): Walk {
+  return  { id: doc.id, ...doc.data() } as Walk;
+}
+export function toMoment(doc: firebase.default.firestore.DocumentSnapshot): Moment {
+  return  { walkId: doc.id, ...doc.data() } as Moment;
+}
+
