@@ -936,7 +936,7 @@ const NewWalk: React.FC = () => {
                             color="success"
                             disabled={description === ""}
                             onClick={() => {
-                              saveHandler(description);
+                              saveHandler(description, "");
                             }}
                           >
                             <IonIcon slot="start" icon={finishIcon} />

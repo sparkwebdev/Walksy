@@ -22,7 +22,6 @@ const WalksContextProvider: React.FC = (props) => {
         end: walk.end,
         steps: walk.steps,
         distance: walk.distance,
-        moments: walk.moments,
         coverImage: walk.coverImage,
         locations: walk.locations,
       };
@@ -63,7 +62,6 @@ const WalksContextProvider: React.FC = (props) => {
       end,
       steps,
       distance,
-      moments,
       coverImage,
       locations,
     };
@@ -87,7 +85,6 @@ const WalksContextProvider: React.FC = (props) => {
         end: storedWalk.start,
         steps: storedWalk.steps,
         distance: storedWalk.distance,
-        moments: storedWalk.moments,
         coverImage: storedWalk.coverImage,
         locations: storedWalk.locations,
       });
