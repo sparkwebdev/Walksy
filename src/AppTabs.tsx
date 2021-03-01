@@ -27,7 +27,6 @@ import {
 } from "ionicons/icons";
 
 import WalksContext from "./data/walks-context";
-import AddData from "./pages/AddData";
 
 const AppTabs: React.FC = () => {
   const { loggedIn } = useAuth();
@@ -45,9 +44,6 @@ const AppTabs: React.FC = () => {
   return (
     <IonTabs>
       <IonRouterOutlet>
-        <Route exact path="/app/add-data">
-          <AddData />
-        </Route>
         <Route exact path="/app/home">
           <HomePage />
         </Route>
