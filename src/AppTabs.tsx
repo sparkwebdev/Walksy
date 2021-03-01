@@ -10,8 +10,9 @@ import React, { useContext, useEffect } from "react";
 import { Redirect, Route } from "react-router";
 import { useAuth } from "./auth";
 import HomePage from "./pages/HomePage";
-import WalkPage from "./pages/WalkPage";
+import WalkEntryPage from "./pages/WalkEntryPage";
 import DashboardPage from "./pages/DashboardPage";
+import DiscoverEntryPage from "./pages/DiscoverEntryPage";
 import AboutPage from "./pages/AboutPage";
 import DiscoverPage from "./pages/DiscoverPage";
 import SettingsPage from "./pages/SettingsPage";
@@ -26,8 +27,7 @@ import {
 } from "ionicons/icons";
 
 import WalksContext from "./data/walks-context";
-
-const NewWalk = React.lazy(() => import("./pages/NewWalk"));
+import AddData from "./pages/AddData";
 
 const AppTabs: React.FC = () => {
   const { loggedIn } = useAuth();
@@ -45,19 +45,23 @@ const AppTabs: React.FC = () => {
   return (
     <IonTabs>
       <IonRouterOutlet>
+        <Route exact path="/app/add-data">
+          <AddData />
+        </Route>
         <Route exact path="/app/home">
           <HomePage />
         </Route>
-        <React.Suspense fallback={<IonSpinner />}>
-          <Route exact path="/app/walk/:id">
-            <WalkPage />
-          </Route>
-        </React.Suspense>
+        <Route exact path="/app/walk/:id">
+          <WalkEntryPage />
+        </Route>
         <Route exact path="/app/dashboard">
           <DashboardPage />
         </Route>
         <Route exact path="/app/discover">
           <DiscoverPage />
+        </Route>
+        <Route exact path="/app/discover/:id">
+          <DiscoverEntryPage />
         </Route>
         <Route exact path="/app/about">
           <AboutPage />
@@ -72,7 +76,7 @@ const AppTabs: React.FC = () => {
       <IonTabBar slot="bottom">
         <IonTabButton tab="home" href="/app/home">
           <IonIcon icon={browseIcon} />
-          <IonLabel>Browse</IonLabel>
+          <IonLabel>Gallery</IonLabel>
         </IonTabButton>
         <IonTabButton tab="discover" href="/app/discover">
           <IonIcon icon={discoverIcon} />
