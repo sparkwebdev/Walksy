@@ -91,3 +91,20 @@ small {
   max-width: 500px;
   margin: 20px auto;
 }
+
+.grid-new {
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.grid-new__item {
+  flex: 0 0 auto;
+  margin-bottom: 1.2%;
+  width: 100%;
+}
+.grid-new__item img {
+  display: block;
+}
+.grid-new__item:nth-child(4n + 1),
+.grid-new__item:nth-child(4n + 2) {
+  width: 49.4%;
+}
