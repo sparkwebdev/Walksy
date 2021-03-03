@@ -107,6 +107,7 @@ const NewWalk: React.FC = () => {
   const [steps, setSteps] = useState<number>(0);
   const [distance, setDistance] = useState<number>(0);
   const [description, setDescription] = useState("");
+  const [coverImage, setCoverImage] = useState("");
   const [end, setEnd] = useState<string>("");
 
   // Walk view state - Tutorial
@@ -217,12 +218,11 @@ const NewWalk: React.FC = () => {
 
   useEffect(() => {
     if (end) {
-      let coverImage: string = "";
       let firstMomentImage = moments.find((moment) => {
         return moment.imagePath !== null;
       });
       if (firstMomentImage?.imagePath) {
-        coverImage = firstMomentImage.imagePath;
+        setCoverImage(firstMomentImage.imagePath);
       }
       walksCtx.addWalk(
         title,
@@ -910,6 +910,29 @@ const NewWalk: React.FC = () => {
                   <Progress time={time} distance={distance} steps={steps} />
                   <IonList>
                     <IonItem className="ion-margin-top">
+                      <img src={coverImage} alt="" />
+                      <IonLabel position="stacked">
+                        Choose a cover image...
+                      </IonLabel>
+                      {moments.length > 0 ? (
+                        <IonGrid>
+                          <IonRow>
+                            {moments.map((moment) => {
+                              return (
+                                <IonCol>
+                                  <img
+                                    src="{moment.imagePath}"
+                                    alt=""
+                                    onClick={() => {
+                                      setCoverImage(moment.imagePath);
+                                    }}
+                                  />
+                                </IonCol>
+                              );
+                            })}
+                          </IonRow>
+                        </IonGrid>
+                      ) : null}
                       <IonLabel position="stacked">
                         Give this walk a short description...
                       </IonLabel>
