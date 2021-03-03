@@ -365,6 +365,8 @@ const NewWalk: React.FC = () => {
     }
   };
 
+  const viewMapHandler = async () => {
+  };
   return (
     <IonPage>
       <PageHeader
