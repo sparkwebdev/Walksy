@@ -50,7 +50,7 @@ const PageHeader: React.FC<ContainerProps> = ({
         )}
         {!showTool && !toolAction && (
           <IonButtons slot="end">
-            <IonButton href="/app/about">
+            <IonButton routerLink="/app/about">
               <IonIcon slot="icon-only" icon={informationIcon} />
             </IonButton>
           </IonButtons>

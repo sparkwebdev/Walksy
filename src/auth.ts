@@ -17,12 +17,12 @@ export function useAuth(): Auth {
 }
 
 export function useAuthInit(): AuthInit {
-  const [AuthInit, setAuthInit] = useState<AuthInit>({ loading: true } );
+  const [authInit, setAuthInit] = useState<AuthInit>({ loading: true } );
   useEffect(() => {
     return firebaseAuth.onAuthStateChanged((firebaseUser) => {
       const auth = firebaseUser ? { loggedIn: true, userId: firebaseUser.uid } : { loggedIn: false }
       setAuthInit({ loading: false, auth });
     });
   }, []);
-  return AuthInit;
+  return authInit;
 }

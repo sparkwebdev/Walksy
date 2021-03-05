@@ -31,11 +31,11 @@ const HomePage: React.FC = () => {
         <IonGrid className="ion-no-padding">
           <IonRow className="grid-new">
             {moments.map((moment, index) => (
-              <IonCol className="grid-new__item">
+              <IonCol className="grid-new__item" key={index}>
                 <IonCard
                   className="ion-no-margin ion-no-padding"
                   key={index}
-                  href={`/app/walk/${moment.walkId}`}
+                  routerLink={`/app/walk/${moment.walkId}`}
                 >
                   <MomentItemPreview
                     walkId={moment.walkId}

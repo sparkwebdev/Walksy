@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IonList, IonItem, IonListHeader, IonLabel } from "@ionic/react";
+import { IonList, IonItem, IonLabel } from "@ionic/react";
 import { firestore } from "../firebase";
 import { Entry, toEntry } from "../data/models";
 import dayjs from "dayjs";
@@ -21,7 +21,7 @@ const LatestNews: React.FC<ContainerProps> = ({
       .orderBy("date")
       .limit(count)
       .onSnapshot(({ docs }) => setEntries(docs.map(toEntry)));
-  }, []);
+  }, [count]);
 
   return (
     <div>

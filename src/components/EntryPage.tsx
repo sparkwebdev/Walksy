@@ -1,4 +1,4 @@
-import { IonPage, IonContent, IonText } from "@ionic/react";
+import { IonPage, IonContent } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { firestore } from "../firebase";

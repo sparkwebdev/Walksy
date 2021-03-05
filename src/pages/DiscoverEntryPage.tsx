@@ -44,7 +44,7 @@ const DiscoverEntryPage: React.FC = () => {
           setWalks(docs.map(toWalk));
         });
     }
-  }, []);
+  }, [id]);
 
   return (
     <IonPage>

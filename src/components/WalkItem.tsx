@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { formatDate, getMinAndSec, getTimeDiff, loadImage } from "../helpers";
+import { formatDate, getMinAndSec, getTimeDiff } from "../helpers";
 import {
   IonCard,
   IonCardContent,
@@ -41,7 +41,7 @@ const WalkItem: React.FC<{
     return momentsRef.orderBy("timestamp").onSnapshot(({ docs }) => {
       setMoments(docs.map(toMoment));
     });
-  }, []);
+  }, [props.id]);
 
   return (
     <>

@@ -20,7 +20,7 @@ const DashboardPage: React.FC = () => {
       .onSnapshot(({ docs }) => {
         setWalks(docs.map(toWalk));
       });
-  }, []);
+  }, [userId]);
 
   return (
     <IonPage>
@@ -30,7 +30,7 @@ const DashboardPage: React.FC = () => {
           <IonCard
             className="ion-no-margin ion-no-padding"
             key={walk.id}
-            href={`/app/walk/${walk.id}`}
+            routerLink={`/app/walk/${walk.id}`}
           >
             <WalkItemPreview
               title={walk.title}

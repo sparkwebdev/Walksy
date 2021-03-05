@@ -18,11 +18,12 @@ const DiscoverPage: React.FC = () => {
         <div className="constrain constrain--large">
           <IonCard
             className="walk-card ion-no-margin ion-no-padding"
-            href="/app/discover/nearby"
+            routerLink="/app/discover/nearby"
           >
             <img
               className="walk-card__image"
               src="assets/img/cover-nearby-walks.jpg"
+              alt=""
             />
             <IonCardHeader className="walk-card__header">
               <IonCardTitle className="walk-card__title text-body">
@@ -35,11 +36,12 @@ const DiscoverPage: React.FC = () => {
           </IonCard>
           <IonCard
             className="walk-card ion-no-margin"
-            href="/app/discover/recent"
+            routerLink="/app/discover/recent"
           >
             <img
               className="walk-card__image"
               src="assets/img/cover-recent-walks.jpg"
+              alt=""
             />
             <IonCardHeader className="walk-card__header">
               <IonCardTitle className="walk-card__title text-body">
@@ -52,11 +54,12 @@ const DiscoverPage: React.FC = () => {
           </IonCard>
           <IonCard
             className="walk-card ion-no-margin"
-            href="/app/discover/curated"
+            routerLink="/app/discover/curated"
           >
             <img
               className="walk-card__image"
               src="assets/img/cover-curated-walks.jpg"
+              alt=""
             />
             <IonCardHeader className="walk-card__header">
               <IonCardTitle className="walk-card__title text-body">
@@ -69,11 +72,12 @@ const DiscoverPage: React.FC = () => {
           </IonCard>
           <IonCard
             className="walk-card ion-no-margin"
-            href="/app/discover/tag-foraging"
+            routerLink="/app/discover/tag-foraging"
           >
             <img
               className="walk-card__image"
               src="assets/img/cover-tag-foraging.jpg"
+              alt=""
             />
             <IonCardHeader className="walk-card__header">
               <IonCardTitle className="walk-card__title text-body">
@@ -83,11 +87,12 @@ const DiscoverPage: React.FC = () => {
           </IonCard>
           <IonCard
             className="walk-card ion-no-margin"
-            href="/app/discover/tag-streetart"
+            routerLink="/app/discover/tag-streetart"
           >
             <img
               className="walk-card__image"
               src="assets/img/cover-tag-streetart.jpg"
+              alt=""
             />
             <IonCardHeader className="walk-card__header">
               <IonCardTitle className="walk-card__title text-body">
