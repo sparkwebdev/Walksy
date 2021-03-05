@@ -3,6 +3,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { Plugins } from "@capacitor/core";
+import { Moment, Walk } from './data/models';
 
 const { Storage } = Plugins;
 
@@ -32,28 +33,49 @@ export const createUserProfileDocument = async (userAuth: any, additionalData: {
   const snapShot = await userRef.get();
   if (!snapShot.exists) {
     const createdAt = new Date();
+    const userData = {
+      userId: userAuth.uid,
+      createdAt,
+      metric: true,
+      profilePic: '',
+      displayName: additionalData.firstName,
+      ...additionalData
+    };
     try {
-      await userRef.set({
-        userId: userAuth.uid,
-        createdAt,
-        metric: true,
-        profilePic: '',
-        displayName: additionalData.firstName,
-        ...additionalData
-      });
+      await userRef.set(userData);
     } catch (error) {
       console.log('error creating user', error.message);
     } finally {
-      const userProfile = {
-        userId: userAuth.uid,
-        createdAt,
-        metric: true,
-        profilePic: '',
-        displayName: additionalData.firstName,
-        ...additionalData
-      };
+      const userProfile = userData;
       Storage.set({ key: "userProfile", value: JSON.stringify(userProfile) });
       return userRef;
     }
   }
 }
+
+export const handleSaveWalk = async (walkData: Walk, moments: Moment[]) => {
+  const walksRef = firestore.collection("users-walks");
+  const walkRef = await walksRef
+    .add({
+      ...walkData,
+    })
+    .then((data) => {
+      moments.forEach((moment) => {
+        handleSaveMoment(moment, data.id, walkData.userId);
+      });
+    });
+    return walkRef;
+}
+
+const handleSaveMoment = async (moment: any, walkId: string, userId: string) => {
+  const momentsRef = firestore.collection("users-moments");
+  const momentRef = await momentsRef
+    .add({
+      ...moment,
+      walkId,
+      userId,
+    })
+    .then((data) => {
+      console.log("Saved moments for walk: ", walkId);
+    });
+};

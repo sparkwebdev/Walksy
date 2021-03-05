@@ -1,5 +1,3 @@
-export type WalkType = 'user' | 'guided';
-
 export interface Moment {
   walkId: string;
   imagePath: string;
@@ -14,18 +12,19 @@ export interface Walk {
   title: string;
   colour: string;
   description: string;
-  type: WalkType;
   start: string;
   end: string;
   steps: number;
   distance: number;
   coverImage: string;
   locations: Location[] | [];
+  userId: string;
 }
 
 export interface Location {
   lat: number;
   lng: number;
+  timestamp: string;
 }
 
 export interface Time { 

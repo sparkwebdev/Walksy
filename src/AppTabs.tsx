@@ -6,7 +6,7 @@ import {
   IonLabel,
   IonIcon,
 } from "@ionic/react";
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { Redirect, Route } from "react-router";
 import { useAuth } from "./auth";
 import HomePage from "./pages/HomePage";
@@ -26,16 +26,8 @@ import {
   person as profileIcon,
 } from "ionicons/icons";
 
-import WalksContext from "./data/walks-context";
-
 const AppTabs: React.FC = () => {
   const { loggedIn } = useAuth();
-  const walksCtx = useContext(WalksContext);
-
-  const { initContext } = walksCtx;
-  useEffect(() => {
-    initContext();
-  }, [initContext]);
 
   if (!loggedIn) {
     return <Redirect to="/intro" />;
