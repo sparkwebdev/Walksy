@@ -12,7 +12,7 @@ import React from "react";
 
 const WalkTutorial: React.FC<{
   onFinish: () => void;
-}> = (props) => {
+}> = ({ onFinish }) => {
   return (
     <div className="centered-content centered-content--no-toolbar">
       <div className="constrain constrain--medium">
@@ -61,7 +61,7 @@ const WalkTutorial: React.FC<{
                   Excepteur sint occaecat cupidatat non proident, sunt in culpa
                   qui officia deserunt mollit anim id est laborum.
                 </p>
-                <IonButton className="ion-margin-top" onClick={props.onFinish}>
+                <IonButton className="ion-margin-top" onClick={onFinish}>
                   Let's Walk!
                 </IonButton>
               </IonSlide>

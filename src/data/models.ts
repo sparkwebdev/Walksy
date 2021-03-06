@@ -3,7 +3,7 @@ export interface Moment {
   imagePath: string;
   audioPath: string;
   note: string;
-  location: Location;
+  location: Location | null;
   timestamp: string;
 }
 
@@ -24,7 +24,6 @@ export interface Walk {
 export interface Location {
   lat: number;
   lng: number;
-  timestamp: string;
 }
 
 export interface Time { 
