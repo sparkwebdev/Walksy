@@ -1,10 +1,4 @@
-import React, {
-  useState,
-  useEffect,
-  useContext,
-  useRef,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   IonPage,
   IonContent,
@@ -12,78 +6,28 @@ import {
   IonCard,
   IonCardHeader,
   IonCardSubtitle,
-  IonCardContent,
-  IonList,
-  IonItem,
-  IonLabel,
-  IonInput,
-  IonGrid,
-  IonRow,
-  IonCol,
   IonLoading,
-  IonButton,
-  IonIcon,
-  IonAlert,
-  IonModal,
-  IonTextarea,
-  IonText,
 } from "@ionic/react";
-import { useHistory } from "react-router-dom";
 import "./NewWalk.css";
 import "../components/ImagePicker.css";
-import {
-  Plugins,
-  CameraResultType,
-  CameraSource,
-  Capacitor,
-  Filesystem,
-  FilesystemDirectory,
-} from "@capacitor/core";
+import { Plugins } from "@capacitor/core";
 import WalkTutorial from "../components/WalkTutorial";
 import PageHeader from "../components/PageHeader";
-import { Pedometer } from "@ionic-native/pedometer";
 import Progress from "../components/Progress";
 
-import { Location, Moment, Photo, Time } from "../data/models";
+import { Location, Moment } from "../data/models";
 import WalksContext from "../data/walks-context";
-import {
-  generateHslaColors,
-  getFriendlyTimeOfDay,
-  getFriendlyWalkDescriptor,
-  getMinAndSec,
-  getTimeDiff,
-} from "../helpers";
 
-import {
-  checkmark as finishIcon,
-  close as cancelIcon,
-  micCircleOutline as recordlIcon,
-  stopCircleOutline as stopIcon,
-  chevronDown as chevronDownIcon,
-  flagOutline as flagIcon,
-  map as mapIcon,
-} from "ionicons/icons";
+import { useAuth } from "../auth";
+import NewWalkPre from "./NewWalkPre";
+import NewWalkAddMoment from "./NewWalkAddMoment";
+import NewWalkPost from "./NewWalkPost";
 
-import { base64FromPath } from "@ionic/react-hooks/filesystem";
-
-const { Storage, Geolocation, Camera } = Plugins;
-
-const suggestedTitle = () => {
-  return `${getFriendlyTimeOfDay()} ${getFriendlyWalkDescriptor()}`;
-};
-
-let colours = generateHslaColors(14, undefined, undefined, true);
-function shift(arr: any) {
-  const shiftByRandom = Math.floor(Math.random() * colours.length);
-  return arr.map(
-    (_: any, i: any, a: any) => a[(i + a.length - shiftByRandom) % a.length]
-  );
-}
-colours = shift(colours);
+const { Storage, Geolocation } = Plugins;
 
 const NewWalk: React.FC = () => {
-  const history = useHistory();
   const walksCtx = useContext(WalksContext);
+  const { userId } = useAuth();
 
   // Global (View) states
   const [loading, setLoading] = useState<boolean>(false);
@@ -93,19 +37,13 @@ const NewWalk: React.FC = () => {
   }>({ showError: false });
 
   // Global (Walk) states
-  const [title, setTitle] = useState<string>(suggestedTitle());
-  const [colour, setColour] = useState<string>(colours[0]);
+  const [title, setTitle] = useState<string>("");
+  const [colour, setColour] = useState<string>("");
   const [start, setStart] = useState<string>("");
-  const [currentLocation, setCurrentLocation] = useState<
-    Location | null | undefined
-  >(undefined);
-  const [locations, setLocations] = useState<Location[] | []>([]);
-  const [time, setTime] = useState<Time>({
-    min: 0,
-    sec: 0,
-  });
   const [steps, setSteps] = useState<number>(0);
   const [distance, setDistance] = useState<number>(0);
+  const [locations, setLocations] = useState<Location[] | []>([]);
+  const [moments, setMoments] = useState<Moment[]>([]);
   const [description, setDescription] = useState("");
   const [coverImage, setCoverImage] = useState("");
   const [end, setEnd] = useState<string>("");
@@ -137,848 +75,185 @@ const NewWalk: React.FC = () => {
     setShowHelp(true);
   };
 
-  // Walk view state - Pre Walking
+  const getLocation = async (showLoading: boolean = true) => {
+    if (showLoading) {
+      setLoading(true);
+    }
+    try {
+      const position = await Geolocation.getCurrentPosition({
+        timeout: 3000,
+      });
+      const location: Location = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      };
+      if (location !== null) {
+        setLocations([...locations, location]);
+      }
+      setLoading(false);
+      return location;
+    } catch (e) {
+      setLoading(false);
+      setError({ showError: true, message: "Could not get your location" });
+      return null;
+    }
+  };
 
-  // Walk view state - Is Walking
-  const [cancelAlert, setCancelAlert] = useState(false);
+  const startWalkHandler = () => {
+    getLocation().then(() => {
+      setStart(new Date().toISOString());
+    });
+  };
 
-  const cancelHandler = () => {
-    setLocations([]);
+  const resetWalkHandler = () => {
     setStart("");
     setEnd("");
   };
 
-  const endHandler = () => {
-    getLocation();
-    setEnd(new Date().toISOString());
+  const endWalkHandler = () => {
+    getLocation().then(() => {
+      setEnd(new Date().toISOString());
+    });
   };
 
-  const getLocation = async () => {
+  const saveWalkHandler = async () => {
     setLoading(true);
-    try {
-      const position = await Geolocation.getCurrentPosition();
-      const currentLocation: Location = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      };
-      setCurrentLocation(currentLocation);
-      setLoading(false);
-    } catch (e) {
-      setCurrentLocation(null);
-      setLoading(false);
-    }
+    await walksCtx.saveWalk(
+      title,
+      colour,
+      description,
+      start,
+      end,
+      steps,
+      distance,
+      moments,
+      coverImage,
+      locations,
+      userId!
+    );
+    setLoading(false);
   };
-
-  const getLocationBackground = async () => {
-    try {
-      const position = await Geolocation.getCurrentPosition();
-      const currentLocation: Location = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-      };
-      setCurrentLocation(currentLocation);
-    } catch (e) {
-      setCurrentLocation(null);
-    }
-  };
-
-  useEffect(() => {
-    if (currentLocation !== undefined) {
-      if (!start) {
-        setStart(new Date().toISOString());
-      }
-      if (
-        currentLocation !== null &&
-        (locations.length == 0 ||
-          currentLocation !== locations[locations.length - 1])
-      ) {
-        setLocations([...locations, currentLocation]);
-      }
-    }
-  }, [currentLocation]);
-
-  useEffect(() => {
-    let ticker: any = null;
-    if (start) {
-      ticker = setInterval(() => {
-        const timeDiff = getTimeDiff(start, new Date().toISOString());
-        const minAndSec = getMinAndSec(timeDiff);
-        setTime(minAndSec);
-      }, 1000);
-      Pedometer.startPedometerUpdates().subscribe((data) => {
-        setSteps(data.numberOfSteps);
-        setDistance(data.distance / 1000); // metres to km
-      });
-    }
-    return () => {
-      clearInterval(ticker);
-      Pedometer.stopPedometerUpdates();
-    };
-  }, [start]);
 
   useEffect(() => {
     if (end) {
-      let firstMomentImage = moments.find((moment) => {
-        return moment.imagePath !== null;
-      });
-      if (firstMomentImage?.imagePath) {
-        setCoverImage(firstMomentImage.imagePath);
-      }
-      walksCtx.addWalk(
-        title,
-        colour,
-        description,
-        "user",
-        start,
-        end,
-        steps,
-        distance,
-        moments,
-        coverImage,
-        locations
-      );
+      saveWalkHandler();
     }
   }, [end]);
 
-  // Walk view state - Finished Walking
-  const saveHandler = (description: string, coverImage: string) => {
-    console.log("should update description and cover", description, coverImage);
-    history.replace("/app/dashboard");
+  // Update state handlers
+  const updateWalkTitleColour = (title: string, colour: string) => {
+    setTitle(title);
+    setColour(colour);
+  };
+  const updateWalkStepsDistance = (steps: number, distance: number) => {
+    setSteps(steps);
+    setDistance(distance);
+  };
+  const updateWalkMoments = (moments: Moment[]) => {
+    setMoments(moments);
+  };
+  const updateWalkDescriptionCoverImage = (
+    description: string,
+    coverImage: string
+  ) => {
+    setDescription(description);
+    setCoverImage(coverImage);
   };
 
-  // Add Moment
-  const [moments, setMoments] = useState<Moment[]>([]);
-  const [note, setNote] = useState<string>("");
-  const [location, setLocation] = useState<Location | null | undefined>(
-    undefined
-  );
-  const [addMomentModal, setAddMomentModal] = useState<boolean>(false);
-  const [addMomentCurrent, setAddMomentCurrent] = useState<string>("");
-  const [takenPhoto, setTakenPhoto] = useState<Photo | null>(null);
-  const [takenPhotoPath, setTakenPhotoPath] = useState<string>("");
-  const [recordingAudio, setRecordingAudio] = useState<boolean>(false);
-  const [takenAudioPath, setTakenAudioPath] = useState<string>("");
-  const [audio, setAudio] = useState<boolean>(false);
-
-  const filePickerChildRef = useRef();
-
-  const addMomentHandler = (type: string) => {
-    setAddMomentModal(true);
-    setAddMomentCurrent(type);
-    getLocationBackground();
-    // if (type === "Photo") {
-    //   (filePickerChildRef as any).current.openFilePicker();
-    // }
-  };
-
-  const photoPickHandler = (photo: Photo | null) => {
-    if (photo) {
-      savePhoto(photo).then((path) => {
-        setTakenPhotoPath(path);
-      });
-    }
-    setTakenPhoto(photo);
-  };
-
-  const recordAudioHandler = () => {
-    setRecordingAudio(!recordingAudio);
-    setAudio(true);
-  };
-
-  const savePhoto = async (photo: Photo) => {
-    const base64 = await base64FromPath(photo.preview);
-    let fileName = new Date().getTime() + ".jpeg";
-    Filesystem.writeFile({
-      path: fileName,
-      data: base64,
-      directory: FilesystemDirectory.Data,
-    });
-    return fileName;
-  };
-
-  const resetMoments = () => {
-    // setMoments([]);
-  };
-
-  const saveMomentHandler = () => {
-    const newMoment: Moment = {
-      walkId: "",
-      imagePath: takenPhotoPath,
-      audioPath: takenAudioPath,
-      note: note,
-      location: currentLocation!,
-      timestamp: new Date().toString(),
-    };
-    setMoments([...moments, newMoment]);
-    clearMomentHandler();
-  };
-
-  const clearMomentHandler = () => {
-    setNote("");
-    setTakenPhoto(null);
-    setTakenPhotoPath("");
-    setAddMomentModal(false);
-  };
-
-  const filePickerRef = useRef<HTMLInputElement>(null);
-
-  const openFilePicker = () => {
-    filePickerRef.current!.click();
-  };
-
-  const pickFileHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target!.files![0];
-    const fr = new FileReader();
-    fr.onload = () => {
-      const photo: Photo = {
-        path: undefined,
-        preview: fr.result!.toString(),
-      };
-      setTakenPhoto(photo);
-    };
-    fr.readAsDataURL(file);
-  };
-
-  const takePhotoHandler = async () => {
-    if (!Capacitor.isPluginAvailable("Camera")) {
-      openFilePicker();
-      return;
-    }
-    try {
-      const photo = await Camera.getPhoto({
-        resultType: CameraResultType.Uri,
-        source: CameraSource.Prompt,
-        quality: 80,
-        width: 800,
-      });
-
-      if (!photo || !photo.webPath) {
-        return;
-      }
-      const pickedPhoto: Photo = {
-        path: photo.path,
-        preview: photo.webPath,
-      };
-      setTakenPhoto(pickedPhoto);
-    } catch (error) {
-      openFilePicker();
-    }
-  };
-
-  const viewMapHandler = async () => {
-  };
   return (
     <IonPage>
       <PageHeader
-        title="Walk"
+        title="New Walk"
         back={!start && !end}
         showTool={!start && !end && !showTutorial}
         toolText="Help"
         toolAction={getHelpHandler}
       />
-      <IonContent scrollY={false}>
-        {/* 
-        *
-        *
-        Tutorial view state
-        *
-        *
-        */}
-        {(showTutorial || showHelp) && (
-          <WalkTutorial onFinish={finishTutorialHandler} />
-        )}
-        {/* 
-        *
-        *
-        Pre Walk view state
-        *
-        *
-        */}
-        {!start && !end && showTutorial === false && !showHelp && (
-          <div className="centered-content centered-content--no-toolbar">
-            <div className="constrain constrain--medium">
-              <IonCard>
-                <IonCardHeader
-                  className="ion-no-padding"
-                  style={{
-                    backgroundColor: colour,
-                  }}
-                >
-                  <IonCardSubtitle
-                    className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
-                    color="dark"
-                  >
-                    Start your walk...
-                  </IonCardSubtitle>
-                </IonCardHeader>
-                <IonCardContent className="ion-no-padding">
-                  <IonList>
-                    <IonItem className="ion-margin-top">
-                      <IonLabel position="stacked">
-                        Give this walk a title...
-                      </IonLabel>
-                      <IonInput
-                        type="text"
-                        value={title}
-                        maxlength={40}
-                        onIonChange={(event) => setTitle(event.detail!.value!)}
-                      />
-                    </IonItem>
-                    <p className="ion-padding-start">
-                      <small>{40 - title.length} characters remaining</small>
-                    </p>
-                  </IonList>
-                  <IonList lines="none">
-                    <IonItem className="ion-margin-top">
-                      <IonLabel position="stacked">
-                        Give this walk a colour...
-                      </IonLabel>
-                      <IonGrid
-                        className="swatches ion-margin-top ion-justify-content-center"
-                        style={{ backgroundColor: "var(--ion-color-light)" }}
-                      >
-                        <IonRow className="ion-justify-content-between">
-                          {colours.map((current) => {
-                            return (
-                              <IonCol
-                                className={
-                                  current === colour
-                                    ? "swatches__colour swatches__colour--chosen"
-                                    : "swatches__colour"
-                                }
-                                key={current}
-                                style={{
-                                  background: current,
-                                }}
-                                onClick={() => {
-                                  setColour(current);
-                                }}
-                              ></IonCol>
-                            );
-                          })}
-                        </IonRow>
-                      </IonGrid>
-                    </IonItem>
-                    <IonItem
-                      lines="none"
-                      className="ion-hide ion-margin-bottom"
-                    >
-                      <IonInput
-                        type="text"
-                        value={colour}
-                        className="swatches__colour swatches__colour--output"
-                        onIonChange={() => setColour(colour)}
-                        disabled={true}
-                        hidden={true}
-                      ></IonInput>
-                    </IonItem>
-                  </IonList>
-                </IonCardContent>
-                <IonCardHeader
-                  className="ion-margin-top ion-no-padding"
-                  color="light"
-                >
-                  <IonCardSubtitle className="ion-no-margin">
-                    <IonGrid>
-                      <IonRow>
-                        <IonCol size="12" sizeSm="8" offsetSm="2">
-                          <IonButton
-                            expand="block"
-                            disabled={title === ""}
-                            onClick={() => {
-                              getLocation();
-                            }}
-                          >
-                            Start
-                          </IonButton>
-                        </IonCol>
-                      </IonRow>
-                    </IonGrid>
-                  </IonCardSubtitle>
-                </IonCardHeader>
-              </IonCard>
-            </div>
-            <IonLoading message={"Getting your location..."} isOpen={loading} />
-          </div>
-        )}
-        {/* 
-        *
-        *
-        Walk In Progress view state
-        *
-        *
-        */}
-        {start && !end && (
-          <div className="centered-content centered-content--no-toolbar">
-            <div className="constrain constrain--medium">
-              <IonCard>
-                <IonCardHeader
-                  className="ion-no-padding"
-                  style={{
-                    backgroundColor: colour,
-                  }}
-                >
-                  <IonCardSubtitle
-                    className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
-                    color="dark"
-                  >
-                    {title}
-                  </IonCardSubtitle>
-                </IonCardHeader>
-                <IonCardContent className="ion-no-padding">
-                  {/* 
-                  *
-                  *
-                  Progress
-                  *
-                  *
-                  */}
-                  <Progress time={time} distance={distance} steps={steps} />
-                  {/* 
-                  *
-                  *
-                  Add Moment
-                  *
-                  *
-                  */}
-                  <IonCard className="moment-panel ion-no-margin">
-                    <IonCardContent>
-                      <IonGrid>
-                        <IonRow>
-                          <IonCol
-                            onClick={() => {
-                              addMomentHandler("Photo");
-                            }}
-                          >
-                            <img src="assets/img/icon-camera.svg" alt="" />
-                            <h3 className="text-heading ion-text-center">
-                              <strong>Add Photo</strong>
-                            </h3>
-                          </IonCol>
-                          <IonCol
-                            onClick={() => {
-                              addMomentHandler("Audio");
-                            }}
-                          >
-                            <img src="assets/img/icon-audio.svg" alt="" />
-                            <h3 className="text-heading ion-text-center">
-                              <strong>Add Sound</strong>
-                            </h3>
-                          </IonCol>
-                          <IonCol
-                            onClick={() => {
-                              addMomentHandler("Note");
-                            }}
-                          >
-                            <img src="assets/img/icon-note.svg" alt="" />
-                            <h3 className="text-heading ion-text-center">
-                              <strong>Add Note</strong>
-                            </h3>
-                          </IonCol>
-                        </IonRow>
-                      </IonGrid>
+      <IonContent
+        scrollY={false}
+        style={{
+          margin: "auto",
+        }}
+      >
+        <IonCard
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100%",
+          }}
+          className="ion-no-margin"
+        >
+          {/* Tutorial view state */}
+          {(showTutorial || showHelp) && (
+            <WalkTutorial onFinish={finishTutorialHandler} />
+          )}
 
-                      <IonModal
-                        isOpen={addMomentModal}
-                        onDidPresent={() => {
-                          if (addMomentCurrent === "Photo" && !takenPhoto) {
-                            filePickerRef.current!.click();
-                          }
-                        }}
-                      >
-                        <div className="centered-content centered-content--no-toolbar-no-header">
-                          <div className="constrain constrain--medium">
-                            <div className="ion-padding-top ion-margin-top">
-                              <IonCard color="medium">
-                                <IonCardHeader
-                                  className="ion-no-padding"
-                                  style={{
-                                    backgroundColor: colour,
-                                  }}
-                                >
-                                  <IonCardSubtitle
-                                    className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
-                                    color="dark"
-                                  >
-                                    Add {addMomentCurrent}
-                                  </IonCardSubtitle>
-                                </IonCardHeader>
-                                <IonCardContent className="ion-no-padding">
-                                  {addMomentCurrent === "Photo" && (
-                                    <div
-                                      className="image-picker"
-                                      onClick={takePhotoHandler}
-                                    >
-                                      {!takenPhoto && (
-                                        <IonText className="image-picker__label">
-                                          No photo chosen
-                                        </IonText>
-                                      )}
-                                      {takenPhoto && (
-                                        <img
-                                          className="image-picker__preview"
-                                          src={takenPhoto.preview}
-                                          alt="Preview"
-                                        />
-                                      )}
-                                      <input
-                                        type="file"
-                                        hidden
-                                        ref={filePickerRef}
-                                      />
-                                    </div>
-                                  )}
-                                  {addMomentCurrent === "Audio" && (
-                                    <p
-                                      style={{
-                                        margin: "0 auto",
-                                        padding: "30px 0",
-                                        background: "white",
-                                        textAlign: "center",
-                                      }}
-                                      onClick={() => {
-                                        setRecordingAudio(!recordingAudio);
-                                      }}
-                                    >
-                                      <IonIcon
-                                        slot="start"
-                                        icon={
-                                          recordingAudio
-                                            ? stopIcon
-                                            : recordlIcon
-                                        }
-                                        color={
-                                          recordingAudio ? "danger" : "success"
-                                        }
-                                        style={{
-                                          fontSize: "65px",
-                                        }}
-                                      />
-                                      <br />
-                                      <strong>
-                                        {recordingAudio ? "Stop" : "Record"}
-                                      </strong>
-                                    </p>
-                                  )}
-                                  {addMomentCurrent === "Note" && (
-                                    <div>
-                                      <IonLabel hidden={true}>
-                                        Add a note...
-                                      </IonLabel>
-                                      <IonTextarea
-                                        placeholder="A thought or description..."
-                                        maxlength={280}
-                                        rows={8}
-                                        style={{
-                                          padding: "10px 20px",
-                                          margin: "0",
-                                          backgroundColor: "white",
-                                        }}
-                                        value={note}
-                                        onIonChange={(event) => {
-                                          setNote(event.detail.value!);
-                                        }}
-                                      ></IonTextarea>
-                                      <p className="ion-padding">
-                                        <small>
-                                          {280 - note.length} characters
-                                          remaining
-                                        </small>
-                                      </p>
-                                    </div>
-                                  )}
-                                </IonCardContent>
-
-                                <IonCardHeader
-                                  className="ion-no-padding"
-                                  color="light"
-                                >
-                                  <IonGrid>
-                                    <IonRow>
-                                      <IonCol size="5">
-                                        <IonButton
-                                          expand="block"
-                                          color="danger"
-                                          onClick={() => {
-                                            if (note.length > 0) {
-                                              setCancelAlert(true);
-                                            } else {
-                                              setAddMomentModal(false);
-                                            }
-                                          }}
-                                        >
-                                          <IonIcon
-                                            slot="start"
-                                            icon={cancelIcon}
-                                          />
-                                          Cancel
-                                        </IonButton>
-                                        <IonAlert
-                                          header={"Cancel"}
-                                          subHeader={"Are you sure?"}
-                                          buttons={[
-                                            {
-                                              text: "No",
-                                              role: "cancel",
-                                            },
-                                            {
-                                              text: "Yes",
-                                              cssClass: "secondary",
-                                              handler: clearMomentHandler,
-                                            },
-                                          ]}
-                                          isOpen={cancelAlert}
-                                          onDidDismiss={() =>
-                                            setCancelAlert(false)
-                                          }
-                                        />
-                                      </IonCol>
-                                      <IonCol size="7">
-                                        <IonButton
-                                          expand="block"
-                                          color="success"
-                                          onClick={() => {
-                                            saveMomentHandler();
-                                          }}
-                                        >
-                                          <IonIcon
-                                            slot="start"
-                                            icon={finishIcon}
-                                          />
-                                          Add {addMomentCurrent}
-                                        </IonButton>
-                                      </IonCol>
-                                    </IonRow>
-                                  </IonGrid>
-                                </IonCardHeader>
-                              </IonCard>
-                            </div>
-                          </div>
-                        </div>
-                      </IonModal>
-
-                      {moments.length > 0 ? (
-                        <IonGrid>
-                          <IonRow>
-                            <IonCol size="12" className="ion-text-center">
-                              {moments.length > 0 && (
-                                <IonText className="text-body">
-                                  <p>
-                                    <IonIcon
-                                      icon={flagIcon}
-                                      className="icon-large"
-                                    />
-                                  </p>
-                                  {moments.length} moment
-                                  {moments.length !== 1 && "s"}
-                                  <p>
-                                    <IonIcon
-                                      icon={chevronDownIcon}
-                                      className="icon-small"
-                                    />
-                                  </p>
-                                </IonText>
-                              )}
-                            </IonCol>
-                          </IonRow>
-                          <IonRow>
-                            <IonCol
-                              className="ion-no-margin ion-no-padding"
-                              size="12"
-                              sizeSm="8"
-                              offsetSm="2"
-                            >
-                              <IonButton
-                                expand="block"
-                                onClick={viewMapHandler}
-                              >
-                                <IonIcon slot="start" icon={mapIcon} />
-                                View on Map
-                              </IonButton>
-                            </IonCol>
-                          </IonRow>
-                        </IonGrid>
-                      ) : (
-                        <IonGrid>
-                          <IonRow>
-                            <IonCol size="12" className="ion-text-center">
-                              <IonText className="ion-margin-bottom">
-                                <h1 className="text-heading">
-                                  What do you notice as&nbsp;you&nbsp;walk?
-                                </h1>
-                              </IonText>
-                              <p
-                                className="text-body"
-                                style={{
-                                  marginTop: "10px",
-                                }}
-                              >
-                                Record anything that draws your attention, or
-                                that you see or hear.
-                              </p>
-                            </IonCol>
-                          </IonRow>
-                        </IonGrid>
-                      )}
-                    </IonCardContent>
-                    <IonLoading
-                      message={"Getting your location..."}
-                      isOpen={loading}
-                    />
-                  </IonCard>
-                </IonCardContent>
-                <IonCardHeader className="ion-no-padding" color="light">
-                  <IonGrid>
-                    <IonRow>
-                      <IonCol size="5">
-                        <IonButton
-                          expand="block"
-                          color="danger"
-                          onClick={() => setCancelAlert(true)}
-                        >
-                          <IonIcon slot="start" icon={cancelIcon} />
-                          Cancel
-                        </IonButton>
-                        <IonAlert
-                          header={"Cancel"}
-                          subHeader={"Are you sure?"}
-                          buttons={[
-                            {
-                              text: "No",
-                              role: "cancel",
-                            },
-                            {
-                              text: "Yes",
-                              cssClass: "secondary",
-                              handler: cancelHandler,
-                            },
-                          ]}
-                          isOpen={cancelAlert}
-                          onDidDismiss={() => setCancelAlert(false)}
-                        />
-                      </IonCol>
-                      <IonCol size="7">
-                        <IonButton
-                          expand="block"
-                          color="success"
-                          onClick={() => {
-                            endHandler();
-                          }}
-                        >
-                          <IonIcon slot="start" icon={finishIcon} />
-                          End Walk
-                        </IonButton>
-                      </IonCol>
-                    </IonRow>
-                  </IonGrid>
-                </IonCardHeader>
-              </IonCard>
-            </div>
-            <IonLoading message={"Getting your location..."} isOpen={loading} />
-          </div>
-        )}
-        {/* 
-        *
-        *
-        Walk Finished view state
-        *
-        *
-        */}
-        {start && end && (
-          // <WalkPostSettings
-          //   title={title}
-          //   colour={colour}
-          //   start={start}
-          //   end={end}
-          //   time={time}
-          //   distance={distance}
-          //   steps={steps}
-          //   onSave={saveHandler}
-          // />
-          <div className="centered-content centered-content--no-toolbar-no-header">
-            <div className="constrain constrain--medium">
-              <IonCard>
-                <IonCardHeader
-                  className="ion-no-padding"
-                  style={{
-                    backgroundColor: colour,
-                  }}
+          {/* Walk view states */}
+          {showTutorial === false && !showHelp && (
+            <>
+              {/* Header */}
+              <IonCardHeader
+                className="ion-no-padding"
+                style={{
+                  backgroundColor: colour,
+                }}
+              >
+                <IonCardSubtitle
+                  className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
+                  color="dark"
                 >
-                  <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
-                    Well done!
-                  </IonCardSubtitle>
-                </IonCardHeader>
-                <IonCardContent className="ion-no-padding">
-                  <Progress time={time} distance={distance} steps={steps} />
-                  <IonList>
-                    <IonItem className="ion-margin-top">
-                      <img src={coverImage} alt="" />
-                      <IonLabel position="stacked">
-                        Choose a cover image...
-                      </IonLabel>
-                      {moments.length > 0 ? (
-                        <IonGrid>
-                          <IonRow>
-                            {moments.map((moment) => {
-                              return (
-                                <IonCol>
-                                  <img
-                                    src="{moment.imagePath}"
-                                    alt=""
-                                    onClick={() => {
-                                      setCoverImage(moment.imagePath);
-                                    }}
-                                  />
-                                </IonCol>
-                              );
-                            })}
-                          </IonRow>
-                        </IonGrid>
-                      ) : null}
-                      <IonLabel position="stacked">
-                        Give this walk a short description...
-                      </IonLabel>
-                      <IonInput
-                        type="text"
-                        value={description}
-                        onIonChange={(event) =>
-                          setDescription(event.detail!.value!)
-                        }
-                      />
-                    </IonItem>
-                  </IonList>
-                </IonCardContent>
-                <IonCardHeader
-                  className="ion-margin-top ion-no-padding"
-                  color="light"
-                >
-                  <IonCardSubtitle>
-                    <IonGrid>
-                      <IonRow>
-                        <IonCol size="12" sizeSm="8" offsetSm="2">
-                          <IonButton
-                            expand="block"
-                            color="success"
-                            disabled={description === ""}
-                            onClick={() => {
-                              saveHandler(description, "");
-                            }}
-                          >
-                            <IonIcon slot="start" icon={finishIcon} />
-                            Save
-                          </IonButton>
-                        </IonCol>
-                      </IonRow>
-                    </IonGrid>
-                  </IonCardSubtitle>
-                </IonCardHeader>
-              </IonCard>
-            </div>
-          </div>
-        )}
+                  {title ? title : "Start your walk..."}
+                </IonCardSubtitle>
+              </IonCardHeader>
+
+              {/* Pre Walk view state */}
+              {!start && !end && (
+                <NewWalkPre
+                  startWalk={startWalkHandler}
+                  updateWalk={(title: string, colour: string) =>
+                    updateWalkTitleColour(title, colour)
+                  }
+                />
+              )}
+
+              {/* Walk In Progress view state */}
+              {start && !end && (
+                <>
+                  {/* Progress */}
+                  <Progress
+                    start={start}
+                    updateWalk={(steps: number, distance: number) =>
+                      updateWalkStepsDistance(steps, distance)
+                    }
+                  />
+                  {/* Add Moment */}
+                  <NewWalkAddMoment
+                    endWalk={endWalkHandler}
+                    updateWalk={(moments: Moment[]) =>
+                      updateWalkMoments(moments)
+                    }
+                    getLocation={getLocation}
+                  />
+                </>
+              )}
+
+              {/* Walk Finished view state */}
+              {start && end && (
+                <NewWalkPost
+                  updateWalk={(description: string, coverImage: string) =>
+                    updateWalkDescriptionCoverImage(description, coverImage)
+                  }
+                />
+              )}
+            </>
+          )}
+        </IonCard>
       </IonContent>
+
+      <IonLoading message={"Loading..."} isOpen={loading} />
       <IonToast
-        duration={3000}
+        duration={2000}
+        position="bottom"
         isOpen={error.showError}
         onDidDismiss={() => setError({ showError: false, message: undefined })}
         message={error.message}

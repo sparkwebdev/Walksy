@@ -1,20 +1,45 @@
 import { IonCard, IonItem, IonIcon, IonList } from "@ionic/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Progress.css";
 import { time as timeIcon, walk as walkIcon } from "ionicons/icons";
-import { getUnitDistance } from "../helpers";
+import { getMinAndSec, getTimeDiff, getUnitDistance } from "../helpers";
+import { Pedometer } from "@ionic-native/pedometer";
+import { Time } from "../data/models";
 
 interface ContainerProps {
-  time?: { min: number; sec: number };
-  steps?: number;
-  distance?: number;
+  start: string;
+  updateWalk: (steps: number, distance: number) => void;
 }
 
-const Progress: React.FC<ContainerProps> = ({
-  time = { min: 0, sec: 0 },
-  steps = 0,
-  distance = 0,
-}) => {
+const Progress: React.FC<ContainerProps> = ({ start, updateWalk }) => {
+  const [time, setTime] = useState<Time>({
+    min: 0,
+    sec: 0,
+  });
+  const [steps, setSteps] = useState<number>(0);
+  const [distance, setDistance] = useState<number>(0);
+
+  useEffect(() => {
+    let ticker: any = null;
+    ticker = setInterval(() => {
+      const timeDiff = getTimeDiff(start, new Date().toISOString());
+      const minAndSec = getMinAndSec(timeDiff);
+      setTime(minAndSec);
+    }, 1000);
+    Pedometer.startPedometerUpdates().subscribe((data) => {
+      setSteps(data.numberOfSteps);
+      setDistance(data.distance / 1000); // metres to km
+    });
+    return () => {
+      clearInterval(ticker);
+      Pedometer.stopPedometerUpdates();
+    };
+  }, []);
+
+  useEffect(() => {
+    updateWalk(steps, distance);
+  }, [distance]);
+
   return (
     <IonCard className="progress-panel">
       <IonList lines="none">
