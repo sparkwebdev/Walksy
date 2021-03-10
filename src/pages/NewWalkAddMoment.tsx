@@ -8,14 +8,27 @@ import {
   IonCol,
   IonGrid,
   IonIcon,
+  IonItem,
   IonLabel,
+  IonLoading,
   IonModal,
   IonRow,
   IonText,
   IonTextarea,
+  IonToast,
+  isPlatform,
 } from "@ionic/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Location, Moment, Photo } from "../data/models";
+import {
+  Camera,
+  CameraResultType,
+  CameraSource,
+  Capacitor,
+  Filesystem,
+  FilesystemDirectory,
+} from "@capacitor/core";
+import { base64FromPath } from "@ionic/react-hooks/filesystem";
 
 import {
   checkmark as finishIcon,
@@ -26,14 +39,42 @@ import {
   flagOutline as flagIcon,
   map as mapIcon,
 } from "ionicons/icons";
+import { storage } from "../firebase";
 
 const noteMaxLength = 280;
+const placeholderImage = "assets/img/placeholder.png";
+
+// async function savePicture(blobUrl: string) {
+//   const base64 = await base64FromPath(blobUrl);
+//   const fileName = new Date().getTime() + ".jpeg";
+//   Filesystem.writeFile({
+//     path: fileName,
+//     data: base64,
+//     directory: FilesystemDirectory.Data,
+//   });
+// }
+
+async function savePicture(blobUrl: string) {
+  const fileInputRef = storage.ref(`/moments/${Date.now()}`);
+  const response = await fetch(blobUrl);
+  const blob = await response.blob();
+  const snapshot = await fileInputRef.put(blob);
+  const url = await snapshot.ref.getDownloadURL();
+  return url;
+}
 
 const NewWalkAddMoment: React.FC<{
   updateWalk: (moments: Moment[]) => void;
   endWalk: () => void;
   getLocation: () => Promise<Location | null>;
 }> = ({ endWalk, updateWalk, getLocation }) => {
+  // Global (View) states
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<{
+    showError: boolean;
+    message?: string;
+  }>({ showError: false });
+
   const [moments, setMoments] = useState<Moment[]>([]);
   const [cancelWalkAlert, setCancelWalkAlert] = useState(false);
 
@@ -42,28 +83,55 @@ const NewWalkAddMoment: React.FC<{
   const [cancelMomentAlert, setCancelMomentAlert] = useState(false);
 
   const [takenPhoto, setTakenPhoto] = useState<Photo | null>(null);
-  const [takenPhotoPath, setTakenPhotoPath] = useState<string>("");
+  const [imagePath, setImagePath] = useState<string>(""); // takenPhotoPath, setTakenPhotoPath
+  const [remoteImagePath, setRemoteImagePath] = useState<string>("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [audioPath, setAudioPath] = useState<string>("");
   const [recordingSound, setRecordingSound] = useState<boolean>(false);
-  const [takenSoundPath, setTakenSoundPath] = useState<string>("");
-  const [audio, setSound] = useState<boolean>(false);
+  const [remoteAudioPath, setRemoteAudioPath] = useState<string>("");
+
   const [note, setNote] = useState<string>("");
 
   const addMomentHandler = (type: string) => {
     setAddMomentModal(true);
     setAddMomentCurrentType(type);
-    // getLocation(false);
     // if (type === "Photo") {
-    //   (filePickerChildRef as any).current.openFilePicker();
+    // fileInputRef.current!.click();
     // }
   };
+
+  const saveMomentMediaHandler = async () => {
+    if (imagePath !== "" && addMomentCurrentType === "Photo") {
+      setLoading(true);
+      try {
+        const remoteUrl = await savePicture(imagePath);
+        setRemoteImagePath(remoteUrl);
+        console.log("Remote picture saved", remoteUrl);
+      } catch (error) {
+        setError({
+          showError: true,
+          message: "Not saved. Please try again.",
+        });
+        return;
+      }
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (remoteImagePath !== "" || remoteAudioPath !== "") {
+      saveMomentHandler();
+    }
+  }, [remoteImagePath, remoteAudioPath]);
 
   const saveMomentHandler = () => {
     getLocation().then((currentLocation) => {
       const newMoment: Moment = {
         walkId: "",
-        imagePath: takenPhotoPath,
-        audioPath: takenSoundPath,
-        note: note,
+        imagePath: remoteImagePath,
+        audioPath: remoteAudioPath,
+        note,
         location: currentLocation,
         timestamp: new Date().toString(),
       };
@@ -74,8 +142,11 @@ const NewWalkAddMoment: React.FC<{
 
   const clearMomentHandler = () => {
     setAddMomentModal(false);
-    // (filePickerChildRef as any).current!.imageResetHandler();
     setNote("");
+    setImagePath("");
+    setAddMomentCurrentType("");
+    setRemoteImagePath("");
+    setRemoteAudioPath("");
   };
 
   const viewMapHandler = () => {};
@@ -84,13 +155,47 @@ const NewWalkAddMoment: React.FC<{
     updateWalk(moments);
   }, [moments]);
 
+  useEffect(() => {
+    return () => {
+      if (imagePath.startsWith("blob:")) {
+        URL.revokeObjectURL(imagePath);
+      }
+    };
+  }, [imagePath]);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      const file = event.target.files?.item(0);
+      const imagePath = URL.createObjectURL(file);
+      setImagePath(imagePath);
+    }
+  };
+
+  const handlePictureClick = async () => {
+    if (!Capacitor.isPluginAvailable("Camera")) {
+      fileInputRef.current!.click();
+      return;
+    }
+    if (isPlatform("capacitor")) {
+      try {
+        const photo = await Camera.getPhoto({
+          resultType: CameraResultType.Uri,
+          source: CameraSource.Prompt,
+          width: 600,
+        });
+        setImagePath(photo.webPath!);
+      } catch (error) {
+        console.log("Camera error:", error);
+      }
+    } else {
+      fileInputRef.current!.click();
+    }
+  };
+
   return (
     <>
-      <IonCardContent
-        className="ion-no-padding constrain constrain--medium"
-        style={{ margin: "auto" }}
-      >
-        <IonGrid>
+      <IonCardContent>
+        <IonGrid class="constrain constrain--medium">
           <IonRow>
             <IonCol
               onClick={() => {
@@ -124,52 +229,85 @@ const NewWalkAddMoment: React.FC<{
             </IonCol>
           </IonRow>
         </IonGrid>
-
+      </IonCardContent>
+      <IonCardContent
+        className="constrain constrain--medium"
+        style={{ margin: "auto" }}
+      >
         <IonModal isOpen={addMomentModal}>
           <IonCard
             color="medium"
             className="ion-no-margin"
-            style={{ flex: "1" }}
+            style={{ flex: "1", paddingTop: "30px" }}
           >
-            <IonCardHeader className="ion-no-padding" color="tertiary">
-              <IonCardSubtitle
-                className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
-                color="dark"
-              >
-                Add {addMomentCurrentType}
-              </IonCardSubtitle>
-            </IonCardHeader>
-            <IonCardContent className="ion-no-padding">
-              {addMomentCurrentType === "Photo" && <></>}
-              {addMomentCurrentType === "Sound" && <></>}
-              {addMomentCurrentType === "Note" && (
-                <div>
-                  <IonLabel hidden={true}>Add a note...</IonLabel>
-                  <IonTextarea
-                    placeholder="A thought or description..."
-                    maxlength={noteMaxLength}
-                    rows={8}
-                    style={{
-                      padding: "10px 20px",
-                      margin: "0",
-                      backgroundColor: "white",
-                    }}
-                    value={note}
-                    onIonChange={(event) => {
-                      setNote(event.detail.value!);
-                    }}
-                  ></IonTextarea>
-                  <p className="ion-padding">
-                    <small>
-                      {noteMaxLength - note.length} characters remaining
-                    </small>
-                  </p>
-                </div>
-              )}
-            </IonCardContent>
+            <IonCard>
+              <IonCardHeader className="ion-no-padding" color="tertiary">
+                <IonCardSubtitle
+                  className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
+                  style={{ color: "white" }}
+                >
+                  Add {addMomentCurrentType}
+                </IonCardSubtitle>
+              </IonCardHeader>
+              <IonCardContent className="ion-no-padding">
+                {addMomentCurrentType === "Photo" && (
+                  <div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileChange}
+                      hidden
+                      ref={fileInputRef}
+                    />
+                    <img
+                      src={imagePath ? imagePath : placeholderImage}
+                      alt=""
+                      onClick={() => {
+                        fileInputRef.current?.click();
+                      }}
+                      style={{
+                        cursor: "pointer",
+                        display: "block",
+                      }}
+                    />
+                  </div>
+                )}
+                {addMomentCurrentType === "Sound" && <></>}
+                {addMomentCurrentType === "Note" && (
+                  <div>
+                    <IonLabel hidden={true}>Add a note...</IonLabel>
+                    <IonTextarea
+                      placeholder="A thought or description..."
+                      maxlength={noteMaxLength}
+                      rows={7}
+                      style={{
+                        padding: "10px 20px",
+                        margin: "0",
+                        backgroundColor: "white",
+                      }}
+                      value={note}
+                      onIonChange={(event) => {
+                        setNote(event.detail.value!);
+                      }}
+                    ></IonTextarea>
+                    <p className="ion-padding">
+                      <small>
+                        {noteMaxLength - note.length} characters remaining
+                      </small>
+                    </p>
+                  </div>
+                )}
+              </IonCardContent>
+            </IonCard>
           </IonCard>
 
-          <IonCardHeader className="ion-no-padding" color="light">
+          <IonCardHeader
+            className="ion-no-padding"
+            color="light"
+            style={{
+              paddingBottom: "20px",
+            }}
+          >
             <IonGrid>
               <IonRow>
                 <IonCol size="5">
@@ -212,10 +350,16 @@ const NewWalkAddMoment: React.FC<{
                   <IonButton
                     expand="block"
                     color="success"
-                    disabled={note.length === 0}
-                    onClick={() => {
-                      saveMomentHandler();
-                    }}
+                    disabled={note.length === 0 && imagePath === ""}
+                    onClick={
+                      addMomentCurrentType === "note"
+                        ? () => {
+                            saveMomentHandler();
+                          }
+                        : () => {
+                            saveMomentMediaHandler();
+                          }
+                    }
                   >
                     <IonIcon slot="start" icon={finishIcon} />
                     Add {addMomentCurrentType}
@@ -285,6 +429,7 @@ const NewWalkAddMoment: React.FC<{
         color="light"
         style={{
           marginTop: "auto",
+          paddingBottom: "20px",
         }}
       >
         <IonCardSubtitle className="ion-no-margin constrain constrain--medium">
@@ -333,6 +478,15 @@ const NewWalkAddMoment: React.FC<{
           </IonGrid>
         </IonCardSubtitle>
       </IonCardHeader>
+
+      <IonLoading message={"Loading..."} isOpen={loading} />
+      <IonToast
+        duration={2000}
+        position="bottom"
+        isOpen={error.showError}
+        onDidDismiss={() => setError({ showError: false, message: undefined })}
+        message={error.message}
+      />
     </>
   );
 };

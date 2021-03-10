@@ -22,12 +22,14 @@ import { useAuth } from "../auth";
 import NewWalkPre from "./NewWalkPre";
 import NewWalkAddMoment from "./NewWalkAddMoment";
 import NewWalkPost from "./NewWalkPost";
+import { useHistory } from "react-router-dom";
 
 const { Storage, Geolocation } = Plugins;
 
 const NewWalk: React.FC = () => {
   const walksCtx = useContext(WalksContext);
   const { userId } = useAuth();
+  const history = useHistory();
 
   // Global (View) states
   const [loading, setLoading] = useState<boolean>(false);
@@ -116,29 +118,11 @@ const NewWalk: React.FC = () => {
     });
   };
 
-  const saveWalkHandler = async () => {
-    setLoading(true);
-    await walksCtx.saveWalk(
-      title,
-      colour,
-      description,
-      start,
-      end,
-      steps,
-      distance,
-      moments,
-      coverImage,
-      locations,
-      userId!
-    );
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    if (end) {
-      saveWalkHandler();
-    }
-  }, [end]);
+  // useEffect(() => {
+  //   if (end) {
+  //     saveWalkHandler();
+  //   }
+  // }, [end]);
 
   // Update state handlers
   const updateWalkTitleColour = (title: string, colour: string) => {
@@ -150,14 +134,43 @@ const NewWalk: React.FC = () => {
     setDistance(distance);
   };
   const updateWalkMoments = (moments: Moment[]) => {
+    const latestImage = moments.find((moment) => {
+      return moment.imagePath !== "";
+    });
+    if (latestImage) {
+      setCoverImage(latestImage.imagePath);
+    }
     setMoments(moments);
   };
-  const updateWalkDescriptionCoverImage = (
+
+  const saveWalkHandler = async (
     description: string,
-    coverImage: string
+    coverImage: string,
+    share: boolean
   ) => {
-    setDescription(description);
-    setCoverImage(coverImage);
+    setLoading(true);
+    try {
+      const storedWalkId = await walksCtx.saveWalk(
+        title,
+        colour,
+        description,
+        start,
+        end,
+        steps,
+        distance,
+        moments,
+        coverImage,
+        locations,
+        userId!
+      );
+      setLoading(false);
+      history.push({
+        pathname: `/app/walk/${storedWalkId}`,
+        state: { share: share },
+      });
+    } catch (error) {
+      console.log("Could not save walk");
+    }
   };
 
   return (
@@ -176,6 +189,7 @@ const NewWalk: React.FC = () => {
         }}
       >
         <IonCard
+          color="light"
           style={{
             display: "flex",
             flexDirection: "column",
@@ -240,9 +254,16 @@ const NewWalk: React.FC = () => {
               {/* Walk Finished view state */}
               {start && end && (
                 <NewWalkPost
-                  updateWalk={(description: string, coverImage: string) =>
-                    updateWalkDescriptionCoverImage(description, coverImage)
-                  }
+                  updateWalk={(
+                    description: string,
+                    coverImage: string,
+                    share: boolean
+                  ) => saveWalkHandler(description, coverImage, share)}
+                  moments={moments}
+                  start={start}
+                  end={end}
+                  steps={steps}
+                  distance={distance}
                 />
               )}
             </>
