@@ -53,18 +53,20 @@ export const createUserProfileDocument = async (userAuth: any, additionalData: {
   }
 }
 
-export const handleSaveWalk = async (walkData: Walk, moments: Moment[]) => {
+export const handleStoreWalk = async (walkData: Walk, moments: Moment[]) => {
   const walksRef = firestore.collection("users-walks");
+  let walkId;
   const walkRef = await walksRef
     .add({
       ...walkData,
     })
     .then((data) => {
+      walkId = data.id;
       moments.forEach((moment) => {
         handleSaveMoment(moment, data.id, walkData.userId);
       });
     });
-    return walkRef;
+    return walkId;
 }
 
 const handleSaveMoment = async (moment: any, walkId: string, userId: string) => {
@@ -75,7 +77,4 @@ const handleSaveMoment = async (moment: any, walkId: string, userId: string) => 
       walkId,
       userId,
     })
-    .then((data) => {
-      console.log("Saved moments for walk: ", walkId);
-    });
 };

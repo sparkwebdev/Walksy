@@ -2,7 +2,7 @@ import React from "react";
 
 import WalksContext from "./walks-context";
 import { Moment, Location } from "../data/models";
-import { handleSaveWalk } from "../firebase";
+import { handleStoreWalk } from "../firebase";
 
 const WalksContextProvider: React.FC = (props) => {
   const saveWalk = async (
@@ -31,7 +31,8 @@ const WalksContextProvider: React.FC = (props) => {
       locations,
       userId,
     };
-    handleSaveWalk(walkData, moments);
+    const stroredWalkId = await handleStoreWalk(walkData, moments);
+    return stroredWalkId;
   };
 
   return (
