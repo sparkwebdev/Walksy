@@ -8,7 +8,6 @@ import {
   IonCol,
   IonGrid,
   IonIcon,
-  IonItem,
   IonLabel,
   IonLoading,
   IonModal,
@@ -16,25 +15,23 @@ import {
   IonText,
   IonTextarea,
   IonToast,
-  isPlatform,
+  // isPlatform,
 } from "@ionic/react";
 import React, { useEffect, useRef, useState } from "react";
-import { Location, Moment, Photo } from "../data/models";
-import {
-  Camera,
-  CameraResultType,
-  CameraSource,
-  Capacitor,
-  Filesystem,
-  FilesystemDirectory,
-} from "@capacitor/core";
-import { base64FromPath } from "@ionic/react-hooks/filesystem";
+// import { Photo } from "../data/models";
+import { Location, Moment } from "../data/models";
+// import {
+//   Camera,
+//   CameraResultType,
+//   CameraSource,
+//   Capacitor,
+// } from "@capacitor/core";
 
 import {
   checkmark as finishIcon,
   close as cancelIcon,
-  micCircleOutline as recordlIcon,
-  stopCircleOutline as stopIcon,
+  // micCircleOutline as recordlIcon,
+  // stopCircleOutline as stopIcon,
   chevronDown as chevronDownIcon,
   flagOutline as flagIcon,
   map as mapIcon,
@@ -82,13 +79,13 @@ const NewWalkAddMoment: React.FC<{
   const [addMomentCurrentType, setAddMomentCurrentType] = useState<string>("");
   const [cancelMomentAlert, setCancelMomentAlert] = useState(false);
 
-  const [takenPhoto, setTakenPhoto] = useState<Photo | null>(null);
+  // const [takenPhoto, setTakenPhoto] = useState<Photo | null>(null);
   const [imagePath, setImagePath] = useState<string>(""); // takenPhotoPath, setTakenPhotoPath
   const [remoteImagePath, setRemoteImagePath] = useState<string>("");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [audioPath, setAudioPath] = useState<string>("");
-  const [recordingSound, setRecordingSound] = useState<boolean>(false);
+  // const [audioPath, setAudioPath] = useState<string>("");
+  // const [recordingSound, setRecordingSound] = useState<boolean>(false);
   const [remoteAudioPath, setRemoteAudioPath] = useState<string>("");
 
   const [note, setNote] = useState<string>("");
@@ -107,7 +104,6 @@ const NewWalkAddMoment: React.FC<{
       try {
         const remoteUrl = await savePicture(imagePath);
         setRemoteImagePath(remoteUrl);
-        console.log("Remote picture saved", remoteUrl);
       } catch (error) {
         setError({
           showError: true,
@@ -153,7 +149,7 @@ const NewWalkAddMoment: React.FC<{
 
   useEffect(() => {
     updateWalk(moments);
-  }, [moments]);
+  }, [moments, updateWalk]);
 
   useEffect(() => {
     return () => {
@@ -171,26 +167,26 @@ const NewWalkAddMoment: React.FC<{
     }
   };
 
-  const handlePictureClick = async () => {
-    if (!Capacitor.isPluginAvailable("Camera")) {
-      fileInputRef.current!.click();
-      return;
-    }
-    if (isPlatform("capacitor")) {
-      try {
-        const photo = await Camera.getPhoto({
-          resultType: CameraResultType.Uri,
-          source: CameraSource.Prompt,
-          width: 600,
-        });
-        setImagePath(photo.webPath!);
-      } catch (error) {
-        console.log("Camera error:", error);
-      }
-    } else {
-      fileInputRef.current!.click();
-    }
-  };
+  // const handlePictureClick = async () => {
+  //   if (!Capacitor.isPluginAvailable("Camera")) {
+  //     fileInputRef.current!.click();
+  //     return;
+  //   }
+  //   if (isPlatform("capacitor")) {
+  //     try {
+  //       const photo = await Camera.getPhoto({
+  //         resultType: CameraResultType.Uri,
+  //         source: CameraSource.Prompt,
+  //         width: 600,
+  //       });
+  //       setImagePath(photo.webPath!);
+  //     } catch (error) {
+  //       console.log("Camera error:", error);
+  //     }
+  //   } else {
+  //     fileInputRef.current!.click();
+  //   }
+  // };
 
   return (
     <>

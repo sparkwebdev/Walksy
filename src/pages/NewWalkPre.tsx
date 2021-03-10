@@ -47,7 +47,7 @@ const NewWalkPre: React.FC<{
 
   useEffect(() => {
     updateWalk(title, colour);
-  }, [title, colour]);
+  }, [title, colour, updateWalk]);
 
   return (
     <>

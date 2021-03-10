@@ -56,7 +56,7 @@ export const createUserProfileDocument = async (userAuth: any, additionalData: {
 export const handleStoreWalk = async (walkData: Walk, moments: Moment[]) => {
   const walksRef = firestore.collection("users-walks");
   let walkId;
-  const walkRef = await walksRef
+  await walksRef
     .add({
       ...walkData,
     })
@@ -71,7 +71,7 @@ export const handleStoreWalk = async (walkData: Walk, moments: Moment[]) => {
 
 const handleSaveMoment = async (moment: any, walkId: string, userId: string) => {
   const momentsRef = firestore.collection("users-moments");
-  const momentRef = await momentsRef
+  await momentsRef
     .add({
       ...moment,
       walkId,

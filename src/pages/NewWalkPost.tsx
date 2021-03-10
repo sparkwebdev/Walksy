@@ -42,7 +42,7 @@ const NewWalkPost: React.FC<{
     if (latestImage) {
       setCoverImage(latestImage.imagePath);
     }
-  }, []);
+  }, [moments]);
 
   return (
     <>

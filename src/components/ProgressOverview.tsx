@@ -28,7 +28,7 @@ const ProgressOverview: React.FC<ContainerProps> = ({
     const timeDiff = getTimeDiff(start, new Date().toISOString());
     const minAndSec = getMinAndSec(timeDiff);
     setTime(minAndSec);
-  }, []);
+  }, [start]);
   return (
     <IonCard className="progress-panel">
       <IonList lines="none">

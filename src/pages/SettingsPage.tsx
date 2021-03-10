@@ -48,10 +48,10 @@ const SettingsPage: React.FC = () => {
     });
   }, [userId]);
 
-  const [takenPhoto, setTakenPhoto] = useState<Photo>();
+  // const [takenPhoto, setTakenPhoto] = useState<Photo>();
 
   const photoPickHandler = (photo: Photo) => {
-    setTakenPhoto(photo);
+    // setTakenPhoto(photo);
   };
 
   const filePickerChildRef = useRef();

@@ -46,8 +46,7 @@ const NewWalk: React.FC = () => {
   const [distance, setDistance] = useState<number>(0);
   const [locations, setLocations] = useState<Location[] | []>([]);
   const [moments, setMoments] = useState<Moment[]>([]);
-  const [description, setDescription] = useState("");
-  const [coverImage, setCoverImage] = useState("");
+  // const [coverImage, setCoverImage] = useState("");
   const [end, setEnd] = useState<string>("");
 
   // Walk view state - Tutorial
@@ -107,22 +106,16 @@ const NewWalk: React.FC = () => {
     });
   };
 
-  const resetWalkHandler = () => {
-    setStart("");
-    setEnd("");
-  };
+  // const resetWalkHandler = () => {
+  //   setStart("");
+  //   setEnd("");
+  // };
 
   const endWalkHandler = () => {
     getLocation().then(() => {
       setEnd(new Date().toISOString());
     });
   };
-
-  // useEffect(() => {
-  //   if (end) {
-  //     saveWalkHandler();
-  //   }
-  // }, [end]);
 
   // Update state handlers
   const updateWalkTitleColour = (title: string, colour: string) => {
@@ -134,12 +127,12 @@ const NewWalk: React.FC = () => {
     setDistance(distance);
   };
   const updateWalkMoments = (moments: Moment[]) => {
-    const latestImage = moments.find((moment) => {
-      return moment.imagePath !== "";
-    });
-    if (latestImage) {
-      setCoverImage(latestImage.imagePath);
-    }
+    // const latestImage = moments.find((moment) => {
+    //   return moment.imagePath !== "";
+    // });
+    // if (latestImage) {
+    //   setCoverImage(latestImage.imagePath);
+    // }
     setMoments(moments);
   };
 

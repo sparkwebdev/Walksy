@@ -34,11 +34,11 @@ const Progress: React.FC<ContainerProps> = ({ start, updateWalk }) => {
       clearInterval(ticker);
       Pedometer.stopPedometerUpdates();
     };
-  }, []);
+  }, [start]);
 
   useEffect(() => {
     updateWalk(steps, distance);
-  }, [distance]);
+  }, [distance, steps, updateWalk]);
 
   return (
     <IonCard className="progress-panel">
