@@ -16,6 +16,7 @@ interface ContainerProps {
   showTool?: boolean;
   toolText?: string;
   toolAction?: () => void;
+  defaultHref?: string;
 }
 
 const PageHeader: React.FC<ContainerProps> = ({
@@ -24,6 +25,7 @@ const PageHeader: React.FC<ContainerProps> = ({
   showTool,
   toolText,
   toolAction,
+  defaultHref = "/app/home",
 }) => {
   const location = useLocation();
   return (
@@ -31,7 +33,7 @@ const PageHeader: React.FC<ContainerProps> = ({
       <IonToolbar>
         {back && (
           <IonButtons slot="start">
-            <IonBackButton defaultHref="/app/home" text="" />
+            <IonBackButton defaultHref={defaultHref} text="" />
           </IonButtons>
         )}
         <IonTitle className="ion-text-center">{title}</IonTitle>

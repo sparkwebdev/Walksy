@@ -22,7 +22,7 @@ ion-list {
   /* font-family: "Domine"; */
 }
 ion-button {
-  --border-radius: 0;
+  --border-radius: 4px;
   font-family: "Domine";
 }
 
