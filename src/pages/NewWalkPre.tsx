@@ -56,7 +56,7 @@ const NewWalkPre: React.FC<{
         style={{ margin: "auto" }}
       >
         <IonCard>
-          <IonCardHeader className="ion-no-padding" color="tertiary">
+          <IonCardHeader className="ion-no-padding" color="dark">
             <IonCardSubtitle
               className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
               style={{
@@ -88,7 +88,7 @@ const NewWalkPre: React.FC<{
           </IonCardContent>
         </IonCard>
         <IonCard>
-          <IonCardHeader className="ion-no-padding" color="tertiary">
+          <IonCardHeader className="ion-no-padding" color="dark">
             <IonCardSubtitle
               className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
               style={{
@@ -100,7 +100,7 @@ const NewWalkPre: React.FC<{
           </IonCardHeader>
           <IonCardContent className="ion-no-padding ion-no-margin">
             <IonList lines="none">
-              <IonItem className="ion-no-padding">
+              <IonItem>
                 <IonLabel position="stacked" className="ion-hide">
                   Give this walk a colour...
                 </IonLabel>

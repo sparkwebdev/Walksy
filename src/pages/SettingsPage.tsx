@@ -69,7 +69,7 @@ const SettingsPage: React.FC = () => {
         <div className="centered-content">
           <div className="constrain constrain--medium">
             <IonCard className="ion-padding-bottom constrain-medium">
-              <IonCardHeader className="ion-no-padding" color="tertiary">
+              <IonCardHeader className="ion-no-padding" color="dark">
                 <IonGrid className="ion-no-padding">
                   <IonRow className="ion-align-items-center">
                     <IonCol>
@@ -158,7 +158,7 @@ const SettingsPage: React.FC = () => {
               </IonCardContent>
             </IonCard>
             <IonCard className="ion-padding-bottom constrain-medium">
-              <IonCardHeader className="ion-no-padding" color="tertiary">
+              <IonCardHeader className="ion-no-padding" color="dark">
                 <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
                   Your Preferences
                 </IonCardSubtitle>
@@ -190,7 +190,7 @@ const SettingsPage: React.FC = () => {
               </IonCardContent>
             </IonCard>
             <IonCard className="ion-padding-bottom constrain-medium">
-              <IonCardHeader className="ion-no-padding" color="tertiary">
+              <IonCardHeader className="ion-no-padding" color="dark">
                 <IonGrid className="ion-no-padding">
                   <IonRow className="ion-align-items-center">
                     <IonCol>

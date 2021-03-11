@@ -15,7 +15,7 @@ const NotFound: React.FC = () => {
       <PageHeader title="Not found" back={true} />
       <IonContent className="ion-padding">
         <IonCard>
-          <IonCardHeader className="ion-no-padding" color="tertiary">
+          <IonCardHeader className="ion-no-padding" color="dark">
             <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
               Not found.
             </IonCardSubtitle>

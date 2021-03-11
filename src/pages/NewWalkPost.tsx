@@ -54,7 +54,7 @@ const NewWalkPost: React.FC<{
       />
       <IonCardContent className="constrain constrain--medium">
         <IonCard>
-          <IonCardHeader className="ion-no-padding" color="tertiary">
+          <IonCardHeader className="ion-no-padding" color="dark">
             <IonCardSubtitle
               className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
               style={{
@@ -89,7 +89,7 @@ const NewWalkPost: React.FC<{
         </IonCard>
         {coverImage && (
           <IonCard>
-            <IonCardHeader className="ion-no-padding" color="tertiary">
+            <IonCardHeader className="ion-no-padding" color="dark">
               <IonCardSubtitle
                 className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
                 style={{

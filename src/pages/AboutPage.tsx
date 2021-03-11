@@ -35,7 +35,7 @@ const AboutPage: React.FC = () => {
             </p>
           </div>
           <IonCard>
-            <IonCardHeader className="ion-no-padding" color="tertiary">
+            <IonCardHeader className="ion-no-padding" color="dark">
               <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
                 Funded by:
               </IonCardSubtitle>
