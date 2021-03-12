@@ -18,7 +18,10 @@ const WalkTutorial: React.FC<{
       <div className="constrain constrain--medium">
         <IonCard>
           <IonCardHeader className="ion-no-padding" color="dark">
-            <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
+            <IonCardSubtitle
+              className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
+              style={{ color: "white" }}
+            >
               Let's get started...
             </IonCardSubtitle>
           </IonCardHeader>
