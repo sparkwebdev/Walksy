@@ -240,7 +240,7 @@ const SettingsPage: React.FC = () => {
                 <IonAlert
                   isOpen={logoutAlert}
                   onDidDismiss={() => setLogoutAlert(false)}
-                  header={"Cancel"}
+                  header={"Logout"}
                   subHeader={"Are you sure?"}
                   buttons={[
                     {
