@@ -78,3 +78,12 @@ const handleSaveMoment = async (moment: any, walkId: string, userId: string) => 
       userId,
     })
 };
+
+export const handleStorePicture = async (blobUrl: string) => {
+  const fileInputRef = storage.ref(`/moments/${Date.now()}`);
+  const response = await fetch(blobUrl);
+  const blob = await response.blob();
+  const snapshot = await fileInputRef.put(blob);
+  const url = await snapshot.ref.getDownloadURL();
+  return url;
+}
