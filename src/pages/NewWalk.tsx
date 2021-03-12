@@ -53,11 +53,14 @@ const NewWalk: React.FC = () => {
   const [showTutorial, setShowTutorial] = useState<boolean | undefined>(
     undefined
   );
+  const [showTutorialText, setShowTutorialText] = useState<string>("Help");
+
   const [showHelp, setShowHelp] = useState<boolean>(false);
 
   const finishTutorialHandler = () => {
     setShowTutorial(false);
     setShowHelp(false);
+    setShowTutorialText("Help");
     Storage.set({
       key: "showWalkTutorial",
       value: JSON.stringify(false),
@@ -73,7 +76,13 @@ const NewWalk: React.FC = () => {
   }, [showTutorial]);
 
   const getHelpHandler = () => {
-    setShowHelp(true);
+    if (showHelp) {
+      setShowHelp(false);
+      setShowTutorialText("Help");
+    } else {
+      setShowHelp(true);
+      setShowTutorialText("Close");
+    }
   };
 
   const getLocation = async (showLoading: boolean = true) => {
@@ -172,7 +181,7 @@ const NewWalk: React.FC = () => {
         title="New Walk"
         back={!start && !end}
         showTool={!start && !end && !showTutorial}
-        toolText="Help"
+        toolText={showTutorialText}
         toolAction={getHelpHandler}
       />
       <IonContent
