@@ -28,24 +28,18 @@ const HomePage: React.FC = () => {
     <IonPage>
       <PageHeader title="Browse Gallery" />
       <IonContent>
-        <IonGrid className="ion-no-padding">
-          <IonRow className="grid-new">
-            {moments.map((moment, index) => (
-              <IonCol className="grid-new__item" key={index}>
-                <IonCard
-                  className="ion-no-margin ion-no-padding"
-                  key={index}
-                  routerLink={`/app/walk/${moment.walkId}`}
-                >
-                  <MomentItemPreview
-                    walkId={moment.walkId}
-                    coverImage={moment.imagePath}
-                  />
-                </IonCard>
-              </IonCol>
-            ))}
-          </IonRow>
-        </IonGrid>
+        {moments.map((moment, index) => (
+          <IonCard
+            className="ion-no-margin ion-no-padding"
+            key={index}
+            routerLink={`/app/walk/${moment.walkId}`}
+          >
+            <MomentItemPreview
+              walkId={moment.walkId}
+              coverImage={moment.imagePath}
+            />
+          </IonCard>
+        ))}
       </IonContent>
     </IonPage>
   );
