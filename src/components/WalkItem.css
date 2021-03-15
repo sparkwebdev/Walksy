@@ -4,8 +4,9 @@
 
 .walk-item img {
   width: 100%;
-  height: 60vh;
+  height: 50vh;
   object-fit: cover;
+  display: block;
 }
 
 .walk-item__content {
@@ -14,7 +15,12 @@
   left: 0;
   right: 0;
   /* background: rgba(0, 0, 0, 0.65); */
-  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.65));
+  background-image: linear-gradient(
+    transparent,
+    rgba(20, 20, 20, 0.65),
+    rgba(20, 20, 20, 0.85)
+  );
+  padding-top: 80px;
 }
 .walk-item__content * {
   color: var(--ion-color-dark-contrast);
@@ -26,6 +32,7 @@
 
 .walk-item-new {
   position: relative;
+  background-color: var(--ion-color-dark);
 }
 
 .walk-item-new__image {
