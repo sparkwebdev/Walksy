@@ -19,7 +19,7 @@ const MomentItemPreview: React.FC<{
   }, [props.walkId]);
 
   return (
-    <div className="walk-item ion-no-margin">
+    <div className="walk-item">
       {props.coverImage && walk?.title && (
         <img
           className="walk-item__cover-image"
