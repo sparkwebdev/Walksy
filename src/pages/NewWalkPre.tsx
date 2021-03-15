@@ -169,9 +169,7 @@ const NewWalkPre: React.FC<{
                 <IonButton
                   expand="block"
                   disabled={title === ""}
-                  onClick={() => {
-                    startWalk();
-                  }}
+                  onClick={startWalk}
                 >
                   Start Walk
                 </IonButton>
