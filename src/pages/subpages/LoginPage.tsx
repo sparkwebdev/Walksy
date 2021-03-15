@@ -18,7 +18,7 @@ import {
   IonText,
   IonCardSubtitle,
 } from "@ionic/react";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Redirect } from "react-router";
 import { useAuth } from "../../auth";
 import { auth } from "../../firebase";
@@ -27,8 +27,9 @@ import { eye as eyeIcon, eyeOff as eyeOffIcon } from "ionicons/icons";
 
 const LoginPage: React.FC = () => {
   const { loggedIn } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const emailInputRef = useRef<HTMLIonInputElement>(null);
+  const passwordInputRef = useRef<HTMLIonInputElement>(null);
+
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordIcon, sePasswordIcon] = useState(eyeIcon);
   const [status, setStatus] = useState({
@@ -38,9 +39,17 @@ const LoginPage: React.FC = () => {
   });
 
   const handleLogin = async () => {
+    const email = emailInputRef.current!.value;
+    const password = passwordInputRef.current!.value;
+    if (!email || !password) {
+      return;
+    }
     try {
       setStatus({ loading: true, error: false, errorMessage: "" });
-      const credential = await auth.signInWithEmailAndPassword(email, password);
+      const credential = await auth.signInWithEmailAndPassword(
+        email.toString(),
+        password.toString()
+      );
       return credential;
     } catch (error) {
       console.log("error: ", error);
@@ -76,8 +85,7 @@ const LoginPage: React.FC = () => {
                     </IonLabel>
                     <IonInput
                       type="email"
-                      value={email}
-                      onIonChange={(event) => setEmail(event.detail!.value!)}
+                      ref={emailInputRef}
                       onIonFocus={() =>
                         setStatus({ ...status, error: false, errorMessage: "" })
                       }
@@ -89,8 +97,7 @@ const LoginPage: React.FC = () => {
                     </IonLabel>
                     <IonInput
                       type={showPassword ? "text" : "password"}
-                      value={password}
-                      onIonChange={(event) => setPassword(event.detail!.value!)}
+                      ref={passwordInputRef}
                       onIonFocus={() =>
                         setStatus({ ...status, error: false, errorMessage: "" })
                       }
@@ -98,9 +105,7 @@ const LoginPage: React.FC = () => {
                     <IonIcon
                       slot="end"
                       icon={showPasswordIcon}
-                      onClick={() => {
-                        toggleShowPassword();
-                      }}
+                      onClick={toggleShowPassword}
                     />
                   </IonItem>
                 </IonList>
