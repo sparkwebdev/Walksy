@@ -40,13 +40,7 @@ const PageHeader: React.FC<ContainerProps> = ({
         {location.pathname === "/app/new-walk" && showTool && toolAction && (
           <IonButtons slot="end">
             <IonButton>
-              <span
-                onClick={() => {
-                  toolAction();
-                }}
-              >
-                {toolText}
-              </span>
+              <span onClick={toolAction}>{toolText}</span>
             </IonButton>
           </IonButtons>
         )}
