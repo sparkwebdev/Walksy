@@ -53,10 +53,10 @@ small {
   justify-content: center;
   /* padding-top: 20px; */
 }
-.centered-content--no-toolbar {
+.centered-content--no-tabs {
   min-height: calc(100vh - 94px - 40px);
 }
-.centered-content--no-toolbar-no-header {
+.centered-content--no-tabs-no-header {
   min-height: calc(100vh - 40px);
 }
 .with-hover-cursor:hover {

@@ -38,7 +38,7 @@ const LoginPage: React.FC = () => {
     errorMessage: "",
   });
 
-  const handleLogin = async () => {
+  const loginHandler = async () => {
     const email = emailInputRef.current!.value;
     const password = passwordInputRef.current!.value;
     if (!email || !password) {
@@ -52,12 +52,11 @@ const LoginPage: React.FC = () => {
       );
       return credential;
     } catch (error) {
-      console.log("error: ", error);
       setStatus({ loading: false, error: true, errorMessage: error.message });
     }
   };
 
-  const toggleShowPassword = () => {
+  const toggleShowPasswordHandler = () => {
     setShowPassword(!showPassword);
     showPassword ? sePasswordIcon(eyeIcon) : sePasswordIcon(eyeOffIcon);
   };
@@ -69,7 +68,7 @@ const LoginPage: React.FC = () => {
     <IonPage>
       <PageHeader title="Login" />
       <IonContent className="">
-        <div className="centered-content">
+        <div className="centered-content centered-content--no-tabs">
           <div className="constrain constrain--medium">
             <IonCard>
               <IonCardHeader className="ion-no-padding" color="dark">
@@ -105,7 +104,10 @@ const LoginPage: React.FC = () => {
                     <IonIcon
                       slot="end"
                       icon={showPasswordIcon}
-                      onClick={toggleShowPassword}
+                      onClick={toggleShowPasswordHandler}
+                      style={{
+                        marginTop: "1.2em",
+                      }}
                     />
                   </IonItem>
                 </IonList>
@@ -128,18 +130,29 @@ const LoginPage: React.FC = () => {
                     </IonItem>
                   </IonList>
                 )}
-
-                <IonButton
-                  className="ion-margin"
-                  expand="block"
-                  onClick={handleLogin}
-                >
-                  Login
-                </IonButton>
-                <IonButton expand="block" fill="clear" routerLink="/register">
-                  Don't have an account?
-                </IonButton>
               </IonCardContent>
+              <IonCardHeader
+                className="ion-no-padding ion-margin-top"
+                color="light"
+              >
+                <IonGrid>
+                  <IonRow>
+                    <IonCol>
+                      <IonButton expand="block" onClick={loginHandler}>
+                        Login
+                      </IonButton>
+                      <IonButton
+                        expand="block"
+                        fill="clear"
+                        routerLink="/register"
+                        className="ion-margin-top"
+                      >
+                        Don't have an account?
+                      </IonButton>
+                    </IonCol>
+                  </IonRow>
+                </IonGrid>
+              </IonCardHeader>
             </IonCard>
           </div>
         </div>

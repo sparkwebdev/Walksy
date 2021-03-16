@@ -22,32 +22,30 @@ export const auth = app.auth();
 export const firestore = app.firestore();
 export const storage = app.storage();
 
-export const createUserProfileDocument = async (userAuth: any, additionalData: {
+export const createUserProfile = async (userData: {
+  userId: string,
   firstName: string,
   lastName: string,
-  // location: string,
+  displayName: string,
+  location: string,
   age: string,
+  profilePic: string,
 }) => {
-  if (!userAuth) return;
-  const userRef = firestore.doc(`users/${userAuth.uid}`);
+  if (!userData.userId) return;
+  const userRef = firestore.doc(`users/${userData.userId}`);
   const snapShot = await userRef.get();
   if (!snapShot.exists) {
     const createdAt = new Date();
-    const userData = {
-      userId: userAuth.uid,
+    const userProfileData = {
       createdAt,
-      metric: true,
-      profilePic: '',
-      displayName: additionalData.firstName,
-      ...additionalData
+      ...userData
     };
     try {
-      await userRef.set(userData);
+      await userRef.set(userProfileData);
     } catch (error) {
       console.log('error creating user', error.message);
     } finally {
-      const userProfile = userData;
-      Storage.set({ key: "userProfile", value: JSON.stringify(userProfile) });
+      Storage.set({ key: "userProfile", value: JSON.stringify(userProfileData) });
       return userRef;
     }
   }
@@ -87,3 +85,20 @@ export const handleStorePicture = async (blobUrl: string) => {
   const url = await snapshot.ref.getDownloadURL();
   return url;
 }
+
+
+export const checkUniqueDisplayName = async (name: string) => {
+  try {
+    const isUnique = await firestore
+      .collection("users")
+      .where("displayName", "==", name)
+      .limit(1)
+      .get()
+      .then((querySnapshot) => {
+        return querySnapshot.empty ? true : false;
+      })
+    return isUnique;
+  } catch (error)  {
+    console.log("Error getting data: ", error);
+  }
+};
