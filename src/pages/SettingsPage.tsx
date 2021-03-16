@@ -27,10 +27,11 @@ import PageHeader from "../components/PageHeader";
 
 const SettingsPage: React.FC = () => {
   const { userId } = useAuth();
+  const [displayName, setDisplayName] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [age, setAge] = useState("");
-  // const [location, setLocation] = useState("");
+  const [location, setLocation] = useState("");
   const [distance, setDistance] = useState("");
   const [email, setEmail] = useState("");
   // const [password, setPassword] = useState("");
@@ -41,6 +42,7 @@ const SettingsPage: React.FC = () => {
     const usersRef = firestore.collection("users").doc(userId);
     return usersRef.onSnapshot((user) => {
       const data = user.data();
+      setFirstName(data?.displayName);
       setFirstName(data?.firstName);
       setLastName(data?.lastName);
       setAge(data?.age);
@@ -123,6 +125,19 @@ const SettingsPage: React.FC = () => {
                 <IonList>
                   <IonItem>
                     <IonLabel position="fixed">
+                      <small>Display Name</small>
+                    </IonLabel>
+                    <IonInput
+                      type="text"
+                      value={displayName}
+                      readonly={!editing}
+                      onIonChange={(event) =>
+                        setDisplayName(event.detail.value!)
+                      }
+                    />
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel position="fixed">
                       <small>First Name</small>
                     </IonLabel>
                     <IonInput
@@ -148,10 +163,21 @@ const SettingsPage: React.FC = () => {
                       <small>Age</small>
                     </IonLabel>
                     <IonInput
-                      type="text"
+                      type="number"
                       value={age}
                       readonly={!editing}
                       onIonChange={(event) => setAge(event.detail.value!)}
+                    />
+                  </IonItem>
+                  <IonItem>
+                    <IonLabel position="fixed">
+                      <small>Location</small>
+                    </IonLabel>
+                    <IonInput
+                      type="text"
+                      value={location}
+                      readonly={!editing}
+                      onIonChange={(event) => setLocation(event.detail.value!)}
                     />
                   </IonItem>
                 </IonList>

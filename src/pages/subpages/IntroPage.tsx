@@ -39,7 +39,7 @@ const Intro: React.FC = () => {
         <IonToolbar color="medium">
           <IonButtons slot="end">
             {onLastSlide === false && (
-              <IonButton onClick={() => skipIntro()}>Skip</IonButton>
+              <IonButton onClick={skipIntro}>Skip</IonButton>
             )}
           </IonButtons>
         </IonToolbar>
