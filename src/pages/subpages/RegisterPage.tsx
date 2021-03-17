@@ -28,6 +28,7 @@ import { eye as eyeIcon, eyeOff as eyeOffIcon } from "ionicons/icons";
 import PageHeader from "../../components/PageHeader";
 import CompleteProfile from "../../components/CompleteProfile";
 import TermsAndConditions from "../../components/TermsAndConditions";
+import { UserPreferences } from "../../data/models";
 
 const { Storage } = Plugins;
 
@@ -89,6 +90,7 @@ const RegisterPage: React.FC = () => {
         .then((userCredential) => {
           if (userCredential.user) {
             setGeneratedUserId(userCredential.user!.uid);
+            setUserDefaultPreferences();
             setUserHasProfile(true);
           }
         });
@@ -96,6 +98,17 @@ const RegisterPage: React.FC = () => {
     } catch (error) {
       setStatus({ loading: false, error: true, errorMessage: error.message });
     }
+  };
+
+  const setUserDefaultPreferences = () => {
+    const defaultPreferences: UserPreferences = {
+      metric: true,
+      darkMode: false,
+    };
+    Storage.set({
+      key: "userPreferences",
+      value: JSON.stringify(defaultPreferences),
+    });
   };
 
   const completeProfileHandler = async (
