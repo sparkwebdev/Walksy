@@ -115,10 +115,10 @@ const NewWalk: React.FC = () => {
     });
   };
 
-  // const resetWalkHandler = () => {
-  //   setStart("");
-  //   setEnd("");
-  // };
+  const resetWalkHandler = () => {
+    setStart("");
+    setEnd("");
+  };
 
   const endWalkHandler = () => {
     getLocation().then(() => {
@@ -136,12 +136,6 @@ const NewWalk: React.FC = () => {
     setDistance(distance);
   };
   const updateWalkMoments = (moments: Moment[]) => {
-    // const latestImage = moments.find((moment) => {
-    //   return moment.imagePath !== "";
-    // });
-    // if (latestImage) {
-    //   setCoverImage(latestImage.imagePath);
-    // }
     setMoments(moments);
   };
 
@@ -179,7 +173,7 @@ const NewWalk: React.FC = () => {
     <IonPage>
       <PageHeader
         title="New Walk"
-        back={!start && !end}
+        // back={!start && !end}
         showTool={!start && !end && !showTutorial}
         toolText={showTutorialText}
         toolAction={getHelpHandler}
@@ -244,10 +238,11 @@ const NewWalk: React.FC = () => {
                   />
                   {/* Add Moment */}
                   <NewWalkAddMoment
-                    endWalk={endWalkHandler}
                     updateWalk={(moments: Moment[]) =>
                       updateWalkMoments(moments)
                     }
+                    resetWalk={resetWalkHandler}
+                    endWalk={endWalkHandler}
                     getLocation={getLocation}
                   />
                 </>

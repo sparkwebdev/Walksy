@@ -1,192 +1,90 @@
 import {
   IonAlert,
   IonButton,
-  IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
   IonCol,
   IonGrid,
   IonIcon,
-  IonLabel,
-  IonLoading,
   IonModal,
   IonRow,
   IonText,
-  IonTextarea,
-  IonToast,
-  // isPlatform,
 } from "@ionic/react";
-import React, { useEffect, useRef, useState } from "react";
-// import { Photo } from "../data/models";
+import React, { useEffect, useState } from "react";
 import { Location, Moment } from "../data/models";
-// import {
-//   Camera,
-//   CameraResultType,
-//   CameraSource,
-//   Capacitor,
-// } from "@capacitor/core";
+import NewWalkAddMomentModal from "./NewWalkAddMomentModal";
 
 import {
   checkmark as finishIcon,
   close as cancelIcon,
-  // micCircleOutline as recordlIcon,
-  // stopCircleOutline as stopIcon,
   chevronDown as chevronDownIcon,
   flagOutline as flagIcon,
   map as mapIcon,
 } from "ionicons/icons";
-import { storage } from "../firebase";
-
-const noteMaxLength = 280;
-const placeholderImage = "assets/img/placeholder.png";
-
-// async function savePicture(blobUrl: string) {
-//   const base64 = await base64FromPath(blobUrl);
-//   const fileName = new Date().getTime() + ".jpeg";
-//   Filesystem.writeFile({
-//     path: fileName,
-//     data: base64,
-//     directory: FilesystemDirectory.Data,
-//   });
-// }
-
-async function savePicture(blobUrl: string) {
-  const fileInputRef = storage.ref(`/moments/${Date.now()}`);
-  const response = await fetch(blobUrl);
-  const blob = await response.blob();
-  const snapshot = await fileInputRef.put(blob);
-  const url = await snapshot.ref.getDownloadURL();
-  return url;
-}
 
 const NewWalkAddMoment: React.FC<{
   updateWalk: (moments: Moment[]) => void;
+  resetWalk: () => void;
   endWalk: () => void;
   getLocation: () => Promise<Location | null>;
-}> = ({ endWalk, updateWalk, getLocation }) => {
-  // Global (View) states
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<{
-    showError: boolean;
-    message?: string;
-  }>({ showError: false });
-
+}> = ({ updateWalk, endWalk, resetWalk, getLocation }) => {
   const [moments, setMoments] = useState<Moment[]>([]);
   const [cancelWalkAlert, setCancelWalkAlert] = useState(false);
 
   const [addMomentModal, setAddMomentModal] = useState<boolean>(false);
   const [addMomentCurrentType, setAddMomentCurrentType] = useState<string>("");
-  const [cancelMomentAlert, setCancelMomentAlert] = useState(false);
 
-  // const [takenPhoto, setTakenPhoto] = useState<Photo | null>(null);
   const [imagePath, setImagePath] = useState<string>(""); // takenPhotoPath, setTakenPhotoPath
-  const [remoteImagePath, setRemoteImagePath] = useState<string>("");
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // const [audioPath, setAudioPath] = useState<string>("");
-  // const [recordingSound, setRecordingSound] = useState<boolean>(false);
-  const [remoteAudioPath, setRemoteAudioPath] = useState<string>("");
-
+  const [audioPath, setAudioPath] = useState<string>("");
   const [note, setNote] = useState<string>("");
 
   const addMomentHandler = (type: string) => {
-    setAddMomentModal(true);
     setAddMomentCurrentType(type);
-    // if (type === "Photo") {
-    // fileInputRef.current!.click();
-    // }
+    setAddMomentModal(true);
   };
 
-  const saveMomentMediaHandler = async () => {
-    if (imagePath !== "" && addMomentCurrentType === "Photo") {
-      setLoading(true);
-      try {
-        const remoteUrl = await savePicture(imagePath);
-        setRemoteImagePath(remoteUrl);
-      } catch (error) {
-        setError({
-          showError: true,
-          message: "Not saved. Please try again.",
-        });
-        return;
-      }
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (remoteImagePath !== "" || remoteAudioPath !== "") {
-      saveMomentHandler();
-    }
-  }, [remoteImagePath, remoteAudioPath]);
-
-  const saveMomentHandler = () => {
+  const setMomentHandler = () => {
     getLocation().then((currentLocation) => {
       const newMoment: Moment = {
         walkId: "",
-        imagePath: remoteImagePath,
-        audioPath: remoteAudioPath,
+        imagePath,
+        audioPath,
         note,
         location: currentLocation,
-        timestamp: new Date().toString(),
+        timestamp: new Date().toISOString(),
       };
       setMoments([...moments, newMoment]);
-      clearMomentHandler();
     });
   };
 
   const clearMomentHandler = () => {
     setAddMomentModal(false);
-    setNote("");
-    setImagePath("");
     setAddMomentCurrentType("");
-    setRemoteImagePath("");
-    setRemoteAudioPath("");
   };
 
   const viewMapHandler = () => {};
 
-  useEffect(() => {
-    updateWalk(moments);
-  }, [moments, updateWalk]);
-
-  useEffect(() => {
-    return () => {
-      if (imagePath.startsWith("blob:")) {
-        URL.revokeObjectURL(imagePath);
-      }
-    };
-  }, [imagePath]);
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const file = event.target.files?.item(0);
-      const imagePath = URL.createObjectURL(file);
-      setImagePath(imagePath);
-    }
+  const updateMomentImageAudioNote = (
+    imagePath: string,
+    audioPath: string,
+    note: string
+  ) => {
+    setImagePath(imagePath);
+    setAudioPath(audioPath);
+    setNote(note);
   };
 
-  // const handlePictureClick = async () => {
-  //   if (!Capacitor.isPluginAvailable("Camera")) {
-  //     fileInputRef.current!.click();
-  //     return;
-  //   }
-  //   if (isPlatform("capacitor")) {
-  //     try {
-  //       const photo = await Camera.getPhoto({
-  //         resultType: CameraResultType.Uri,
-  //         source: CameraSource.Prompt,
-  //         width: 600,
-  //       });
-  //       setImagePath(photo.webPath!);
-  //     } catch (error) {
-  //       console.log("Camera error:", error);
-  //     }
-  //   } else {
-  //     fileInputRef.current!.click();
-  //   }
-  // };
+  useEffect(() => {
+    if (imagePath !== "" || audioPath !== "" || note !== "") {
+      setMomentHandler();
+    }
+  }, [imagePath, audioPath, note, setMomentHandler]);
+
+  useEffect(() => {
+    updateWalk(moments);
+    // clearMomentHandler();
+  }, [moments]);
 
   return (
     <>
@@ -230,141 +128,6 @@ const NewWalkAddMoment: React.FC<{
         className="constrain constrain--medium"
         style={{ margin: "auto" }}
       >
-        <IonModal isOpen={addMomentModal}>
-          <IonCard
-            color="medium"
-            className="ion-no-margin"
-            style={{ flex: "1", paddingTop: "30px" }}
-          >
-            <IonCard>
-              <IonCardHeader className="ion-no-padding" color="tertiary">
-                <IonCardSubtitle
-                  className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
-                  style={{ color: "white" }}
-                >
-                  Add {addMomentCurrentType}
-                </IonCardSubtitle>
-              </IonCardHeader>
-              <IonCardContent className="ion-no-padding">
-                {addMomentCurrentType === "Photo" && (
-                  <div>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      hidden
-                      ref={fileInputRef}
-                    />
-                    <img
-                      src={imagePath ? imagePath : placeholderImage}
-                      alt=""
-                      onClick={() => {
-                        fileInputRef.current?.click();
-                      }}
-                      style={{
-                        cursor: "pointer",
-                        display: "block",
-                      }}
-                    />
-                  </div>
-                )}
-                {addMomentCurrentType === "Sound" && <></>}
-                {addMomentCurrentType === "Note" && (
-                  <div>
-                    <IonLabel hidden={true}>Add a note...</IonLabel>
-                    <IonTextarea
-                      placeholder="A thought or description..."
-                      maxlength={noteMaxLength}
-                      rows={7}
-                      style={{
-                        padding: "10px 20px",
-                        margin: "0",
-                        backgroundColor: "white",
-                      }}
-                      value={note}
-                      onIonChange={(event) => {
-                        setNote(event.detail.value!);
-                      }}
-                    ></IonTextarea>
-                    <p className="ion-padding">
-                      <small>
-                        {noteMaxLength - note.length} characters remaining
-                      </small>
-                    </p>
-                  </div>
-                )}
-              </IonCardContent>
-            </IonCard>
-          </IonCard>
-
-          <IonCardHeader
-            className="ion-no-padding"
-            color="light"
-            style={{
-              paddingBottom: "20px",
-            }}
-          >
-            <IonGrid>
-              <IonRow>
-                <IonCol size="5">
-                  <IonButton
-                    expand="block"
-                    color="danger"
-                    onClick={() => {
-                      // To Do: Or image or audio check
-                      if (note.length > 0) {
-                        setCancelMomentAlert(true);
-                      } else {
-                        clearMomentHandler();
-                      }
-                    }}
-                  >
-                    <IonIcon slot="start" icon={cancelIcon} />
-                    Cancel
-                  </IonButton>
-                  <IonAlert
-                    header={"Cancel"}
-                    subHeader={"Are you sure?"}
-                    buttons={[
-                      {
-                        text: "No",
-                        role: "cancel",
-                      },
-                      {
-                        text: "Yes",
-                        cssClass: "secondary",
-                        handler: clearMomentHandler,
-                      },
-                    ]}
-                    isOpen={cancelMomentAlert}
-                    onDidDismiss={() => {
-                      clearMomentHandler();
-                    }}
-                  />
-                </IonCol>
-                <IonCol size="7">
-                  <IonButton
-                    expand="block"
-                    color="success"
-                    disabled={note.length === 0 && imagePath === ""}
-                    onClick={
-                      addMomentCurrentType === "note"
-                        ? () => {
-                            saveMomentHandler();
-                          }
-                        : () => {
-                            saveMomentMediaHandler();
-                          }
-                    }
-                  >
-                    <IonIcon slot="start" icon={finishIcon} />
-                    Add {addMomentCurrentType}
-                  </IonButton>
-                </IonCol>
-              </IonRow>
-            </IonGrid>
-          </IonCardHeader>
-        </IonModal>
         {moments.length > 0 ? (
           <IonGrid>
             <IonRow>
@@ -451,7 +214,7 @@ const NewWalkAddMoment: React.FC<{
                     {
                       text: "Yes",
                       cssClass: "secondary",
-                      // handler: resetWalkHandler,
+                      handler: resetWalk,
                     },
                   ]}
                   isOpen={cancelWalkAlert}
@@ -459,13 +222,7 @@ const NewWalkAddMoment: React.FC<{
                 />
               </IonCol>
               <IonCol size="7">
-                <IonButton
-                  expand="block"
-                  color="success"
-                  onClick={() => {
-                    endWalk();
-                  }}
-                >
+                <IonButton expand="block" color="success" onClick={endWalk}>
                   <IonIcon slot="start" icon={finishIcon} />
                   End Walk
                 </IonButton>
@@ -474,15 +231,15 @@ const NewWalkAddMoment: React.FC<{
           </IonGrid>
         </IonCardSubtitle>
       </IonCardHeader>
-
-      <IonLoading message={"Loading..."} isOpen={loading} />
-      <IonToast
-        duration={2000}
-        position="bottom"
-        isOpen={error.showError}
-        onDidDismiss={() => setError({ showError: false, message: undefined })}
-        message={error.message}
-      />
+      <IonModal isOpen={addMomentModal}>
+        <NewWalkAddMomentModal
+          updateMoment={(imagePath: string, audioPath: string, note: string) =>
+            updateMomentImageAudioNote(imagePath, audioPath, note)
+          }
+          cancelMoment={() => clearMomentHandler()}
+          type={addMomentCurrentType}
+        />
+      </IonModal>
     </>
   );
 };
