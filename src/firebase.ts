@@ -3,7 +3,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { Plugins } from "@capacitor/core";
-import { Moment, Walk } from './data/models';
+import { Moment, UserProfile, Walk } from './data/models';
 
 const { Storage } = Plugins;
 
@@ -22,33 +22,53 @@ export const auth = app.auth();
 export const firestore = app.firestore();
 export const storage = app.storage();
 
-export const createUserProfile = async (userData: {
-  userId: string,
-  firstName: string,
-  lastName: string,
-  displayName: string,
-  location: string,
-  age: string,
-  profilePic: string,
-}) => {
+export const createUserProfile = async (userData: UserProfile) => {
   if (!userData.userId) return;
   const userRef = firestore.doc(`users/${userData.userId}`);
   const snapShot = await userRef.get();
   if (!snapShot.exists) {
-    const createdAt = new Date();
+    const createdAt = new Date().toISOString();
     const userProfileData = {
       createdAt,
       ...userData
     };
     try {
-      await userRef.set(userProfileData);
+      await userRef.set(userProfileData).then(() => {
+        Storage.set({ key: "userProfile", value: JSON.stringify(userProfileData) });
+      });
     } catch (error) {
       console.log('error creating user', error.message);
-    } finally {
-      Storage.set({ key: "userProfile", value: JSON.stringify(userProfileData) });
-      return userRef;
     }
+    return userRef;
   }
+}
+
+export const updateUserProfile = async (userData: UserProfile) => {
+  const entriesRef = firestore.collection("users")
+  .where("userId", "==", userData.userId)
+  .limit(1)
+  .get()
+  .then((query) => {
+    const userDoc = query.docs[0];
+    userDoc.ref.update(userData);
+  }).then(() => {
+    syncUserProfileToLocal(userData.userId);
+  }).catch((error)=> {
+    console.log(error);
+  })
+}
+
+export const syncUserProfileToLocal = async (userId: string) => {
+  const entriesRef = firestore.collection("users")
+  .where("userId", "==", userId)
+  .limit(1)
+  .get()
+  .then((query) => {
+    const userDoc = query.docs[0];
+    Storage.set({ key: "userProfile", value: JSON.stringify(userDoc.data()) });
+  }).catch((error)=> {
+    console.log(error);
+  })
 }
 
 export const handleStoreWalk = async (walkData: Walk, moments: Moment[]) => {
@@ -100,5 +120,18 @@ export const checkUniqueDisplayName = async (name: string) => {
     return isUnique;
   } catch (error)  {
     console.log("Error getting data: ", error);
+  }
+};
+
+export const getRemoteUserData = async (userId: string) => {
+  try {
+    const usersData = await firestore
+      .collection("users")
+      .doc(userId).get().then((user) => {
+        return user.data();
+      })
+    return usersData;
+  } catch (error) {
+    console.log("Error getting user data: ", error);
   }
 };
