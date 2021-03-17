@@ -1,3 +1,18 @@
+export interface UserProfile {
+  userId: string;
+  firstName: string;
+  lastName: string;
+  age: string;
+  location: string;
+  displayName: string;
+  profilePic: string;
+}
+
+export interface UserPreferences {
+  metric: boolean;
+  darkMode: boolean;
+}
+
 export interface Moment {
   walkId: string;
   imagePath: string;
