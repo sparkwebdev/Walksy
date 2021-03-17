@@ -27,9 +27,7 @@ export const createUserProfile = async (userData: UserProfile) => {
   const userRef = firestore.doc(`users/${userData.userId}`);
   const snapShot = await userRef.get();
   if (!snapShot.exists) {
-    const createdAt = new Date().toISOString();
     const userProfileData = {
-      createdAt,
       ...userData
     };
     try {

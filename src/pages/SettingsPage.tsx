@@ -35,7 +35,7 @@ import { formatDate } from "../helpers";
 import { UserPreferences } from "../data/models";
 
 const SettingsPage: React.FC = () => {
-  const { userId } = useAuth();
+  const { userId, userCreatedAt, userEmail } = useAuth();
 
   const [displayName, setDisplayName] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -43,13 +43,10 @@ const SettingsPage: React.FC = () => {
   const [age, setAge] = useState("");
   const [location, setLocation] = useState("");
   const [profilePic, setProfilePic] = useState("");
-  const [createdAt, setCreatedAt] = useState("");
 
   const [metric, setMetric] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [editing, setEditing] = useState(false);
 
   const [status, setStatus] = useState({
@@ -90,7 +87,6 @@ const SettingsPage: React.FC = () => {
     setAge(userData?.age);
     setLocation(userData?.location);
     setProfilePic(userData?.profilePic);
-    setCreatedAt(userData?.createdAt);
   };
 
   const saveDetailsHandler = async () => {
@@ -116,6 +112,7 @@ const SettingsPage: React.FC = () => {
         });
       })
       .catch(() => {
+        setEditing(false);
         setStatus({
           loading: false,
           error: true,
@@ -123,7 +120,6 @@ const SettingsPage: React.FC = () => {
         });
         console.log("Error updating user profile");
       });
-    setEditing(false);
   };
 
   const savePreferencesHandler = async (name: string, value: boolean) => {
@@ -140,6 +136,10 @@ const SettingsPage: React.FC = () => {
       });
     });
   };
+
+  const updateEmailHandler = async () => {};
+
+  const updatePasswordHandler = async () => {};
 
   const [logoutAlert, setLogoutAlert] = useState(false);
 
@@ -172,9 +172,9 @@ const SettingsPage: React.FC = () => {
                     </small>
                   )}
                 {displayName && <h3>{displayName}</h3>}
-                {createdAt && (
+                {userCreatedAt && (
                   <IonCardSubtitle>
-                    Joined {formatDate(createdAt)}
+                    Joined {formatDate(userCreatedAt)}
                   </IonCardSubtitle>
                 )}
               </div>
@@ -380,23 +380,31 @@ const SettingsPage: React.FC = () => {
                       <IonLabel position="fixed">
                         <small>Email</small>
                       </IonLabel>
-                      <IonInput
-                        type="text"
-                        value={email}
-                        onIonChange={(event) => setEmail(event.detail.value!)}
-                      />
-                      <IonButton size="small" slot="end" onClick={() => {}}>
+                      <IonInput type="text" value={userEmail} readonly={true} />
+                      {/* <IonButton
+                        size="small"
+                        slot="end"
+                        onClick={() => {
+                          updateEmailHandler();
+                        }}
+                      >
                         Edit
-                      </IonButton>
+                      </IonButton> */}
                     </IonItem>
                     <IonItem>
                       <IonLabel position="fixed">
                         <small>Password</small>
                       </IonLabel>
-                      <IonInput type="password" value="****" />
-                      <IonButton size="small" slot="end" onClick={() => {}}>
+                      <IonInput type="password" value="****" readonly={true} />
+                      {/* <IonButton
+                        size="small"
+                        slot="end"
+                        onClick={() => {
+                          updatePasswordHandler();
+                        }}
+                      >
                         Edit
-                      </IonButton>
+                      </IonButton> */}
                     </IonItem>
                   </IonList>
                 </IonCardContent>
