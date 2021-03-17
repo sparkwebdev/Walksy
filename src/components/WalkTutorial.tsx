@@ -14,7 +14,7 @@ const WalkTutorial: React.FC<{
   onFinish: () => void;
 }> = ({ onFinish }) => {
   return (
-    <div className="centered-content centered-content--no-toolbar">
+    <div className="centered-content centered-content--no-tabs">
       <div className="constrain constrain--medium">
         <IonCard>
           <IonCardHeader className="ion-no-padding" color="dark">
