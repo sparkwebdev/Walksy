@@ -1,9 +1,6 @@
 .walk-card {
   position: relative;
 }
-.walk-card:not(:last-child) {
-  margin-bottom: 8px;
-}
 
 .walk-card__image {
   display: block;
