@@ -23,11 +23,14 @@ import "./theme/variables.css";
 import "./theme/variables-app.css";
 import "./theme/global.css";
 import WalksContextProvider from "./data/WalksContextProvider";
+import MemoriesContextProvider from "./data/MemoriesContextProvider";
 
 ReactDOM.render(
-  <WalksContextProvider>
-    <App />
-  </WalksContextProvider>,
+  <MemoriesContextProvider>
+    <WalksContextProvider>
+      <App />
+    </WalksContextProvider>
+  </MemoriesContextProvider>,
   document.getElementById("root")
 );
 

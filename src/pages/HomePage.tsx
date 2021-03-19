@@ -1,11 +1,4 @@
-import {
-  IonPage,
-  IonContent,
-  IonGrid,
-  IonCol,
-  IonRow,
-  IonCard,
-} from "@ionic/react";
+import { IonPage, IonContent, IonCard, IonList, IonItem } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import MomentItemPreview from "../components/MomentItemPreview";
 import PageHeader from "../components/PageHeader";
@@ -28,6 +21,11 @@ const HomePage: React.FC = () => {
     <IonPage>
       <PageHeader title="Browse Gallery" />
       <IonContent>
+        <IonList>
+          <IonItem routerLink="/app/good-memories">Good Memories</IonItem>
+          <IonItem routerLink="/app/bad-memories">Bad Memories</IonItem>
+          <IonItem routerLink="/app/new-memory">New Memory</IonItem>
+        </IonList>
         {moments.map((moment, index) => (
           <IonCard
             className="ion-no-margin ion-no-padding"

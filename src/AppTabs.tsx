@@ -5,19 +5,8 @@ import {
   IonTabButton,
   IonLabel,
   IonIcon,
-  IonMenu,
-  IonHeader,
-  IonTitle,
-  IonItem,
-  IonContent,
-  IonList,
-  IonMenuToggle,
-  IonListHeader,
-  IonCardSubtitle,
-  IonText,
-  IonButton,
 } from "@ionic/react";
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import { Redirect, Route } from "react-router";
 import { useAuth } from "./auth";
 import HomePage from "./pages/HomePage";
@@ -35,16 +24,27 @@ import {
   footsteps as walkIcon,
   time as dashboardIcon,
   person as profileIcon,
-  informationCircleOutline as aboutIcon,
-  newspaperOutline as newsIcon,
 } from "ionicons/icons";
 import NewWalk from "./pages/NewWalk";
 import NewsPage from "./pages/NewsPage";
+
+import GoodMemories from "./pages/GoodMemories";
+import BadMemories from "./pages/BadMemories";
+import NewMemory from "./pages/NewMemory";
+import MemoriesContext from "./data/memories-context";
+
 import SideMenu from "./components/SideMenu";
 
 const AppTabs: React.FC = () => {
-  const { loggedIn } = useAuth();
+  const memoriesCtx = useContext(MemoriesContext);
 
+  const { initContext } = memoriesCtx;
+
+  useEffect(() => {
+    initContext();
+  }, [initContext]);
+
+  const { loggedIn } = useAuth();
   if (!loggedIn) {
     return <Redirect to="/intro" />;
   }
@@ -53,6 +53,15 @@ const AppTabs: React.FC = () => {
     <>
       <IonTabs>
         <IonRouterOutlet id="main">
+          <Route path="/app/good-memories">
+            <GoodMemories />
+          </Route>
+          <Route path="/app/bad-memories">
+            <BadMemories />
+          </Route>
+          <Route path="/app/new-memory">
+            <NewMemory />
+          </Route>
           <Route exact path="/app/home">
             <HomePage />
           </Route>
