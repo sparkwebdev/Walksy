@@ -74,3 +74,57 @@ ion-tab-button ion-label {
   height: 100px;
   border-radius: 50% !important;
 }
+/* Moments List */
+.moments-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.moments-list__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1;
+  position: relative;
+  padding-bottom: 50px;
+}
+.moments-list__item:not(:first-child) {
+}
+.moments-list__item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: calc(50% + 20px);
+  width: 5px;
+  height: calc(50% + 50px);
+  background: var(--ion-color-secondary);
+  z-index: -1;
+}
+.moments-list__icon {
+  font-size: 3em;
+  width: 30px;
+  margin-right: 20px;
+}
+.moments-list__item--photo img {
+  display: block;
+}
+
+.moments-list__image-container,
+.moments-list__note,
+.moments-list__audio {
+  display: block;
+  width: calc(100% - 50px);
+}
+.moments-list__image {
+  display: block;
+}
+.moments-list__note {
+  padding: 1.6em 1.6em 1.6em 2em;
+  font-size: 1.1em !important;
+  line-height: 1.75em !important;
+}
+.moments-list__note::first-letter {
+  font-size: 1.6em !important;
+  margin-right: 0.1em;
+}

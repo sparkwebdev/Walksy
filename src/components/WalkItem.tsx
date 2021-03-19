@@ -6,6 +6,7 @@ import {
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
+  IonIcon,
   IonText,
 } from "@ionic/react";
 
@@ -16,6 +17,12 @@ import { Moment, toMoment } from "../data/models";
 
 // import { playCircleOutline as playIcon } from "ionicons/icons";
 import { firestore } from "../firebase";
+import {
+  image as imageIcon,
+  // camera as cameraIcon,
+  mic as audioIcon,
+  chatbubbleEllipses as noteIcon,
+} from "ionicons/icons";
 
 const WalkItem: React.FC<{
   id?: string;
@@ -92,42 +99,65 @@ const WalkItem: React.FC<{
           </div>
         </IonCardContent>
       </IonCard>
-      {moments.map((moment: Moment) => (
-        <IonCard
-          key={moment.timestamp}
-          className="walk-item__moment ion-no-margin"
-          color="medium"
-        >
-          {moment.imagePath && (
-            <img
-              className="walk-item__moment-image"
-              src={moment.imagePath}
-              alt=""
-            />
-          )}
-          {moment.audioPath && (
-            <IonCardContent className="walk-item__moment-audio">
-              <IonText>Listen:</IonText>
-              <audio controls className="ion-margin">
-                <source src={moment.audioPath} type="audio/mpeg" />
-              </audio>
-              {/* <IonIcon
-                slot="start"
-                icon={playIcon}
-                color="success"
-                style={{
-                  fontSize: "65px",
-                }}
-              /> */}
-            </IonCardContent>
-          )}
-          {moment.note && (
-            <IonCardContent className="walk-item__moment-note ion-text-center text-body">
-              <IonText className=" ion-padding">{moment.note}</IonText>
-            </IonCardContent>
-          )}
-        </IonCard>
-      ))}
+      <ol reversed className="moments-list constrain constrain--large">
+        {moments.map((moment: Moment) => (
+          <>
+            {moment.imagePath && (
+              <li
+                className="moments-list__item moments-list__item--photo"
+                key={moment.timestamp}
+              >
+                <IonIcon
+                  icon={imageIcon}
+                  className="moments-list__icon"
+                  style={{ color: props.colour }}
+                />
+                <IonCard className="moments-list__image-container ion-no-margin">
+                  <img src={moment.imagePath} />
+                </IonCard>
+              </li>
+            )}
+            {moment.audioPath && (
+              <li
+                className="moments-list__item moments-list__item--audio"
+                key={moment.timestamp}
+              >
+                {/* <IonIcon
+                  slot="start"
+                  icon={playIcon}
+                  color="success"
+                  style={{
+                    fontSize: "65px",
+                  }}
+                /> */}
+                <IonIcon
+                  icon={audioIcon}
+                  className="moments-list__icon"
+                  style={{ color: props.colour }}
+                />
+                <audio controls className="moments-list__audio">
+                  <source src={moment.audioPath} type="audio/mpeg" />
+                </audio>
+              </li>
+            )}
+            {moment.note && (
+              <li
+                className="moments-list__item moments-list__item--note"
+                key={moment.timestamp}
+              >
+                <IonIcon
+                  icon={noteIcon}
+                  className="moments-list__icon"
+                  style={{ color: props.colour }}
+                />
+                <IonCard className="moments-list__note text-body ion-no-margin">
+                  {moment.note}
+                </IonCard>
+              </li>
+            )}
+          </>
+        ))}
+      </ol>
     </>
   );
 };

@@ -2,12 +2,6 @@
   position: relative;
 }
 
-.walk-item img {
-  width: 100%;
-  height: 40vh;
-  object-fit: cover;
-}
-
 .walk-item__content {
   position: absolute;
   bottom: 0;
@@ -17,8 +11,4 @@
 }
 .walk-item__content * {
   color: var(--ion-color-dark-contrast);
-}
-
-.walk-item__moment-image {
-  display: block;
 }
