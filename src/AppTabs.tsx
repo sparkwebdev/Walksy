@@ -38,6 +38,7 @@ import {
   informationCircleOutline as aboutIcon,
   newspaperOutline as newsIcon,
 } from "ionicons/icons";
+import NewWalk from "./pages/NewWalk";
 import NewsPage from "./pages/NewsPage";
 import SideMenu from "./components/SideMenu";
 

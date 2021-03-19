@@ -1,9 +1,6 @@
 import {
-  IonAlert,
   IonButton,
   IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
   IonCol,
   IonGrid,
   IonIcon,
@@ -16,8 +13,6 @@ import { Location, Moment } from "../data/models";
 import NewWalkAddMomentModal from "./NewWalkAddMomentModal";
 
 import {
-  checkmark as finishIcon,
-  close as cancelIcon,
   chevronDown as chevronDownIcon,
   flagOutline as flagIcon,
   map as mapIcon,
@@ -30,7 +25,6 @@ const NewWalkAddMoment: React.FC<{
   getLocation: () => Promise<Location | null>;
 }> = ({ updateWalk, endWalk, resetWalk, getLocation }) => {
   const [moments, setMoments] = useState<Moment[]>([]);
-  const [cancelWalkAlert, setCancelWalkAlert] = useState(false);
 
   const [addMomentModal, setAddMomentModal] = useState<boolean>(false);
   const [addMomentCurrentType, setAddMomentCurrentType] = useState<string>("");
@@ -128,109 +122,38 @@ const NewWalkAddMoment: React.FC<{
         className="constrain constrain--medium"
         style={{ margin: "auto" }}
       >
-        {moments.length > 0 ? (
-          <IonGrid>
-            <IonRow>
-              <IonCol size="12" className="ion-text-center">
-                {moments.length > 0 && (
-                  <IonText className="text-body">
-                    <p>
-                      <IonIcon icon={flagIcon} className="icon-large" />
-                    </p>
-                    {moments.length} moment
-                    {moments.length !== 1 && "s"}
-                    <p>
-                      <IonIcon icon={chevronDownIcon} className="icon-small" />
-                    </p>
-                  </IonText>
-                )}
-              </IonCol>
-            </IonRow>
-            <IonRow>
-              <IonCol
-                className="ion-no-margin ion-no-padding"
-                size="12"
-                sizeSm="8"
-                offsetSm="2"
-              >
-                <IonButton expand="block" onClick={viewMapHandler}>
-                  <IonIcon slot="start" icon={mapIcon} />
-                  View on Map
-                </IonButton>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-        ) : (
-          <IonGrid>
-            <IonRow>
-              <IonCol size="12" className="ion-text-center">
-                <IonText className="ion-margin-bottom">
-                  <h1 className="text-heading">
-                    What do you notice as&nbsp;you&nbsp;walk?
-                  </h1>
+        <IonGrid>
+          <IonRow>
+            <IonCol size="12" className="ion-text-center">
+              {moments.length > 0 && (
+                <IonText className="text-body">
+                  <p>
+                    <IonIcon icon={flagIcon} className="icon-large" />
+                  </p>
+                  {moments.length} moment
+                  {moments.length !== 1 && "s"}
+                  <p>
+                    <IonIcon icon={chevronDownIcon} className="icon-small" />
+                  </p>
                 </IonText>
-                <p
-                  className="text-body"
-                  style={{
-                    marginTop: "10px",
-                  }}
-                >
-                  Record anything that draws your attention, or that you see or
-                  hear.
-                </p>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-        )}
+              )}
+            </IonCol>
+          </IonRow>
+          <IonRow>
+            <IonCol
+              className="ion-no-margin ion-no-padding"
+              size="12"
+              sizeSm="8"
+              offsetSm="2"
+            >
+              <IonButton expand="block" onClick={viewMapHandler}>
+                <IonIcon slot="start" icon={mapIcon} />
+                View on Map
+              </IonButton>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
       </IonCardContent>
-      <IonCardHeader
-        className="ion-no-padding"
-        color="light"
-        style={{
-          marginTop: "auto",
-          paddingBottom: "20px",
-        }}
-      >
-        <IonCardSubtitle className="ion-no-margin constrain constrain--medium">
-          <IonGrid>
-            <IonRow>
-              <IonCol size="5">
-                <IonButton
-                  expand="block"
-                  color="danger"
-                  onClick={() => setCancelWalkAlert(true)}
-                >
-                  <IonIcon slot="start" icon={cancelIcon} />
-                  Cancel
-                </IonButton>
-                <IonAlert
-                  header={"Cancel"}
-                  subHeader={"Are you sure?"}
-                  buttons={[
-                    {
-                      text: "No",
-                      role: "cancel",
-                    },
-                    {
-                      text: "Yes",
-                      cssClass: "secondary",
-                      handler: resetWalk,
-                    },
-                  ]}
-                  isOpen={cancelWalkAlert}
-                  onDidDismiss={() => setCancelWalkAlert(false)}
-                />
-              </IonCol>
-              <IonCol size="7">
-                <IonButton expand="block" color="success" onClick={endWalk}>
-                  <IonIcon slot="start" icon={finishIcon} />
-                  End Walk
-                </IonButton>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-        </IonCardSubtitle>
-      </IonCardHeader>
       <IonModal isOpen={addMomentModal}>
         <NewWalkAddMomentModal
           updateMoment={(imagePath: string, audioPath: string, note: string) =>
