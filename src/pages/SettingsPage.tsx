@@ -150,11 +150,11 @@ const SettingsPage: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader title="Settings" />
+      <PageHeader title="Profile &amp; Settings" />
       <IonContent>
-        <div className="centered-content">
-          <div className="constrain constrain--medium">
-            <div>
+        <IonGrid className="constrain constrain--large">
+          <IonRow className="ion-margin-top">
+            <IonCol>
               <div className="profile-badge">
                 {profilePic && (
                   <img
@@ -178,6 +178,10 @@ const SettingsPage: React.FC = () => {
                   </IonCardSubtitle>
                 )}
               </div>
+            </IonCol>
+          </IonRow>
+          <IonRow>
+            <IonCol>
               <IonCard>
                 <IonCardHeader className="ion-no-padding" color="dark">
                   <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
@@ -305,7 +309,6 @@ const SettingsPage: React.FC = () => {
                         ) : (
                           <IonButton
                             color={editing ? "success" : "primary"}
-                            size="small"
                             onClick={() => {
                               setEditing(!editing);
                             }}
@@ -318,6 +321,10 @@ const SettingsPage: React.FC = () => {
                   </IonGrid>
                 </IonCardHeader>
               </IonCard>
+            </IonCol>
+          </IonRow>
+          <IonRow>
+            <IonCol>
               <IonCard className="ion-padding-bottom constrain-medium">
                 <IonCardHeader className="ion-no-padding" color="dark">
                   <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
@@ -367,7 +374,10 @@ const SettingsPage: React.FC = () => {
                   </IonList>
                 </IonCardContent>
               </IonCard>
-
+            </IonCol>
+          </IonRow>
+          <IonRow>
+            <IonCol>
               <IonCard>
                 <IonCardHeader className="ion-no-padding" color="dark">
                   <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
@@ -416,7 +426,6 @@ const SettingsPage: React.FC = () => {
                     <IonRow>
                       <IonCol className="ion-text-center">
                         <IonButton
-                          size="small"
                           color="tertiary"
                           onClick={() => {
                             setLogoutAlert(true);
@@ -446,9 +455,9 @@ const SettingsPage: React.FC = () => {
                   </IonGrid>
                 </IonCardHeader>
               </IonCard>
-            </div>
-          </div>
-        </div>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
       </IonContent>
       <IonLoading isOpen={status.loading} />
     </IonPage>

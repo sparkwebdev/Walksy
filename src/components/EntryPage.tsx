@@ -1,4 +1,4 @@
-import { IonPage, IonContent } from "@ionic/react";
+import { IonPage, IonContent, IonGrid, IonRow, IonCol } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { firestore } from "../firebase";
@@ -22,20 +22,28 @@ const EntryPage: React.FC = () => {
   return (
     <IonPage>
       <PageHeader title="News" back={true} />
-      <IonContent className="ion-padding">
-        {entry?.date && (
-          <p className="text-heading">
-            {dayjs(entry?.date).format("dddd, DD MMM 'YY")}
-          </p>
-        )}
-        <h1 className="text-heading">{entry?.title}</h1>
+      <IonContent>
+        <IonGrid className="constrain constrain--large">
+          <IonRow className="ion-margin-top">
+            <IonCol>
+              {entry?.date && (
+                <p className="text-heading">
+                  {dayjs(entry?.date).format("dddd, DD MMM 'YY")}
+                </p>
+              )}
+              <h1 className="text-heading">{entry?.title}</h1>
 
-        {entry?.excerpt && (
-          <p>
-            <em>{entry.excerpt}</em>
-          </p>
-        )}
-        {entry?.content && entry.content}
+              {entry?.excerpt && (
+                <p className="text-body">
+                  <big>{entry.excerpt}</big>
+                </p>
+              )}
+              <div className="text-body" style={{ whiteSpace: "pre-line" }}>
+                {entry?.content && entry.content}
+              </div>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
       </IonContent>
     </IonPage>
   );

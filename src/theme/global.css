@@ -63,15 +63,17 @@ small {
   cursor: pointer;
 }
 .swatches__colour {
-  border: solid 2px #000;
+  border: solid 2px #777269;
   background-color: #fff;
   box-shadow: 1px 1px #999;
   color: transparent;
   flex: 0 0 10%;
   margin: 5px;
+  border-radius: 50% !important;
+  box-shadow: 2px 2px 0 #777269;
 }
 .swatches__colour:not(.swatches__colour--chosen):not(.swatches__colour--output) {
-  opacity: 0.65;
+  opacity: 0.5;
   border-color: #999;
 }
 .swatches__colour:not(.swatches__colour--output) {
