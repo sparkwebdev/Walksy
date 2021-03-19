@@ -4,6 +4,7 @@ import {
   IonButtons,
   IonHeader,
   IonIcon,
+  IonMenuButton,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
@@ -31,26 +32,22 @@ const PageHeader: React.FC<ContainerProps> = ({
   return (
     <IonHeader>
       <IonToolbar>
-        {back && (
+        {back && !showTool && (
           <IonButtons slot="start">
             <IonBackButton defaultHref={defaultHref} text="" />
           </IonButtons>
         )}
         <IonTitle className="ion-text-center">{title}</IonTitle>
         {location.pathname === "/app/new-walk" && showTool && toolAction && (
-          <IonButtons slot="end">
+          <IonButtons slot="start">
             <IonButton>
               <span onClick={toolAction}>{toolText}</span>
             </IonButton>
           </IonButtons>
         )}
-        {!showTool && !toolAction && (
-          <IonButtons slot="end">
-            <IonButton routerLink="/app/about">
-              <IonIcon slot="icon-only" icon={informationIcon} />
-            </IonButton>
-          </IonButtons>
-        )}
+        <IonButtons slot="end">
+          <IonMenuButton />
+        </IonButtons>
       </IonToolbar>
     </IonHeader>
   );
