@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Plugins, FilesystemDirectory } from "@capacitor/core";
 import { base64FromPath } from "@ionic/react-hooks/filesystem";
 
-import MemoriesContext, { Memory, MemoryType } from "./memories-context";
+import MemoriesContext, { Memory } from "./memories-context";
 import { Photo } from "../components/ImagePickerNew";
 
 const { Storage, Filesystem } = Plugins;
@@ -16,13 +16,12 @@ const MemoriesContextProvider: React.FC = (props) => {
         id: memory.id,
         title: memory.title,
         imagePath: memory.imagePath,
-        type: memory.type,
       };
     });
     Storage.set({ key: "memories", value: JSON.stringify(storableMemories) });
   }, [memories]);
 
-  const addMemory = async (photo: Photo, title: string, type: MemoryType) => {
+  const addMemory = async (photo: Photo, title: string) => {
     const fileName = new Date().getTime() + ".jpeg";
 
     const base64 = await base64FromPath(photo.preview);
@@ -35,7 +34,6 @@ const MemoriesContextProvider: React.FC = (props) => {
     const newMemory: Memory = {
       id: Math.random().toString(),
       title,
-      type,
       imagePath: fileName,
       base64Url: base64,
     };
@@ -58,7 +56,6 @@ const MemoriesContextProvider: React.FC = (props) => {
       loadedMemories.push({
         id: storedMemory.id,
         title: storedMemory.title,
-        type: storedMemory.type,
         imagePath: storedMemory.imagePath,
         base64Url: "data:image/jpeg;base64," + file.data,
       });

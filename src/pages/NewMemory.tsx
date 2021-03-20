@@ -19,12 +19,11 @@ import {
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 
-import MemoriesContext, { MemoryType } from "../data/memories-context";
+import MemoriesContext from "../data/memories-context";
 import ImagePickerNew, { Photo } from "../components/ImagePickerNew";
 
 const NewMemory: React.FC = () => {
   const [takenPhoto, setTakenPhoto] = useState<Photo>();
-  const [chosenMemoryType, setChosenMemoryType] = useState<MemoryType>("good");
 
   const memoriesCtx = useContext(MemoriesContext);
 
@@ -36,28 +35,18 @@ const NewMemory: React.FC = () => {
     setTakenPhoto(photo);
   };
 
-  const selectMemoryTypeHandler = (event: CustomEvent) => {
-    const selectedMemoryType = event.detail.value;
-    setChosenMemoryType(selectedMemoryType);
-  };
-
   const addMemoryHandler = async () => {
     const enteredTitle = titleRef.current?.value;
 
     if (
       !enteredTitle ||
       enteredTitle.toString().trim().length === 0 ||
-      !takenPhoto ||
-      !chosenMemoryType
+      !takenPhoto
     ) {
       return;
     }
 
-    memoriesCtx.addMemory(
-      takenPhoto,
-      enteredTitle.toString(),
-      chosenMemoryType
-    );
+    memoriesCtx.addMemory(takenPhoto, enteredTitle.toString());
     history.length > 0 ? history.goBack() : history.replace("/good-memories");
   };
 
@@ -79,17 +68,6 @@ const NewMemory: React.FC = () => {
                 <IonLabel position="floating">Memory Title</IonLabel>
                 <IonInput type="text" ref={titleRef}></IonInput>
               </IonItem>
-            </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol>
-              <IonSelect
-                onIonChange={selectMemoryTypeHandler}
-                value={chosenMemoryType}
-              >
-                <IonSelectOption value="good">Good Memory</IonSelectOption>
-                <IonSelectOption value="bad">Bad Memory</IonSelectOption>
-              </IonSelect>
             </IonCol>
           </IonRow>
           <IonRow className="ion-text-center">

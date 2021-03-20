@@ -28,8 +28,7 @@ import {
 import NewWalk from "./pages/NewWalk";
 import NewsPage from "./pages/NewsPage";
 
-import GoodMemories from "./pages/GoodMemories";
-import BadMemories from "./pages/BadMemories";
+import Memories from "./pages/Memories";
 import NewMemory from "./pages/NewMemory";
 import MemoriesContext from "./data/memories-context";
 
@@ -53,11 +52,8 @@ const AppTabs: React.FC = () => {
     <>
       <IonTabs>
         <IonRouterOutlet id="main">
-          <Route path="/app/good-memories">
-            <GoodMemories />
-          </Route>
-          <Route path="/app/bad-memories">
-            <BadMemories />
+          <Route path="/app/memories">
+            <Memories />
           </Route>
           <Route path="/app/new-memory">
             <NewMemory />

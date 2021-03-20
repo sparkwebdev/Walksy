@@ -22,8 +22,7 @@ const HomePage: React.FC = () => {
       <PageHeader title="Browse Gallery" />
       <IonContent>
         <IonList>
-          <IonItem routerLink="/app/good-memories">Good Memories</IonItem>
-          <IonItem routerLink="/app/bad-memories">Bad Memories</IonItem>
+          <IonItem routerLink="/app/memories">Memories</IonItem>
           <IonItem routerLink="/app/new-memory">New Memory</IonItem>
         </IonList>
         {moments.map((moment, index) => (
