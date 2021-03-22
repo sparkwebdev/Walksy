@@ -14,8 +14,6 @@ import {
   IonLabel,
   IonInput,
   IonButton,
-  IonSelect,
-  IonSelectOption,
 } from "@ionic/react";
 import { useHistory } from "react-router-dom";
 

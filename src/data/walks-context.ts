@@ -1,11 +1,21 @@
 import React from 'react';
 
-import { Moment, Location } from "../data/models";
+import { Walk, Moment, Location } from "../data/models";
 
-const WalksContext = React.createContext<{
-  saveWalk: (title: string, colour: string, description: string, start: string, end: string, steps: number, distance: number, moments: Moment[] | [], coverImage: string, locations: Location[] | [], userId: string) => void;
-}>({
-  saveWalk: () => {},
+interface Context {
+  walks: Walk[];
+  moments: Moment[];
+  addWalk: (title: string, colour: string, description: string, start: string, end: string, steps: number, distance: number, coverImage: string, locations: Location[] | [], userId: string) => void;
+  addMoment: (walkId: string, imagePath: string, audioPath: string, note: string, location: Location, timestamp: string) => void;
+  deleteMoment: (momentId: string) => void;
+}
+
+const WalksContext = React.createContext<Context>({
+  walks: [],
+  moments: [],
+  addWalk: () => {},
+  addMoment: () => {},
+  deleteMoment: () => {},
 });
 
 export default WalksContext;

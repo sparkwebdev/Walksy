@@ -14,6 +14,7 @@ export interface UserPreferences {
 }
 
 export interface Moment {
+  id: string;
   walkId: string;
   imagePath: string;
   audioPath: string;

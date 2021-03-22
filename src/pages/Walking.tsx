@@ -133,14 +133,14 @@ const Walking: React.FC = () => {
     setMoments(moments);
   };
 
-  const saveWalkHandler = async (
+  const addWalkHandler = async (
     description: string,
     coverImage: string,
     share: boolean
   ) => {
     setLoading(true);
     try {
-      const storedWalkId = await walksCtx.saveWalk(
+      const storedWalkId = await walksCtx.addWalk(
         title,
         colour,
         description,
@@ -148,7 +148,6 @@ const Walking: React.FC = () => {
         end,
         steps,
         distance,
-        moments,
         coverImage,
         locations,
         userId!
@@ -294,7 +293,7 @@ const Walking: React.FC = () => {
                 description: string,
                 coverImage: string,
                 share: boolean
-              ) => saveWalkHandler(description, coverImage, share)}
+              ) => addWalkHandler(description, coverImage, share)}
               moments={moments}
               start={start}
               end={end}
