@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   IonPage,
   IonContent,
@@ -38,6 +38,7 @@ import {
 } from "ionicons/icons";
 import NewWalkMoments from "./NewWalkMoments";
 import PageHeader from "../components/PageHeader";
+import ProgressOverview from "../components/ProgressOverview";
 
 const { Geolocation } = Plugins;
 
@@ -80,7 +81,7 @@ const Walking: React.FC = () => {
   useEffect(() => {
     getLocation().then(() => {
       const startDate = new Date().toISOString();
-      walkCtx.updateWalk({
+      walksCtx.updateWalk({
         start: startDate,
       });
       setStart(startDate);
@@ -112,7 +113,7 @@ const Walking: React.FC = () => {
   };
 
   const cancelWalkHandler = () => {
-    walkCtx.reset();
+    walksCtx.reset();
     history.push({
       pathname: `/app/new-walk`,
     });
@@ -121,7 +122,7 @@ const Walking: React.FC = () => {
   const endWalkHandler = () => {
     getLocation().then(() => {
       const endDate = new Date().toISOString();
-      walkCtx.updateWalk({
+      walksCtx.updateWalk({
         end: endDate,
         steps,
         distance,
@@ -137,23 +138,15 @@ const Walking: React.FC = () => {
     setDistance(distance);
   };
 
-  const walkCtx = useContext(WalksContext);
-
   const fabButtonHandler = (type: string) => {
     setMomentType(type);
   };
 
-  const updateWalkHandler = async (
-    description: string,
-    coverImage: string,
-    share: boolean
-  ) => {
+  const saveShareWalkHandler = async (share: boolean) => {
     setLoading(true);
     try {
-      const storedWalkId = walkCtx.updateWalk({
-        description,
-        coverImage,
-      });
+      const storedWalkId = "fakeId";
+      console.log("should save to remote");
       setLoading(false);
       history.push({
         pathname: `/app/walk/${storedWalkId}`,
@@ -178,57 +171,6 @@ const Walking: React.FC = () => {
           margin: "auto",
         }}
       >
-        {/* Header */}
-        <IonCardHeader
-          className="ion-no-padding"
-          style={{
-            backgroundColor: colour,
-          }}
-        >
-          <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
-            {title ? title : "Start your walk..."}
-          </IonCardSubtitle>
-        </IonCardHeader>
-
-        {/* Walk In Progress view state */}
-        {start && !end && (
-          <>
-            {/* Progress */}
-            <div className="constrain constrain--large">
-              <Progress
-                start={start}
-                updateWalk={(steps: number, distance: number) =>
-                  updateWalkStepsDistance(steps, distance)
-                }
-              />
-            </div>
-            {/* Add Moment */}
-            <NewWalkMoments
-              walkId={walkId}
-              momentType={momentType}
-              resetMomentType={() => {
-                setMomentType("");
-              }}
-              getLocation={getLocation}
-            />
-          </>
-        )}
-
-        {/* Walk Finished view state */}
-        {start && end && (
-          <NewWalkPost
-            updateWalk={(
-              description: string,
-              coverImage: string,
-              share: boolean
-            ) => updateWalkHandler(description, coverImage, share)}
-            moments={walksCtx.moments}
-            start={start}
-            end={end}
-            steps={steps}
-            distance={distance}
-          />
-        )}
         {!end && (
           <IonFab vertical="bottom" slot="fixed" edge horizontal="center">
             {walksCtx.moments.length < 1 && showPrompt && (
@@ -277,6 +219,68 @@ const Walking: React.FC = () => {
             </IonFabList>
           </IonFab>
         )}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            minHeight: "85%",
+          }}
+        >
+          {/* Header */}
+          <IonCardHeader
+            className="ion-no-padding"
+            style={{
+              backgroundColor: colour,
+            }}
+          >
+            <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
+              {title ? title : "Start your walk..."}
+            </IonCardSubtitle>
+          </IonCardHeader>
+
+          {/* Walk In Progress view state */}
+          {start && !end && (
+            <>
+              {/* Progress */}
+              <div className="constrain constrain--large">
+                <Progress
+                  start={start}
+                  updateWalk={(steps: number, distance: number) =>
+                    updateWalkStepsDistance(steps, distance)
+                  }
+                />
+              </div>
+              {/* Add Moment */}
+              <NewWalkMoments
+                walkId={walkId}
+                momentType={momentType}
+                resetMomentType={() => {
+                  setMomentType("");
+                }}
+                getLocation={getLocation}
+              />
+            </>
+          )}
+
+          {/* Walk Finished view state */}
+          {start && end && (
+            <>
+              {/* Progress OverView */}
+              <div className="constrain constrain--large">
+                <ProgressOverview
+                  distance={distance}
+                  steps={steps}
+                  start={start}
+                  end={end}
+                />
+              </div>
+              <NewWalkPost
+                saveShareWalk={(share: boolean) => saveShareWalkHandler(share)}
+                moments={walksCtx.moments}
+              />
+            </>
+          )}
+        </div>
       </IonContent>
       {!end && (
         <IonCardHeader
@@ -337,6 +341,7 @@ const Walking: React.FC = () => {
           </IonCardSubtitle>
         </IonCardHeader>
       )}
+
       <IonLoading message={"Loading..."} isOpen={loading} />
       <IonToast
         duration={2000}

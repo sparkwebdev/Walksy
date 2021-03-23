@@ -3,8 +3,6 @@ import {
   IonButton,
   IonCard,
   IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
   IonCardTitle,
   IonCol,
   IonGrid,
@@ -12,38 +10,44 @@ import {
   IonInput,
   IonLabel,
   IonRow,
+  IonTitle,
 } from "@ionic/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   checkmark as finishIcon,
   shareOutline as shareIcon,
 } from "ionicons/icons";
 import { Moment } from "../data/models";
-import ProgressOverview from "../components/ProgressOverview";
 import "./NewWalkPost.css";
 import { appData } from "../data/appData";
+import WalksContext from "../data/walks-context";
 
 const suggestedDescriptors = appData.suggestedDescriptors;
 const descriptorsMaxCount = 3;
 
 const NewWalkPost: React.FC<{
-  updateWalk: (description: string, coverImage: string, share: boolean) => void;
+  saveShareWalk: (share: boolean) => void;
   moments: Moment[];
-  steps: number;
-  distance: number;
-  start: string;
-  end: string;
-}> = ({ updateWalk, moments, steps, distance, start, end }) => {
+}> = ({ saveShareWalk, moments }) => {
   const [description, setDescription] = useState<string>("");
+  const [chosenDescription, setChosenDescription] = useState<boolean>(false);
+  const [chosenCoverImage, setChosenCoverImage] = useState<boolean>(false);
   const [descriptors, setDescriptors] = useState<string[]>([]);
   const [coverImage, setCoverImage] = useState<string>("");
+  const walksCtx = useContext(WalksContext);
 
   useEffect(() => {
-    const latestImage = moments.find((moment) => {
-      return moment.imagePath !== "";
-    });
-    if (latestImage) {
-      setCoverImage(latestImage.imagePath);
+    const momentsWithImages = moments.filter(
+      (moment) => moment.imagePath !== ""
+    );
+    momentsWithImages.length < 2
+      ? setChosenCoverImage(true)
+      : setChosenCoverImage(false);
+    // const latestImage = moments.find((moment) => {
+    //   return moment.imagePath !== "";
+    // });
+    if (momentsWithImages.length > 0) {
+      setCoverImage(momentsWithImages[0].imagePath);
     }
   }, [moments]);
 
@@ -57,73 +61,29 @@ const NewWalkPost: React.FC<{
     }
   };
 
+  const chosenCoverImageHandler = () => {
+    walksCtx.updateWalk({
+      coverImage,
+    });
+    setChosenCoverImage(true);
+  };
+
+  const chosenDescriptionHandler = () => {
+    walksCtx.updateWalk({
+      description,
+    });
+    setChosenDescription(true);
+  };
+
   return (
     <>
-      <ProgressOverview
-        distance={distance}
-        steps={steps}
-        start={start}
-        end={end}
-      />
-      <IonCardContent className="constrain constrain--medium">
-        <div className="ion-text-center">
-          <IonCardTitle className="title text-heading">
-            Describe this walk...
-          </IonCardTitle>
-          <p className="small-print">
-            Choose up to {descriptorsMaxCount} words to describe this walk...
-          </p>
-          <div
-            className={
-              descriptors.length === 3
-                ? "ion-margin-top keywords keywords--complete"
-                : "ion-margin-top keywords"
-            }
-          >
-            {suggestedDescriptors.map((keyword) => {
-              return (
-                <IonBadge
-                  className={
-                    descriptors.includes(keyword)
-                      ? "badge-keyword badge-keyword--active"
-                      : "badge-keyword"
-                  }
-                  onClick={() => {
-                    chooseKeywordHandler(keyword);
-                  }}
-                >
-                  {keyword}
-                </IonBadge>
-              );
-            })}
-          </div>
-        </div>
-        <IonLabel className="ion-hide">Walk description...</IonLabel>
-        <IonInput
-          type="text"
-          value={descriptors.join(", ")}
-          onIonChange={(event) => setDescription(event.detail!.value!)}
-          className="input-text"
-          disabled={true}
-        >
-          {descriptors.length === 3 ? (
-            <IonIcon
-              icon={finishIcon}
-              size="large"
-              color="success"
-              className="badge-input-feedback-complete"
-            />
-          ) : (
-            <IonBadge className="badge-input-feedback" color="light">
-              {descriptorsMaxCount - descriptors.length}
-            </IonBadge>
-          )}
-        </IonInput>
-
-        {coverImage && (
+      <IonCardContent
+        className="constrain constrain--medium"
+        style={{ margin: "auto" }}
+      >
+        {coverImage && !chosenCoverImage && (
           <>
             <div className="ion-text-center ion-padding ion-margin-top">
-              <IonCardSubtitle className="sub-title">Step 2:</IonCardSubtitle>
               <IonCardTitle className="title text-heading">
                 Choose a cover image...
               </IonCardTitle>
@@ -163,48 +123,143 @@ const NewWalkPost: React.FC<{
                 ) : null}
               </IonCardContent>
             </IonCard>
+            <IonGrid>
+              <IonRow>
+                <IonCol>
+                  <IonButton color="success" onClick={chosenCoverImageHandler}>
+                    <strong>Next</strong>
+                  </IonButton>
+                  <IonButton
+                    expand="block"
+                    color="dark"
+                    fill="clear"
+                    onClick={chosenCoverImageHandler}
+                  >
+                    Skip
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
           </>
         )}
+        {!chosenDescription && (
+          <>
+            <div className="ion-text-center">
+              <IonCardTitle className="title text-heading ion-margin-top">
+                Describe this walk...
+              </IonCardTitle>
+              <p className="small-print">
+                Choose up to {descriptorsMaxCount} words to describe this
+                walk...
+              </p>
+              <div
+                className={
+                  descriptors.length === 3
+                    ? "ion-margin-top keywords keywords--complete"
+                    : "ion-margin-top keywords"
+                }
+              >
+                {suggestedDescriptors.map((keyword) => {
+                  return (
+                    <IonBadge
+                      className={
+                        descriptors.includes(keyword)
+                          ? "badge-keyword badge-keyword--active"
+                          : "badge-keyword"
+                      }
+                      onClick={() => {
+                        chooseKeywordHandler(keyword);
+                      }}
+                    >
+                      {keyword}
+                    </IonBadge>
+                  );
+                })}
+              </div>
+              <IonLabel className="ion-hide">Walk description...</IonLabel>
+              <IonInput
+                type="text"
+                value={descriptors.join(", ")}
+                onIonChange={(event) => setDescription(event.detail!.value!)}
+                className="input-text"
+                disabled={true}
+              >
+                {descriptors.length === 3 ? (
+                  <IonIcon
+                    icon={finishIcon}
+                    size="large"
+                    color="success"
+                    className="badge-input-feedback-complete"
+                  />
+                ) : (
+                  <IonBadge className="badge-input-feedback" color="light">
+                    {descriptorsMaxCount - descriptors.length}
+                  </IonBadge>
+                )}
+              </IonInput>
+              <IonGrid>
+                <IonRow>
+                  <IonCol>
+                    <IonButton
+                      color="success"
+                      onClick={chosenDescriptionHandler}
+                    >
+                      <strong>Next</strong>
+                    </IonButton>
+                    <IonButton
+                      expand="block"
+                      color="dark"
+                      fill="clear"
+                      onClick={chosenDescriptionHandler}
+                    >
+                      Skip
+                    </IonButton>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+            </div>
+          </>
+        )}
+        {chosenCoverImage && chosenDescription && (
+          <div className="ion-text-center ion-padding ion-margin-top">
+            <img
+              src="assets/img/walksy-panel.svg"
+              alt=""
+              style={{ maxHeight: "22vh" }}
+            />
+            <IonTitle className="title text-heading">Well done!</IonTitle>
+            <p className="small-print">Would you like to share this walk?</p>
+            <IonGrid>
+              <IonRow>
+                <IonCol size="6">
+                  <IonButton
+                    expand="block"
+                    color="primary"
+                    onClick={() => {
+                      saveShareWalk(true);
+                    }}
+                  >
+                    <IonIcon slot="start" icon={shareIcon} />
+                    Share
+                  </IonButton>
+                </IonCol>
+                <IonCol size="6">
+                  <IonButton
+                    expand="block"
+                    color="success"
+                    onClick={() => {
+                      saveShareWalk(false);
+                    }}
+                  >
+                    <IonIcon slot="start" icon={finishIcon} />
+                    Done
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </div>
+        )}
       </IonCardContent>
-      <IonCardHeader
-        className="ion-no-padding"
-        color="light"
-        style={{
-          marginTop: "auto",
-          paddingBottom: "20px",
-        }}
-      >
-        <IonCardSubtitle className="ion-no-margin constrain constrain--medium">
-          <IonGrid>
-            <IonRow>
-              <IonCol size="5">
-                <IonButton
-                  expand="block"
-                  color="primary"
-                  onClick={() => {
-                    updateWalk(description, coverImage, true);
-                  }}
-                >
-                  <IonIcon slot="start" icon={shareIcon} />
-                  Share
-                </IonButton>
-              </IonCol>
-              <IonCol size="7">
-                <IonButton
-                  expand="block"
-                  color="success"
-                  onClick={() => {
-                    updateWalk(description, coverImage, false);
-                  }}
-                >
-                  <IonIcon slot="start" icon={finishIcon} />
-                  Finish
-                </IonButton>
-              </IonCol>
-            </IonRow>
-          </IonGrid>
-        </IonCardSubtitle>
-      </IonCardHeader>
     </>
   );
 };
