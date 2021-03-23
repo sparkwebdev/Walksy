@@ -3,19 +3,21 @@ import React from 'react';
 import { Walk, Moment, Location } from "../data/models";
 
 interface Context {
-  walks: Walk[];
+  walk: Walk | {};
   moments: Moment[];
-  addWalk: (title: string, colour: string, description: string, start: string, end: string, steps: number, distance: number, coverImage: string, locations: Location[] | [], userId: string) => void;
-  addMoment: (walkId: string, imagePath: string, audioPath: string, note: string, location: Location, timestamp: string) => void;
+  updateWalk: ({}) => void;
+  addMoment: (walkId: string, imagePath: string, audioPath: string, note: string, location: Location | null, timestamp: string) => void;
   deleteMoment: (momentId: string) => void;
+  reset: () => void;
 }
 
 const WalksContext = React.createContext<Context>({
-  walks: [],
+  walk: {},
   moments: [],
-  addWalk: () => {},
+  updateWalk: () => {},
   addMoment: () => {},
   deleteMoment: () => {},
+  reset: () => {},
 });
 
 export default WalksContext;

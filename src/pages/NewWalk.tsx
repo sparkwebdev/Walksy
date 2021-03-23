@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import {
   IonPage,
   IonContent,
@@ -22,6 +22,8 @@ import {
   getFriendlyTimeOfDay,
   getFriendlyWalkDescriptor,
 } from "../helpers";
+import WalksContext from "../data/walks-context";
+import { useAuth } from "../auth";
 
 const { Storage } = Plugins;
 
@@ -42,6 +44,9 @@ const titleMaxLength = 40;
 
 const NewWalk: React.FC = () => {
   const history = useHistory();
+  const { userId } = useAuth();
+
+  const walkCtx = useContext(WalksContext);
 
   const [title, setTitle] = useState<string>(suggestedTitle());
   const [colour, setColour] = useState<string>(colours[0]);
@@ -83,9 +88,19 @@ const NewWalk: React.FC = () => {
   };
 
   const startWalkHandler = () => {
+    walkCtx.reset(); // To Do — check for existing data (previous walk) and handle?
+    const generatedWalkId = new Date().getTime().toString();
+
+    walkCtx.updateWalk({
+      walkId: generatedWalkId,
+      title,
+      colour,
+      userId,
+    });
+
     history.push({
       pathname: `/walking`,
-      state: { title: title, colour: colour },
+      state: { walkId: generatedWalkId, title: title, colour: colour },
     });
   };
 

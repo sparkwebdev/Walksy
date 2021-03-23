@@ -6,10 +6,10 @@
   --ion-tab-bar-color: var(--ion-color-tertiary);
   --ion-tab-bar-color-selected: var(--ion-color-primary);
 }
-ion-app {
-  /* margin-top: env(safe-area-inset-top); */
-  /* margin-bottom: env(safe-area-inset-bottom); */
-}
+/* ion-app {
+  margin-top: env(safe-area-inset-top);
+  margin-bottom: env(safe-area-inset-bottom);
+} */
 
 ion-content {
   --ion-background-color: var(--ion-color-medium);
@@ -89,9 +89,18 @@ ion-tab-button ion-label {
   background: white;
   box-shadow: 2px 3px 0 #777269;
   border: solid 1px #777269;
-  font-size: 1.3em;
+  font-size: 1.1em;
   margin: 10px;
-  padding: 3px 10px;
+  padding: 0 10px !important;
+  width: calc(100% - 20px);
+}
+.input-text .native-input[disabled] {
+  opacity: 1;
+  box-shadow: 0 !important;
+}
+.input-text[aria-disabled="true"] {
+  box-shadow: none;
+  border: none;
 }
 
 .tooltip {
@@ -145,8 +154,6 @@ ion-tab-button ion-label {
   position: relative;
   padding-bottom: 50px;
 }
-.moments-list__item:not(:first-child) {
-}
 .moments-list__item:not(:last-child)::after {
   content: "";
   position: absolute;
@@ -183,4 +190,33 @@ ion-tab-button ion-label {
 .moments-list__note::first-letter {
   font-size: 1.6em !important;
   margin-right: 0.1em;
+}
+
+/* Walk Descriptors */
+.badge-input-feedback,
+.badge-input-feedback-complete {
+  /* margin-right: 5px; */
+  order: 2;
+}
+.badge-input-feedback {
+  padding: 8px 12px;
+  border-radius: 50% !important;
+  /* margin-top: 5px; */
+  /* margin-right: 5px; */
+}
+.keywords--complete .badge-keyword:not(.badge-keyword--active) {
+  opacity: 0.3;
+}
+.badge-keyword {
+  margin: 4px;
+  padding: 10px;
+  border-radius: 0.5em !important;
+  cursor: pointer;
+  --background: var(--ion-color-dark);
+  opacity: 0.8;
+  font-size: clamp(0.75rem, 3.2vw, 0.85rem);
+}
+.badge-keyword--active {
+  --background: var(--ion-color-primary);
+  opacity: 1;
 }

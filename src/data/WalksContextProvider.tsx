@@ -1,84 +1,26 @@
 import React, { useEffect, useState } from "react";
 
-import { Plugins, FilesystemDirectory } from "@capacitor/core";
+import { Plugins } from "@capacitor/core";
 import WalksContext from "./walks-context";
 import { Walk, Moment, Location } from "../data/models";
-// import { handleStoreWalk } from "../firebase";
-const { Storage, Filesystem } = Plugins;
+const { Storage } = Plugins;
 
 const WalksContextProvider: React.FC = (props) => {
-  const [walks, setWalks] = useState<Walk[]>([]);
+  const [walk, setWalk] = useState<Walk | {}>({});
   const [moments, setMoments] = useState<Moment[]>([]);
 
   useEffect(() => {
-    const storableWalks = walks.map((walk: Walk) => {
-      return {
-        id: walk.id,
-        title: walk.title,
-        colour: walk.colour,
-        description: walk.description,
-        start: walk.start,
-        end: walk.end,
-        steps: walk.steps,
-        distance: walk.distance,
-        coverImage: walk.coverImage,
-        locations: walk.locations,
-        userId: walk.userId,
-      };
-    });
-    Storage.set({ key: "walks", value: JSON.stringify(storableWalks) });
-  }, [walks]);
+    Storage.set({ key: "walk", value: JSON.stringify(walk) });
+  }, [walk]);
 
   useEffect(() => {
-    const storableMoments = moments.map((moment: Moment) => {
-      return {
-        id: moment.id,
-        walkId: moment.id,
-        imagePath: moment.imagePath,
-        audioPath: moment.audioPath,
-        note: moment.note,
-        location: moment.location,
-        timestamp: moment.timestamp,
-      };
-    });
-    Storage.set({ key: "moments", value: JSON.stringify(storableMoments) });
+    Storage.set({ key: "moments", value: JSON.stringify(moments) });
   }, [moments]);
 
-  const addWalk = async (
-    title: string,
-    colour: string,
-    description: string,
-    start: string,
-    end: string,
-    steps: number,
-    distance: number,
-    coverImage: string,
-    locations: Location[] | [],
-    userId: string
-  ) => {
-    const newWalk = {
-      id: new Date().getTime().toString(),
-      title,
-      colour,
-      description,
-      start,
-      end,
-      steps,
-      distance,
-      coverImage,
-      locations,
-      userId,
-    };
-    console.log(
-      "Adding walk to local. Should be storing (to firebase) new walk minus moments: ",
-      newWalk
-    );
+  const updateWalk = async (data: {}) => {
+    const newWalk = { ...walk, ...data };
 
-    setWalks((curWalks) => {
-      return curWalks.concat(newWalk);
-    });
-    // const stroredWalkId = await handleStoreWalk(newWalk);
-    // return stroredWalkId;
+    setWalk(newWalk);
   };
 
   const addMoment = (
@@ -89,9 +31,7 @@ const WalksContextProvider: React.FC = (props) => {
     location: Location | null,
     timestamp: string
   ) => {
-    console.log("should add Moment");
-
-    const newMoment = {
+    const newMoment: Moment = {
       id: new Date().getTime().toString(),
       walkId,
       imagePath,
@@ -107,17 +47,23 @@ const WalksContextProvider: React.FC = (props) => {
   };
 
   const deleteMoment = (momentId: string) => {
-    console.log("should delete Moment");
+    console.log("should delete Moment: ", momentId);
+  };
+
+  const reset = () => {
+    setWalk({});
+    setMoments([]);
   };
 
   return (
     <WalksContext.Provider
       value={{
-        walks,
+        walk,
         moments,
-        addWalk,
+        updateWalk,
         addMoment,
         deleteMoment,
+        reset,
       }}
     >
       {props.children}

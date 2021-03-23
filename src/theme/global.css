@@ -63,7 +63,7 @@ small {
   cursor: pointer;
 }
 .swatches__colour {
-  border: solid 2px #777269;
+  border: solid 1px #777269;
   background-color: #fff;
   box-shadow: 1px 1px #999;
   color: transparent;
@@ -73,12 +73,12 @@ small {
   box-shadow: 2px 2px 0 #777269;
 }
 .swatches__colour:not(.swatches__colour--chosen):not(.swatches__colour--output) {
-  opacity: 0.5;
+  opacity: 0.35;
   border-color: #999;
 }
 .swatches__colour:not(.swatches__colour--output) {
   width: 10%;
-  padding-top: 8%;
+  padding-top: 7.6%;
 }
 @supports (aspect-ratio: 1/1) {
   .swatches__colour:not(.swatches__colour--output) {

@@ -1,16 +1,16 @@
 import {
+  IonBadge,
   IonButton,
   IonCard,
   IonCardContent,
   IonCardHeader,
   IonCardSubtitle,
+  IonCardTitle,
   IonCol,
   IonGrid,
   IonIcon,
   IonInput,
-  IonItem,
   IonLabel,
-  IonList,
   IonRow,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
@@ -21,8 +21,10 @@ import {
 import { Moment } from "../data/models";
 import ProgressOverview from "../components/ProgressOverview";
 import "./NewWalkPost.css";
+import { appData } from "../data/appData";
 
-const descriptionMaxLength = 40;
+const suggestedDescriptors = appData.suggestedDescriptors;
+const descriptorsMaxCount = 3;
 
 const NewWalkPost: React.FC<{
   updateWalk: (description: string, coverImage: string, share: boolean) => void;
@@ -32,8 +34,9 @@ const NewWalkPost: React.FC<{
   start: string;
   end: string;
 }> = ({ updateWalk, moments, steps, distance, start, end }) => {
-  const [description, setDescription] = useState("");
-  const [coverImage, setCoverImage] = useState("");
+  const [description, setDescription] = useState<string>("");
+  const [descriptors, setDescriptors] = useState<string[]>([]);
+  const [coverImage, setCoverImage] = useState<string>("");
 
   useEffect(() => {
     const latestImage = moments.find((moment) => {
@@ -44,6 +47,16 @@ const NewWalkPost: React.FC<{
     }
   }, [moments]);
 
+  const chooseKeywordHandler = (keyword: string) => {
+    if (descriptors.includes(keyword)) {
+      setDescriptors(descriptors.filter((item) => item !== keyword));
+    } else {
+      if (descriptors.length < descriptorsMaxCount) {
+        setDescriptors([...descriptors, keyword]);
+      }
+    }
+  };
+
   return (
     <>
       <ProgressOverview
@@ -53,83 +66,104 @@ const NewWalkPost: React.FC<{
         end={end}
       />
       <IonCardContent className="constrain constrain--medium">
-        <IonCard>
-          <IonCardHeader className="ion-no-padding" color="dark">
-            <IonCardSubtitle
-              className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
-              style={{
-                color: "white",
-              }}
-            >
-              Give this walk a short description...
-            </IonCardSubtitle>
-          </IonCardHeader>
-          <IonCardContent className="ion-no-padding">
-            <IonList className="ion-padding-bottom">
-              <IonItem>
-                <IonLabel position="stacked" className="ion-hide">
-                  Give this walk a short description...
-                </IonLabel>
-                <IonInput
-                  type="text"
-                  value={description}
-                  onIonChange={(event) => setDescription(event.detail!.value!)}
-                  maxlength={descriptionMaxLength}
-                  placeholder="e.g. Long city walk"
-                />
-              </IonItem>
-              <p className="ion-padding-start">
-                <small>
-                  {descriptionMaxLength - description.length} characters
-                  remaining
-                </small>
-              </p>
-            </IonList>
-          </IonCardContent>
-        </IonCard>
+        <div className="ion-text-center">
+          <IonCardTitle className="title text-heading">
+            Describe this walk...
+          </IonCardTitle>
+          <p className="small-print">
+            Choose up to {descriptorsMaxCount} words to describe this walk...
+          </p>
+          <div
+            className={
+              descriptors.length === 3
+                ? "ion-margin-top keywords keywords--complete"
+                : "ion-margin-top keywords"
+            }
+          >
+            {suggestedDescriptors.map((keyword) => {
+              return (
+                <IonBadge
+                  className={
+                    descriptors.includes(keyword)
+                      ? "badge-keyword badge-keyword--active"
+                      : "badge-keyword"
+                  }
+                  onClick={() => {
+                    chooseKeywordHandler(keyword);
+                  }}
+                >
+                  {keyword}
+                </IonBadge>
+              );
+            })}
+          </div>
+        </div>
+        <IonLabel className="ion-hide">Walk description...</IonLabel>
+        <IonInput
+          type="text"
+          value={descriptors.join(", ")}
+          onIonChange={(event) => setDescription(event.detail!.value!)}
+          className="input-text"
+          disabled={true}
+        >
+          {descriptors.length === 3 ? (
+            <IonIcon
+              icon={finishIcon}
+              size="large"
+              color="success"
+              className="badge-input-feedback-complete"
+            />
+          ) : (
+            <IonBadge className="badge-input-feedback" color="light">
+              {descriptorsMaxCount - descriptors.length}
+            </IonBadge>
+          )}
+        </IonInput>
+
         {coverImage && (
-          <IonCard>
-            <IonCardHeader className="ion-no-padding" color="dark">
-              <IonCardSubtitle
-                className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
-                style={{
-                  color: "white",
-                }}
-              >
+          <>
+            <div className="ion-text-center ion-padding ion-margin-top">
+              <IonCardSubtitle className="sub-title">Step 2:</IonCardSubtitle>
+              <IonCardTitle className="title text-heading">
                 Choose a cover image...
-              </IonCardSubtitle>
-            </IonCardHeader>
-            <IonCardContent className="ion-no-padding cover-image-picker">
-              <img
-                src={coverImage}
-                alt=""
-                className="cover-image-picker__cover-image"
-              />
-              {moments.length > 0 ? (
-                <div className="cover-image-picker__scroller">
-                  {moments
-                    .filter((moment) => moment.imagePath !== "")
-                    .map((moment, index) => {
-                      return (
-                        <img
-                          key={moment.timestamp}
-                          src={moment.imagePath}
-                          alt=""
-                          onClick={() => {
-                            setCoverImage(moment.imagePath);
-                          }}
-                          className={
-                            index === 0
-                              ? "cover-image-picker__image cover-image-picker__image--chosen"
-                              : "cover-image-picker__image"
-                          }
-                        />
-                      );
-                    })}
-                </div>
-              ) : null}
-            </IonCardContent>
-          </IonCard>
+              </IonCardTitle>
+              <p className="small-print">
+                Choose your favourit image from this walk...
+              </p>
+            </div>
+            <IonCard>
+              <IonCardContent className="ion-no-padding cover-image-picker">
+                <img
+                  src={coverImage}
+                  alt=""
+                  className="cover-image-picker__cover-image"
+                />
+                {moments.length > 0 ? (
+                  <div className="cover-image-picker__scroller">
+                    {moments
+                      .filter((moment) => moment.imagePath !== "")
+                      .map((moment) => {
+                        return (
+                          <img
+                            key={moment.timestamp}
+                            src={moment.imagePath}
+                            alt=""
+                            onClick={() => {
+                              setCoverImage(moment.imagePath);
+                            }}
+                            className={
+                              coverImage === moment.imagePath
+                                ? "cover-image-picker__image cover-image-picker__image--chosen"
+                                : "cover-image-picker__image"
+                            }
+                          />
+                        );
+                      })}
+                  </div>
+                ) : null}
+              </IonCardContent>
+            </IonCard>
+          </>
         )}
       </IonCardContent>
       <IonCardHeader
