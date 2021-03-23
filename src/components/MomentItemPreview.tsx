@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IonCard, IonCardContent, IonText } from "@ionic/react";
+import { IonCardContent, IonText } from "@ionic/react";
 
 import "./WalkItem.css";
 import { firestore } from "../firebase";

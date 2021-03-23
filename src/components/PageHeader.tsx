@@ -3,13 +3,11 @@ import {
   IonButton,
   IonButtons,
   IonHeader,
-  IonIcon,
   IonMenuButton,
   IonTitle,
   IonToolbar,
 } from "@ionic/react";
 import { useLocation } from "react-router-dom";
-import { informationCircleOutline as informationIcon } from "ionicons/icons";
 
 interface ContainerProps {
   title: string;

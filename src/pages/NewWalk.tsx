@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   IonPage,
   IonContent,
@@ -46,7 +46,7 @@ const NewWalk: React.FC = () => {
   const history = useHistory();
   const { userId } = useAuth();
 
-  const walkCtx = useContext(WalksContext);
+  const walksCtx = useContext(WalksContext);
 
   const [title, setTitle] = useState<string>(suggestedTitle());
   const [colour, setColour] = useState<string>(colours[0]);
@@ -88,10 +88,10 @@ const NewWalk: React.FC = () => {
   };
 
   const startWalkHandler = () => {
-    walkCtx.reset(); // To Do — check for existing data (previous walk) and handle?
+    walksCtx.reset(); // To Do — check for existing data (previous walk) and handle?
     const generatedWalkId = new Date().getTime().toString();
 
-    walkCtx.updateWalk({
+    walksCtx.updateWalk({
       walkId: generatedWalkId,
       title,
       colour,

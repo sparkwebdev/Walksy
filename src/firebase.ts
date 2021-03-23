@@ -54,6 +54,7 @@ export const updateUserProfile = async (userData: UserProfile) => {
   }).catch((error)=> {
     console.log(error);
   })
+  return entriesRef;
 }
 
 export const syncUserProfileToLocal = async (userId: string) => {
@@ -67,6 +68,7 @@ export const syncUserProfileToLocal = async (userId: string) => {
   }).catch((error)=> {
     console.log(error);
   })
+  return entriesRef;
 }
 
 export const handleStoreWalk = async (walkData: Walk, moments: Moment[]) => {

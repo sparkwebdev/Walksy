@@ -137,9 +137,13 @@ const SettingsPage: React.FC = () => {
     });
   };
 
-  const updateEmailHandler = async () => {};
+  const updateEmailHandler = async () => {
+    console.log("should update email");
+  };
 
-  const updatePasswordHandler = async () => {};
+  const updatePasswordHandler = async () => {
+    console.log("should update password");
+  };
 
   const [logoutAlert, setLogoutAlert] = useState(false);
 
@@ -159,7 +163,7 @@ const SettingsPage: React.FC = () => {
                 {profilePic && (
                   <img
                     src={profilePic}
-                    alt={`Profile image for ${firstName} ${lastName}`}
+                    alt={`Profile for ${firstName} ${lastName}`}
                     className="profile-badge__image"
                     width="100"
                     height="100"
@@ -391,7 +395,7 @@ const SettingsPage: React.FC = () => {
                         <small>Email</small>
                       </IonLabel>
                       <IonInput type="text" value={userEmail} readonly={true} />
-                      {/* <IonButton
+                      <IonButton
                         size="small"
                         slot="end"
                         onClick={() => {
@@ -399,14 +403,14 @@ const SettingsPage: React.FC = () => {
                         }}
                       >
                         Edit
-                      </IonButton> */}
+                      </IonButton>
                     </IonItem>
                     <IonItem>
                       <IonLabel position="fixed">
                         <small>Password</small>
                       </IonLabel>
                       <IonInput type="password" value="****" readonly={true} />
-                      {/* <IonButton
+                      <IonButton
                         size="small"
                         slot="end"
                         onClick={() => {
@@ -414,7 +418,7 @@ const SettingsPage: React.FC = () => {
                         }}
                       >
                         Edit
-                      </IonButton> */}
+                      </IonButton>
                     </IonItem>
                   </IonList>
                 </IonCardContent>

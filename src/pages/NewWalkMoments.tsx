@@ -11,7 +11,7 @@ import {
   IonModal,
   IonRow,
 } from "@ionic/react";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useRef } from "react";
 import { Location } from "../data/models";
 import WalksContext from "../data/walks-context";
 import NewWalkMomentsOutput from "../components/NewWalkMomentsOutput";

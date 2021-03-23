@@ -113,7 +113,7 @@ const WalkItem: React.FC<{
                   style={{ color: props.colour }}
                 />
                 <IonCard className="moments-list__image-container ion-no-margin">
-                  <img src={moment.imagePath} />
+                  <img src={moment.imagePath} alt="" />
                 </IonCard>
               </li>
             )}
