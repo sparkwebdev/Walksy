@@ -42,7 +42,7 @@ const WalksContextProvider: React.FC = (props) => {
     };
 
     setMoments((curMoments) => {
-      return curMoments.concat(newMoment);
+      return [newMoment].concat(curMoments);
     });
   };
 

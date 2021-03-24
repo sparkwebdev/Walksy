@@ -14,10 +14,11 @@ import {
   IonTextarea,
 } from "@ionic/react";
 import React, { useContext, useRef, useState } from "react";
-import { Location } from "../data/models";
+import { Location, Photo } from "../data/models";
 import WalksContext from "../data/walks-context";
 import NewWalkMomentsOutput from "../components/NewWalkMomentsOutput";
 import { close as cancelIcon, add as addIcon } from "ionicons/icons";
+import ImagePickerNew from "../components/ImagePickerNew";
 
 const noteMaxLength = 280;
 
@@ -29,33 +30,61 @@ const NewWalkMoments: React.FC<{
 }> = ({ walkId, momentType, resetMomentType, getLocation }) => {
   const walksCtx = useContext(WalksContext);
 
-  const imagePathRef = useRef<HTMLIonInputElement>(null);
+  // const imagePathRef = useRef<HTMLIonInputElement>(null);
   const audioPathRef = useRef<HTMLIonInputElement>(null);
   const noteRef = useRef<HTMLIonTextareaElement>(null);
   const [note, setNote] = useState<string>("");
 
+  const [takenPhoto, setTakenPhoto] = useState<Photo | null>();
+
+  const imagePickerRef = useRef<any>();
+
+  const photoPickHandler = (photo: Photo) => {
+    setTakenPhoto(photo);
+    // resetMomentType();
+  };
+
+  const saveImageHandler = async () => {
+    // if (!takenPhoto) {
+    //   return;
+    // }
+    // const fileName = new Date().getTime() + ".jpeg";
+    // const base64 = await base64FromPath(takenPhoto.preview);
+    // Filesystem.writeFile({
+    //   path: fileName,
+    //   data: base64,
+    //   directory: FilesystemDirectory.Data,
+    // }).then(() => {
+    addMomentHandler();
+    // });
+  };
+
   const addMomentHandler = () => {
-    const enteredImagePath = imagePathRef.current?.value || "";
+    const enteredImagePath = takenPhoto?.preview || "";
     const enteredAudioPath = audioPathRef.current?.value || "";
     const enteredNote = noteRef.current?.value || "";
     if (
-      enteredImagePath.toString().trim().length === 0 &&
       enteredAudioPath.toString().trim().length === 0 &&
-      enteredNote.toString().trim().length === 0
+      enteredNote.toString().trim().length === 0 &&
+      !takenPhoto
     ) {
       return;
     }
-    getLocation().then((currentLocation) => {
-      walksCtx.addMoment(
-        walkId,
-        enteredImagePath!.toString(),
-        enteredAudioPath!.toString(),
-        enteredNote!.toString(),
-        currentLocation,
-        new Date().toISOString()
-      );
-    });
-    resetMomentType();
+    getLocation()
+      .then((currentLocation) => {
+        walksCtx.addMoment(
+          walkId,
+          enteredImagePath,
+          enteredAudioPath!.toString(),
+          enteredNote!.toString(),
+          currentLocation,
+          new Date().toISOString()
+        );
+      })
+      .then(() => {
+        setTakenPhoto(null);
+        resetMomentType();
+      });
   };
 
   return (
@@ -70,7 +99,9 @@ const NewWalkMoments: React.FC<{
         onDidDismiss={resetMomentType}
         cssClass="add-moment-modal"
         onDidPresent={() => {
-          if (momentType === "Note") {
+          if (momentType === "Photo") {
+            imagePickerRef.current.triggerTakePhoto();
+          } else if (momentType === "Note") {
             noteRef.current!.setFocus();
           }
         }}
@@ -78,14 +109,23 @@ const NewWalkMoments: React.FC<{
         {momentType !== "" && (
           <>
             {momentType === "Photo" && (
-              <IonRow>
-                <IonCol>
-                  <IonItem>
-                    <IonLabel position="floating">Moment Image Path</IonLabel>
-                    <IonInput type="text" ref={imagePathRef}></IonInput>
-                  </IonItem>
-                </IonCol>
-              </IonRow>
+              <div
+                className="ion-padding ion-text-center"
+                style={{
+                  marginTop: "auto",
+                  marginBottom: "auto",
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <ImagePickerNew
+                  ref={imagePickerRef}
+                  onCancel={resetMomentType}
+                  onImagePick={photoPickHandler}
+                />
+              </div>
             )}
             {momentType === "Audio" && (
               <IonRow>
@@ -141,7 +181,10 @@ const NewWalkMoments: React.FC<{
                       fill="clear"
                       expand="block"
                       color="danger"
-                      onClick={resetMomentType}
+                      onClick={() => {
+                        setTakenPhoto(null);
+                        resetMomentType();
+                      }}
                     >
                       <IonIcon slot="start" icon={cancelIcon} />
                       Cancel
@@ -151,9 +194,11 @@ const NewWalkMoments: React.FC<{
                     <IonButton
                       expand="block"
                       color="success"
-                      onClick={addMomentHandler}
+                      onClick={takenPhoto ? saveImageHandler : addMomentHandler}
                       disabled={
-                        note.length < 1 || note.toString().trim().length < 1
+                        (note.length < 1 ||
+                          note.toString().trim().length < 1) &&
+                        !takenPhoto
                       }
                     >
                       <IonIcon slot="start" icon={addIcon} />
