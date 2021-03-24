@@ -40,6 +40,9 @@ small {
   margin-right: auto;
   width: 100%;
 }
+.constrain--small {
+  max-width: 16rem;
+}
 .constrain--medium {
   max-width: 24rem;
 }
@@ -71,6 +74,7 @@ small {
   margin: 5px;
   border-radius: 50% !important;
   box-shadow: 2px 2px 0 #777269;
+  cursor: pointer;
 }
 .swatches__colour:not(.swatches__colour--chosen):not(.swatches__colour--output) {
   opacity: 0.35;

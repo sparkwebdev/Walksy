@@ -14,6 +14,8 @@ import {
   IonList,
   IonLoading,
   IonRow,
+  IonSelect,
+  IonSelectOption,
   IonText,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
@@ -147,16 +149,21 @@ const CompleteProfile: React.FC<{
             <IonLabel position="stacked">
               <small>Age (optional)</small>
             </IonLabel>
-            <IonInput
-              type="number"
-              min="1"
-              max="135"
-              value={age?.toString()}
+            <IonSelect
               onIonChange={(event) => setAge(event.detail!.value!)}
+              value={age}
               onIonFocus={() =>
                 setStatus({ ...status, error: false, errorMessage: "" })
               }
-            />
+            >
+              <IonSelectOption value="under-11">Under 11</IonSelectOption>
+              <IonSelectOption value="11-to-18">11 to 18</IonSelectOption>
+              <IonSelectOption value="19-to-29">19 to 29</IonSelectOption>
+              <IonSelectOption value="30-to-44">30 to 44</IonSelectOption>
+              <IonSelectOption value="45-to-60">45 to 60</IonSelectOption>
+              <IonSelectOption value="61-to-75">61 to 75</IonSelectOption>
+              <IonSelectOption value="76-plus">76 plus</IonSelectOption>
+            </IonSelect>
           </IonItem>
           <IonItem>
             <IonLabel position="stacked">

@@ -1,12 +1,10 @@
 import {
   IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
+  IonCardTitle,
   IonSlide,
   IonSlides,
   IonText,
+  IonTitle,
 } from "@ionic/react";
 import React from "react";
 
@@ -16,61 +14,127 @@ const WalkTutorial: React.FC<{
   return (
     <div className="centered-content centered-content--no-tabs">
       <div className="constrain constrain--medium">
-        <IonCard>
-          <IonCardHeader className="ion-no-padding" color="dark">
-            <IonCardSubtitle
-              className="ion-padding ion-no-margin ion-text-uppercase ion-text-center"
-              style={{ color: "white" }}
+        <IonSlides pager={true}>
+          <IonSlide>
+            <IonTitle
+              className="title text-heading ion-margin-bottom"
+              color="tertiary"
             >
-              Let's get started...
-            </IonCardSubtitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <IonSlides pager={true}>
-              <IonSlide>
-                <IonText className="ion-margin-bottom">
-                  <h1 className="text-heading">
-                    What do you notice as you&nbsp;walk?
-                  </h1>
-                </IonText>
-                <p className="text-body">
-                  The app will record your journey as you walk. Please stop
-                  anytime to record anything that draws your attention, or that
-                  you see or hear. These will act as markers to guide others
-                  along the route. This might be the taking of a photo, the
-                  recording of a sound, or something written.
-                </p>
-              </IonSlide>
-              <IonSlide>
-                <p className="text-body">
-                  Notes can be added such as an observation, a direction about a
-                  turn to take, or anything else that marks a particular spot on
-                  your route. You can edit once you’ve finished the walk before
-                  then finally uploading to the app.
-                </p>
-              </IonSlide>
-              <IonSlide>
-                <p className="text-body">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Ut enim ad minim veniam, quis nostrud exercitation ullamco
-                  laboris nisi ut aliquip ex ea commodo consequat. Duis aute
-                  irure dolor in reprehenderit in voluptate velit esse cillum
-                  dolore eu fugiat nulla pariatur.
-                </p>
-              </IonSlide>
-              <IonSlide>
-                <p className="text-body">
-                  Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                  qui officia deserunt mollit anim id est laborum.
-                </p>
-                <IonButton className="ion-margin-top" onClick={onFinish}>
-                  Let's Walk!
-                </IonButton>
-              </IonSlide>
-            </IonSlides>
-          </IonCardContent>
-        </IonCard>
+              <strong>Getting Started</strong>
+            </IonTitle>
+            <IonCardTitle className="title text-heading constrain constrain--small">
+              <IonText color="tertiary">
+                What do you notice as you walk?
+              </IonText>
+            </IonCardTitle>
+            <p className="text-body">
+              The app will record your journey as you walk. Please stop anytime
+              to record anything that draws your attention, or that you see or
+              hear. These recorded ‘Moments’ will act as markers to guide others
+              along the route. This might be the taking of a photo, the
+              recording of a sound, or something written.
+            </p>
+          </IonSlide>
+          <IonSlide>
+            <img
+              src="assets/img/icon-camera.svg"
+              alt=""
+              style={{ maxHeight: "100px" }}
+            />
+            <IonTitle
+              className="title text-heading ion-margin-bottom"
+              color="tertiary"
+            >
+              <strong>Adding Moments: Photos</strong>
+            </IonTitle>
+            <IonCardTitle className="title text-heading constrain constrain--small">
+              <IonText color="tertiary">
+                What catches your eye as you walk?
+              </IonText>
+            </IonCardTitle>
+            <p className="text-body">
+              A view perhaps, a small detail on a wall or path, a colour, a
+              plant or texture.
+            </p>
+            <div className="constrain constrain--small ion-margin-top ion-margin-bottom info-bubble">
+              <p className="text-body small-print ion-no-margin">
+                Keep holding your phone vertically to take the best pics.
+              </p>
+            </div>
+          </IonSlide>
+          <IonSlide>
+            <img
+              src="assets/img/icon-audio.svg"
+              alt=""
+              style={{ maxHeight: "100px" }}
+            />
+            <IonTitle
+              className="title text-heading ion-margin-bottom"
+              color="tertiary"
+            >
+              <strong>Adding Moments: Audio</strong>
+            </IonTitle>
+            <IonCardTitle className="title text-heading constrain constrain--small">
+              <IonText color="tertiary">Listen, and what do you hear?</IonText>
+            </IonCardTitle>
+            <p className="text-body">
+              Perhaps the tweet of birds singing, the rush of the waves, a train
+              passing or you want to speak about something.
+            </p>
+            <div className="constrain constrain--small ion-margin-top ion-margin-bottom info-bubble info-bubble--alt">
+              <p className="text-body small-print ion-no-margin">
+                Create all your ‘Moments’ as sounds and you’ll have made a sound
+                walk.
+              </p>
+            </div>
+          </IonSlide>
+          <IonSlide>
+            <img
+              src="assets/img/icon-note.svg"
+              alt=""
+              style={{ maxHeight: "100px" }}
+            />
+            <IonTitle
+              className="title text-heading ion-margin-bottom"
+              color="tertiary"
+            >
+              <strong>Adding Moments: Notes</strong>
+            </IonTitle>
+            <IonCardTitle className="title text-heading constrain">
+              <IonText color="tertiary">
+                Anything you want to note about today’s journey?
+              </IonText>
+            </IonCardTitle>
+            <p className="text-body">
+              Let others know about observations, or encounters, or how you feel
+              as you walk today, or it might be something about the weather, or
+              a turn in the road.
+            </p>
+            <div className="constrain constrain--small ion-margin-top ion-margin-bottom info-bubble">
+              <p className="text-body small-print ion-no-margin">
+                Why not add a poem or list of guiding instructions using a
+                series of Notes?
+              </p>
+            </div>
+          </IonSlide>
+          <IonSlide>
+            <IonTitle
+              className="title text-heading ion-margin-bottom"
+              color="tertiary"
+            >
+              <strong>Finishing Up</strong>
+            </IonTitle>
+            <p className="text-body">
+              Once you complete your walk, you’ll be able to add a short
+              description about your walk, how it was or where you went. You can
+              also select browsable tags, before making any final edits and
+              saving.
+            </p>
+            <IonButton className="ion-margin-top" onClick={onFinish}>
+              Let's Walk!
+            </IonButton>
+          </IonSlide>
+        </IonSlides>
       </div>
     </div>
   );

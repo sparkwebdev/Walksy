@@ -25,7 +25,7 @@ const Intro: React.FC = () => {
 
   const skipIntro = () => {
     setOnLastSlide(true);
-    slides.current?.slideTo(3);
+    slides.current?.slideTo(4);
   };
 
   const slideOpts = {
@@ -77,7 +77,7 @@ const Intro: React.FC = () => {
               <h3 className="text-heading">
                 <span>Browse</span> <br />
                 <span className="text-body">
-                  our curated or other users&#8217; walks
+                  our curated art walks or other users&#8217; walks
                 </span>
               </h3>
               <h3 className="text-heading">
@@ -99,25 +99,46 @@ const Intro: React.FC = () => {
               alt=""
             />
             <div className="constrain constrain--medium ion-padding">
+              <img
+                src="assets/img/walksy-anim-jiggle.gif"
+                alt=""
+                style={{ margin: "-60px auto -30px auto" }}
+              />
+              <h3 className="text-heading">
+                <span>Join in recording your Nearby</span>
+              </h3>
+              <p className="text-body">
+                Be a part of recording our local environments, of the places we
+                love and value, that shape our collective outdoors. You can add
+                images, sounds or notes to form your walks, whilst monitoring
+                your distance&nbsp;&amp;&nbsp;steps.
+              </p>
+            </div>
+          </IonSlide>
+          <IonSlide>
+            <img
+              className="intro__logo"
+              src="assets/img/walksy-logo.svg"
+              alt=""
+            />
+            <div className="constrain constrain--medium ion-padding">
               <p className="text-body">
                 The &#8216;Walksy&#8217; (Walk &amp; See) App has been devised
                 and created by Art Walk Projects (Edinburgh) offering a creative
-                and fun way to collect the things we observe as we walk, whilst
-                encouraging us to walk more and explore our nearby.
+                way to record our outdoors, whilst encouraging us to walk more
+                and improve our&nbsp;wellbeing.
               </p>
-              <h3 className="text-heading">
-                <strong>Funded by:</strong>
-              </h3>
               <IonGrid>
-                <IonRow>
-                  <IonCol>
+                <p className="text-heading">Funded by:</p>
+                <IonRow className="ion-align-items-center">
+                  <IonCol className="ion-padding">
                     <img
                       className="intro__partner"
                       src="assets/img/login_smarter-choices.svg"
                       alt=""
                     />
                   </IonCol>
-                  <IonCol>
+                  <IonCol className="ion-padding">
                     <img
                       className="intro__partner"
                       src="assets/img/logo_community-fund.svg"
@@ -130,9 +151,9 @@ const Intro: React.FC = () => {
           </IonSlide>
           <IonSlide>
             <img
-              className="intro__panel-2"
-              src="assets/img/walksy-panel-2.svg"
+              src="assets/img/walksy-anim-rotate.gif"
               alt=""
+              style={{ margin: "-60px auto 0 auto", maxHeight: "20vh" }}
             />
             <div className="constrain constrain--medium">
               <IonCard>

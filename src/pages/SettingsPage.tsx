@@ -17,6 +17,8 @@ import {
   IonLoading,
   IonPage,
   IonRow,
+  IonSelect,
+  IonSelectOption,
   IonToggle,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
@@ -244,16 +246,37 @@ const SettingsPage: React.FC = () => {
                         />
                       )}
                     </IonItem>
-                    <IonItem>
+                    <IonItem className="age-select">
                       <IonLabel position="fixed">
                         <small>Age</small>
                       </IonLabel>
-                      <IonInput
-                        type="number"
-                        value={age}
-                        readonly={!editing}
+                      <IonSelect
                         onIonChange={(event) => setAge(event.detail!.value!)}
-                      />
+                        value={age}
+                        disabled={!editing}
+                      >
+                        <IonSelectOption value="under-11">
+                          Under 11
+                        </IonSelectOption>
+                        <IonSelectOption value="11-to-18">
+                          11 to 18
+                        </IonSelectOption>
+                        <IonSelectOption value="19-to-29">
+                          19 to 29
+                        </IonSelectOption>
+                        <IonSelectOption value="30-to-44">
+                          30 to 44
+                        </IonSelectOption>
+                        <IonSelectOption value="45-to-60">
+                          45 to 60
+                        </IonSelectOption>
+                        <IonSelectOption value="61-to-75">
+                          61 to 75
+                        </IonSelectOption>
+                        <IonSelectOption value="76-plus">
+                          76 plus
+                        </IonSelectOption>
+                      </IonSelect>
                       {editing && (
                         <IonIcon
                           slot="end"
@@ -296,7 +319,6 @@ const SettingsPage: React.FC = () => {
                             <IonButton
                               className="ion-margin-end"
                               color="danger"
-                              size="small"
                               onClick={() => setEditing(false)}
                             >
                               Cancel
@@ -304,7 +326,6 @@ const SettingsPage: React.FC = () => {
                             <IonButton
                               className="ion-margin-end"
                               color="success"
-                              size="small"
                               onClick={saveDetailsHandler}
                             >
                               Save
