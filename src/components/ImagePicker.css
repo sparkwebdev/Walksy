@@ -1,4 +1,4 @@
-.image-picker {
+/* .image-picker {
   width: 100%;
   height: 35vh;
   border: 1px solid #ccc;
@@ -14,7 +14,7 @@
 
 @supports (aspect-ratio: 1/1) {
   .image-picker {
-    /* aspect-ratio: 1 / 1; */
+    aspect-ratio: 1 / 1;
   }
 }
 
@@ -27,4 +27,4 @@
 .image-picker__preview {
   margin: 10px;
   max-height: 35vh;
-}
+} */

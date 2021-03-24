@@ -1,6 +1,9 @@
-import React, { useState, useRef } from "react";
-import { IonButton, IonIcon, IonLabel } from "@ionic/react";
-import { camera } from "ionicons/icons";
+import React, {
+  useState,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import {
   Plugins,
   CameraResultType,
@@ -19,10 +22,18 @@ const { Camera } = Plugins;
 
 const ImagePickerNew: React.FC<{
   onImagePick: (photo: Photo) => void;
-}> = (props) => {
+  onCancel?: () => void;
+  ref?: any;
+}> = forwardRef((props, ref) => {
   const [takenPhoto, setTakenPhoto] = useState<Photo>();
 
   const filePickerRef = useRef<HTMLInputElement>(null);
+
+  useImperativeHandle(ref, () => ({
+    triggerTakePhoto() {
+      takePhotoHandler();
+    },
+  }));
 
   const openFilePicker = () => {
     filePickerRef.current!.click();
@@ -65,28 +76,28 @@ const ImagePickerNew: React.FC<{
       setTakenPhoto(pickedPhoto);
       props.onImagePick(pickedPhoto);
     } catch (error) {
-      openFilePicker();
+      if (props.onCancel) {
+        props.onCancel();
+      }
     }
   };
 
   return (
-    <React.Fragment>
+    <div onClick={takePhotoHandler} className="image-preview-container">
       <div className="image-preview">
-        {!takenPhoto && <h3>No photo chosen.</h3>}
+        {!takenPhoto && (
+          <p className="text-body small-print">No photo chosen.</p>
+        )}
         {takenPhoto && <img src={takenPhoto.preview} alt="Preview" />}
       </div>
-      <IonButton fill="clear" onClick={takePhotoHandler}>
-        <IonIcon icon={camera} slot="start"></IonIcon>
-        <IonLabel>Take Photo</IonLabel>
-      </IonButton>
       <input
         type="file"
         hidden
         ref={filePickerRef}
         onChange={pickFileHandler}
       />
-    </React.Fragment>
+    </div>
   );
-};
+});
 
 export default ImagePickerNew;
