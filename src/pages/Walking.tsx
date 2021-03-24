@@ -56,6 +56,7 @@ const Walking: React.FC = () => {
   const { colour } = locationURL.state || "";
 
   const walksCtx = useContext(WalksContext);
+
   const history = useHistory();
   const [showPrompt, setShowPrompt] = useState(true);
 
@@ -79,6 +80,9 @@ const Walking: React.FC = () => {
   const [cancelWalkAlert, setCancelWalkAlert] = useState(false);
 
   useEffect(() => {
+    if (Object.keys(walksCtx.walk).length === 0) {
+      return;
+    }
     getLocation().then(() => {
       const startDate = new Date().toISOString();
       walksCtx.updateWalk({
@@ -158,8 +162,8 @@ const Walking: React.FC = () => {
     }
   };
 
-  if (!loggedIn || !title) {
-    return <Redirect to="/" />;
+  if (!loggedIn || Object.keys(walksCtx.walk).length === 0) {
+    return <Redirect to="/app/new-walk" />;
   }
 
   return (

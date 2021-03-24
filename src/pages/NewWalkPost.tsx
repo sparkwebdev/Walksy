@@ -88,7 +88,7 @@ const NewWalkPost: React.FC<{
                 Choose a cover image...
               </IonCardTitle>
               <p className="small-print">
-                Choose your favourit image from this walk...
+                Choose your favourite image from this walk...
               </p>
             </div>
             <IonCard>
@@ -123,25 +123,18 @@ const NewWalkPost: React.FC<{
                 ) : null}
               </IonCardContent>
             </IonCard>
-            <IonGrid>
+            <IonGrid className="ion-text-center">
               <IonRow>
-                <IonCol>
+                <IonCol className="ion-no-padding">
                   <IonButton color="success" onClick={chosenCoverImageHandler}>
                     <strong>Next</strong>
-                  </IonButton>
-                  <IonButton
-                    color="dark"
-                    fill="clear"
-                    onClick={chosenCoverImageHandler}
-                  >
-                    Skip
                   </IonButton>
                 </IonCol>
               </IonRow>
             </IonGrid>
           </>
         )}
-        {!chosenDescription && (
+        {!chosenDescription && chosenCoverImage && (
           <>
             <div className="ion-text-center">
               <IonCardTitle className="title text-heading ion-margin-top">
@@ -196,15 +189,19 @@ const NewWalkPost: React.FC<{
                   </IonBadge>
                 )}
               </IonInput>
-              <IonGrid>
+              <IonGrid className="ion-text-center">
                 <IonRow>
-                  <IonCol>
+                  <IonCol className="ion-no-padding">
                     <IonButton
                       color="success"
                       onClick={chosenDescriptionHandler}
                     >
                       <strong>Next</strong>
                     </IonButton>
+                  </IonCol>
+                </IonRow>
+                <IonRow>
+                  <IonCol className="ion-no-padding">
                     <IonButton
                       color="dark"
                       fill="clear"

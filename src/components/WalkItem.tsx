@@ -6,7 +6,6 @@ import {
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
-  IonIcon,
   IonText,
 } from "@ionic/react";
 
@@ -17,12 +16,6 @@ import { Moment, toMoment } from "../data/models";
 
 // import { playCircleOutline as playIcon } from "ionicons/icons";
 import { firestore } from "../firebase";
-import {
-  image as imageIcon,
-  // camera as cameraIcon,
-  mic as audioIcon,
-  chatbubbleEllipses as noteIcon,
-} from "ionicons/icons";
 import MomentsList from "./MomentsList";
 
 const WalkItem: React.FC<{

@@ -3,10 +3,8 @@ import {
   IonIcon,
   IonItem,
   IonList,
-  IonListHeader,
   IonMenu,
   IonMenuToggle,
-  IonText,
 } from "@ionic/react";
 import React from "react";
 import {

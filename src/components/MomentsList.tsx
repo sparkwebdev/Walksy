@@ -9,11 +9,7 @@ import {
 } from "@ionic/react";
 import React from "react";
 import { Moment } from "../data/models";
-import {
-  chevronDown as chevronDownIcon,
-  flagOutline as flagIcon,
-  map as mapIcon,
-} from "ionicons/icons";
+import { map as mapIcon } from "ionicons/icons";
 
 const MomentsList: React.FC<{
   moments: Moment[];
