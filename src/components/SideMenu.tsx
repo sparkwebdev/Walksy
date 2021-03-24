@@ -29,28 +29,34 @@ const SideMenu: React.FC = () => {
           src="assets/img/walksy-logo.svg"
           alt=""
           style={{
+            marginTop: "50px",
             maxHeight: "80px",
           }}
         />
       </div>
-      <IonListHeader color="dark">
-        <IonText>
-          <strong>Menu</strong>
-        </IonText>
-      </IonListHeader>
+      <p
+        style={{
+          margin: "0",
+          padding: "16px 20px",
+          background: "#777269",
+          color: "#fff",
+        }}
+      >
+        <strong>Menu</strong>
+      </p>
       <IonContent>
         <IonList color="dark">
           <IonMenuToggle>
             <IonItem button routerLink="/app/settings">
-              <IonIcon icon={profileIcon} slot="start" />
+              <IonIcon icon={profileIcon} slot="start" size="small" />
               Profile &amp; Settings
             </IonItem>
             <IonItem button routerLink="/app/about">
-              <IonIcon icon={aboutIcon} slot="start" />
+              <IonIcon icon={aboutIcon} slot="start" size="small" />
               About this App
             </IonItem>
             <IonItem button routerLink="/app/latest-news">
-              <IonIcon icon={newsIcon} slot="start" />
+              <IonIcon icon={newsIcon} slot="start" size="small" />
               Latest ArtWalk news
             </IonItem>
           </IonMenuToggle>
