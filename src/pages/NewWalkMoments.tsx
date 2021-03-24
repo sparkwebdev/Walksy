@@ -1,5 +1,6 @@
 import {
   IonButton,
+  IonCard,
   IonCardContent,
   IonCardHeader,
   IonCol,
@@ -10,12 +11,15 @@ import {
   IonLabel,
   IonModal,
   IonRow,
+  IonTextarea,
 } from "@ionic/react";
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { Location } from "../data/models";
 import WalksContext from "../data/walks-context";
 import NewWalkMomentsOutput from "../components/NewWalkMomentsOutput";
-import { checkmark as finishIcon, close as cancelIcon } from "ionicons/icons";
+import { close as cancelIcon, add as addIcon } from "ionicons/icons";
+
+const noteMaxLength = 280;
 
 const NewWalkMoments: React.FC<{
   walkId: string;
@@ -27,7 +31,8 @@ const NewWalkMoments: React.FC<{
 
   const imagePathRef = useRef<HTMLIonInputElement>(null);
   const audioPathRef = useRef<HTMLIonInputElement>(null);
-  const noteRef = useRef<HTMLIonInputElement>(null);
+  const noteRef = useRef<HTMLIonTextareaElement>(null);
+  const [note, setNote] = useState<string>("");
 
   const addMomentHandler = () => {
     const enteredImagePath = imagePathRef.current?.value || "";
@@ -60,41 +65,68 @@ const NewWalkMoments: React.FC<{
     >
       <NewWalkMomentsOutput />
 
-      <IonModal isOpen={momentType !== ""} onDidDismiss={resetMomentType}>
+      <IonModal
+        isOpen={momentType !== ""}
+        onDidDismiss={resetMomentType}
+        cssClass="add-moment-modal"
+        onDidPresent={() => {
+          if (momentType === "Note") {
+            noteRef.current!.setFocus();
+          }
+        }}
+      >
         {momentType !== "" && (
           <>
-            <IonGrid>
-              {momentType === "Photo" && (
-                <IonRow>
-                  <IonCol>
-                    <IonItem>
-                      <IonLabel position="floating">Moment Image Path</IonLabel>
-                      <IonInput type="text" ref={imagePathRef}></IonInput>
-                    </IonItem>
-                  </IonCol>
-                </IonRow>
-              )}
-              {momentType === "Audio" && (
-                <IonRow>
-                  <IonCol>
-                    <IonItem>
-                      <IonLabel position="floating">Moment Audio Path</IonLabel>
-                      <IonInput type="text" ref={audioPathRef}></IonInput>
-                    </IonItem>
-                  </IonCol>
-                </IonRow>
-              )}
-              {momentType === "Note" && (
-                <IonRow>
-                  <IonCol>
-                    <IonItem>
+            {momentType === "Photo" && (
+              <IonRow>
+                <IonCol>
+                  <IonItem>
+                    <IonLabel position="floating">Moment Image Path</IonLabel>
+                    <IonInput type="text" ref={imagePathRef}></IonInput>
+                  </IonItem>
+                </IonCol>
+              </IonRow>
+            )}
+            {momentType === "Audio" && (
+              <IonRow>
+                <IonCol>
+                  <IonItem>
+                    <IonLabel position="floating">Moment Audio Path</IonLabel>
+                    <IonInput type="text" ref={audioPathRef}></IonInput>
+                  </IonItem>
+                </IonCol>
+              </IonRow>
+            )}
+            {momentType === "Note" && (
+              <IonCard style={{ marginTop: "auto" }}>
+                <IonLabel hidden={true}>Add a note...</IonLabel>
+                <IonTextarea
+                  placeholder="A thought or description..."
+                  maxlength={noteMaxLength}
+                  rows={7}
+                  style={{
+                    padding: "10px 20px",
+                    margin: "0",
+                    backgroundColor: "white",
+                  }}
+                  // value={note}
+                  ref={noteRef}
+                  onIonChange={(event) => {
+                    setNote(event.detail.value!);
+                  }}
+                ></IonTextarea>
+                <p className="ion-padding ion-no-margin with-tint">
+                  <small>
+                    {noteMaxLength - note.length} characters remaining
+                  </small>
+                </p>
+
+                {/* <IonItem>
                       <IonLabel position="floating">Moment Note</IonLabel>
                       <IonInput type="text" ref={noteRef}></IonInput>
-                    </IonItem>
-                  </IonCol>
-                </IonRow>
-              )}
-            </IonGrid>
+                    </IonItem> */}
+              </IonCard>
+            )}
             <IonCardHeader
               className="ion-no-padding"
               color="light"
@@ -106,6 +138,7 @@ const NewWalkMoments: React.FC<{
                 <IonRow>
                   <IonCol size="5">
                     <IonButton
+                      fill="clear"
                       expand="block"
                       color="danger"
                       onClick={resetMomentType}
@@ -119,8 +152,11 @@ const NewWalkMoments: React.FC<{
                       expand="block"
                       color="success"
                       onClick={addMomentHandler}
+                      disabled={
+                        note.length < 1 || note.toString().trim().length < 1
+                      }
                     >
-                      <IonIcon slot="start" icon={finishIcon} />
+                      <IonIcon slot="start" icon={addIcon} />
                       Add {momentType}
                     </IonButton>
                   </IonCol>

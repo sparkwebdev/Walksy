@@ -130,7 +130,6 @@ const NewWalkPost: React.FC<{
                     <strong>Next</strong>
                   </IonButton>
                   <IonButton
-                    expand="block"
                     color="dark"
                     fill="clear"
                     onClick={chosenCoverImageHandler}
@@ -207,7 +206,6 @@ const NewWalkPost: React.FC<{
                       <strong>Next</strong>
                     </IonButton>
                     <IonButton
-                      expand="block"
                       color="dark"
                       fill="clear"
                       onClick={chosenDescriptionHandler}
