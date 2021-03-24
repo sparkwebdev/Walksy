@@ -23,6 +23,7 @@ import {
   mic as audioIcon,
   chatbubbleEllipses as noteIcon,
 } from "ionicons/icons";
+import MomentsList from "./MomentsList";
 
 const WalkItem: React.FC<{
   id?: string;
@@ -99,65 +100,7 @@ const WalkItem: React.FC<{
           </div>
         </IonCardContent>
       </IonCard>
-      <ol reversed className="moments-list constrain constrain--large">
-        {moments.map((moment: Moment) => (
-          <>
-            {moment.imagePath && (
-              <li
-                className="moments-list__item moments-list__item--photo"
-                key={moment.timestamp}
-              >
-                <IonIcon
-                  icon={imageIcon}
-                  className="moments-list__icon"
-                  style={{ color: props.colour }}
-                />
-                <IonCard className="moments-list__image-container ion-no-margin">
-                  <img src={moment.imagePath} alt="" />
-                </IonCard>
-              </li>
-            )}
-            {moment.audioPath && (
-              <li
-                className="moments-list__item moments-list__item--audio"
-                key={moment.timestamp}
-              >
-                {/* <IonIcon
-                  slot="start"
-                  icon={playIcon}
-                  color="success"
-                  style={{
-                    fontSize: "65px",
-                  }}
-                /> */}
-                <IonIcon
-                  icon={audioIcon}
-                  className="moments-list__icon"
-                  style={{ color: props.colour }}
-                />
-                <audio controls className="moments-list__audio">
-                  <source src={moment.audioPath} type="audio/mpeg" />
-                </audio>
-              </li>
-            )}
-            {moment.note && (
-              <li
-                className="moments-list__item moments-list__item--note"
-                key={moment.timestamp}
-              >
-                <IonIcon
-                  icon={noteIcon}
-                  className="moments-list__icon"
-                  style={{ color: props.colour }}
-                />
-                <IonCard className="moments-list__note text-body ion-no-margin">
-                  {moment.note}
-                </IonCard>
-              </li>
-            )}
-          </>
-        ))}
-      </ol>
+      <MomentsList moments={moments} />
     </>
   );
 };

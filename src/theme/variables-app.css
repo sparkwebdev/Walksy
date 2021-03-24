@@ -152,15 +152,15 @@ ion-tab-button ion-label {
   align-items: center;
   z-index: 1;
   position: relative;
-  padding-bottom: 50px;
+  padding-bottom: 40px;
 }
 .moments-list__item:not(:last-child)::after {
   content: "";
   position: absolute;
   top: 50%;
-  left: calc(50% + 20px);
-  width: 5px;
-  height: calc(50% + 50px);
+  left: 15px;
+  width: 4px;
+  height: calc(50% + 25px);
   background: var(--ion-color-secondary);
   z-index: -1;
 }
@@ -171,13 +171,15 @@ ion-tab-button ion-label {
 }
 .moments-list__item--photo img {
   display: block;
+  width: 100%;
 }
 
 .moments-list__image-container,
 .moments-list__note,
 .moments-list__audio {
   display: block;
-  width: calc(100% - 50px);
+  /* width: calc(100% - 50px); */
+  width: 100%;
 }
 .moments-list__image {
   display: block;
@@ -186,10 +188,46 @@ ion-tab-button ion-label {
   padding: 1.6em 1.6em 1.6em 2em;
   font-size: 1.1em !important;
   line-height: 1.75em !important;
+  text-align: left;
 }
 .moments-list__note::first-letter {
   font-size: 1.6em !important;
   margin-right: 0.1em;
+}
+.moments-list-count {
+  display: block;
+  position: relative;
+  width: 34px;
+  margin-bottom: 25px;
+}
+.moments-list-count::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 15px;
+  width: 4px;
+  height: calc(50% + 25px);
+  background: var(--ion-color-secondary);
+  z-index: -1;
+}
+.moments-list-count__icon {
+  width: 34px;
+  height: 50px;
+  display: block;
+}
+.moments-list-count__total {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  line-height: 26px;
+  border-radius: 50% !important;
+  top: 4px;
+  left: 4px;
+  background: var(--ion-color-secondary);
+  color: var(--ion-color-secondary-contrast);
+  font-weight: bold;
+}
+.moments-list-count__label {
 }
 
 /* Walk Descriptors */
