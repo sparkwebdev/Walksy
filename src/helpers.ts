@@ -72,6 +72,7 @@ export function getFriendlyTimeOfDay() {
   var afternoon = dayjs().hour(13).minute(30).second(0);
   var evening = dayjs().hour(17).minute(0).second(0);
   var night = dayjs().hour(20).minute(0).second(0);
+  var latenight = dayjs().hour(0).minute(0).second(0);
 
   if (dayjs().isSameOrAfter(night)) {
     return day + " night";
@@ -88,6 +89,10 @@ export function getFriendlyTimeOfDay() {
   if (dayjs().isSameOrAfter(morning)) {
     return day + " morning";
   }
+  if (dayjs().isSameOrAfter(latenight)) {
+    return "Late night";
+  }
+  return day;
 }
 
 export function getFriendlyWalkDescriptor() {
