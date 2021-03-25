@@ -4,17 +4,37 @@ import {
   IonCol,
   IonGrid,
   IonIcon,
+  IonModal,
   IonRow,
   IonText,
 } from "@ionic/react";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Moment } from "../data/models";
 import { map as mapIcon } from "ionicons/icons";
+import MapWithMarkers from "./MapWithMarkers";
 
 const MomentsList: React.FC<{
   moments: Moment[];
+  showMap?: boolean;
 }> = (props) => {
-  const viewMapHandler = () => {};
+  const [momentsWithLocations, setMomentsWithLocations] = useState<Moment[]>(
+    []
+  );
+  const [showMap, setShowMap] = useState<boolean>(false);
+  const [mapKey, setMapKey] = useState<number>(Math.random());
+
+  const viewMapHandler = () => {
+    setShowMap(true);
+  };
+
+  useEffect(() => {
+    const momentsLoc = props.moments?.filter(
+      (moment) => moment.location !== null
+    );
+    if (momentsLoc!.length > 0) {
+      setMomentsWithLocations(momentsLoc);
+    }
+  }, [props.moments]);
   return (
     <>
       <IonGrid className="ion-no-padding">
@@ -22,7 +42,7 @@ const MomentsList: React.FC<{
           <IonCol size="2">
             <IonText className="text-body moments-list-count">
               <img
-                src="assets/icon/map_marker.svg"
+                src="assets/icon/map_marker_plain.svg"
                 alt=""
                 className="moments-list-count__icon"
               />
@@ -49,7 +69,7 @@ const MomentsList: React.FC<{
             {moment.imagePath && (
               <li
                 className="moments-list__item moments-list__item--photo"
-                key={moment.timestamp}
+                key={moment.id}
               >
                 <IonCard className="moments-list__image-container ion-no-margin">
                   <img src={moment.imagePath} alt="" />
@@ -59,7 +79,7 @@ const MomentsList: React.FC<{
             {moment.audioPath && (
               <li
                 className="moments-list__item moments-list__item--audio"
-                key={moment.timestamp}
+                key={moment.id}
               >
                 <audio controls className="moments-list__audio">
                   <source src={moment.audioPath} type="audio/mpeg" />
@@ -69,7 +89,7 @@ const MomentsList: React.FC<{
             {moment.note && (
               <li
                 className="moments-list__item moments-list__item--note"
-                key={moment.timestamp}
+                key={moment.id}
               >
                 <IonCard className="moments-list__note text-body ion-no-margin">
                   {moment.note}
@@ -79,6 +99,21 @@ const MomentsList: React.FC<{
           </>
         ))}
       </ol>
+      <IonModal
+        isOpen={showMap}
+        onDidDismiss={() => {
+          setShowMap(false);
+        }}
+        onWillPresent={() => {
+          setMapKey(Math.random());
+        }}
+      >
+        <MapWithMarkers
+          moments={momentsWithLocations}
+          onDismiss={() => setShowMap(false)}
+          key={mapKey}
+        />
+      </IonModal>
     </>
   );
 };
