@@ -8,8 +8,8 @@
 .image-preview {
   width: 100%;
   max-width: 375px;
-  min-height: 75%;
-  max-height: 100%;
+  min-height: 375px;
+  max-height: 75%;
   background: white;
   border: solid 1px #777269;
   display: flex;

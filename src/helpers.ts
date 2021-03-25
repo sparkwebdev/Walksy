@@ -110,7 +110,7 @@ export function getFriendlyWalkDescriptor() {
 export function generateHslaColors(
   amount = 1,
   saturation = 95,
-  lightness = 75,
+  lightness = 85,
   randomise = false
 ) {
   let colors = [];
