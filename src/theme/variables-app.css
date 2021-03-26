@@ -227,8 +227,6 @@ ion-tab-button ion-label {
   color: var(--ion-color-secondary-contrast);
   font-weight: bold;
 }
-.moments-list-count__label {
-}
 
 /* Walk Descriptors */
 .badge-input-feedback,
@@ -257,9 +255,6 @@ ion-tab-button ion-label {
 .badge-keyword--active {
   --background: var(--ion-color-primary);
   opacity: 1;
-}
-
-.age-select {
 }
 
 .age-select ion-label,
@@ -307,4 +302,10 @@ ion-tab-button ion-label {
 
 .with-tint {
   background-color: var(--ion-color-light);
+}
+
+.recorder {
+  display: inline-block;
+  border-radius: 50% !important;
+  overflow: hidden;
 }

@@ -33,6 +33,8 @@ import NewMemory from "./pages/NewMemory";
 import MemoriesContext from "./data/memories-context";
 
 import SideMenu from "./components/SideMenu";
+import AudioRecord from "./pages/AudioRecord";
+import AudioRecord2 from "./pages/AudioRecord2";
 
 const AppTabs: React.FC = () => {
   const memoriesCtx = useContext(MemoriesContext);
@@ -57,6 +59,12 @@ const AppTabs: React.FC = () => {
           </Route>
           <Route path="/app/new-memory">
             <NewMemory />
+          </Route>
+          <Route path="/app/audio-record">
+            <AudioRecord />
+          </Route>
+          <Route path="/app/audio-record2">
+            <AudioRecord2 />
           </Route>
           <Route exact path="/app/home">
             <HomePage />

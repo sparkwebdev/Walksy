@@ -24,6 +24,8 @@ const HomePage: React.FC = () => {
         <IonList>
           <IonItem routerLink="/app/memories">Memories</IonItem>
           <IonItem routerLink="/app/new-memory">New Memory</IonItem>
+          <IonItem routerLink="/app/audio-record">Audio Record</IonItem>
+          <IonItem routerLink="/app/audio-record2">Audio Record 2</IonItem>
         </IonList>
         {moments.map((moment, index) => (
           <IonCard
