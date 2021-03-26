@@ -304,8 +304,12 @@ ion-tab-button ion-label {
   background-color: var(--ion-color-light);
 }
 
-.recorder {
+.audio-recorder__record {
   display: inline-block;
   border-radius: 50% !important;
   overflow: hidden;
+}
+
+.audio-recorder__record--on {
+  filter: hue-rotate(105deg) saturate(0.5) brightness(1.61);
 }
