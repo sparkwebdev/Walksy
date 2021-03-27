@@ -1,7 +1,7 @@
+import React, { useState } from "react";
+
 import { Recorder } from "react-voice-recorder";
 import "react-voice-recorder/dist/index.css";
-
-import React, { useState } from "react";
 
 const AudioRecord3: React.FC = () => {
   const [audioDetails, setAudioDetails] = useState<any>({
