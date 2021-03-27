@@ -37,6 +37,7 @@ import AudioRecord from "./pages/AudioRecord";
 import AudioRecord2 from "./pages/AudioRecord2";
 import AudioRecord3 from "./pages/AudioRecord3";
 import AudioRecord4 from "./pages/AudioRecord4";
+import AudioRecord5 from "./pages/AudioRecord5";
 
 const AppTabs: React.FC = () => {
   const memoriesCtx = useContext(MemoriesContext);
@@ -73,6 +74,9 @@ const AppTabs: React.FC = () => {
           </Route>
           <Route path="/app/audio-record4">
             <AudioRecord4 />
+          </Route>
+          <Route path="/app/audio-record5">
+            <AudioRecord5 />
           </Route>
           <Route exact path="/app/home">
             <HomePage />

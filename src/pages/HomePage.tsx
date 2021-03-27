@@ -28,6 +28,7 @@ const HomePage: React.FC = () => {
           <IonItem routerLink="/app/audio-record2">Audio Record 2</IonItem>
           <IonItem routerLink="/app/audio-record3">Audio Record 3</IonItem>
           <IonItem routerLink="/app/audio-record4">Audio Record 4</IonItem>
+          <IonItem routerLink="/app/audio-record5">Audio Record 5</IonItem>
         </IonList>
         {moments.map((moment, index) => (
           <IonCard
