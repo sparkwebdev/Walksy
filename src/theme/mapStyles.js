@@ -1,4 +1,4 @@
-export default [
+const styles = [
   {
       "elementType": "labels",
       "stylers": [
@@ -199,3 +199,5 @@ export default [
   {},
   {}
 ]
+
+export default styles;
