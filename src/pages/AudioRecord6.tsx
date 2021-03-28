@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Media, MediaObject } from "@ionic-native/media";
 import { File } from "@ionic-native/file";
-import { IonButton } from "@ionic/react";
+import { IonButton, IonPage } from "@ionic/react";
 
 const AudioRecord6: React.FC = () => {
   const [isRecording, setIsRecording] = useState<boolean>(false);
@@ -163,7 +163,7 @@ const AudioRecord6: React.FC = () => {
   //   window.setTimeout(() => file.stopRecord(), 10000);
   // });
   return (
-    <div>
+    <IonPage>
       {isRecording ? (
         <IonButton color="danger" onClick={stopRecording}>
           Stop Recording
@@ -179,7 +179,7 @@ const AudioRecord6: React.FC = () => {
       <IonButton color="success" onClick={stopPlayback}>
         Stop
       </IonButton>
-    </div>
+    </IonPage>
   );
 };
 

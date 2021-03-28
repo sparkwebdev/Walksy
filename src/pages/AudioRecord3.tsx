@@ -1,3 +1,4 @@
+import { IonPage } from "@ionic/react";
 import React, { useState } from "react";
 
 import { Recorder } from "react-voice-recorder";
@@ -35,15 +36,17 @@ const AudioRecord3: React.FC = () => {
     setAudioDetails(reset);
   };
   return (
-    <Recorder
-      record={true}
-      title={"New recording"}
-      audioURL={audioDetails.url}
-      showUIAudio
-      handleAudioStop={(data: any) => handleAudioStop(data)}
-      handleAudioUpload={(data: any) => handleAudioUpload(data)}
-      handleRest={() => handleReset()}
-    />
+    <IonPage>
+      <Recorder
+        record={true}
+        title={"New recording"}
+        audioURL={audioDetails.url}
+        showUIAudio
+        handleAudioStop={(data: any) => handleAudioStop(data)}
+        handleAudioUpload={(data: any) => handleAudioUpload(data)}
+        handleRest={() => handleReset()}
+      />
+    </IonPage>
   );
 };
 

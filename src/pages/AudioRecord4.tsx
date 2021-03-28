@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import AudioReactRecorder, { RecordState } from "audio-react-recorder";
+import { IonPage } from "@ionic/react";
 
 const AudioRecord4: React.FC = () => {
   console.log("e");
@@ -20,7 +21,7 @@ const AudioRecord4: React.FC = () => {
     console.log("audioData", audioData);
   };
   return (
-    <div>
+    <IonPage>
       <AudioReactRecorder
         state={recordState}
         onStop={onStop}
@@ -29,7 +30,7 @@ const AudioRecord4: React.FC = () => {
 
       <button onClick={start}>Start</button>
       <button onClick={stop}>Stop</button>
-    </div>
+    </IonPage>
   );
 };
 

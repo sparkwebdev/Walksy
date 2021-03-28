@@ -1,4 +1,4 @@
-import { IonButton } from "@ionic/react";
+import { IonButton, IonPage } from "@ionic/react";
 import React, { useState } from "react";
 import MicRecorder from "mic-recorder-to-mp3";
 
@@ -46,7 +46,7 @@ const AudioRecord2: React.FC = () => {
   };
 
   return (
-    <>
+    <IonPage>
       <h1>Mic Recorder to Mp3 Example</h1>
 
       {isRecording ? (
@@ -59,7 +59,7 @@ const AudioRecord2: React.FC = () => {
         </IonButton>
       )}
       {recording}
-    </>
+    </IonPage>
   );
 };
 
