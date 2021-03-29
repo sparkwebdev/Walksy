@@ -1,22 +1,49 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   IonCard,
   IonCardHeader,
   IonCardSubtitle,
   IonCardTitle,
+  IonCol,
   IonContent,
+  IonGrid,
   IonPage,
+  IonRow,
+  IonText,
 } from "@ionic/react";
 import PageHeader from "../components/PageHeader";
 import "./DiscoverPage.css";
+import { firestore } from "../firebase";
+import { Walk, toWalk } from "../data/models";
+import { appData } from "../data/appData";
+const suggestedDescriptors = appData.suggestedDescriptors;
 
 const DiscoverPage: React.FC = () => {
+  const [recentWalks, setRecentWalks] = useState<Walk[]>([]);
+  const [curatedWalks, setCuratedWalks] = useState<Walk[]>([]);
+
+  useEffect(() => {
+    const walksRef = firestore.collection("users-walks");
+    return walksRef
+      .limit(25)
+      .orderBy("start")
+      .onSnapshot(({ docs }) => {
+        setRecentWalks(docs.map(toWalk));
+      });
+  }, []);
+  useEffect(() => {
+    const walksRef = firestore.collection("users-walks");
+    return walksRef.where("type", "==", ["curated"]).onSnapshot(({ docs }) => {
+      setCuratedWalks(docs.map(toWalk));
+    });
+  }, []);
+
   return (
     <IonPage>
       <PageHeader title="Discover" />
       <IonContent>
         <div className="constrain constrain--large">
-          <IonCard
+          {/* <IonCard
             className="walk-card ion-no-margin ion-no-padding"
             routerLink="/app/discover/nearby"
           >
@@ -33,7 +60,7 @@ const DiscoverPage: React.FC = () => {
                 11
               </IonCardSubtitle>
             </IonCardHeader>
-          </IonCard>
+          </IonCard> */}
           <IonCard
             className="walk-card ion-no-margin"
             routerLink="/app/discover/recent"
@@ -48,7 +75,7 @@ const DiscoverPage: React.FC = () => {
                 Recent Walks
               </IonCardTitle>
               <IonCardSubtitle className="walk-card__subtitle text-body">
-                11
+                {recentWalks.length}
               </IonCardSubtitle>
             </IonCardHeader>
           </IonCard>
@@ -66,39 +93,42 @@ const DiscoverPage: React.FC = () => {
                 Curated Walks
               </IonCardTitle>
               <IonCardSubtitle className="walk-card__subtitle text-body">
-                17
+                {recentWalks.length}
               </IonCardSubtitle>
             </IonCardHeader>
           </IonCard>
-          <IonCard
-            className="walk-card ion-no-margin"
-            routerLink="/app/discover/tag-foraging"
-          >
-            <img
-              className="walk-card__image"
-              src="assets/img/cover-tag-foraging.jpg"
-              alt=""
-            />
-            <IonCardHeader className="walk-card__header">
-              <IonCardTitle className="walk-card__title text-body">
-                #foraging
-              </IonCardTitle>
-            </IonCardHeader>
-          </IonCard>
-          <IonCard
-            className="walk-card ion-no-margin"
-            routerLink="/app/discover/tag-streetart"
-          >
-            <img
-              className="walk-card__image"
-              src="assets/img/cover-tag-streetart.jpg"
-              alt=""
-            />
-            <IonCardHeader className="walk-card__header">
-              <IonCardTitle className="walk-card__title text-body">
-                #streetart
-              </IonCardTitle>
-            </IonCardHeader>
+          <h2 className="text-heading ion-padding-start ion-padding-end">
+            <IonText color="primary">
+              <strong>Browse tags...</strong>
+            </IonText>
+          </h2>
+          <IonCard className="ion-no-margin" style={{ background: "#777269" }}>
+            <IonGrid className="grid grid--thirds ion-no-padding">
+              <IonRow>
+                {suggestedDescriptors.map((keyword) => {
+                  return (
+                    <IonCol>
+                      <IonCard
+                        className="walk-card ion-no-margin"
+                        routerLink={`/app/discover/tag-${keyword}`}
+                      >
+                        <img
+                          className="walk-card__image"
+                          src={`assets/img/cover-tag-${keyword}.jpg`}
+                          alt=""
+                          style={{ display: "block" }}
+                        />
+                        <IonCardHeader className="walk-card__header">
+                          <IonCardTitle className="walk-card__title text-body">
+                            #{keyword}
+                          </IonCardTitle>
+                        </IonCardHeader>
+                      </IonCard>
+                    </IonCol>
+                  );
+                })}
+              </IonRow>
+            </IonGrid>
           </IonCard>
         </div>
       </IonContent>
