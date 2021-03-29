@@ -32,6 +32,7 @@ const options = {
 
 const MapWithMarkers: React.FC<{
   moments: Moment[];
+  colour?: string;
   onDismiss?: () => void;
 }> = (props) => {
   const { isLoaded, loadError } = useLoadScript({
@@ -78,7 +79,7 @@ const MapWithMarkers: React.FC<{
     const walkPath = new window.google.maps.Polyline({
       path: locations,
       geodesic: true,
-      strokeColor: "#00ccb4",
+      strokeColor: props.colour || "#00ccb4",
       strokeOpacity: 1.0,
       strokeWeight: 2,
     });
