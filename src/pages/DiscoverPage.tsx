@@ -93,7 +93,7 @@ const DiscoverPage: React.FC = () => {
                 Curated Walks
               </IonCardTitle>
               <IonCardSubtitle className="walk-card__subtitle text-body">
-                {recentWalks.length}
+                {curatedWalks.length}
               </IonCardSubtitle>
             </IonCardHeader>
           </IonCard>
