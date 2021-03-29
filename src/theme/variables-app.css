@@ -74,6 +74,10 @@ ion-tab-button ion-label {
   height: 100px;
   border-radius: 50% !important;
 }
+.profile-badge__image--small {
+  width: 60px;
+  height: 60px;
+}
 
 /* Walk */
 .sub-title {
@@ -307,4 +311,24 @@ ion-tab-button ion-label {
 
 .with-tint {
   background-color: var(--ion-color-light);
+}
+
+.grid ion-row {
+  flex-wrap: wrap;
+}
+.grid ion-col {
+  flex: 1 1 auto;
+}
+.grid--half ion-col {
+  width: 50%;
+}
+.grid--thirds ion-col {
+  width: 33.333%;
+}
+
+.grid--half .walk-item img {
+  height: 22vh;
+}
+.grid--thirds .walk-item img {
+  height: 16vh;
 }

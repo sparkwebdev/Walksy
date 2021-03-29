@@ -15,6 +15,7 @@ import MapWithMarkers from "./MapWithMarkers";
 
 const MomentsList: React.FC<{
   moments: Moment[];
+  colour?: string;
   showMap?: boolean;
 }> = (props) => {
   const [momentsWithLocations, setMomentsWithLocations] = useState<Moment[]>(
@@ -111,6 +112,7 @@ const MomentsList: React.FC<{
         <MapWithMarkers
           moments={momentsWithLocations}
           onDismiss={() => setShowMap(false)}
+          colour={props.colour}
           key={mapKey}
         />
       </IonModal>

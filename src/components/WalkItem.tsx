@@ -93,7 +93,7 @@ const WalkItem: React.FC<{
           </div>
         </IonCardContent>
       </IonCard>
-      <MomentsList moments={moments} />
+      <MomentsList moments={moments} colour={props.colour} />
     </>
   );
 };

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { formatDate, getMinAndSec, getTimeDiff } from "../helpers";
-import { IonCard, IonCardContent, IonText } from "@ionic/react";
+import { IonBadge, IonCard, IonCardContent, IonText } from "@ionic/react";
 
 import "./WalkItem.css";
 import { getUnitDistance } from "../helpers";
+import { firestore } from "../firebase";
+import { getRemoteUserData } from "../firebase";
 
 const WalkItemPreview: React.FC<{
   title: string;
@@ -14,9 +16,26 @@ const WalkItemPreview: React.FC<{
   steps: number;
   distance: number;
   coverImage: string;
+  type?: string;
+  userId?: string;
 }> = (props) => {
   const timeDiff = getTimeDiff(props.start, props.end);
   const time = getMinAndSec(timeDiff);
+  const [displayName, setDisplayName] = useState<string>("");
+  const [profilePic, setProfilePic] = useState<string>("");
+
+  useEffect(() => {
+    if (props.userId) {
+      getRemoteUserData(props.userId).then((data) => {
+        loadUserData(data);
+      });
+    }
+  }, [props.userId]);
+
+  const loadUserData = (userData: any) => {
+    setDisplayName(userData?.displayName);
+    setProfilePic(userData?.profilePic);
+  };
 
   return (
     <>
@@ -26,6 +45,23 @@ const WalkItemPreview: React.FC<{
             className="walk-item__cover-image"
             src={props.coverImage}
             alt={props.title}
+          />
+        )}
+        {props.type && props.type !== "user" && (
+          <IonBadge
+            className="ion-text-uppercase walk-item__type"
+            color={props.type === "curated" ? "secondary" : "primary"}
+          >
+            {props.type}
+          </IonBadge>
+        )}
+        {profilePic && (
+          <img
+            src={profilePic}
+            alt=""
+            className="walk-item__profile-badge profile-badge__image profile-badge__image--small"
+            width="40"
+            height="40"
           />
         )}
         <IonCardContent
@@ -41,6 +77,7 @@ const WalkItemPreview: React.FC<{
             {props.title && (
               <h2>
                 <strong>{props.title}</strong>
+                {displayName && <span> by {displayName}</span>}
               </h2>
             )}
             {props.description && (
@@ -49,20 +86,24 @@ const WalkItemPreview: React.FC<{
               </p>
             )}
           </IonText>
-          {props.steps > 0 && (
-            <p>
-              {props.distance?.toFixed(2)}
-              <span className="smallprint">&nbsp;{getUnitDistance()}</span>
-              &nbsp;— 
-              {props.steps}&nbsp;<span className="smallprint">steps</span>
-              &nbsp;
-              {time["min"] > 0 && (
-                <span>
-                  — 
-                  {time["min"]}&nbsp;<span className="smallprint">min</span>
-                </span>
+          {!props.userId && (
+            <>
+              {props.steps > 0 && (
+                <p>
+                  {props.distance?.toFixed(2)}
+                  <span className="smallprint">&nbsp;{getUnitDistance()}</span>
+                  &nbsp;— 
+                  {props.steps}&nbsp;<span className="smallprint">steps</span>
+                  &nbsp;
+                  {time["min"] > 0 && (
+                    <span>
+                      — 
+                      {time["min"]}&nbsp;<span className="smallprint">min</span>
+                    </span>
+                  )}
+                </p>
               )}
-            </p>
+            </>
           )}
         </IonCardContent>
       </IonCard>

@@ -7,6 +7,7 @@ import { toWalk, Walk } from "../data/models";
 
 const MomentItemPreview: React.FC<{
   walkId?: string;
+  imageOnly?: boolean;
   coverImage?: string;
 }> = (props) => {
   const [walk, setWalk] = useState<Walk>();
@@ -27,20 +28,22 @@ const MomentItemPreview: React.FC<{
           alt={walk.title}
         />
       )}
-      <IonCardContent className="walk-item__content">
-        <IonText className="text-heading">
-          {walk?.title && (
-            <h2>
-              <strong>{walk.title}</strong>
-            </h2>
-          )}
-          {walk?.description && (
-            <p>
-              <strong>{walk.description}</strong>
-            </p>
-          )}
-        </IonText>
-      </IonCardContent>
+      {!props.imageOnly && (
+        <IonCardContent className="walk-item__content">
+          <IonText className="text-heading">
+            {walk?.title && (
+              <h2>
+                <strong>{walk.title}</strong>
+              </h2>
+            )}
+            {walk?.description && (
+              <p>
+                <strong>{walk.description}</strong>
+              </p>
+            )}
+          </IonText>
+        </IonCardContent>
+      )}
     </div>
   );
 };

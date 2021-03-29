@@ -35,6 +35,7 @@ export interface Walk {
   coverImage: string;
   locations: Location[] | [];
   userId: string;
+  type: "user" | "curated" | "featured";
 }
 
 export interface Location {
