@@ -61,9 +61,9 @@ const ImagePickerNew: React.FC<{
     try {
       const photo = await Camera.getPhoto({
         resultType: CameraResultType.Uri,
-        source: CameraSource.Camera,
+        source: CameraSource.Prompt,
         quality: 80,
-        width: 500,
+        width: 740,
       });
 
       if (!photo || !photo.webPath) {

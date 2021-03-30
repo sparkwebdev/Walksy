@@ -13,12 +13,14 @@ import {
   IonRow,
   IonTextarea,
 } from "@ionic/react";
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Location, Photo } from "../data/models";
 import WalksContext from "../data/walks-context";
 import NewWalkMomentsOutput from "../components/NewWalkMomentsOutput";
 import { close as cancelIcon, add as addIcon } from "ionicons/icons";
 import ImagePickerNew from "../components/ImagePickerNew";
+import { base64FromPath } from "@ionic/react-hooks/filesystem";
+import { Filesystem, FilesystemDirectory } from "@capacitor/core";
 
 const noteMaxLength = 280;
 
@@ -45,22 +47,37 @@ const NewWalkMoments: React.FC<{
   };
 
   const saveImageHandler = async () => {
-    // if (!takenPhoto) {
-    //   return;
-    // }
-    // const fileName = new Date().getTime() + ".jpeg";
-    // const base64 = await base64FromPath(takenPhoto.preview);
-    // Filesystem.writeFile({
-    //   path: fileName,
-    //   data: base64,
-    //   directory: FilesystemDirectory.Data,
-    // }).then(() => {
-    addMomentHandler();
-    // });
+    if (!takenPhoto) {
+      return;
+    }
+    const fileName = new Date().getTime() + ".jpeg";
+    const base64 = await base64FromPath(takenPhoto.preview);
+    Filesystem.writeFile({
+      path: fileName,
+      data: base64,
+      directory: FilesystemDirectory.Data,
+    }).then(() => {
+      // setTakenPhoto((curPhoto) => {
+      //   return {
+      //     ...curPhoto!,
+      //     path: fileName,
+      //   };
+      // });
+      // addMomentHandler();
+      setTakenPhoto({
+        path: fileName,
+        preview: takenPhoto.preview,
+      });
+    });
   };
 
-  const addMomentHandler = () => {
-    const enteredImagePath = takenPhoto?.preview || "";
+  useEffect(() => {
+    if (takenPhoto?.path && !takenPhoto.path.startsWith("file://")) {
+      addMomentHandler();
+    }
+  }, [takenPhoto]);
+
+  const addMomentHandler = async () => {
     const enteredAudioPath = audioPathRef.current?.value || "";
     const enteredNote = noteRef.current?.value || "";
     if (
@@ -70,11 +87,26 @@ const NewWalkMoments: React.FC<{
     ) {
       return;
     }
+    let loadedPhotoPath = "";
+    if (takenPhoto?.path) {
+      const enteredImagePath = takenPhoto?.path || "";
+      await Filesystem.readFile({
+        path: enteredImagePath,
+        directory: FilesystemDirectory.Data,
+      })
+        .then((file) => {
+          loadedPhotoPath = `data:image/jpeg;base64,${file.data}`;
+        })
+        .catch((e) => {
+          console.log("Couldn't save file", loadedPhotoPath);
+          resetMomentType();
+        });
+    }
     getLocation()
       .then((currentLocation) => {
         walksCtx.addMoment(
           walkId,
-          enteredImagePath,
+          loadedPhotoPath,
           enteredAudioPath!.toString(),
           enteredNote!.toString(),
           currentLocation,
@@ -95,6 +127,7 @@ const NewWalkMoments: React.FC<{
       <NewWalkMomentsOutput />
 
       <IonModal
+        backdrop-dismiss="false"
         isOpen={momentType !== ""}
         onDidDismiss={resetMomentType}
         cssClass="add-moment-modal"
