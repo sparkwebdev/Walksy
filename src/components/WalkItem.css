@@ -18,7 +18,7 @@
   padding: 8px 12px;
 }
 
-.walk-item__profile-badge {
+.walk-item .walk-item__profile-badge {
   position: absolute;
   top: 20px;
   left: 20px;

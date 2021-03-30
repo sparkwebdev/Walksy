@@ -24,18 +24,22 @@ const WalkEntryPage: React.FC = () => {
   return (
     <IonPage>
       <PageHeader title="Walk" back={true} />
-      <IonContent>
-        <WalkItem
-          id={id}
-          title={walk?.title}
-          colour={walk?.colour}
-          description={walk?.description}
-          start={walk?.start}
-          end={walk?.end}
-          steps={walk?.steps}
-          distance={walk?.distance}
-          coverImage={walk?.coverImage}
-        />
+      <IonContent className="ion-padding-bottom">
+        <div className="ion-margin-bottom constrain constrain--large">
+          <WalkItem
+            id={id}
+            title={walk?.title}
+            colour={walk?.colour}
+            description={walk?.description}
+            start={walk?.start}
+            end={walk?.end}
+            steps={walk?.steps}
+            distance={walk?.distance}
+            coverImage={walk?.coverImage}
+            type={walk?.type}
+            userId={walk?.userId}
+          />
+        </div>
       </IonContent>
     </IonPage>
   );

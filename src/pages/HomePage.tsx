@@ -11,6 +11,7 @@ import {
   IonCardSubtitle,
   IonCardTitle,
   IonCardContent,
+  IonRouterLink,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../auth";
@@ -93,7 +94,11 @@ const HomePage: React.FC = () => {
                 </IonText>
               </h2>
               {latestWalk.map((walk) => (
-                <div key={walk.id}>
+                <IonRouterLink
+                  className="ion-no-margin ion-no-padding"
+                  key={walk.id}
+                  routerLink={`/app/walk/${walk.id}`}
+                >
                   <WalkItemPreview
                     title={walk.title}
                     colour={walk.colour}
@@ -103,8 +108,9 @@ const HomePage: React.FC = () => {
                     steps={walk.steps}
                     distance={walk.distance}
                     coverImage={walk.coverImage}
+                    userId={walk.userId}
                   />
-                </div>
+                </IonRouterLink>
               ))}
               <div className="ion-padding">
                 <IonButton routerLink="/app/dashboard">
@@ -143,7 +149,11 @@ const HomePage: React.FC = () => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
               {featuredWalks.map((walk) => (
-                <IonCard key={walk.id} className="ion-no-margin">
+                <IonRouterLink
+                  className="ion-no-margin ion-no-padding"
+                  key={walk.id}
+                  routerLink={`/app/walk/${walk.id}`}
+                >
                   <WalkItemPreview
                     title={walk.title}
                     colour={walk.colour}
@@ -156,7 +166,7 @@ const HomePage: React.FC = () => {
                     type={walk.type}
                     userId={walk.userId}
                   />
-                </IonCard>
+                </IonRouterLink>
               ))}
               <div className="ion-padding">
                 <IonButton routerLink="/app/discover">Discover Walks</IonButton>
