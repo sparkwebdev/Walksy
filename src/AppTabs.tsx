@@ -6,7 +6,7 @@ import {
   IonLabel,
   IonIcon,
 } from "@ionic/react";
-import React, { useContext, useEffect } from "react";
+import React from "react";
 import { Redirect, Route } from "react-router";
 import { useAuth } from "./auth";
 import HomePage from "./pages/HomePage";
