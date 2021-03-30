@@ -165,7 +165,7 @@ ion-tab-button ion-label {
   left: 15px;
   width: 4px;
   height: calc(50% + 25px);
-  background: var(--ion-color-secondary);
+  background: currentColor;
   z-index: -1;
 }
 .moments-list__icon {
@@ -203,6 +203,7 @@ ion-tab-button ion-label {
   position: relative;
   width: 34px;
   margin-bottom: 25px;
+  text-align: center;
 }
 .moments-list-count::after {
   content: "";
@@ -211,7 +212,7 @@ ion-tab-button ion-label {
   left: 15px;
   width: 4px;
   height: calc(50% + 25px);
-  background: var(--ion-color-secondary);
+  background: currentColor;
   z-index: -1;
 }
 .moments-list-count__icon {

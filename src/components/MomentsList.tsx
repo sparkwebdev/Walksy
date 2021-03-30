@@ -41,7 +41,12 @@ const MomentsList: React.FC<{
       <IonGrid className="ion-no-padding">
         <IonRow>
           <IonCol size="2">
-            <IonText className="text-body moments-list-count">
+            <IonText
+              className="text-body moments-list-count"
+              style={{
+                color: props.colour,
+              }}
+            >
               <img
                 src="assets/icon/map_marker_plain.svg"
                 alt=""
@@ -56,7 +61,7 @@ const MomentsList: React.FC<{
               </span> */}
             </IonText>
           </IonCol>
-          <IonCol size="10" sizeSm="8" offsetSm="2">
+          <IonCol size="10" sizeSm="6" offsetSm="4">
             <IonButton expand="block" onClick={viewMapHandler}>
               <IonIcon slot="start" icon={mapIcon} />
               View on Map
@@ -64,7 +69,13 @@ const MomentsList: React.FC<{
           </IonCol>
         </IonRow>
       </IonGrid>
-      <ol reversed className="moments-list constrain constrain--large">
+      <ol
+        reversed
+        className="moments-list constrain constrain--large"
+        style={{
+          color: props.colour,
+        }}
+      >
         {props.moments.map((moment: Moment) => (
           <>
             {moment.imagePath && (
