@@ -69,6 +69,6 @@ export function toWalk(doc: firebase.default.firestore.DocumentSnapshot): Walk {
   return  { id: doc.id, ...doc.data() } as Walk;
 }
 export function toMoment(doc: firebase.default.firestore.DocumentSnapshot): Moment {
-  return  { walkId: doc.id, ...doc.data() } as Moment;
+  return  { id: doc.id, ...doc.data() } as Moment;
 }
 
