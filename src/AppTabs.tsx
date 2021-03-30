@@ -19,30 +19,19 @@ import SettingsPage from "./pages/SettingsPage";
 import EntryPage from "./components/EntryPage";
 
 import {
+  home as homeIcon,
   eye as browseIcon,
   analytics as discoverIcon,
   footsteps as walkIcon,
   time as dashboardIcon,
-  person as profileIcon,
 } from "ionicons/icons";
 import NewWalk from "./pages/NewWalk";
 import NewsPage from "./pages/NewsPage";
 
-import Memories from "./pages/Memories";
-import NewMemory from "./pages/NewMemory";
-import MemoriesContext from "./data/memories-context";
-
 import SideMenu from "./components/SideMenu";
+import GalleryPage from "./pages/GalleryPage";
 
 const AppTabs: React.FC = () => {
-  const memoriesCtx = useContext(MemoriesContext);
-
-  const { initContext } = memoriesCtx;
-
-  useEffect(() => {
-    initContext();
-  }, [initContext]);
-
   const { loggedIn } = useAuth();
   if (!loggedIn) {
     return <Redirect to="/intro" />;
@@ -52,30 +41,24 @@ const AppTabs: React.FC = () => {
     <>
       <IonTabs>
         <IonRouterOutlet id="main">
-          <Route path="/app/memories">
-            <Memories />
-          </Route>
-          <Route path="/app/new-memory">
-            <NewMemory />
-          </Route>
+          {/* Primary Tabs */}
           <Route exact path="/app/home">
             <HomePage />
-          </Route>
-          <Route path="/app/new-walk">
-            <NewWalk />
-          </Route>
-          <Route exact path="/app/walk/:id">
-            <WalkEntryPage />
-          </Route>
-          <Route exact path="/app/dashboard">
-            <DashboardPage />
           </Route>
           <Route exact path="/app/discover">
             <DiscoverPage />
           </Route>
-          <Route exact path="/app/discover/:id">
-            <DiscoverEntryPage />
+          <Route path="/app/new-walk">
+            <NewWalk />
           </Route>
+          <Route exact path="/app/dashboard">
+            <DashboardPage />
+          </Route>
+          <Route exact path="/app/gallery">
+            <GalleryPage />
+          </Route>
+
+          {/* Sub Pages */}
           <Route exact path="/app/about">
             <AboutPage />
           </Route>
@@ -85,14 +68,22 @@ const AppTabs: React.FC = () => {
           <Route exact path="/app/settings">
             <SettingsPage />
           </Route>
+
+          {/* Dynamic pages */}
+          <Route exact path="/app/walk/:id">
+            <WalkEntryPage />
+          </Route>
+          <Route exact path="/app/discover/:id">
+            <DiscoverEntryPage />
+          </Route>
           <Route exact path="/app/entries/:id">
             <EntryPage />
           </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="home" href="/app/home">
-            <IonIcon icon={browseIcon} />
-            <IonLabel>Gallery</IonLabel>
+            <IonIcon icon={homeIcon} />
+            <IonLabel>Home</IonLabel>
           </IonTabButton>
           <IonTabButton tab="discover" href="/app/discover">
             <IonIcon icon={discoverIcon} />
@@ -106,9 +97,9 @@ const AppTabs: React.FC = () => {
             <IonIcon icon={dashboardIcon} />
             <IonLabel>My Walks</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="about" href="/app/settings">
-            <IonIcon icon={profileIcon} />
-            <IonLabel>Profile</IonLabel>
+          <IonTabButton tab="gallery" href="/app/gallery">
+            <IonIcon icon={browseIcon} />
+            <IonLabel>Gallery</IonLabel>
           </IonTabButton>
         </IonTabBar>
       </IonTabs>
