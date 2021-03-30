@@ -146,11 +146,8 @@ const NewWalkMoments: React.FC<{
                 className="ion-padding ion-text-center"
                 style={{
                   marginTop: "auto",
-                  marginBottom: "auto",
-                  height: "100%",
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
+                  overflow: "hidden",
+                  flex: "1 1 auto",
                 }}
               >
                 <ImagePickerNew
@@ -170,8 +167,14 @@ const NewWalkMoments: React.FC<{
                 </IonCol>
               </IonRow>
             )}
-            {momentType === "Note" && (
-              <IonCard style={{ marginTop: "auto" }}>
+            {(momentType === "Note" || takenPhoto) && (
+              <IonCard
+                style={
+                  takenPhoto
+                    ? { marginTop: "auto", flex: "1 0 auto" }
+                    : { marginTop: "auto" }
+                }
+              >
                 <IonLabel hidden={true}>Add a note...</IonLabel>
                 <IonTextarea
                   placeholder="A thought or description..."

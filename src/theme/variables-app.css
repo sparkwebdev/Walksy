@@ -151,9 +151,9 @@ ion-tab-button ion-label {
 }
 
 .moments-list__item {
-  display: flex;
+  /* display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: center; */
   z-index: 1;
   position: relative;
   padding-bottom: 40px;

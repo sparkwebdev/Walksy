@@ -83,13 +83,16 @@ const ImagePickerNew: React.FC<{
   };
 
   return (
-    <div onClick={takePhotoHandler} className="image-preview-container">
-      <div className="image-preview">
-        {!takenPhoto && (
-          <p className="text-body small-print">No photo chosen.</p>
-        )}
-        {takenPhoto && <img src={takenPhoto.preview} alt="Preview" />}
-      </div>
+    <div
+      onClick={takePhotoHandler}
+      className={
+        takenPhoto
+          ? "image-preview-container image-preview-container--with-image"
+          : "image-preview-container"
+      }
+    >
+      {!takenPhoto && <p className="text-body small-print">No photo chosen.</p>}
+      {takenPhoto && <img src={takenPhoto.preview} alt="Preview" />}
       <input
         type="file"
         hidden
