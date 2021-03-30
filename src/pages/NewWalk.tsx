@@ -96,6 +96,7 @@ const NewWalk: React.FC = () => {
       title,
       colour,
       userId,
+      type: "user",
     });
 
     history.push({
