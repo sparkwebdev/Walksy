@@ -22,6 +22,11 @@
   font-size: 1.4rem !important;
   padding: 5px 15px;
 }
+
+.walk-card__title--small {
+  font-size: 1.2rem !important;
+  padding: 0;
+}
 .walk-card:nth-child(2n) .walk-card__header .walk-card__title {
   order: 2;
   margin-left: auto;

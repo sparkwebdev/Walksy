@@ -103,7 +103,7 @@ const DiscoverPage: React.FC = () => {
             </IonText>
           </h2>
           <IonCard className="ion-no-margin" style={{ background: "#777269" }}>
-            <IonGrid className="grid grid--thirds ion-no-padding">
+            <IonGrid className="grid grid--half ion-no-padding">
               <IonRow>
                 {suggestedDescriptors.map((keyword) => {
                   return (
@@ -119,7 +119,7 @@ const DiscoverPage: React.FC = () => {
                           style={{ display: "block" }}
                         />
                         <IonCardHeader className="walk-card__header">
-                          <IonCardTitle className="walk-card__title text-body">
+                          <IonCardTitle className="walk-card__title walk-card__title--small text-body">
                             #{keyword}
                           </IonCardTitle>
                         </IonCardHeader>
