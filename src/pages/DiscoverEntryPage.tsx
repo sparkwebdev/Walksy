@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { IonButton, IonContent, IonList, IonPage } from "@ionic/react";
+import {
+  IonButton,
+  IonContent,
+  IonList,
+  IonPage,
+  IonRouterLink,
+} from "@ionic/react";
 import PageHeader from "../components/PageHeader";
 import { firestore } from "../firebase";
 import { Walk, toWalk } from "../data/models";
 import WalkItemPreview from "../components/WalkItemPreview";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 interface RouteParams {
   id: string;
@@ -65,10 +71,10 @@ const DiscoverEntryPage: React.FC = () => {
             ) : (
               <>
                 {walks.map((walk) => (
-                  <Link
+                  <IonRouterLink
                     className="ion-no-margin ion-no-padding"
                     key={walk.id}
-                    to={`/app/walk/${walk.id}`}
+                    routerLink={`/app/walk/${walk.id}`}
                   >
                     <WalkItemPreview
                       title={walk.title}
@@ -82,7 +88,7 @@ const DiscoverEntryPage: React.FC = () => {
                       type={walk.type}
                       userId={walk.userId}
                     />
-                  </Link>
+                  </IonRouterLink>
                 ))}
               </>
             )}

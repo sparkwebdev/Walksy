@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IonCard, IonContent, IonPage } from "@ionic/react";
+import { IonContent, IonPage, IonRouterLink } from "@ionic/react";
 import PageHeader from "../components/PageHeader";
 import { firestore } from "../firebase";
 import { Walk, toWalk } from "../data/models";
@@ -27,7 +27,7 @@ const DashboardPage: React.FC = () => {
       <PageHeader title="My Walks" />
       <IonContent>
         {walks.map((walk) => (
-          <IonCard
+          <IonRouterLink
             className="ion-no-margin ion-no-padding"
             key={walk.id}
             routerLink={`/app/walk/${walk.id}`}
@@ -42,7 +42,7 @@ const DashboardPage: React.FC = () => {
               distance={walk.distance}
               coverImage={walk.coverImage}
             />
-          </IonCard>
+          </IonRouterLink>
         ))}
       </IonContent>
     </IonPage>

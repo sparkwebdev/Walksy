@@ -259,6 +259,7 @@ const NewWalkAddMomentModal: React.FC<{
         onDidDismiss={() => {
           setCancelMomentAlert(false);
         }}
+        backdropDismiss={false}
       />
       <IonLoading message={"Loading..."} isOpen={loading} />
       <IonToast
