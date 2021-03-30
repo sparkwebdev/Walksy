@@ -77,38 +77,30 @@ const MomentsList: React.FC<{
         }}
       >
         {props.moments.map((moment: Moment) => (
-          <>
+          <li
+            className={`moments-list__item moments-list__item--${
+              (moment.imagePath && "photo") ||
+              (moment.audioPath && "audio") ||
+              (moment.note && "note")
+            }`}
+            key={moment.id}
+          >
             {moment.imagePath && (
-              <li
-                className="moments-list__item moments-list__item--photo"
-                key={moment.id}
-              >
-                <IonCard className="moments-list__image-container ion-no-margin">
-                  <img src={moment.imagePath} alt="" />
-                </IonCard>
-              </li>
+              <IonCard className="moments-list__image-container ion-no-margin">
+                <img src={moment.imagePath} alt="" />
+              </IonCard>
             )}
             {moment.audioPath && (
-              <li
-                className="moments-list__item moments-list__item--audio"
-                key={moment.id}
-              >
-                <audio controls className="moments-list__audio">
-                  <source src={moment.audioPath} type="audio/mpeg" />
-                </audio>
-              </li>
+              <audio controls className="moments-list__audio">
+                <source src={moment.audioPath} type="audio/mpeg" />
+              </audio>
             )}
             {moment.note && (
-              <li
-                className="moments-list__item moments-list__item--note"
-                key={moment.id}
-              >
-                <IonCard className="moments-list__note text-body ion-no-margin">
-                  {moment.note}
-                </IonCard>
-              </li>
+              <IonCard className="moments-list__note text-body ion-no-margin">
+                {moment.note}
+              </IonCard>
             )}
-          </>
+          </li>
         ))}
       </ol>
       <IonModal
