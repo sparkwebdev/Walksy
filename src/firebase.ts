@@ -3,7 +3,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { Plugins } from "@capacitor/core";
-import { UserProfile } from './data/models';
+import { Moment, UserProfile } from './data/models';
 
 const { Storage } = Plugins;
 
@@ -88,11 +88,22 @@ export const handleStoreWalk = async (walkData: {}) => {
   }
 }
 
-export const handleStoreMoment = async (moment: any, walkId: string, userId: string) => {
+export const handleStoreMoment = async (moment: Moment, walkId: string, userId: string) => {
+  let momentToStore: Moment = {...moment};
+  if (moment.imagePath !== "") {
+    await handleStoreFile(moment.imagePath).then((newUrl) => {
+      momentToStore = {
+        ...moment,
+        imagePath: newUrl
+      }
+    }).catch((e) => {
+      console.log('error storing image', e);
+    });
+  }
   const momentsRef = firestore.collection("users-moments");
   await momentsRef
     .add({
-      ...moment,
+      ...momentToStore,
       walkId,
       userId,
     }).then((result) => {
@@ -103,7 +114,7 @@ export const handleStoreMoment = async (moment: any, walkId: string, userId: str
     })
 };
 
-export const handleStorePicture = async (blobUrl: string) => {
+export const handleStoreFile = async (blobUrl: string) => {
   const fileInputRef = storage.ref(`/moments/${Date.now()}`);
   const response = await fetch(blobUrl);
   const blob = await response.blob();
