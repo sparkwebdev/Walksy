@@ -30,7 +30,7 @@ const WalkItemPreviewMini: React.FC<{
     <>
       <IonLabel className="text-heading">
         {props.title}
-        <small className="small-print">
+        <small className="small-print" style={{ lineHeight: "1.2em" }}>
           {" "}
           by {displayName}
           <br />
