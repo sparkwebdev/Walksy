@@ -258,56 +258,58 @@ const Walking: React.FC = () => {
           )}
         </div>
         {addBarVisible && (
-          <IonCard className="moment-panel ion-no-margin ion-padding-bottom">
-            <IonCardContent className="constrain constrain--medium">
-              <IonGrid>
-                <IonRow>
-                  <IonCol
-                    onClick={() => {
-                      addMomentHandler("Audio");
-                    }}
-                  >
-                    <h3 className="moment-panel__label text-heading ion-text-center">
-                      <strong>Audio</strong>
-                    </h3>
-                    <img
-                      className="moment-panel__icon"
-                      src="assets/img/icon-audio.svg"
-                      alt=""
-                    />
-                  </IonCol>
-                  <IonCol
-                    onClick={() => {
-                      addMomentHandler("Photo");
-                    }}
-                  >
-                    <h3 className="moment-panel__label text-heading ion-text-center">
-                      <strong>Photo</strong>
-                    </h3>
-                    <img
-                      className="moment-panel__icon"
-                      src="assets/img/icon-camera.svg"
-                      alt=""
-                    />
-                  </IonCol>
-                  <IonCol
-                    onClick={() => {
-                      addMomentHandler("Note");
-                    }}
-                  >
-                    <h3 className="moment-panel__label text-heading ion-text-center">
-                      <strong>Note</strong>
-                    </h3>
-                    <img
-                      className="moment-panel__icon"
-                      src="assets/img/icon-note.svg"
-                      alt=""
-                    />
-                  </IonCol>
-                </IonRow>
-              </IonGrid>
-            </IonCardContent>
-          </IonCard>
+          <div className="moment-panel">
+            <IonCard className="moment-panel__card ion-no-margin ion-padding-bottom">
+              <IonCardContent className="constrain constrain--medium">
+                <IonGrid>
+                  <IonRow>
+                    <IonCol
+                      onClick={() => {
+                        addMomentHandler("Audio");
+                      }}
+                    >
+                      <h3 className="moment-panel__label text-heading ion-text-center">
+                        <strong>Audio</strong>
+                      </h3>
+                      <img
+                        className="moment-panel__icon"
+                        src="assets/img/icon-audio.svg"
+                        alt=""
+                      />
+                    </IonCol>
+                    <IonCol
+                      onClick={() => {
+                        addMomentHandler("Photo");
+                      }}
+                    >
+                      <h3 className="moment-panel__label text-heading ion-text-center">
+                        <strong>Photo</strong>
+                      </h3>
+                      <img
+                        className="moment-panel__icon"
+                        src="assets/img/icon-camera.svg"
+                        alt=""
+                      />
+                    </IonCol>
+                    <IonCol
+                      onClick={() => {
+                        addMomentHandler("Note");
+                      }}
+                    >
+                      <h3 className="moment-panel__label text-heading ion-text-center">
+                        <strong>Note</strong>
+                      </h3>
+                      <img
+                        className="moment-panel__icon"
+                        src="assets/img/icon-note.svg"
+                        alt=""
+                      />
+                    </IonCol>
+                  </IonRow>
+                </IonGrid>
+              </IonCardContent>
+            </IonCard>
+          </div>
         )}
       </IonContent>
       {!end && (
