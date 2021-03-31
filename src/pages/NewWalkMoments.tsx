@@ -18,7 +18,7 @@ import { Location, Photo } from "../data/models";
 import WalksContext from "../data/walks-context";
 import NewWalkMomentsOutput from "../components/NewWalkMomentsOutput";
 import { close as cancelIcon, add as addIcon } from "ionicons/icons";
-import ImagePickerNew from "../components/ImagePickerNew";
+import ImagePickerNew from "../components/ImagePicker";
 import { base64FromPath } from "@ionic/react-hooks/filesystem";
 import { Filesystem, FilesystemDirectory } from "@capacitor/core";
 
