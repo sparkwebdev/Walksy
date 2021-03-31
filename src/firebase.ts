@@ -3,7 +3,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { Plugins } from "@capacitor/core";
-import { Moment, UserProfile, Walk } from './data/models';
+import { UserProfile } from './data/models';
 
 const { Storage } = Plugins;
 

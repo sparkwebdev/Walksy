@@ -10,7 +10,6 @@ import {
   IonInput,
   IonLabel,
   IonRow,
-  IonTitle,
 } from "@ionic/react";
 import React, { useContext, useEffect, useState } from "react";
 import {

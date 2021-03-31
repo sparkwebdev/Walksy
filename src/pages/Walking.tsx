@@ -14,7 +14,6 @@ import {
   IonAlert,
   IonFab,
   IonFabButton,
-  IonFabList,
   IonCardContent,
   IonCard,
 } from "@ionic/react";
@@ -34,14 +33,11 @@ import {
   close as cancelIcon,
   // map as mapIcon,
   add as addIcon,
-  image as photoIcon,
-  mic as audioIcon,
-  chatbubbleEllipses as noteIcon,
 } from "ionicons/icons";
 import NewWalkMoments from "./NewWalkMoments";
 import PageHeader from "../components/PageHeader";
 import ProgressOverview from "../components/ProgressOverview";
-import { handleStoreWalk, handleStoreMoment } from "../firebase";
+import { handleStoreWalk } from "../firebase";
 
 const { Geolocation } = Plugins;
 
