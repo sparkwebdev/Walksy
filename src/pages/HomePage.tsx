@@ -60,7 +60,8 @@ const HomePage: React.FC = () => {
       .collection("users-moments")
       .limit(4)
       .where("imagePath", "!=", "");
-    return momentsRef.orderBy("imagePath").onSnapshot(({ docs }) => {
+    // return momentsRef.orderBy("timestamp").onSnapshot(({ docs }) => {
+    return momentsRef.onSnapshot(({ docs }) => {
       setMoments(docs.map(toMoment));
     });
   }, []);
@@ -69,8 +70,8 @@ const HomePage: React.FC = () => {
     const walksRef = firestore.collection("users-walks");
     return walksRef
       .where("type", "==", "user")
-      .limit(12)
       .orderBy("start")
+      .limit(12)
       .onSnapshot(({ docs }) => {
         setLatestUserWalks(docs.map(toWalk));
       });
@@ -240,7 +241,7 @@ const HomePage: React.FC = () => {
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
               <IonList>
-                {featuredWalks.map((walk) => (
+                {latestUserWalks.map((walk) => (
                   <IonItem
                     className="ion-no-margin"
                     routerLink={`/app/walk/${walk.id}`}

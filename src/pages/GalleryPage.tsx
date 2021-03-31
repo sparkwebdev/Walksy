@@ -13,7 +13,7 @@ const GalleryPage: React.FC = () => {
       .collection("users-moments")
       .limit(25)
       .where("imagePath", "!=", "");
-    return momentsRef.orderBy("imagePath").onSnapshot(({ docs }) => {
+    return momentsRef.onSnapshot(({ docs }) => {
       setMoments(docs.map(toMoment));
     });
   }, []);
