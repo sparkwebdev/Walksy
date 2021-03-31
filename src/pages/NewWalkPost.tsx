@@ -77,10 +77,7 @@ const NewWalkPost: React.FC<{
 
   return (
     <>
-      <IonCardContent
-        className="constrain constrain--medium"
-        style={{ margin: "auto" }}
-      >
+      <IonCardContent style={{ margin: "auto" }}>
         {coverImage && !chosenCoverImage && (
           <>
             <div className="ion-text-center ion-padding ion-margin-top">
@@ -162,6 +159,7 @@ const NewWalkPost: React.FC<{
                       onClick={() => {
                         chooseKeywordHandler(keyword);
                       }}
+                      key={keyword}
                     >
                       {keyword}
                     </IonBadge>
@@ -222,7 +220,7 @@ const NewWalkPost: React.FC<{
               alt=""
               style={{ maxHeight: "22vh" }}
             />
-            <IonTitle className="title text-heading">Well done!</IonTitle>
+            <h2 className="title text-heading">Well done!</h2>
             <p className="small-print">Would you like to share this walk?</p>
             <IonGrid>
               <IonRow>
