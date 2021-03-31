@@ -152,6 +152,7 @@ const Walking: React.FC = () => {
   };
 
   const addMomentHandler = (type: string) => {
+    setAddBarVisible(false);
     setMomentType(type);
   };
 

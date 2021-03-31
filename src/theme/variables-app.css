@@ -338,6 +338,7 @@ ion-tab-button ion-label {
   position: absolute;
   bottom: 0;
   width: 100%;
+  z-index: 1;
 }
 
 .moment-panel__label {
