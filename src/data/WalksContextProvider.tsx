@@ -3,10 +3,12 @@ import React, { useEffect, useState } from "react";
 import { Plugins } from "@capacitor/core";
 import WalksContext from "./walks-context";
 import { Walk, Moment, Location } from "../data/models";
+import { handleStoreMoment } from "../firebase";
 const { Storage } = Plugins;
 
 const WalksContextProvider: React.FC = (props) => {
   const [walk, setWalk] = useState<Walk | {}>({});
+  const [storedWalkId, setStoredWalkId] = useState<string>("");
   const [moments, setMoments] = useState<Moment[]>([]);
 
   useEffect(() => {
@@ -17,10 +19,25 @@ const WalksContextProvider: React.FC = (props) => {
     Storage.set({ key: "moments", value: JSON.stringify(moments) });
   }, [moments]);
 
+  useEffect(() => {
+    if (storedWalkId !== "") {
+      Storage.get({ key: "userProfile" }).then((data) => {
+        const userData = data.value ? JSON.parse(data.value) : null;
+        if (userData.userId) {
+          storeMoments(userData.userId);
+        }
+      });
+      resetWalk();
+    }
+  }, [storedWalkId]);
+
   const updateWalk = async (data: {}) => {
     const newWalk = { ...walk, ...data };
-
     setWalk(newWalk);
+  };
+
+  const updateWalkIdForStorage = (walkId: string) => {
+    setStoredWalkId(walkId);
   };
 
   const addMoment = (
@@ -47,22 +64,53 @@ const WalksContextProvider: React.FC = (props) => {
   };
 
   const deleteMoment = (momentId: string) => {
-    console.log("should delete Moment: ", momentId);
+    setMoments((curMoments) => {
+      const remainingMoments = curMoments.filter(
+        (moment) => moment.id !== momentId
+      );
+      return remainingMoments;
+    });
+  };
+
+  const storeMoments = async (userId: string) => {
+    if (storedWalkId !== "" && userId) {
+      moments.forEach((moment) => {
+        handleStoreMoment(moment, storedWalkId, userId)
+          .then(() => {
+            deleteMoment(moment.id);
+          })
+          .catch((e) => {
+            console.log("Problem storing moment", e);
+          });
+      });
+    }
+    if (moments.length === 0) {
+      setStoredWalkId("");
+    }
+  };
+
+  const resetWalk = () => {
+    setWalk({});
   };
 
   const reset = () => {
     setWalk({});
     setMoments([]);
+    setStoredWalkId("");
   };
 
   return (
     <WalksContext.Provider
       value={{
         walk,
+        storedWalkId,
+        updateWalkIdForStorage,
         moments,
         updateWalk,
         addMoment,
         deleteMoment,
+        storeMoments,
+        resetWalk,
         reset,
       }}
     >
