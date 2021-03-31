@@ -97,7 +97,9 @@ const MomentsList: React.FC<{
             )}
             {moment.note && (
               <IonCard className="moments-list__note text-body ion-no-margin">
-                {moment.note}
+                {moment.note.split("\n").map((str) => (
+                  <p>{str}</p>
+                ))}
               </IonCard>
             )}
           </li>
