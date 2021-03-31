@@ -39,6 +39,7 @@ import {
 import NewWalkMoments from "./NewWalkMoments";
 import PageHeader from "../components/PageHeader";
 import ProgressOverview from "../components/ProgressOverview";
+import { handleStoreWalk, handleStoreMoment } from "../firebase";
 
 const { Geolocation } = Plugins;
 
@@ -148,18 +149,18 @@ const Walking: React.FC = () => {
 
   const saveShareWalkHandler = async (share: boolean) => {
     setLoading(true);
-    try {
-      const storedWalkId = "fakeId";
-      console.log("should save to remote");
-      setLoading(false);
-      history.push({
-        pathname: `/app/walk/${storedWalkId}`,
-        state: { share: share },
+    const storedWalkId = await handleStoreWalk(walksCtx.walk)
+      .then((storedWalkId) => {
+        walksCtx.updateWalkIdForStorage(storedWalkId!);
+        setLoading(false);
+        history.push({
+          pathname: `/app/walk/${storedWalkId}`,
+          state: { share: share },
+        });
+      })
+      .catch(() => {
+        setLoading(false);
       });
-    } catch (error) {
-      setLoading(false);
-      console.log("Could not save walk");
-    }
   };
 
   if (!loggedIn || Object.keys(walksCtx.walk).length === 0) {
