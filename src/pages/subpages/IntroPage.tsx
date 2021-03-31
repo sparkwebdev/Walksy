@@ -108,10 +108,9 @@ const Intro: React.FC = () => {
                 <span>Join in recording your Nearby</span>
               </h3>
               <p className="text-body">
-                Be a part of recording our local environments, of the places we
-                love and value, that shape our collective outdoors. You can add
-                images, sounds or notes to form your walks, whilst monitoring
-                your distance&nbsp;&amp;&nbsp;steps.
+                Join in creating this library of walks that shape our collective
+                outdoors. You can add images, sounds or notes to form your
+                walks, whilst monitoring your distance&nbsp;&amp;&nbsp;steps.
               </p>
             </div>
           </IonSlide>
