@@ -21,7 +21,7 @@ import {
   IonSelectOption,
   IonToggle,
 } from "@ionic/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   auth,
   getRemoteUserData,
@@ -35,9 +35,11 @@ import PageHeader from "../components/PageHeader";
 import { Storage } from "@capacitor/core";
 import { formatDate } from "../helpers";
 import { UserPreferences } from "../data/models";
+import WalksContext from "../data/walks-context";
 
 const SettingsPage: React.FC = () => {
   const { userId, userCreatedAt, userEmail } = useAuth();
+  const walksCtx = useContext(WalksContext);
 
   const [displayName, setDisplayName] = useState("");
   const [firstName, setFirstName] = useState("");
@@ -150,6 +152,7 @@ const SettingsPage: React.FC = () => {
   const [logoutAlert, setLogoutAlert] = useState(false);
 
   const logoutHandler = () => {
+    walksCtx.reset();
     Storage.remove({ key: "userProfile" });
     auth.signOut();
   };
