@@ -17,7 +17,6 @@ import {
   IonToolbar,
   IonButtons,
 } from "@ionic/react";
-import "./IntroPage.css";
 
 const Intro: React.FC = () => {
   const [onLastSlide, setOnLastSlide] = useState(false);

@@ -20,17 +20,13 @@ import "@ionic/react/css/display.css";
 
 /* Theme variables */
 import "./theme/variables.css";
-import "./theme/variables-app.css";
-import "./theme/global.css";
+import "./theme/theme.css";
 import WalksContextProvider from "./data/WalksContextProvider";
-import MemoriesContextProvider from "./data/MemoriesContextProvider";
 
 ReactDOM.render(
-  <MemoriesContextProvider>
-    <WalksContextProvider>
-      <App />
-    </WalksContextProvider>
-  </MemoriesContextProvider>,
+  <WalksContextProvider>
+    <App />
+  </WalksContextProvider>,
   document.getElementById("root")
 );
 

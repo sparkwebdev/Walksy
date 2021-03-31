@@ -12,7 +12,6 @@ import {
   IonText,
 } from "@ionic/react";
 import PageHeader from "../components/PageHeader";
-import "./DiscoverPage.css";
 import { firestore } from "../firebase";
 import { Walk, toWalk } from "../data/models";
 import { appData } from "../data/appData";

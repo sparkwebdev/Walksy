@@ -71,7 +71,7 @@ export const syncUserProfileToLocal = async (userId: string) => {
   return entriesRef;
 }
 
-export const handleStoreWalk = async (walkData: {}) => {
+export const storeWalkHandler = async (walkData: {}) => {
   const walksRef = firestore.collection("users-walks");
   try {
     const walkId = await walksRef
@@ -88,10 +88,10 @@ export const handleStoreWalk = async (walkData: {}) => {
   }
 }
 
-export const handleStoreMoment = async (moment: Moment, walkId: string, userId: string) => {
+export const storeMomentHandler = async (moment: Moment, walkId: string, userId: string) => {
   let momentToStore: Moment = {...moment};
   if (moment.imagePath !== "") {
-    await handleStoreFile(moment.imagePath).then((newUrl) => {
+    await storeFilehandler(moment.imagePath).then((newUrl) => {
       momentToStore = {
         ...moment,
         imagePath: newUrl
@@ -114,7 +114,7 @@ export const handleStoreMoment = async (moment: Moment, walkId: string, userId: 
     })
 };
 
-export const handleStoreFile = async (blobUrl: string) => {
+export const storeFilehandler = async (blobUrl: string) => {
   const fileInputRef = storage.ref(`/moments/${Date.now()}`);
   const response = await fetch(blobUrl);
   const blob = await response.blob();

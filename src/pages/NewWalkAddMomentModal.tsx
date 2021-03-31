@@ -17,7 +17,7 @@ import {
 } from "@ionic/react";
 import React, { useEffect, useRef, useState } from "react";
 import { checkmark as finishIcon, close as cancelIcon } from "ionicons/icons";
-import { handleStoreFile as savePicture } from "../firebase";
+import { storeFilehandler as savePicture } from "../firebase";
 import {
   Camera,
   CameraResultType,

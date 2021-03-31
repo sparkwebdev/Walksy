@@ -17,7 +17,6 @@ import {
   shareOutline as shareIcon,
 } from "ionicons/icons";
 import { Moment } from "../data/models";
-import "./NewWalkPost.css";
 import { appData } from "../data/appData";
 import WalksContext from "../data/walks-context";
 

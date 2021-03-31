@@ -1,6 +1,5 @@
 import { IonCard, IonIcon, IonGrid, IonRow, IonCol } from "@ionic/react";
 import React, { useEffect, useState } from "react";
-import "./Progress.css";
 import {
   timerOutline as timeIcon,
   arrowUpCircleOutline as distanceIcon,

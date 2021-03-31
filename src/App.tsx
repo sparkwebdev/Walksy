@@ -5,9 +5,9 @@ import AppTabs from "./AppTabs";
 import { Redirect, Route, Switch } from "react-router";
 import { AuthContext, useAuthInit } from "./auth";
 
-import IntroPage from "./pages/subpages/IntroPage";
-import LoginPage from "./pages/subpages/LoginPage";
-import RegisterPage from "./pages/subpages/RegisterPage";
+import IntroPage from "./pages/IntroPage";
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import Walking from "./pages/Walking";
 

@@ -40,17 +40,14 @@ export function formatDateTime(isoString: string) {
   });
 }
 
-// export function parseISOString(s: string) {
-//   var b = s.split(/\D+/);
-//   return new Date(Date.UTC(b[0], --b[1], b[2], b[3], b[4], b[5], b[6]));
-// }
-
 /* User preferences functions */
 export function getUnitDistance() {
   const unit: string = "km";
   return unit;
 }
 
+
+/* Date/time functions */
 export function getMinAndSec(totalSeconds: number) {
   let minutes: number = Math.floor(totalSeconds / 60);
   let seconds: number = totalSeconds % 60;
@@ -95,6 +92,8 @@ export function getFriendlyTimeOfDay() {
   return day;
 }
 
+
+/* Content Generator functions */
 export function getFriendlyWalkDescriptor() {
   const descriptor: string[] = [
     "stroll",
@@ -149,6 +148,7 @@ export function hslToHex(h: number, s: number, l: number) {
   return `#${f(0)}${f(8)}${f(4)}`;
 }
 
+/* Map and Geo functions */
 export function getDistanceBetweenPoints(
   start: { lat: number; long: number },
   end: { lat: number; long: number },

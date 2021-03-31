@@ -17,7 +17,6 @@ import {
   IonCardContent,
   IonCard,
 } from "@ionic/react";
-import "../components/ImagePicker.css";
 import { Plugins } from "@capacitor/core";
 import Progress from "../components/Progress";
 import { Redirect, useLocation } from "react-router-dom";
@@ -37,7 +36,7 @@ import {
 import NewWalkMoments from "./NewWalkMoments";
 import PageHeader from "../components/PageHeader";
 import ProgressOverview from "../components/ProgressOverview";
-import { handleStoreWalk } from "../firebase";
+import { storeWalkHandler } from "../firebase";
 
 const { Geolocation } = Plugins;
 
@@ -154,7 +153,7 @@ const Walking: React.FC = () => {
 
   const saveShareWalkHandler = async (share: boolean) => {
     setLoading(true);
-    const storedWalkId = await handleStoreWalk(walksCtx.walk)
+    const storedWalkId = await storeWalkHandler(walksCtx.walk)
       .then((storedWalkId) => {
         walksCtx.updateWalkIdForStorage(storedWalkId!);
         setLoading(false);

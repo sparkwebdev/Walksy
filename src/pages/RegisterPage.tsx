@@ -22,13 +22,13 @@ import {
 import React, { useEffect, useState } from "react";
 import { Redirect } from "react-router";
 import { Plugins } from "@capacitor/core";
-import { useAuth } from "../../auth";
-import { auth, createUserProfile } from "../../firebase";
+import { useAuth } from "../auth";
+import { auth, createUserProfile } from "../firebase";
 import { eye as eyeIcon, eyeOff as eyeOffIcon } from "ionicons/icons";
-import PageHeader from "../../components/PageHeader";
-import CompleteProfile from "../../components/CompleteProfile";
-import TermsAndConditions from "../../components/TermsAndConditions";
-import { UserPreferences } from "../../data/models";
+import PageHeader from "../components/PageHeader";
+import CompleteProfile from "../components/CompleteProfile";
+import TermsAndConditions from "../components/TermsAndConditions";
+import { UserPreferences } from "../data/models";
 
 const { Storage } = Plugins;
 

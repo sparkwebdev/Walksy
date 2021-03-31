@@ -2,12 +2,10 @@ import React, { useEffect, useState } from "react";
 import { formatDate, getMinAndSec, getTimeDiff } from "../helpers";
 import { IonBadge, IonCol, IonGrid, IonRow, IonText } from "@ionic/react";
 
-import "./WalkItem.css";
 import { getUnitDistance } from "../helpers";
 
 import { Moment, toMoment } from "../data/models";
 
-// import { playCircleOutline as playIcon } from "ionicons/icons";
 import { firestore, getRemoteUserData } from "../firebase";
 import MomentsList from "./MomentsList";
 import { useAuth } from "../auth";

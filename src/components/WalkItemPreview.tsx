@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { formatDate, getMinAndSec, getTimeDiff } from "../helpers";
 import { IonBadge, IonCard, IonCardContent, IonText } from "@ionic/react";
 
-import "./WalkItem.css";
 import { getUnitDistance } from "../helpers";
 import { getRemoteUserData } from "../firebase";
 import { useAuth } from "../auth";

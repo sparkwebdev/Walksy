@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Plugins } from "@capacitor/core";
 import WalksContext from "./walks-context";
 import { Walk, Moment, Location } from "../data/models";
-import { handleStoreMoment } from "../firebase";
+import { storeMomentHandler } from "../firebase";
 const { Storage } = Plugins;
 
 const WalksContextProvider: React.FC = (props) => {
@@ -75,7 +75,7 @@ const WalksContextProvider: React.FC = (props) => {
   const storeMoments = async (userId: string) => {
     if (storedWalkId !== "" && userId) {
       moments.forEach((moment) => {
-        handleStoreMoment(moment, storedWalkId, userId)
+        storeMomentHandler(moment, storedWalkId, userId)
           .then(() => {
             deleteMoment(moment.id);
           })

@@ -20,9 +20,9 @@ import {
 } from "@ionic/react";
 import React, { useRef, useState } from "react";
 import { Redirect } from "react-router";
-import { useAuth } from "../../auth";
-import { auth, syncUserProfileToLocal } from "../../firebase";
-import PageHeader from "../../components/PageHeader";
+import { useAuth } from "../auth";
+import { auth, syncUserProfileToLocal } from "../firebase";
+import PageHeader from "../components/PageHeader";
 import { eye as eyeIcon, eyeOff as eyeOffIcon } from "ionicons/icons";
 
 const LoginPage: React.FC = () => {

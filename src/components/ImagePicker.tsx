@@ -1,34 +1,41 @@
-import React, { useState, useRef, forwardRef } from "react";
-import { IonText } from "@ionic/react";
+import React, {
+  useState,
+  useRef,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import {
   Plugins,
   CameraResultType,
   CameraSource,
   Capacitor,
 } from "@capacitor/core";
-import { Photo } from "../data/models";
 
-import "./ImagePicker.css";
+export interface Photo {
+  path: string | undefined;
+  preview: string;
+}
 
 const { Camera } = Plugins;
 
 const ImagePicker: React.FC<{
   onImagePick: (photo: Photo) => void;
-  ref: any;
+  onCancel?: () => void;
+  ref?: any;
 }> = forwardRef((props, ref) => {
-  const [takenPhoto, setTakenPhoto] = useState<Photo | null>();
+  const [takenPhoto, setTakenPhoto] = useState<Photo>();
 
   const filePickerRef = useRef<HTMLInputElement>(null);
+
+  useImperativeHandle(ref, () => ({
+    triggerTakePhoto() {
+      takePhotoHandler();
+    },
+  }));
 
   const openFilePicker = () => {
     filePickerRef.current!.click();
   };
-
-  React.useImperativeHandle(ref, () => ({
-    imageResetHandler: () => {
-      console.log("imageResetHandler");
-    },
-  }));
 
   const pickFileHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target!.files![0];
@@ -54,7 +61,7 @@ const ImagePicker: React.FC<{
         resultType: CameraResultType.Uri,
         source: CameraSource.Prompt,
         quality: 80,
-        width: 800,
+        width: 740,
       });
 
       if (!photo || !photo.webPath) {
@@ -67,31 +74,30 @@ const ImagePicker: React.FC<{
       setTakenPhoto(pickedPhoto);
       props.onImagePick(pickedPhoto);
     } catch (error) {
-      openFilePicker();
+      if (props.onCancel) {
+        props.onCancel();
+      }
     }
   };
 
   return (
-    <React.Fragment>
-      <div className="image-picker" onClick={takePhotoHandler}>
-        {!takenPhoto && (
-          <IonText className="image-picker__label">No photo chosen</IonText>
-        )}
-        {takenPhoto && (
-          <img
-            className="image-picker__preview"
-            src={takenPhoto.preview}
-            alt="Preview"
-          />
-        )}
-      </div>
+    <div
+      onClick={takePhotoHandler}
+      className={
+        takenPhoto
+          ? "image-preview-container image-preview-container--with-image"
+          : "image-preview-container"
+      }
+    >
+      {!takenPhoto && <p className="text-body small-print">No photo chosen.</p>}
+      {takenPhoto && <img src={takenPhoto.preview} alt="Preview" />}
       <input
         type="file"
         hidden
         ref={filePickerRef}
         onChange={pickFileHandler}
       />
-    </React.Fragment>
+    </div>
   );
 });
 
