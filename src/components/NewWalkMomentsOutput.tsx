@@ -4,14 +4,16 @@ import React, { useContext } from "react";
 import WalksContext from "../data/walks-context";
 import MomentsList from "./MomentsList";
 
-const NewWalkMomentsOutput: React.FC = () => {
+const NewWalkMomentsOutput: React.FC<{
+  colour: string;
+}> = (props) => {
   const walksCtx = useContext(WalksContext);
   return (
     <IonGrid>
       <IonRow>
         <IonCol size="12" className="ion-text-center">
           {walksCtx.moments.length > 0 ? (
-            <MomentsList moments={walksCtx.moments} />
+            <MomentsList moments={walksCtx.moments} colour={props.colour} />
           ) : (
             <div
               style={{ margin: "auto" }}

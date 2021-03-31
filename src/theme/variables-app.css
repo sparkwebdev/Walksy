@@ -189,9 +189,9 @@ ion-tab-button ion-label {
   display: block;
 }
 .moments-list__note {
-  padding: 1.6em 1.6em 1.6em 2em;
-  font-size: 1.1em !important;
-  line-height: 1.75em !important;
+  padding: 1em 1em 1em 1.6em;
+  font-size: 0.95em !important;
+  line-height: 1.5em !important;
   text-align: left;
 }
 .moments-list__note::first-letter {

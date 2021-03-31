@@ -26,10 +26,11 @@ const noteMaxLength = 280;
 
 const NewWalkMoments: React.FC<{
   walkId: string;
+  colour: string;
   momentType: string;
   resetMomentType: () => void;
   getLocation: () => Promise<Location | null>;
-}> = ({ walkId, momentType, resetMomentType, getLocation }) => {
+}> = ({ walkId, colour, momentType, resetMomentType, getLocation }) => {
   const walksCtx = useContext(WalksContext);
 
   // const imagePathRef = useRef<HTMLIonInputElement>(null);
@@ -124,7 +125,7 @@ const NewWalkMoments: React.FC<{
       className="constrain constrain--large"
       style={{ margin: "auto" }}
     >
-      <NewWalkMomentsOutput />
+      <NewWalkMomentsOutput colour={colour} />
 
       <IonModal
         backdrop-dismiss="false"

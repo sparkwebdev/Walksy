@@ -225,6 +225,7 @@ const Walking: React.FC = () => {
               {/* Add Moment */}
               <NewWalkMoments
                 walkId={walkId}
+                colour={colour}
                 momentType={momentType}
                 resetMomentType={() => {
                   setMomentType("");
