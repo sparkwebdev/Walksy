@@ -247,6 +247,7 @@ const HomePage: React.FC = () => {
                     style={{
                       borderLeft: `solid 10px ${walk.colour}`,
                     }}
+                    key={walk.id}
                   >
                     <WalkItemPreviewMini
                       title={walk.title}

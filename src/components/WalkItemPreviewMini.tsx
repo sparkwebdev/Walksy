@@ -30,9 +30,12 @@ const WalkItemPreviewMini: React.FC<{
     <>
       <IonLabel className="text-heading">
         {props.title}
-        <small className="small-print"> by {displayName}</small>
-        <br />
         <small className="small-print">
+          {" "}
+          by {displayName}
+          <br />
+          {props.description}
+          <br />
           {formatDate(props.start, false)}
           {props.distance && (
             <span>
@@ -42,7 +45,6 @@ const WalkItemPreviewMini: React.FC<{
           )}
         </small>
       </IonLabel>
-      <IonNote>{props.description}</IonNote>
     </>
   );
 };
