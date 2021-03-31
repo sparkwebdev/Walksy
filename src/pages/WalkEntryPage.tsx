@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { IonContent, IonPage } from "@ionic/react";
+import React, { useContext, useEffect, useState } from "react";
+import { IonAlert, IonContent, IonPage } from "@ionic/react";
 import PageHeader from "../components/PageHeader";
 import WalkItem from "../components/WalkItem";
 import { useParams } from "react-router";
 import { firestore } from "../firebase";
 import { toWalk, Walk } from "../data/models";
+import WalksContext from "../data/walks-context";
 
 interface RouteParams {
   id: string;
 }
 
 const WalkEntryPage: React.FC = () => {
+  const walksCtx = useContext(WalksContext);
   const { id } = useParams<RouteParams>();
   const [walk, setWalk] = useState<Walk>();
 
@@ -41,6 +43,12 @@ const WalkEntryPage: React.FC = () => {
           />
         </div>
       </IonContent>
+      <IonAlert
+        header={"Saving your moments..."}
+        subHeader={`${walksCtx.moments.length} to go`}
+        isOpen={walksCtx.moments.length > 0}
+        backdropDismiss={false}
+      />
     </IonPage>
   );
 };
