@@ -71,29 +71,35 @@ export const syncUserProfileToLocal = async (userId: string) => {
   return entriesRef;
 }
 
-export const handleStoreWalk = async (walkData: Walk, moments: Moment[]) => {
+export const handleStoreWalk = async (walkData: {}) => {
   const walksRef = firestore.collection("users-walks");
-  let walkId;
-  await walksRef
+  try {
+    const walkId = await walksRef
     .add({
       ...walkData,
     })
     .then((data) => {
-      walkId = data.id;
-      moments.forEach((moment) => {
-        handleSaveMoment(moment, data.id, walkData.userId);
-      });
+      return data.id;
     });
     return walkId;
+  } catch (error) {
+    console.log("Error saving walk to storage");
+    return null;
+  }
 }
 
-const handleSaveMoment = async (moment: any, walkId: string, userId: string) => {
+export const handleStoreMoment = async (moment: any, walkId: string, userId: string) => {
   const momentsRef = firestore.collection("users-moments");
   await momentsRef
     .add({
       ...moment,
       walkId,
       userId,
+    }).then((result) => {
+      return result;
+    }).catch(() => {
+      console.log("Error storing moment");
+      return null;
     })
 };
 
