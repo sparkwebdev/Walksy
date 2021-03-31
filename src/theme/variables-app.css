@@ -333,3 +333,17 @@ ion-tab-button ion-label {
 .grid--thirds .walk-item img {
   height: 16vh;
 }
+
+.moment-panel {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+.moment-panel__label {
+  font-size: 1.2em !important;
+}
+
+.moment-panel__icon {
+  max-height: 85px;
+}

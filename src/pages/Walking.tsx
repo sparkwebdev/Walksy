@@ -15,6 +15,8 @@ import {
   IonFab,
   IonFabButton,
   IonFabList,
+  IonCardContent,
+  IonCard,
 } from "@ionic/react";
 import "../components/ImagePicker.css";
 import { Plugins } from "@capacitor/core";
@@ -60,6 +62,7 @@ const Walking: React.FC = () => {
 
   const history = useHistory();
   const [showPrompt, setShowPrompt] = useState(true);
+  const [addBarVisible, setAddBarVisible] = useState(false);
 
   // Global (View) states
   const [loading, setLoading] = useState<boolean>(false);
@@ -143,7 +146,12 @@ const Walking: React.FC = () => {
     setDistance(distance);
   };
 
-  const fabButtonHandler = (type: string) => {
+  const showAddBarHandler = () => {
+    setShowPrompt(false);
+    setAddBarVisible(!addBarVisible);
+  };
+
+  const addMomentHandler = (type: string) => {
     setMomentType(type);
   };
 
@@ -181,47 +189,9 @@ const Walking: React.FC = () => {
             {walksCtx.moments.length < 1 && showPrompt && (
               <div className="tooltip text-body">Add a moment...</div>
             )}
-
-            <IonFabButton
-              onClick={() => {
-                setShowPrompt(false);
-              }}
-            >
+            <IonFabButton onClick={showAddBarHandler} activated={addBarVisible}>
               <IonIcon icon={addIcon} />
             </IonFabButton>
-            <IonFabList
-              side="start"
-              style={{ transform: "translate(-5px, -45px)" }}
-            >
-              <IonFabButton
-                color="dark"
-                style={{ transform: "scale(1.2)" }}
-                onClick={() => fabButtonHandler("Audio")}
-              >
-                <IonIcon icon={audioIcon} />
-              </IonFabButton>
-            </IonFabList>
-            <IonFabList side="top" style={{ transform: "translateY(-25px)" }}>
-              <IonFabButton
-                color="dark"
-                style={{ transform: "scale(1.2)" }}
-                onClick={() => fabButtonHandler("Note")}
-              >
-                <IonIcon icon={noteIcon} />
-              </IonFabButton>
-            </IonFabList>
-            <IonFabList
-              side="end"
-              style={{ transform: "translate(5px, -45px)" }}
-            >
-              <IonFabButton
-                color="dark"
-                style={{ transform: "scale(1.2)" }}
-                onClick={() => fabButtonHandler("Photo")}
-              >
-                <IonIcon icon={photoIcon} />
-              </IonFabButton>
-            </IonFabList>
           </IonFab>
         )}
         <div
@@ -286,6 +256,58 @@ const Walking: React.FC = () => {
             </>
           )}
         </div>
+        {addBarVisible && (
+          <IonCard className="moment-panel ion-no-margin ion-padding-bottom">
+            <IonCardContent className="constrain constrain--medium">
+              <IonGrid>
+                <IonRow>
+                  <IonCol
+                    onClick={() => {
+                      addMomentHandler("Audio");
+                    }}
+                  >
+                    <h3 className="moment-panel__label text-heading ion-text-center">
+                      <strong>Audio</strong>
+                    </h3>
+                    <img
+                      className="moment-panel__icon"
+                      src="assets/img/icon-audio.svg"
+                      alt=""
+                    />
+                  </IonCol>
+                  <IonCol
+                    onClick={() => {
+                      addMomentHandler("Photo");
+                    }}
+                  >
+                    <h3 className="moment-panel__label text-heading ion-text-center">
+                      <strong>Photo</strong>
+                    </h3>
+                    <img
+                      className="moment-panel__icon"
+                      src="assets/img/icon-camera.svg"
+                      alt=""
+                    />
+                  </IonCol>
+                  <IonCol
+                    onClick={() => {
+                      addMomentHandler("Note");
+                    }}
+                  >
+                    <h3 className="moment-panel__label text-heading ion-text-center">
+                      <strong>Note</strong>
+                    </h3>
+                    <img
+                      className="moment-panel__icon"
+                      src="assets/img/icon-note.svg"
+                      alt=""
+                    />
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+            </IonCardContent>
+          </IonCard>
+        )}
       </IonContent>
       {!end && (
         <IonCardHeader
