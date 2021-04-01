@@ -41,7 +41,7 @@ const MomentItemPreview: React.FC<{
             )}
             {walk?.description && (
               <p>
-                <strong>{walk.description}</strong>
+                <strong>{walk.description.join(", ")}</strong>
               </p>
             )}
           </IonText>

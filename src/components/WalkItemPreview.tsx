@@ -6,7 +6,6 @@ import {
   IonCardContent,
   IonIcon,
   IonItem,
-  IonList,
   IonText,
 } from "@ionic/react";
 
@@ -21,13 +20,14 @@ import {
 const WalkItemPreview: React.FC<{
   title?: string;
   colour?: string;
-  description?: string;
+  description?: [];
   start?: string;
   end?: string;
   steps?: number;
   distance?: number;
   coverImage?: string;
   type?: string;
+  overview?: string;
   userId?: string;
 }> = (props) => {
   const { userId } = useAuth();
@@ -55,88 +55,107 @@ const WalkItemPreview: React.FC<{
 
   return (
     <>
-      <IonCard className="walk-item ion-no-margin">
-        {props.coverImage && (
-          <img
-            className="walk-item__cover-image"
-            src={props.coverImage}
-            alt={props.title}
-            width="400"
-            height="300"
-          />
-        )}
-        {props.type && props.type !== "user" && (
-          <IonBadge
-            className="ion-text-uppercase walk-item__type"
-            color={props.type === "curated" ? "secondary" : "primary"}
+      <IonCard className="ion-no-margin">
+        <div className="walk-item">
+          {props.coverImage && (
+            <img
+              className="walk-item__cover-image"
+              src={props.coverImage}
+              alt={props.title}
+              width="400"
+              height="300"
+            />
+          )}
+          {props.type && props.type !== "user" && (
+            <IonBadge
+              className="ion-text-uppercase walk-item__type"
+              color={props.type === "curated" ? "secondary" : "primary"}
+            >
+              {props.type}
+            </IonBadge>
+          )}
+          {profilePic && (
+            <img
+              src={profilePic}
+              alt=""
+              className="walk-item__profile-badge profile-badge__image profile-badge__image--small"
+              width="40"
+              height="40"
+            />
+          )}
+          <IonCardContent
+            className="walk-item__content ion-no-padding ion-no-margin"
+            style={{
+              borderBottom: "solid 6px " + props.colour,
+            }}
           >
-            {props.type}
-          </IonBadge>
-        )}
-        {profilePic && (
-          <img
-            src={profilePic}
-            alt=""
-            className="walk-item__profile-badge profile-badge__image profile-badge__image--small"
-            width="40"
-            height="40"
-          />
-        )}
-        <IonCardContent
-          className="walk-item__content ion-no-padding ion-no-margin"
-          style={{
-            borderBottom: "solid 6px " + props.colour,
-          }}
-        >
-          <IonItem className="ion-item-transparent" lines="none" detail={true}>
-            <IonText className="text-heading" color="light">
-              <h2>
-                <strong>{props.title}</strong>
-              </h2>
-              <p className="text-body">
-                {props.userId !== userId && (
-                  <>
-                    by {displayName}
-                    <br />
-                  </>
-                )}
-                <span className="ion-text-uppercase">
-                  {props.start && formatDate(props.start, false)}
-                </span>
-                {props.distance && props.distance > 0.1 && (
-                  <span>
-                    , {props.distance.toFixed(2)} {getUnitDistance()}
-                  </span>
-                )}
-                {props.description && <span> — {props.description}</span>}
-              </p>
-              {props.userId === userId &&
-                props.steps &&
-                props.steps > 0 &&
-                time &&
-                time["min"] > 0 && (
-                  <IonText
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      marginTop: "5px",
-                    }}
-                  >
-                    <IonIcon icon={walkIcon} />
-                    &nbsp;
-                    {props.steps}&nbsp;
-                    <span className="smallprint">steps</span>
-                    <span style={{ marginLeft: "10px" }}>
-                      <IonIcon icon={timeIcon} />
-                      &nbsp;
-                      {time["min"]}&nbsp;
-                      <span className="smallprint">min</span>
+            <IonItem
+              className="ion-item-transparent"
+              lines="none"
+              detail={true}
+            >
+              <IonText className="text-heading" color="light">
+                <h2>
+                  <strong>{props.title}</strong>
+                </h2>
+                <p className="text-body">
+                  {props.userId !== userId && (
+                    <>
+                      by {displayName}
+                      <br />
+                    </>
+                  )}
+                  {props.type !== "curated" && (
+                    <span className="ion-text-uppercase">
+                      {props.start && formatDate(props.start, false)}, 
                     </span>
-                  </IonText>
-                )}
-            </IonText>
+                  )}
+                  {props.distance && props.distance > 0.1 && (
+                    <span>
+                      {props.distance.toFixed(2)} {getUnitDistance()}
+                    </span>
+                  )}
+                  {props.description && (
+                    <span> — {props.description.join("")}</span>
+                  )}
+                </p>
+                {props.userId === userId &&
+                  props.steps &&
+                  props.steps > 0 &&
+                  time &&
+                  time["min"] > 0 && (
+                    <IonText
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        marginTop: "5px",
+                      }}
+                    >
+                      <IonIcon icon={walkIcon} />
+                      &nbsp;
+                      {props.steps}&nbsp;
+                      <span className="smallprint">steps</span>
+                      <span style={{ marginLeft: "10px" }}>
+                        <IonIcon icon={timeIcon} />
+                        &nbsp;
+                        {time["min"]}&nbsp;
+                        <span className="smallprint">min</span>
+                      </span>
+                    </IonText>
+                  )}
+              </IonText>
+            </IonItem>
+          </IonCardContent>
+        </div>
+        {props.overview && (
+          <IonItem className="walk-item__overview" lines="none" detail={true}>
+            <p className="text-heading">
+              {props.overview.length > 110
+                ? `${props.overview.substring(0, 110)}...`
+                : props.overview}
+            </p>
           </IonItem>
-        </IonCardContent>
+        )}
       </IonCard>
     </>
   );

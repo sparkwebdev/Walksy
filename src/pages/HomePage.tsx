@@ -26,13 +26,15 @@ import {
   analyticsOutline as discoverIcon,
   footstepsOutline as walkIcon,
   timeOutline as dashboardIcon,
+  peopleOutline as personIcon,
 } from "ionicons/icons";
 
 const HomePage: React.FC = () => {
   const { userId } = useAuth();
   const [loading, setLoading] = useState<boolean>(true);
   const [latestWalk, setLatestWalk] = useState<Walk[]>([]);
-  const [featuredWalks, setFeaturedWalks] = useState<Walk[]>([]);
+  const [curatedWalks, setCuratedWalks] = useState<Walk[]>([]);
+  const [featuredWalk, setFeaturedWalk] = useState<Walk[]>([]);
   const [moments, setMoments] = useState<Moment[]>([]);
   const [latestUserWalks, setLatestUserWalks] = useState<Walk[]>([]);
 
@@ -49,27 +51,24 @@ const HomePage: React.FC = () => {
 
   useEffect(() => {
     const walksRef = firestore.collection("users-walks");
-    return (
-      walksRef
-        .where("type", "not-in", ["user"])
-        // .limit(2)
-        // .orderBy("start")
-        .onSnapshot(({ docs }) => {
-          setFeaturedWalks(docs.map(toWalk));
-        })
-    );
+    return walksRef
+      .where("type", "==", "curated")
+      .limit(2)
+      .orderBy("start")
+      .onSnapshot(({ docs }) => {
+        setCuratedWalks(docs.map(toWalk));
+      });
   }, []);
 
   useEffect(() => {
-    const momentsRef = firestore
-      .collection("users-moments")
-      .limit(25)
-      .where("imagePath", "!=", "");
-    // return momentsRef.orderBy("timestamp").onSnapshot(({ docs }) => {
-    return momentsRef.onSnapshot(({ docs }) => {
-      const shuffled = docs.sort(() => 0.5 - Math.random());
-      setMoments(shuffled.slice(0, 3).map(toMoment));
-    });
+    const walksRef = firestore.collection("users-walks");
+    return walksRef
+      .where("type", "==", "featured")
+      .limit(1)
+      .orderBy("start")
+      .onSnapshot(({ docs }) => {
+        setFeaturedWalk(docs.map(toWalk));
+      });
   }, []);
 
   useEffect(() => {
@@ -81,6 +80,19 @@ const HomePage: React.FC = () => {
       .onSnapshot(({ docs }) => {
         setLatestUserWalks(docs.map(toWalk));
       });
+  }, []);
+
+  useEffect(() => {
+    const momentsRef = firestore
+      .collection("users-moments")
+      .limit(30)
+      .orderBy("timestamp");
+    return momentsRef.onSnapshot(({ docs }) => {
+      const momentsWithImages = docs
+        .map(toMoment)
+        .filter((moment) => moment.imagePath !== "");
+      setMoments(momentsWithImages.slice(0, 9));
+    });
   }, []);
 
   return (
@@ -110,7 +122,7 @@ const HomePage: React.FC = () => {
               marginBottom: "30px",
             }}
           >
-            <IonButton routerLink="/app/new-walk" color="secondary">
+            <IonButton routerLink="/app/new-walk" color="success">
               <IonIcon icon={walkIcon} slot="start" />
               Start a walk
             </IonButton>
@@ -120,7 +132,7 @@ const HomePage: React.FC = () => {
             <>
               <h2 className="text-heading ion-padding-start ion-padding-end">
                 <IonText color="primary">
-                  <strong>Your latest walk...</strong>
+                  <strong>Your latest walk</strong>
                 </IonText>
               </h2>
               {latestWalk.map((walk) => (
@@ -145,6 +157,7 @@ const HomePage: React.FC = () => {
               <IonButton
                 className="ion-margin-top ion-margin-bottom ion-margin-start"
                 routerLink="/app/dashboard"
+                // color="secondary"
               >
                 <IonIcon icon={dashboardIcon} slot="start" />
                 View Dashboard
@@ -152,11 +165,11 @@ const HomePage: React.FC = () => {
             </>
           )}
 
-          {featuredWalks.length > 0 && (
+          {curatedWalks.length > 0 && (
             <>
               <h2 className="text-heading ion-padding-start ion-padding-end">
                 <IonText color="primary">
-                  <strong>Featured Walks...</strong>
+                  <strong>Curated Walks...</strong>
                 </IonText>
               </h2>
               <p
@@ -166,7 +179,52 @@ const HomePage: React.FC = () => {
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
-              {featuredWalks.map((walk) => (
+              {curatedWalks.map((walk) => (
+                <IonRouterLink
+                  className="ion-no-margin ion-no-padding"
+                  key={walk.id}
+                  routerLink={`/app/walk/${walk.id}`}
+                >
+                  <WalkItemPreview
+                    title={walk.title}
+                    colour={walk.colour}
+                    description={walk.description}
+                    start={walk.start}
+                    end={walk.end}
+                    steps={walk.steps}
+                    distance={walk.distance}
+                    coverImage={walk.coverImage}
+                    type={walk.type}
+                    overview={walk.overview}
+                    userId={walk.userId}
+                  />
+                </IonRouterLink>
+              ))}
+              <IonButton
+                className="ion-margin-top ion-margin-bottom ion-margin-start"
+                routerLink="/app/discover"
+              >
+                <IonIcon icon={discoverIcon} slot="start" />
+                Discover Walks
+              </IonButton>
+            </>
+          )}
+
+          {latestUserWalks.length > 0 && (
+            <div className="ion-margin-bottom ion-padding-bottom">
+              <h2 className="text-heading ion-padding-start ion-padding-end">
+                <IonText color="primary">
+                  <strong>Latest User Walks...</strong>
+                </IonText>
+              </h2>
+              <p
+                className="text-body small-print ion-padding-start ion-padding-end"
+                style={{ maxWidth: "32em" }}
+              >
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              </p>
+              {featuredWalk.map((walk) => (
                 <IonRouterLink
                   className="ion-no-margin ion-no-padding"
                   key={walk.id}
@@ -186,21 +244,45 @@ const HomePage: React.FC = () => {
                   />
                 </IonRouterLink>
               ))}
+              <IonList lines="none">
+                {latestUserWalks.map((walk) => (
+                  <IonItem
+                    className="ion-no-margin"
+                    routerLink={`/app/walk/${walk.id}`}
+                    style={{
+                      background: "rgba(255, 255, 255, 0.925)",
+                      borderBottom: `solid 5px ${walk.colour}`,
+                      lineHeight: "1.2",
+                      marginBottom: "10px",
+                    }}
+                    key={walk.id}
+                    detail={true}
+                  >
+                    <WalkItemPreviewMini
+                      title={walk.title}
+                      description={walk.description}
+                      start={walk.start}
+                      distance={walk.distance}
+                      userId={walk.userId}
+                    />
+                  </IonItem>
+                ))}
+              </IonList>
               <IonButton
-                className="ion-margin-top ion-margin-bottom ion-margin-start"
-                routerLink="/app/discover"
+                className="ion-margin-start"
+                routerLink="/app/dashboard"
               >
-                <IonIcon icon={discoverIcon} slot="start" />
-                Discover Walks
+                <IonIcon icon={personIcon} slot="start" />
+                Latest User Walks
               </IonButton>
-            </>
+            </div>
           )}
 
           {moments.length > 0 && (
             <>
               <h2 className="text-heading ion-padding-start ion-padding-end">
                 <IonText color="primary">
-                  <strong>User Moments...</strong>
+                  <strong>Latest User Moments...</strong>
                 </IonText>
               </h2>
               <p
@@ -236,46 +318,6 @@ const HomePage: React.FC = () => {
                 View Gallery
               </IonButton>
             </>
-          )}
-
-          {latestUserWalks.length > 0 && (
-            <div className="ion-margin-bottom ion-padding-bottom">
-              <h2 className="text-heading ion-padding-start ion-padding-end">
-                <IonText color="primary">
-                  <strong>Latest User Walks...</strong>
-                </IonText>
-              </h2>
-              <p
-                className="text-body small-print ion-padding-start ion-padding-end"
-                style={{ maxWidth: "32em" }}
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
-              <IonList lines="none">
-                {latestUserWalks.map((walk) => (
-                  <IonItem
-                    className="ion-no-margin"
-                    routerLink={`/app/walk/${walk.id}`}
-                    style={{
-                      background: "rgba(255, 255, 255, 0.925)",
-                      borderBottom: `solid 5px ${walk.colour}`,
-                      lineHeight: "1.2",
-                      marginBottom: "10px",
-                    }}
-                    key={walk.id}
-                  >
-                    <WalkItemPreviewMini
-                      title={walk.title}
-                      description={walk.description}
-                      start={walk.start}
-                      distance={walk.distance}
-                      userId={walk.userId}
-                    />
-                  </IonItem>
-                ))}
-              </IonList>
-            </div>
           )}
         </div>
       </IonContent>

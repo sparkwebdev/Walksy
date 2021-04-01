@@ -14,7 +14,7 @@ const WalkItem: React.FC<{
   id?: string;
   title?: string;
   colour?: string;
-  description?: string;
+  description?: [];
   start?: string;
   end?: string;
   steps?: number;
@@ -90,7 +90,7 @@ const WalkItem: React.FC<{
                 )}
                 {props.description && (
                   <p className="ion-no-margin small-print">
-                    <strong>{props.description}</strong>
+                    <strong>{props.description.join(", ")}</strong>
                   </p>
                 )}
               </IonText>

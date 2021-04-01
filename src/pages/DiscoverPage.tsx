@@ -9,7 +9,6 @@ import {
   IonGrid,
   IonPage,
   IonRow,
-  IonText,
 } from "@ionic/react";
 import PageHeader from "../components/PageHeader";
 import { firestore } from "../firebase";
@@ -19,7 +18,7 @@ const suggestedDescriptors = appData.suggestedDescriptors;
 const DiscoverPage: React.FC = () => {
   const [curatedWalksCount, setCuratedWalksCount] = useState<number>();
   const [featuredWalks, setFeaturedWalksCount] = useState<number>();
-  const [recentWalksCount, setRecentWalksCount] = useState<number>();
+  const [latestWalksCount, setLatestWalksCount] = useState<number>();
 
   useEffect(() => {
     const walksRef = firestore.collection("users-walks");
@@ -30,15 +29,12 @@ const DiscoverPage: React.FC = () => {
 
   useEffect(() => {
     const walksRef = firestore.collection("users-walks");
-    return (
-      walksRef
-        .where("type", "==", "featured")
-        // .limit(2)
-        // .orderBy("start")
-        .onSnapshot(({ docs }) => {
-          setFeaturedWalksCount(docs.length);
-        })
-    );
+    return walksRef
+      .where("type", "==", "featured")
+      .orderBy("start")
+      .onSnapshot(({ docs }) => {
+        setFeaturedWalksCount(docs.length);
+      });
   }, []);
 
   useEffect(() => {
@@ -48,7 +44,7 @@ const DiscoverPage: React.FC = () => {
       .limit(25)
       .orderBy("start")
       .onSnapshot(({ docs }) => {
-        setRecentWalksCount(docs.length);
+        setLatestWalksCount(docs.length);
       });
   }, []);
 
@@ -121,25 +117,25 @@ const DiscoverPage: React.FC = () => {
           </IonCard>
           <IonCard
             className="walk-card with-placeholder ion-no-margin"
-            routerLink="/app/discover/recent"
+            routerLink="/app/discover/latest"
           >
             <img
               className="walk-card__image"
-              src="assets/img/cover-recent-walks.jpg"
+              src="assets/img/cover-latest-walks.jpg"
               alt=""
               height="400"
               width="265"
             />
             <IonCardHeader className="walk-card__header">
               <IonCardTitle className="walk-card__title text-body">
-                Recent User Walks
+                Latest User Walks
                 <br />
                 <small>
                   Tempor incididunt ut labore et dolore magna aliqua.
                 </small>
               </IonCardTitle>
               <IonCardSubtitle className="walk-card__subtitle text-body">
-                {recentWalksCount}
+                {latestWalksCount}
               </IonCardSubtitle>
             </IonCardHeader>
           </IonCard>
@@ -151,9 +147,9 @@ const DiscoverPage: React.FC = () => {
           <IonCard className="ion-no-margin" style={{ background: "#777269" }}>
             <IonGrid className="grid grid--half ion-no-padding">
               <IonRow>
-                {suggestedDescriptors.map((keyword) => {
+                {suggestedDescriptors.map((keyword, index) => {
                   return (
-                    <IonCol>
+                    <IonCol key={keyword}>
                       <IonCard
                         className="walk-card with-placeholder ion-no-margin"
                         routerLink={`/app/discover/tag-${keyword}`}

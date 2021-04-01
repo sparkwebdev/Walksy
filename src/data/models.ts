@@ -27,7 +27,7 @@ export interface Walk {
   id: string;
   title: string;
   colour: string;
-  description: string;
+  description: [];
   start: string;
   end: string;
   steps: number;
@@ -36,6 +36,7 @@ export interface Walk {
   locations: Location[] | [];
   userId: string;
   type: "user" | "curated" | "featured";
+  overview: string;
 }
 
 export interface Location {

@@ -27,7 +27,7 @@ const NewWalkPost: React.FC<{
   saveShareWalk: (share: boolean) => void;
   moments: Moment[];
 }> = ({ saveShareWalk, moments }) => {
-  const [description, setDescription] = useState<string>("");
+  const [description, setDescription] = useState<string[]>([]);
   const [chosenDescription, setChosenDescription] = useState<boolean>(false);
   const [chosenCoverImage, setChosenCoverImage] = useState<boolean>(false);
   const [descriptors, setDescriptors] = useState<string[]>([]);
@@ -168,7 +168,9 @@ const NewWalkPost: React.FC<{
               <IonInput
                 type="text"
                 value={descriptors.join(", ")}
-                onIonChange={(event) => setDescription(event.detail!.value!)}
+                onIonChange={(event) =>
+                  setDescription(event.detail!.value!.split(", "))
+                }
                 className="input-text"
                 disabled={true}
               >

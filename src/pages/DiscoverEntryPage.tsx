@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   IonButton,
   IonContent,
+  IonIcon,
   IonList,
   IonPage,
   IonRouterLink,
@@ -11,6 +12,7 @@ import { firestore } from "../firebase";
 import { Walk, toWalk } from "../data/models";
 import WalkItemPreview from "../components/WalkItemPreview";
 import { useParams } from "react-router-dom";
+import { footstepsOutline as walkIcon } from "ionicons/icons";
 
 interface RouteParams {
   id: string;
@@ -26,8 +28,9 @@ const DiscoverEntryPage: React.FC = () => {
       case "nearby":
         // To Do
         break;
-      case "recent":
+      case "latest":
         walksRef
+          .where("type", "==", "user")
           .limit(25)
           .orderBy("start")
           .onSnapshot(({ docs }) => {
@@ -35,14 +38,19 @@ const DiscoverEntryPage: React.FC = () => {
           });
         break;
       case "curated":
-        walksRef.where("type", "==", ["curated"]).onSnapshot(({ docs }) => {
+        walksRef.where("type", "==", "curated").onSnapshot(({ docs }) => {
+          setWalks(docs.map(toWalk));
+        });
+        break;
+      case "featured":
+        walksRef.where("type", "==", "featured").onSnapshot(({ docs }) => {
           setWalks(docs.map(toWalk));
         });
         break;
       default:
         if (id.startsWith("tag-")) {
           return walksRef
-            .where("title", "array-contains", id)
+            .where("description", "array-contains", id)
             .orderBy("start")
             .limit(25)
             .onSnapshot(({ docs }) => {
@@ -52,9 +60,13 @@ const DiscoverEntryPage: React.FC = () => {
     }
   }, [id]);
 
+  const currentlyBrowsing = id.startsWith("tag-")
+    ? id.replace("tag-", "#")
+    : `'${id.charAt(0).toUpperCase() + id.slice(1)}'`;
+
   return (
     <IonPage>
-      <PageHeader title={`Browse ${id}`} back={true} />
+      <PageHeader title={`Browse ${currentlyBrowsing}`} back={true} />
       <IonContent>
         <div className="constrain constrain--large">
           <IonList inset={false}>
@@ -66,7 +78,10 @@ const DiscoverEntryPage: React.FC = () => {
                 <p className="text-body constrain constrain--small">
                   Please check back soon, or why not start your own walk?
                 </p>
-                <IonButton routerLink="/app/new-walk">Start a walk</IonButton>
+                <IonButton routerLink="/app/new-walk" color="success">
+                  <IonIcon icon={walkIcon} slot="start" />
+                  Start a walk
+                </IonButton>
               </div>
             ) : (
               <>
@@ -86,6 +101,7 @@ const DiscoverEntryPage: React.FC = () => {
                       distance={walk.distance}
                       coverImage={walk.coverImage}
                       type={walk.type}
+                      overview={walk.overview}
                       userId={walk.userId}
                     />
                   </IonRouterLink>

@@ -7,7 +7,7 @@ import { getRemoteUserData } from "../firebase";
 
 const WalkItemPreviewMini: React.FC<{
   title?: string;
-  description: string;
+  description: [];
   start: string;
   distance: number;
   userId: string;
@@ -62,7 +62,9 @@ const WalkItemPreviewMini: React.FC<{
                 , {props.distance.toFixed(2)} {getUnitDistance()}
               </span>
             )}
-            {props.description && <span> — {props.description}</span>}
+            {props.description && (
+              <span> — {props.description.join(", ")}</span>
+            )}
           </small>
         </div>
       </div>
