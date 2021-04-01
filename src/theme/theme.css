@@ -500,6 +500,11 @@ ion-tab-button ion-label {
   border-color: var(--ion-color-primary);
 }
 
+.with-placeholder {
+  background: url("/src/theme/img/placeholder.jpg");
+  background-size: cover;
+}
+
 .walk-card {
   position: relative;
 }
@@ -507,6 +512,7 @@ ion-tab-button ion-label {
 .walk-card__image {
   display: block;
   width: 100%;
+  height: auto;
 }
 
 .walk-card__header {
@@ -516,13 +522,25 @@ ion-tab-button ion-label {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-image: linear-gradient(
+    transparent,
+    rgba(20, 20, 20, 0.65),
+    rgba(20, 20, 20, 0.85)
+  );
+  padding-top: 80px;
 }
 
 .walk-card__title {
   color: var(--ion-color-medium) !important;
   font-weight: bold !important;
   font-size: 1.4rem !important;
-  padding: 5px 15px;
+  /* padding: 5px 15px; */
+  margin-bottom: 5px;
+  max-width: calc(100vw - 5em);
+}
+.walk-card__title small {
+  line-height: 1.6;
+  display: block;
 }
 
 .walk-card__title--small {
@@ -530,8 +548,9 @@ ion-tab-button ion-label {
   padding: 0;
 }
 .walk-card:nth-child(2n) .walk-card__header .walk-card__title {
-  order: 2;
+  /* order: 2;
   margin-left: auto;
+  text-align: right; */
 }
 .walk-card .walk-card__subtitle {
   color: var(--ion-color-medium) !important;

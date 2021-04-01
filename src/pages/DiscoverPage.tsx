@@ -13,28 +13,43 @@ import {
 } from "@ionic/react";
 import PageHeader from "../components/PageHeader";
 import { firestore } from "../firebase";
-import { Walk, toWalk } from "../data/models";
 import { appData } from "../data/appData";
 const suggestedDescriptors = appData.suggestedDescriptors;
 
 const DiscoverPage: React.FC = () => {
-  const [recentWalks, setRecentWalks] = useState<Walk[]>([]);
-  const [curatedWalks, setCuratedWalks] = useState<Walk[]>([]);
+  const [curatedWalksCount, setCuratedWalksCount] = useState<number>();
+  const [featuredWalks, setFeaturedWalksCount] = useState<number>();
+  const [recentWalksCount, setRecentWalksCount] = useState<number>();
+
+  useEffect(() => {
+    const walksRef = firestore.collection("users-walks");
+    return walksRef.where("type", "==", "curated").onSnapshot(({ docs }) => {
+      setCuratedWalksCount(docs.length);
+    });
+  }, []);
+
+  useEffect(() => {
+    const walksRef = firestore.collection("users-walks");
+    return (
+      walksRef
+        .where("type", "==", "featured")
+        // .limit(2)
+        // .orderBy("start")
+        .onSnapshot(({ docs }) => {
+          setFeaturedWalksCount(docs.length);
+        })
+    );
+  }, []);
 
   useEffect(() => {
     const walksRef = firestore.collection("users-walks");
     return walksRef
+      .where("type", "==", "user")
       .limit(25)
       .orderBy("start")
       .onSnapshot(({ docs }) => {
-        setRecentWalks(docs.map(toWalk));
+        setRecentWalksCount(docs.length);
       });
-  }, []);
-  useEffect(() => {
-    const walksRef = firestore.collection("users-walks");
-    return walksRef.where("type", "==", ["curated"]).onSnapshot(({ docs }) => {
-      setCuratedWalks(docs.map(toWalk));
-    });
   }, []);
 
   return (
@@ -50,6 +65,8 @@ const DiscoverPage: React.FC = () => {
               className="walk-card__image"
               src="assets/img/cover-nearby-walks.jpg"
               alt=""
+              height="400"
+              width="265"
             />
             <IonCardHeader className="walk-card__header">
               <IonCardTitle className="walk-card__title text-body">
@@ -61,25 +78,7 @@ const DiscoverPage: React.FC = () => {
             </IonCardHeader>
           </IonCard> */}
           <IonCard
-            className="walk-card ion-no-margin"
-            routerLink="/app/discover/recent"
-          >
-            <img
-              className="walk-card__image"
-              src="assets/img/cover-recent-walks.jpg"
-              alt=""
-            />
-            <IonCardHeader className="walk-card__header">
-              <IonCardTitle className="walk-card__title text-body">
-                Recent Walks
-              </IonCardTitle>
-              <IonCardSubtitle className="walk-card__subtitle text-body">
-                {recentWalks.length}
-              </IonCardSubtitle>
-            </IonCardHeader>
-          </IonCard>
-          <IonCard
-            className="walk-card ion-no-margin"
+            className="walk-card with-placeholder ion-no-margin"
             routerLink="/app/discover/curated"
           >
             <img
@@ -90,17 +89,65 @@ const DiscoverPage: React.FC = () => {
             <IonCardHeader className="walk-card__header">
               <IonCardTitle className="walk-card__title text-body">
                 Curated Walks
+                <br />
+                <small>Lorem ipsum dolor sit amet, consectetur.</small>
               </IonCardTitle>
               <IonCardSubtitle className="walk-card__subtitle text-body">
-                {curatedWalks.length}
+                {curatedWalksCount}
               </IonCardSubtitle>
             </IonCardHeader>
           </IonCard>
-          <h2 className="text-heading ion-padding-start ion-padding-end">
+          <IonCard
+            className="walk-card with-placeholder ion-no-margin"
+            routerLink="/app/discover/featured"
+          >
+            <img
+              className="walk-card__image"
+              src="assets/img/cover-featured-walks.jpg"
+              alt=""
+              height="400"
+              width="265"
+            />
+            <IonCardHeader className="walk-card__header">
+              <IonCardTitle className="walk-card__title text-body">
+                Featured Walks
+                <br />
+                <small>Consectetur adipiscing elit, sed do eiusmod.</small>
+              </IonCardTitle>
+              <IonCardSubtitle className="walk-card__subtitle text-body">
+                {featuredWalks}
+              </IonCardSubtitle>
+            </IonCardHeader>
+          </IonCard>
+          <IonCard
+            className="walk-card with-placeholder ion-no-margin"
+            routerLink="/app/discover/recent"
+          >
+            <img
+              className="walk-card__image"
+              src="assets/img/cover-recent-walks.jpg"
+              alt=""
+              height="400"
+              width="265"
+            />
+            <IonCardHeader className="walk-card__header">
+              <IonCardTitle className="walk-card__title text-body">
+                Recent User Walks
+                <br />
+                <small>
+                  Tempor incididunt ut labore et dolore magna aliqua.
+                </small>
+              </IonCardTitle>
+              <IonCardSubtitle className="walk-card__subtitle text-body">
+                {recentWalksCount}
+              </IonCardSubtitle>
+            </IonCardHeader>
+          </IonCard>
+          {/* <h2 className="text-heading ion-padding-start ion-padding-end">
             <IonText color="primary">
               <strong>Browse tags...</strong>
             </IonText>
-          </h2>
+          </h2> */}
           <IonCard className="ion-no-margin" style={{ background: "#777269" }}>
             <IonGrid className="grid grid--half ion-no-padding">
               <IonRow>
@@ -108,13 +155,15 @@ const DiscoverPage: React.FC = () => {
                   return (
                     <IonCol>
                       <IonCard
-                        className="walk-card ion-no-margin"
+                        className="walk-card with-placeholder ion-no-margin"
                         routerLink={`/app/discover/tag-${keyword}`}
                       >
                         <img
                           className="walk-card__image"
                           src={`assets/img/cover-tag-${keyword}.jpg`}
                           alt=""
+                          height="240"
+                          width="159"
                           style={{ display: "block" }}
                         />
                         <IonCardHeader className="walk-card__header">
