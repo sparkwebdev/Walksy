@@ -179,6 +179,10 @@ ion-tab-button ion-label {
   width: 60px;
   height: 60px;
 }
+.profile-badge__image--smaller {
+  width: 45px;
+  height: 45px;
+}
 
 /* Walk */
 .sub-title {
@@ -290,14 +294,13 @@ ion-tab-button ion-label {
   display: block;
 }
 .moments-list__note {
-  padding: 1em 1em 1em 1.6em;
+  padding: 0.8em 1.3em 0.8em 1.6em;
   font-size: 0.95em !important;
   line-height: 1.5em !important;
   text-align: left;
 }
 .moments-list__note::first-letter {
-  font-size: 1.6em !important;
-  margin-right: 0.1em;
+  /* font-size: 1.3em !important; */
 }
 .moments-list-count {
   display: block;
@@ -620,10 +623,13 @@ ion-slides {
 .walk-item {
   position: relative;
 }
+.walk-item:not(.walk-item--image-only) {
+  margin-bottom: 16px;
+}
 
 .walk-item__cover-image {
   width: 100%;
-  height: 50vh;
+  height: 40vh;
   max-height: 400px;
 
   object-fit: cover;
@@ -729,18 +735,4 @@ ion-slides {
   justify-content: center;
   padding-top: 5vh;
   padding-bottom: 5vh;
-}
-.walk-item {
-  position: relative;
-}
-
-.walk-item__content {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.65);
-}
-.walk-item__content * {
-  color: var(--ion-color-dark-contrast);
 }

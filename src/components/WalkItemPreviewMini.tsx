@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { formatDate } from "../helpers";
-import { IonLabel, IonNote } from "@ionic/react";
+import { IonLabel } from "@ionic/react";
 
 import { getUnitDistance } from "../helpers";
 import { getRemoteUserData } from "../firebase";
@@ -13,6 +13,7 @@ const WalkItemPreviewMini: React.FC<{
   userId: string;
 }> = (props) => {
   const [displayName, setDisplayName] = useState<string>("");
+  const [profilePic, setProfilePic] = useState<string>("");
 
   useEffect(() => {
     if (props.userId) {
@@ -24,28 +25,43 @@ const WalkItemPreviewMini: React.FC<{
 
   const loadUserData = (userData: any) => {
     setDisplayName(userData?.displayName);
+    setProfilePic(userData?.profilePic);
   };
 
   return (
-    <>
-      <IonLabel className="text-heading">
-        {props.title}
-        <small className="small-print" style={{ lineHeight: "1.2em" }}>
-          {" "}
-          by {displayName}
-          <br />
-          {props.description}
-          <br />
-          {formatDate(props.start, false)}
-          {props.distance && (
-            <span>
-              {" "}
-              — {props.distance} {getUnitDistance()}
-            </span>
-          )}
-        </small>
-      </IonLabel>
-    </>
+    <IonLabel className="text-heading">
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
+        {profilePic && (
+          <img
+            src={profilePic}
+            alt=""
+            className="walk-item__profile-badge profile-badge__image profile-badge__image--smaller"
+            width="40"
+            height="40"
+            style={{ marginRight: "10px" }}
+          />
+        )}
+        <div>
+          {props.title}
+          <small className="small-print" style={{ lineHeight: "1.2em" }}>
+            <br /> by {displayName}
+            <br />
+            {formatDate(props.start, false)}
+            {props.distance > 0.1 && (
+              <span>
+                , {props.distance.toFixed(2)} {getUnitDistance()}
+              </span>
+            )}
+            {props.description && <span> — {props.description}</span>}
+          </small>
+        </div>
+      </div>
+    </IonLabel>
   );
 };
 

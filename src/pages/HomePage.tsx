@@ -7,13 +7,10 @@ import {
   IonRow,
   IonCol,
   IonText,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonCardContent,
   IonRouterLink,
   IonList,
   IonItem,
+  IonIcon,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../auth";
@@ -23,6 +20,12 @@ import WalkItemPreview from "../components/WalkItemPreview";
 import WalkItemPreviewMini from "../components/WalkItemPreviewMini";
 import { Moment, toMoment, toWalk, Walk } from "../data/models";
 import { firestore } from "../firebase";
+import {
+  eyeOutline as browseIcon,
+  analyticsOutline as discoverIcon,
+  footstepsOutline as walkIcon,
+  timeOutline as dashboardIcon,
+} from "ionicons/icons";
 
 const HomePage: React.FC = () => {
   const { userId } = useAuth();
@@ -71,7 +74,7 @@ const HomePage: React.FC = () => {
     return walksRef
       .where("type", "==", "user")
       .orderBy("start")
-      .limit(12)
+      .limit(6)
       .onSnapshot(({ docs }) => {
         setLatestUserWalks(docs.map(toWalk));
       });
@@ -80,46 +83,39 @@ const HomePage: React.FC = () => {
   return (
     <IonPage>
       <PageHeader title="Welcome" />
-      <IonContent className="ion-padding-bottom">
+      <IonContent className="ion-padding">
         <div className="constrain constrain--large">
+          <div className="ion-text-center ion-margin-bottom">
+            <h2>
+              <span className="ion-hide">Walksy</span>
+              <img
+                className="logo"
+                src="assets/img/walksy-logo.svg"
+                alt=""
+                style={{
+                  maxHeight: "80px",
+                }}
+              />
+            </h2>
+            <h3 className="text-heading constrain constrain--small">
+              Walking &amp; recording your&nbsp;nearby.
+            </h3>
+          </div>
           <div
-            className="ion-text-center  ion-padding"
+            className="ion-text-center"
             style={{
-              marginTop: "20px",
-              marginBottom: "20px",
+              marginBottom: "30px",
             }}
           >
-            <img
-              className="logo"
-              src="assets/img/walksy-logo.svg"
-              alt=""
-              style={{
-                maxHeight: "80px",
-              }}
-            />
-            <h2 className="text-heading constrain constrain--small">
-              Walking &amp; recording your nearby.
-            </h2>
-            {latestWalk.length == 0 && (
-              <IonCard
-                className="ion-text-center"
-                color="secondary"
-                routerLink="/app/new-walk"
-              >
-                <IonCardHeader>
-                  <IonCardSubtitle>Get started...</IonCardSubtitle>
-                  <IonCardTitle>You haven't created a walk yet.</IonCardTitle>
-                </IonCardHeader>
-                <IonCardContent>
-                  <IonButton>Start a walk</IonButton>
-                </IonCardContent>
-              </IonCard>
-            )}
+            <IonButton routerLink="/app/new-walk" color="secondary">
+              <IonIcon icon={walkIcon} slot="start" />
+              Start a walk
+            </IonButton>
           </div>
 
           {latestWalk.length > 0 && (
             <>
-              <h2 className="text-heading ion-padding-start ion-padding-end">
+              <h2 className="text-heading">
                 <IonText color="primary">
                   <strong>Your latest walk...</strong>
                 </IonText>
@@ -143,25 +139,24 @@ const HomePage: React.FC = () => {
                   />
                 </IonRouterLink>
               ))}
-              <div className="ion-padding">
-                <IonButton routerLink="/app/dashboard">
-                  View Dashboard
-                </IonButton>
-              </div>
+              <IonButton
+                className="ion-margin-bottom"
+                routerLink="/app/dashboard"
+              >
+                <IonIcon icon={dashboardIcon} slot="start" />
+                View Dashboard
+              </IonButton>
             </>
           )}
 
           {featuredWalks.length > 0 && (
             <>
-              <h2 className="text-heading ion-padding-start ion-padding-end">
+              <h2 className="text-heading">
                 <IonText color="primary">
                   <strong>Featured Walks...</strong>
                 </IonText>
               </h2>
-              <p
-                className="text-body small-print ion-padding-start ion-padding-end"
-                style={{ maxWidth: "32em" }}
-              >
+              <p className="text-body small-print" style={{ maxWidth: "32em" }}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
@@ -185,23 +180,24 @@ const HomePage: React.FC = () => {
                   />
                 </IonRouterLink>
               ))}
-              <div className="ion-padding">
-                <IonButton routerLink="/app/discover">Discover Walks</IonButton>
-              </div>
+              <IonButton
+                className="ion-margin-bottom"
+                routerLink="/app/discover"
+              >
+                <IonIcon icon={discoverIcon} slot="start" />
+                Discover Walks
+              </IonButton>
             </>
           )}
 
           {moments.length > 0 && (
             <>
-              <h2 className="text-heading ion-padding-start ion-padding-end">
+              <h2 className="text-heading">
                 <IonText color="primary">
-                  <strong>Latest User's Moments...</strong>
+                  <strong>Latest User Moments...</strong>
                 </IonText>
               </h2>
-              <p
-                className="text-body small-print ion-padding-start ion-padding-end"
-                style={{ maxWidth: "32em" }}
-              >
+              <p className="text-body small-print" style={{ maxWidth: "32em" }}>
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
@@ -223,14 +219,18 @@ const HomePage: React.FC = () => {
                   </IonRow>
                 </IonGrid>
               </IonCard>
-              <div className="ion-padding">
-                <IonButton routerLink="/app/gallery">View Gallery</IonButton>
-              </div>
+              <IonButton
+                className="ion-margin-top ion-margin-bottom"
+                routerLink="/app/gallery"
+              >
+                <IonIcon icon={browseIcon} slot="start" />
+                View Gallery
+              </IonButton>
             </>
           )}
 
           {latestUserWalks.length > 0 && (
-            <div className="ion-margin-bottom ion-padding-bottom ion-padding-start ion-padding-end">
+            <div className="ion-margin-bottom ion-padding-bottom">
               <h2 className="text-heading">
                 <IonText color="primary">
                   <strong>Latest User Walks...</strong>
@@ -240,13 +240,16 @@ const HomePage: React.FC = () => {
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
-              <IonList>
+              <IonList lines="none">
                 {latestUserWalks.map((walk) => (
                   <IonItem
                     className="ion-no-margin"
                     routerLink={`/app/walk/${walk.id}`}
                     style={{
-                      borderLeft: `solid 10px ${walk.colour}`,
+                      background: "rgba(255, 255, 255, 0.925)",
+                      borderBottom: `solid 5px ${walk.colour}`,
+                      lineHeight: "1.2",
+                      marginBottom: "10px",
                     }}
                     key={walk.id}
                   >

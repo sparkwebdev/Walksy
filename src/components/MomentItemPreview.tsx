@@ -19,7 +19,11 @@ const MomentItemPreview: React.FC<{
   }, [props.walkId]);
 
   return (
-    <div className="walk-item">
+    <div
+      className={
+        props.imageOnly ? "walk-item walk-item--image-only" : "walk-item"
+      }
+    >
       {props.coverImage && walk?.title && (
         <img
           className="walk-item__cover-image"

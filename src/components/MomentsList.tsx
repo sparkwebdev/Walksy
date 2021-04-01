@@ -10,7 +10,7 @@ import {
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { Moment } from "../data/models";
-import { map as mapIcon } from "ionicons/icons";
+import { analyticsOutline as mapIcon } from "ionicons/icons";
 import MapWithMarkers from "./MapWithMarkers";
 
 const MomentsList: React.FC<{
