@@ -14,15 +14,10 @@ export const loadImage = async (imagePath: string) => {
 
 /* Date/time functions */
 export function formatDate(isoString: string, showYear: boolean = true) {
-  const format = showYear ? {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  } : {
-    day: "numeric",
-    month: "short",
+  if (showYear) {
+    return dayjs(isoString).format("D MMM 'YY");
   }
-  return new Date(isoString).toLocaleDateString("en-GB", format);
+  return dayjs(isoString).format("D MMM");
 }
 export function formatTime(isoString: string) {
   return new Date(isoString).toLocaleDateString("en-GB", {

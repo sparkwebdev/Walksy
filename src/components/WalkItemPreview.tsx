@@ -5,6 +5,8 @@ import {
   IonCard,
   IonCardContent,
   IonIcon,
+  IonItem,
+  IonList,
   IonText,
 } from "@ionic/react";
 
@@ -59,6 +61,8 @@ const WalkItemPreview: React.FC<{
             className="walk-item__cover-image"
             src={props.coverImage}
             alt={props.title}
+            width="400"
+            height="300"
           />
         )}
         {props.type && props.type !== "user" && (
@@ -79,57 +83,59 @@ const WalkItemPreview: React.FC<{
           />
         )}
         <IonCardContent
-          className="walk-item__content"
+          className="walk-item__content ion-no-padding ion-no-margin"
           style={{
             borderBottom: "solid 6px " + props.colour,
           }}
         >
-          <IonText className="text-heading">
-            <h2>
-              <strong>{props.title}</strong>
-            </h2>
-            <p className="small-print">
-              {props.userId !== userId && (
-                <>
-                  by {displayName}
-                  <br />
-                </>
-              )}
-              <span className="ion-text-uppercase">
-                {props.start && formatDate(props.start, false)}
-              </span>
-              {props.distance && props.distance > 0.1 && (
-                <span>
-                  , {props.distance.toFixed(2)} {getUnitDistance()}
+          <IonItem className="ion-item-transparent" lines="none" detail={true}>
+            <IonText className="text-heading" color="light">
+              <h2>
+                <strong>{props.title}</strong>
+              </h2>
+              <p className="text-body">
+                {props.userId !== userId && (
+                  <>
+                    by {displayName}
+                    <br />
+                  </>
+                )}
+                <span className="ion-text-uppercase">
+                  {props.start && formatDate(props.start, false)}
                 </span>
-              )}
-              {props.description && <span> — {props.description}</span>}
-            </p>
-          </IonText>
-          {props.userId === userId &&
-            props.steps &&
-            props.steps > 0 &&
-            time &&
-            time["min"] > 0 && (
-              <IonText
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginTop: "5px",
-                }}
-              >
-                <IonIcon icon={walkIcon} />
-                &nbsp;
-                {props.steps}&nbsp;
-                <span className="smallprint">steps</span>
-                <span style={{ marginLeft: "10px" }}>
-                  <IonIcon icon={timeIcon} />
-                  &nbsp;
-                  {time["min"]}&nbsp;
-                  <span className="smallprint">min</span>
-                </span>
-              </IonText>
-            )}
+                {props.distance && props.distance > 0.1 && (
+                  <span>
+                    , {props.distance.toFixed(2)} {getUnitDistance()}
+                  </span>
+                )}
+                {props.description && <span> — {props.description}</span>}
+              </p>
+              {props.userId === userId &&
+                props.steps &&
+                props.steps > 0 &&
+                time &&
+                time["min"] > 0 && (
+                  <IonText
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginTop: "5px",
+                    }}
+                  >
+                    <IonIcon icon={walkIcon} />
+                    &nbsp;
+                    {props.steps}&nbsp;
+                    <span className="smallprint">steps</span>
+                    <span style={{ marginLeft: "10px" }}>
+                      <IonIcon icon={timeIcon} />
+                      &nbsp;
+                      {time["min"]}&nbsp;
+                      <span className="smallprint">min</span>
+                    </span>
+                  </IonText>
+                )}
+            </IonText>
+          </IonItem>
         </IonCardContent>
       </IonCard>
     </>

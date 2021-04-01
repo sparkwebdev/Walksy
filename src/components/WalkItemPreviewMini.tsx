@@ -48,10 +48,15 @@ const WalkItemPreviewMini: React.FC<{
         )}
         <div>
           {props.title}
-          <small className="small-print" style={{ lineHeight: "1.2em" }}>
+          <small
+            className="small-print"
+            style={{ lineHeight: "1.2em", fontSize: "0.9em" }}
+          >
             <br /> by {displayName}
             <br />
-            {formatDate(props.start, false)}
+            <span className="ion-text-uppercase">
+              {formatDate(props.start, false)}
+            </span>
             {props.distance > 0.1 && (
               <span>
                 , {props.distance.toFixed(2)} {getUnitDistance()}

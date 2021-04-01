@@ -11,6 +11,7 @@ import {
   IonList,
   IonItem,
   IonIcon,
+  IonLoading,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../auth";
@@ -29,7 +30,7 @@ import {
 
 const HomePage: React.FC = () => {
   const { userId } = useAuth();
-
+  const [loading, setLoading] = useState<boolean>(true);
   const [latestWalk, setLatestWalk] = useState<Walk[]>([]);
   const [featuredWalks, setFeaturedWalks] = useState<Walk[]>([]);
   const [moments, setMoments] = useState<Moment[]>([]);
@@ -41,6 +42,7 @@ const HomePage: React.FC = () => {
       .limit(1)
       .where("userId", "==", userId);
     return walksRef.orderBy("start").onSnapshot(({ docs }) => {
+      setLoading(false);
       setLatestWalk(docs.map(toWalk));
     });
   }, [userId]);
@@ -61,11 +63,12 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const momentsRef = firestore
       .collection("users-moments")
-      .limit(4)
+      .limit(25)
       .where("imagePath", "!=", "");
     // return momentsRef.orderBy("timestamp").onSnapshot(({ docs }) => {
     return momentsRef.onSnapshot(({ docs }) => {
-      setMoments(docs.map(toMoment));
+      const shuffled = docs.sort(() => 0.5 - Math.random());
+      setMoments(shuffled.slice(0, 3).map(toMoment));
     });
   }, []);
 
@@ -83,7 +86,7 @@ const HomePage: React.FC = () => {
   return (
     <IonPage>
       <PageHeader title="Welcome" />
-      <IonContent className="ion-padding">
+      <IonContent>
         <div className="constrain constrain--large">
           <div className="ion-text-center ion-margin-bottom">
             <h2>
@@ -115,7 +118,7 @@ const HomePage: React.FC = () => {
 
           {latestWalk.length > 0 && (
             <>
-              <h2 className="text-heading">
+              <h2 className="text-heading ion-padding-start ion-padding-end">
                 <IonText color="primary">
                   <strong>Your latest walk...</strong>
                 </IonText>
@@ -140,7 +143,7 @@ const HomePage: React.FC = () => {
                 </IonRouterLink>
               ))}
               <IonButton
-                className="ion-margin-bottom"
+                className="ion-margin-top ion-margin-bottom ion-margin-start"
                 routerLink="/app/dashboard"
               >
                 <IonIcon icon={dashboardIcon} slot="start" />
@@ -151,12 +154,15 @@ const HomePage: React.FC = () => {
 
           {featuredWalks.length > 0 && (
             <>
-              <h2 className="text-heading">
+              <h2 className="text-heading ion-padding-start ion-padding-end">
                 <IonText color="primary">
                   <strong>Featured Walks...</strong>
                 </IonText>
               </h2>
-              <p className="text-body small-print" style={{ maxWidth: "32em" }}>
+              <p
+                className="text-body small-print ion-padding-start ion-padding-end"
+                style={{ maxWidth: "32em" }}
+              >
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
@@ -181,7 +187,7 @@ const HomePage: React.FC = () => {
                 </IonRouterLink>
               ))}
               <IonButton
-                className="ion-margin-bottom"
+                className="ion-margin-top ion-margin-bottom ion-margin-start"
                 routerLink="/app/discover"
               >
                 <IonIcon icon={discoverIcon} slot="start" />
@@ -192,12 +198,15 @@ const HomePage: React.FC = () => {
 
           {moments.length > 0 && (
             <>
-              <h2 className="text-heading">
+              <h2 className="text-heading ion-padding-start ion-padding-end">
                 <IonText color="primary">
-                  <strong>Latest User Moments...</strong>
+                  <strong>User Moments...</strong>
                 </IonText>
               </h2>
-              <p className="text-body small-print" style={{ maxWidth: "32em" }}>
+              <p
+                className="text-body small-print ion-padding-start ion-padding-end"
+                style={{ maxWidth: "32em" }}
+              >
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
@@ -205,7 +214,7 @@ const HomePage: React.FC = () => {
                 className="ion-no-margin"
                 style={{ background: "#777269" }}
               >
-                <IonGrid className="grid grid--half ion-no-padding">
+                <IonGrid className="grid grid--half grid--half-with-full ion-no-padding">
                   <IonRow>
                     {moments.map((moment) => (
                       <IonCol key={moment.id}>
@@ -220,7 +229,7 @@ const HomePage: React.FC = () => {
                 </IonGrid>
               </IonCard>
               <IonButton
-                className="ion-margin-top ion-margin-bottom"
+                className="ion-margin-top ion-margin-bottom ion-margin-start"
                 routerLink="/app/gallery"
               >
                 <IonIcon icon={browseIcon} slot="start" />
@@ -231,12 +240,15 @@ const HomePage: React.FC = () => {
 
           {latestUserWalks.length > 0 && (
             <div className="ion-margin-bottom ion-padding-bottom">
-              <h2 className="text-heading">
+              <h2 className="text-heading ion-padding-start ion-padding-end">
                 <IonText color="primary">
                   <strong>Latest User Walks...</strong>
                 </IonText>
               </h2>
-              <p className="text-body small-print" style={{ maxWidth: "32em" }}>
+              <p
+                className="text-body small-print ion-padding-start ion-padding-end"
+                style={{ maxWidth: "32em" }}
+              >
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
                 eiusmod tempor incididunt ut labore et dolore magna aliqua.
               </p>
@@ -267,6 +279,7 @@ const HomePage: React.FC = () => {
           )}
         </div>
       </IonContent>
+      <IonLoading isOpen={loading} />
     </IonPage>
   );
 };
