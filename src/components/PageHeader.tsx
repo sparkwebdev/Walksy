@@ -38,8 +38,8 @@ const PageHeader: React.FC<ContainerProps> = ({
         <IonTitle className="ion-text-center">{title}</IonTitle>
         {location.pathname === "/app/new-walk" && showTool && toolAction && (
           <IonButtons slot="start">
-            <IonButton>
-              <span onClick={toolAction}>{toolText}</span>
+            <IonButton onClick={toolAction}>
+              <span>{toolText}</span>
             </IonButton>
           </IonButtons>
         )}
