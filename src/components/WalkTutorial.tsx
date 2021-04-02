@@ -12,19 +12,22 @@ const WalkTutorial: React.FC<{
   onFinish: () => void;
 }> = ({ onFinish }) => {
   return (
-    <div className="centered-content centered-content--no-tabs">
-      <div className="constrain constrain--medium">
+    <div className="centered-content centered-content">
+      <div className="constrain constrain--medium ion-padding-start ion-padding-end">
         <IonSlides pager={true}>
           <IonSlide>
-            <IonTitle
+            <IonText
               className="title text-heading ion-margin-bottom"
-              color="tertiary"
+              color="primary"
+              style={{
+                fontSize: "1.2em",
+              }}
             >
               <strong>Getting Started</strong>
-            </IonTitle>
-            <IonCardTitle className="title text-heading constrain constrain--small">
+            </IonText>
+            <IonCardTitle className="title text-heading constrain constrain--medium">
               <IonText color="tertiary">
-                What do you notice as you walk?
+                What do you notice as&nbsp;you&nbsp;walk?
               </IonText>
             </IonCardTitle>
             <p className="text-body">
@@ -39,14 +42,17 @@ const WalkTutorial: React.FC<{
             <img
               src="assets/img/icon-camera.svg"
               alt=""
-              style={{ maxHeight: "100px" }}
+              style={{ maxHeight: "80px" }}
             />
-            <IonTitle
+            <IonText
               className="title text-heading ion-margin-bottom"
-              color="tertiary"
+              color="primary"
+              style={{
+                fontSize: "1.2em",
+              }}
             >
               <strong>Adding Moments: Photos</strong>
-            </IonTitle>
+            </IonText>
             <IonCardTitle className="title text-heading constrain constrain--small">
               <IonText color="tertiary">
                 What catches your eye as you walk?
@@ -66,14 +72,17 @@ const WalkTutorial: React.FC<{
             <img
               src="assets/img/icon-audio.svg"
               alt=""
-              style={{ maxHeight: "100px" }}
+              style={{ maxHeight: "80px" }}
             />
-            <IonTitle
+            <IonText
               className="title text-heading ion-margin-bottom"
-              color="tertiary"
+              color="primary"
+              style={{
+                fontSize: "1.2em",
+              }}
             >
               <strong>Adding Moments: Audio</strong>
-            </IonTitle>
+            </IonText>
             <IonCardTitle className="title text-heading constrain constrain--small">
               <IonText color="tertiary">Listen, and what do you hear?</IonText>
             </IonCardTitle>
@@ -92,16 +101,24 @@ const WalkTutorial: React.FC<{
             <img
               src="assets/img/icon-note.svg"
               alt=""
-              style={{ maxHeight: "100px" }}
+              style={{ maxHeight: "80px" }}
             />
-            <IonTitle
+            <IonText
               className="title text-heading ion-margin-bottom"
-              color="tertiary"
+              color="primary"
+              style={{
+                fontSize: "1.15em",
+              }}
             >
               <strong>Adding Moments: Notes</strong>
-            </IonTitle>
+            </IonText>
             <IonCardTitle className="title text-heading constrain">
-              <IonText color="tertiary">
+              <IonText
+                color="tertiary"
+                style={{
+                  fontSize: "0.9em",
+                }}
+              >
                 Anything you want to note about today’s journey?
               </IonText>
             </IonCardTitle>
@@ -118,12 +135,12 @@ const WalkTutorial: React.FC<{
             </div>
           </IonSlide>
           <IonSlide>
-            <IonTitle
+            <IonText
               className="title text-heading ion-margin-bottom"
               color="tertiary"
             >
               <strong>Finishing Up</strong>
-            </IonTitle>
+            </IonText>
             <p className="text-body">
               Once you complete your walk, you’ll be able to add a short
               description about your walk, how it was or where you went. You can
