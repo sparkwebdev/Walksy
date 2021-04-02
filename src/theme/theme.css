@@ -267,8 +267,8 @@ ion-tab-button ion-label {
   content: "";
   position: absolute;
   top: 50%;
-  left: 15px;
-  width: 4px;
+  left: 14px;
+  width: 5px;
   height: calc(50% + 25px);
   background: currentColor;
   z-index: -1;
@@ -313,8 +313,8 @@ ion-tab-button ion-label {
   content: "";
   position: absolute;
   top: 50%;
-  left: 15px;
-  width: 4px;
+  left: 14px;
+  width: 5px;
   height: calc(50% + 25px);
   background: currentColor;
   z-index: -1;
@@ -712,8 +712,9 @@ ion-slides {
   max-height: calc(22vh + 12vw);
 }
 .walk-item__overview {
-  --background: #fff;
+  --background: rgba(255, 255, 255, 0.95);
   line-height: 1.4;
+  /* color: #fff; */
 }
 .walk-item__overview p {
   padding-right: 16px;

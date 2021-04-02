@@ -55,7 +55,16 @@ const WalkItemPreview: React.FC<{
 
   return (
     <>
-      <IonCard className="ion-no-margin">
+      <IonCard
+        className="ion-no-margin"
+        style={
+          props.overview
+            ? {
+                marginBottom: "8px",
+              }
+            : {}
+        }
+      >
         <div className="walk-item">
           {props.coverImage && (
             <img
@@ -116,7 +125,7 @@ const WalkItemPreview: React.FC<{
                     </span>
                   )}
                   {props.description && (
-                    <span> — {props.description.join("")}</span>
+                    <span> — {props.description.join(", ")}</span>
                   )}
                 </p>
                 {props.userId === userId &&

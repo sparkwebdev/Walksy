@@ -50,7 +50,7 @@ const DiscoverEntryPage: React.FC = () => {
       default:
         if (id.startsWith("tag-")) {
           return walksRef
-            .where("description", "array-contains", id)
+            .where("description", "array-contains", id.replace("tag-", ""))
             .orderBy("start")
             .limit(25)
             .onSnapshot(({ docs }) => {

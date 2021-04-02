@@ -91,9 +91,11 @@ const MomentsList: React.FC<{
               </IonCard>
             )}
             {moment.audioPath && (
-              <audio controls className="moments-list__audio">
-                <source src={moment.audioPath} type="audio/mpeg" />
-              </audio>
+              <IonCard className="moments-list__audio-container ion-no-margin ion-padding">
+                <audio controls className="moments-list__audio">
+                  <source src={moment.audioPath} type="audio/mpeg" />
+                </audio>
+              </IonCard>
             )}
             {moment.note && (
               <IonCard className="moments-list__note text-body ion-no-margin">
