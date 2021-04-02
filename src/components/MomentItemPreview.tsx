@@ -7,6 +7,7 @@ import { toWalk, Walk } from "../data/models";
 const MomentItemPreview: React.FC<{
   walkId?: string;
   imageOnly?: boolean;
+  showAuthor?: boolean;
   coverImage?: string;
 }> = (props) => {
   const [walk, setWalk] = useState<Walk>();
@@ -29,9 +30,11 @@ const MomentItemPreview: React.FC<{
           className="walk-item__cover-image"
           src={props.coverImage}
           alt={walk.title}
+          height="300"
+          width="400"
         />
       )}
-      {!props.imageOnly && (
+      {!props.imageOnly && !props.showAuthor && (
         <IonCardContent className="walk-item__content">
           <IonText className="text-heading">
             {walk?.title && (
