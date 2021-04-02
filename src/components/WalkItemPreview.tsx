@@ -103,8 +103,8 @@ const WalkItemPreview: React.FC<{
               lines="none"
               detail={true}
             >
-              <IonText className="text-heading" color="light">
-                <h2>
+              <IonText className="text-heading" color="medium">
+                <h2 style={{ fontSize: "1.2em" }}>
                   <strong>{props.title}</strong>
                 </h2>
                 <p className="text-body">
