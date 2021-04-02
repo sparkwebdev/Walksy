@@ -58,7 +58,6 @@ const GalleryPage: React.FC = () => {
       ) {
         return momentsGrouped[key].splice(0, 3);
       });
-      console.log(momentsGroupedArray);
       setMoments(momentsGroupedArray);
       setLoading(false);
     });
