@@ -26,24 +26,27 @@ const DashboardPage: React.FC = () => {
     <IonPage>
       <PageHeader title="My Walks" />
       <IonContent>
-        {walks.map((walk) => (
-          <IonRouterLink
-            className="ion-no-margin ion-no-padding"
-            key={walk.id}
-            routerLink={`/app/walk/${walk.id}`}
-          >
-            <WalkItemPreview
-              title={walk.title}
-              colour={walk.colour}
-              description={walk.description}
-              start={walk.start}
-              end={walk.end}
-              steps={walk.steps}
-              distance={walk.distance}
-              coverImage={walk.coverImage}
-            />
-          </IonRouterLink>
-        ))}
+        <div className="constrain constrain--large">
+          {walks.map((walk) => (
+            <IonRouterLink
+              className="ion-no-margin ion-no-padding"
+              key={walk.id}
+              routerLink={`/app/walk/${walk.id}`}
+            >
+              <WalkItemPreview
+                title={walk.title}
+                colour={walk.colour}
+                description={walk.description}
+                start={walk.start}
+                end={walk.end}
+                steps={walk.steps}
+                distance={walk.distance}
+                coverImage={walk.coverImage}
+                userId={userId}
+              />
+            </IonRouterLink>
+          ))}
+        </div>
       </IonContent>
     </IonPage>
   );
