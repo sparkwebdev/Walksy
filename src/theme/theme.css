@@ -812,3 +812,11 @@ ion-slides {
 .text-heading--banner * {
   color: var(--ion-color-primary-contrast) !important;
 }
+
+.page-header--with-colour {
+  --background: currentColor !important;
+}
+.page-header--with-colour ion-title {
+  color: #000;
+  /* text-shadow: 1px 1px 1px var(--ion-color-dark); */
+}

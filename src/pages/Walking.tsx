@@ -173,7 +173,7 @@ const Walking: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader title="New Walk" />
+      <PageHeader title={title} colour={colour} />
       <IonContent
         // scrollY={false}
         style={{

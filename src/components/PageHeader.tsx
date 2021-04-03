@@ -11,6 +11,7 @@ import { useLocation } from "react-router-dom";
 
 interface ContainerProps {
   title: string;
+  colour?: string;
   back?: boolean;
   showTool?: boolean;
   toolText?: string;
@@ -20,6 +21,7 @@ interface ContainerProps {
 
 const PageHeader: React.FC<ContainerProps> = ({
   title,
+  colour,
   back = false,
   showTool,
   toolText,
@@ -29,7 +31,18 @@ const PageHeader: React.FC<ContainerProps> = ({
   const location = useLocation();
   return (
     <IonHeader>
-      <IonToolbar>
+      <IonToolbar
+        style={
+          colour
+            ? {
+                color: colour,
+              }
+            : {}
+        }
+        className={
+          colour ? "page-header page-header--with-colour" : "page-header"
+        }
+      >
         {back && !showTool && (
           <IonButtons slot="start">
             <IonBackButton defaultHref={defaultHref} text="" />

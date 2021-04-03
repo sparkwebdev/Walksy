@@ -35,8 +35,8 @@ const NewWalkMomentsOutput: React.FC<{
                   marginTop: "10px",
                 }}
               >
-                Record anything that draws your attention, or that you see or
-                hear.
+                Record anything that draws your attention, or&nbsp;that you see
+                or hear.
               </p>
             </div>
           )}
