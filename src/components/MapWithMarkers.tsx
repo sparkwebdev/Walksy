@@ -81,7 +81,7 @@ const MapWithMarkers: React.FC<{
       geodesic: true,
       strokeColor: props.colour || "#00ccb4",
       strokeOpacity: 1.0,
-      strokeWeight: 2,
+      strokeWeight: 5,
     });
     walkPath.setMap(map);
   };
@@ -119,7 +119,7 @@ const MapWithMarkers: React.FC<{
                 url: getMapMarker(index),
                 scaledSize: new window.google.maps.Size(30, 30),
                 origin: new window.google.maps.Point(0, 0),
-                anchor: new window.google.maps.Point(15, 15),
+                anchor: new window.google.maps.Point(15, 30),
               }}
               onClick={() => {
                 setCenter({
@@ -174,6 +174,31 @@ const MapWithMarkers: React.FC<{
         }}
       >
         <IonGrid>
+          <IonRow>
+            <IonCol className="ion-text-center text-body small-print ion-align-items-center">
+              <img
+                src="./assets/icon/map_marker_start.svg"
+                alt=""
+                style={{
+                  height: "20px",
+                  marginRight: "3px",
+                  marginBottom: "-3px",
+                }}
+              />
+              = Start
+              <img
+                src="./assets/icon/map_marker_end.svg"
+                alt=""
+                style={{
+                  height: "20px",
+                  marginRight: "3px",
+                  marginLeft: "16px",
+                  marginBottom: "-3px",
+                }}
+              />
+              = End
+            </IonCol>
+          </IonRow>
           <IonRow>
             <IonCol size="8" offset="2">
               <IonButton expand="block" onClick={props.onDismiss}>
