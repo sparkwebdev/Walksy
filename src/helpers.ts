@@ -3,6 +3,11 @@ import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 dayjs.extend(isSameOrAfter);
 
+/* String functions */
+export const numberWithCommas = (x: string | number) => {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 /* File functions */
 export const loadImage = async (imagePath: string) => {
   const file = await Filesystem.readFile({
@@ -103,8 +108,8 @@ export function getFriendlyWalkDescriptor() {
 
 export function generateHslaColors(
   amount = 1,
-  saturation = 95,
-  lightness = 85,
+  saturation = 72,
+  lightness = 72,
   randomise = false
 ) {
   let colors = [];
