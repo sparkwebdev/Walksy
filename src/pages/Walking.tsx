@@ -197,18 +197,6 @@ const Walking: React.FC = () => {
             minHeight: "85%",
           }}
         >
-          {/* Header */}
-          <IonCardHeader
-            className="ion-no-padding"
-            style={{
-              backgroundColor: colour,
-            }}
-          >
-            <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
-              {title ? title : "Start your walk..."}
-            </IonCardSubtitle>
-          </IonCardHeader>
-
           {/* Walk In Progress view state */}
           {start && !end && (
             <>

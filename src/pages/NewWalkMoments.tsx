@@ -18,7 +18,7 @@ import { Location, Photo } from "../data/models";
 import WalksContext from "../data/walks-context";
 import NewWalkMomentsOutput from "../components/NewWalkMomentsOutput";
 import { close as cancelIcon, add as addIcon } from "ionicons/icons";
-import ImagePickerNew from "../components/ImagePicker";
+import ImagePicker from "../components/ImagePicker";
 import { base64FromPath } from "@ionic/react-hooks/filesystem";
 import { Filesystem, FilesystemDirectory } from "@capacitor/core";
 
@@ -140,113 +140,111 @@ const NewWalkMoments: React.FC<{
           }
         }}
       >
-        {momentType !== "" && (
-          <>
-            {momentType === "Photo" && (
-              <div
-                className="ion-padding ion-text-center"
-                style={{
-                  marginTop: "auto",
-                  overflow: "hidden",
-                  flex: "1 1 auto",
-                }}
-              >
-                <ImagePickerNew
-                  ref={imagePickerRef}
-                  onCancel={resetMomentType}
-                  onImagePick={photoPickHandler}
-                />
-              </div>
-            )}
-            {momentType === "Audio" && (
-              <IonRow>
-                <IonCol>
-                  <IonItem>
-                    <IonLabel position="floating">Moment Audio Path</IonLabel>
-                    <IonInput type="text" ref={audioPathRef}></IonInput>
-                  </IonItem>
-                </IonCol>
-              </IonRow>
-            )}
-            {(momentType === "Note" || takenPhoto) && (
-              <IonCard
-                style={
-                  takenPhoto
-                    ? { marginTop: "auto", flex: "1 0 auto" }
-                    : { marginTop: "auto" }
-                }
-              >
-                <IonLabel hidden={true}>Add a note...</IonLabel>
-                <IonTextarea
-                  placeholder="A thought or description..."
-                  maxlength={noteMaxLength}
-                  rows={7}
-                  style={{
-                    padding: "10px 20px",
-                    margin: "0",
-                    backgroundColor: "white",
-                  }}
-                  // value={note}
-                  ref={noteRef}
-                  onIonChange={(event) => {
-                    setNote(event.detail.value!);
-                  }}
-                ></IonTextarea>
-                <p className="ion-padding ion-no-margin with-tint">
-                  <small>
-                    {noteMaxLength - note.length} characters remaining
-                  </small>
-                </p>
+        <div className="add-moment-container">
+          {momentType !== "" && (
+            <>
+              {momentType === "Photo" && (
+                <div className="ion-padding ion-text-center add-moment-photo">
+                  <ImagePicker
+                    ref={imagePickerRef}
+                    onCancel={resetMomentType}
+                    onImagePick={photoPickHandler}
+                  />
+                </div>
+              )}
+              {momentType === "Audio" && (
+                <IonRow>
+                  <IonCol>
+                    <IonItem>
+                      <IonLabel position="floating">Moment Audio Path</IonLabel>
+                      <IonInput type="text" ref={audioPathRef}></IonInput>
+                    </IonItem>
+                  </IonCol>
+                </IonRow>
+              )}
+              {(momentType === "Note" || takenPhoto) && (
+                <IonCard
+                  className={
+                    takenPhoto
+                      ? "add-moment-note add-moment-note--with-photo"
+                      : "add-moment-note"
+                  }
+                >
+                  <IonLabel hidden={true}>Add a note...</IonLabel>
+                  <IonTextarea
+                    placeholder="A thought or description..."
+                    maxlength={noteMaxLength}
+                    rows={takenPhoto ? 3 : 7}
+                    autocapitalize="on"
+                    style={{
+                      padding: "10px 20px",
+                      margin: "0",
+                      backgroundColor: "white",
+                    }}
+                    // value={note}
+                    ref={noteRef}
+                    onIonChange={(event) => {
+                      setNote(event.detail.value!);
+                    }}
+                  ></IonTextarea>
+                  <p className="ion-padding ion-no-margin with-tint">
+                    <small>
+                      {noteMaxLength - note.length} characters remaining
+                    </small>
+                  </p>
 
-                {/* <IonItem>
+                  {/* <IonItem>
                       <IonLabel position="floating">Moment Note</IonLabel>
                       <IonInput type="text" ref={noteRef}></IonInput>
                     </IonItem> */}
-              </IonCard>
-            )}
-            <IonCardHeader
-              className="ion-no-padding"
-              color="light"
-              style={{
-                paddingBottom: "20px",
-              }}
-            >
-              <IonGrid>
-                <IonRow>
-                  <IonCol size="5">
-                    <IonButton
-                      fill="clear"
-                      expand="block"
-                      color="danger"
-                      onClick={() => {
-                        setTakenPhoto(null);
-                        resetMomentType();
-                      }}
-                    >
-                      <IonIcon slot="start" icon={cancelIcon} />
-                      Cancel
-                    </IonButton>
-                  </IonCol>
-                  <IonCol size="7">
-                    <IonButton
-                      expand="block"
-                      color="success"
-                      onClick={takenPhoto ? saveImageHandler : addMomentHandler}
-                      disabled={
-                        (note.length < 1 ||
-                          note.toString().trim().length < 1) &&
-                        !takenPhoto
-                      }
-                    >
-                      <IonIcon slot="start" icon={addIcon} />
-                      Add {momentType}
-                    </IonButton>
-                  </IonCol>
-                </IonRow>
-              </IonGrid>
-            </IonCardHeader>
-          </>
-        )}
+                </IonCard>
+              )}
+              <IonCardHeader
+                className="ion-no-padding add-moment-footer"
+                color="light"
+                style={{
+                  paddingBottom: "20px",
+                }}
+              >
+                <IonGrid>
+                  <IonRow>
+                    <IonCol size="5">
+                      <IonButton
+                        fill="clear"
+                        expand="block"
+                        color="danger"
+                        onClick={() => {
+                          setTakenPhoto(null);
+                          resetMomentType();
+                        }}
+                      >
+                        <IonIcon slot="start" icon={cancelIcon} />
+                        Cancel
+                      </IonButton>
+                    </IonCol>
+                    <IonCol size="7">
+                      <IonButton
+                        expand="block"
+                        color="success"
+                        onClick={
+                          takenPhoto ? saveImageHandler : addMomentHandler
+                        }
+                        disabled={
+                          (note.length < 1 ||
+                            note.toString().trim().length < 1) &&
+                          !takenPhoto
+                        }
+                      >
+                        <IonIcon slot="start" icon={addIcon} />
+                        Add {momentType}
+                      </IonButton>
+                    </IonCol>
+                  </IonRow>
+                </IonGrid>
+              </IonCardHeader>
+            </>
+          )}
+        </div>
       </IonModal>
       {/* <NewWalkAddMomentModal
           updateMoment={(imagePath: string, audioPath: string, note: string) =>

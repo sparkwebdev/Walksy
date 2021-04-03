@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { formatDate, getMinAndSec, getTimeDiff } from "../helpers";
-import { IonBadge, IonCol, IonGrid, IonRow, IonText } from "@ionic/react";
+import {
+  formatDate,
+  getMinAndSec,
+  getTimeDiff,
+  numberWithCommas,
+} from "../helpers";
+import {
+  IonBadge,
+  IonCardContent,
+  IonCol,
+  IonGrid,
+  IonIcon,
+  IonItem,
+  IonRow,
+  IonText,
+} from "@ionic/react";
 
 import { getUnitDistance } from "../helpers";
 
@@ -9,6 +23,11 @@ import { Moment, toMoment } from "../data/models";
 import { firestore, getRemoteUserData } from "../firebase";
 import MomentsList from "./MomentsList";
 import { useAuth } from "../auth";
+import {
+  timerOutline as timeIcon,
+  arrowUpCircleOutline as distanceIcon,
+  footstepsOutline as walkIcon,
+} from "ionicons/icons";
 
 const WalkItem: React.FC<{
   id?: string;
@@ -55,95 +74,95 @@ const WalkItem: React.FC<{
       <div className="walk-item-new_ ion-padding-start ion-padding-end">
         <IonGrid className="ion-margin-bottom ion-padding-bottom">
           <IonRow
-            className="ion-align-items-center ion-padding-bottom ion-padding-top"
+            className="ion-align-items-center"
             style={{
               borderBottom: "solid 4px " + props.colour,
             }}
           >
-            <IonCol>
-              <IonText className="text-heading">
-                {props.start && (
-                  <p className="ion-text-uppercase">
-                    {formatDate(props.start, true)}
-                  </p>
-                )}
-                {props.title && (
-                  <h2>
-                    <strong>{props.title}</strong>
-                  </h2>
-                )}
-                {props.type && props.type !== "user" && (
-                  <IonBadge
-                    className="ion-text-uppercase walk-item__type_"
-                    color={props.type === "curated" ? "secondary" : "primary"}
-                  >
-                    {props.type}
-                  </IonBadge>
-                )}
-                {props.type && props.type !== "user" && (
-                  <IonBadge
-                    className="ion-text-uppercase walk-item__type_"
-                    color={props.type === "curated" ? "secondary" : "primary"}
-                  >
-                    {props.type}
-                  </IonBadge>
-                )}
-                {props.description && (
-                  <p className="ion-no-margin small-print">
-                    <strong>{props.description.join(", ")}</strong>
-                  </p>
-                )}
-              </IonText>
-            </IonCol>
-            {profilePic && (
-              <IonCol size="3" className="ion-text-center">
-                <img
-                  src={profilePic}
-                  alt=""
-                  className="walk-item__profile-badge profile-badge__image profile-badge__image--small"
-                  width="40"
-                  height="40"
-                />
-                {displayName && (
-                  <p className="ion-no-margin small-print text-body">
-                    {displayName}
-                  </p>
-                )}
-              </IonCol>
-            )}
+            <IonText className="text-heading">
+              <h2>
+                <strong>{props.title}</strong>
+              </h2>
+            </IonText>
           </IonRow>
           <IonRow>
-            <IonCol>
-              {(props.userId === userId || props.distance) && (
-                <p className="text-heading">
-                  <strong>
-                    {props.distance?.toFixed(2)}
-                    <span className="smallprint">
-                      &nbsp;{getUnitDistance()}
+            <IonCol
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              {profilePic && (
+                <div className="ion-text-center">
+                  <img
+                    src={profilePic}
+                    alt=""
+                    className="walk-item__profile-badge profile-badge__image profile-badge__image--small"
+                    width="40"
+                    height="40"
+                    style={{
+                      marginRight: "10px",
+                    }}
+                  />
+                </div>
+              )}
+              <IonText className="text-heading">
+                <span className="text-body">
+                  {props.userId !== userId && displayName && (
+                    <>
+                      by {displayName}
+                      <br />
+                    </>
+                  )}
+                  {props.type !== "curated" && (
+                    <span className="ion-text-uppercase">
+                      {props.start && formatDate(props.start, false)} — 
                     </span>
-                    {props.userId === userId && props.steps && props.steps > 0 && (
+                  )}
+                  {props.description && (
+                    <span>{props.description.join(", ")}</span>
+                  )}
+                </span>
+                <IonText
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginTop: "5px",
+                  }}
+                >
+                  {props.distance && props.distance > 0.1 && (
+                    <span>
+                      <IonIcon icon={distanceIcon} />
+                      &nbsp;
+                      {props.distance.toFixed(2)} {getUnitDistance()}
+                    </span>
+                  )}
+                  {props.userId === userId &&
+                    props.steps &&
+                    props.steps > 0 &&
+                    time &&
+                    time["min"] > 0 && (
                       <>
-                        &nbsp;— 
-                        {props.steps}&nbsp;
-                        <span className="smallprint">steps</span>
-                      </>
-                    )}
-                    {props.userId === userId && time && time["min"] > 0 && (
-                      <>
-                        &nbsp;
-                        <span>
-                          — 
+                        <span style={{ marginLeft: "10px" }}>
+                          <IonIcon icon={walkIcon} />
+                          &nbsp;
+                          {numberWithCommas(props.steps)}&nbsp;
+                          <span className="smallprint">steps</span>
+                        </span>
+                        <span style={{ marginLeft: "10px" }}>
+                          <IonIcon icon={timeIcon} />
+                          &nbsp;
                           {time["min"]}&nbsp;
                           <span className="smallprint">min</span>
                         </span>
                       </>
                     )}
-                  </strong>
-                </p>
-              )}
+                </IonText>
+              </IonText>
             </IonCol>
           </IonRow>
         </IonGrid>
+
         <MomentsList moments={moments} colour={props.colour} />
       </div>
     </>

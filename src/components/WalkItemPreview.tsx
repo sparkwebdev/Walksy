@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { formatDate, getMinAndSec, getTimeDiff } from "../helpers";
+import {
+  formatDate,
+  getMinAndSec,
+  getTimeDiff,
+  numberWithCommas,
+} from "../helpers";
 import {
   IonBadge,
   IonCard,
@@ -14,6 +19,7 @@ import { getRemoteUserData } from "../firebase";
 import { useAuth } from "../auth";
 import {
   timerOutline as timeIcon,
+  arrowUpCircleOutline as distanceIcon,
   footstepsOutline as walkIcon,
 } from "ionicons/icons";
 
@@ -116,42 +122,46 @@ const WalkItemPreview: React.FC<{
                   )}
                   {props.type !== "curated" && (
                     <span className="ion-text-uppercase">
-                      {props.start && formatDate(props.start, false)}, 
-                    </span>
-                  )}
-                  {props.distance && props.distance > 0.1 && (
-                    <span>
-                      {props.distance.toFixed(2)} {getUnitDistance()}
+                      {props.start && formatDate(props.start, false)} — 
                     </span>
                   )}
                   {props.description && (
-                    <span> — {props.description.join(", ")}</span>
+                    <span>{props.description.join(", ")}</span>
                   )}
                 </p>
-                {props.userId === userId &&
-                  props.steps &&
-                  props.steps > 0 &&
-                  time &&
-                  time["min"] > 0 && (
-                    <IonText
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        marginTop: "5px",
-                      }}
-                    >
-                      <IonIcon icon={walkIcon} />
+                <IonText
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginTop: "5px",
+                  }}
+                >
+                  {props.distance && props.distance > 0.1 && (
+                    <span>
+                      <IonIcon icon={distanceIcon} />
                       &nbsp;
-                      {props.steps}&nbsp;
-                      <span className="smallprint">steps</span>
-                      <span style={{ marginLeft: "10px" }}>
-                        <IonIcon icon={timeIcon} />
-                        &nbsp;
-                        {time["min"]}&nbsp;
-                        <span className="smallprint">min</span>
-                      </span>
-                    </IonText>
+                      {props.distance.toFixed(2)} {getUnitDistance()}
+                    </span>
                   )}
+                  {props.userId === userId &&
+                    props.steps &&
+                    props.steps > 0 &&
+                    time &&
+                    time["min"] > 0 && (
+                      <span style={{ marginLeft: "10px" }}>
+                        <IonIcon icon={walkIcon} />
+                        &nbsp;
+                        {numberWithCommas(props.steps)}&nbsp;
+                        <span className="smallprint">steps</span>
+                        <span style={{ marginLeft: "10px" }}>
+                          <IonIcon icon={timeIcon} />
+                          &nbsp;
+                          {time["min"]}&nbsp;
+                          <span className="smallprint">min</span>
+                        </span>
+                      </span>
+                    )}
+                </IonText>
               </IonText>
             </IonItem>
           </IonCardContent>

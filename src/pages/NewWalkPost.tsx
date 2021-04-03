@@ -86,32 +86,38 @@ const NewWalkPost: React.FC<{
                 Choose your favourite image from this walk...
               </p>
             </div>
-            <IonCard>
+            <IonCard className="constrain constrain--medium">
               <IonCardContent className="ion-no-padding cover-image-picker">
-                <img
-                  src={coverImage}
-                  alt=""
-                  className="cover-image-picker__cover-image"
-                />
+                <div className="cover-image-picker__cover-image-container">
+                  <img
+                    src={coverImage}
+                    alt=""
+                    className="cover-image-picker__cover-image"
+                  />
+                </div>
                 {moments.length > 0 ? (
                   <div className="cover-image-picker__scroller">
                     {moments
                       .filter((moment) => moment.imagePath !== "")
                       .map((moment) => {
                         return (
-                          <img
+                          <div
                             key={moment.timestamp}
-                            src={moment.imagePath}
-                            alt=""
                             onClick={() => {
                               setCoverImage(moment.imagePath);
                             }}
                             className={
                               coverImage === moment.imagePath
-                                ? "cover-image-picker__image cover-image-picker__image--chosen"
-                                : "cover-image-picker__image"
+                                ? "cover-image-picker__scroller-image-container cover-image-picker__scroller-image-container--chosen"
+                                : "cover-image-picker__scroller-image-container"
                             }
-                          />
+                          >
+                            <img
+                              src={moment.imagePath}
+                              alt=""
+                              className="cover-image-picker__scroller-image"
+                            />
+                          </div>
                         );
                       })}
                   </div>
@@ -131,7 +137,7 @@ const NewWalkPost: React.FC<{
         )}
         {!chosenDescription && chosenCoverImage && (
           <>
-            <div className="ion-text-center">
+            <div className="ion-text-center  constrain constrain--large">
               <IonCardTitle className="title text-heading ion-margin-top">
                 Describe this walk...
               </IonCardTitle>
