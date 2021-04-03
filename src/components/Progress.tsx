@@ -1,11 +1,23 @@
-import { IonCard, IonIcon, IonGrid, IonRow, IonCol } from "@ionic/react";
+import {
+  IonCard,
+  IonIcon,
+  IonGrid,
+  IonRow,
+  IonCol,
+  IonText,
+} from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import {
   timerOutline as timeIcon,
   arrowUpCircleOutline as distanceIcon,
   footstepsOutline as walkIcon,
 } from "ionicons/icons";
-import { getMinAndSec, getTimeDiff, getUnitDistance } from "../helpers";
+import {
+  getMinAndSec,
+  getTimeDiff,
+  getUnitDistance,
+  numberWithCommas,
+} from "../helpers";
 import { Pedometer } from "@ionic-native/pedometer";
 import { Time } from "../data/models";
 
@@ -44,7 +56,7 @@ const Progress: React.FC<ContainerProps> = ({ start, updateWalk }) => {
   }, [distance, steps, updateWalk]);
 
   return (
-    <IonCard className="progress-panel" color="dark">
+    <IonCard className="progress-panel" color="tertiary">
       <IonGrid>
         <IonRow className="ion-justify-content-center">
           <IonCol
@@ -52,46 +64,55 @@ const Progress: React.FC<ContainerProps> = ({ start, updateWalk }) => {
             style={{
               fontSize: "1.15em",
               padding: "10px 0",
+              fontFamily: "monospace",
             }}
           >
-            <IonIcon
-              icon={timeIcon}
-              style={{
-                verticalAlign: "middle",
-                margin: "0 5px 2px 0",
-                fontSize: "1.5em",
-              }}
-            />
-            <span
-              style={{
-                minWidth: "6rem",
-                display: "inline-block",
-                textAlign: "left",
-              }}
-            >
-              {time["min"]}&nbsp;<span className="smallprint">min</span>&nbsp;
-              {("0" + time["sec"]).slice(-2)}&nbsp;
-              <span className="smallprint">sec</span>
-            </span>
-            <IonIcon
-              icon={distanceIcon}
-              style={{
-                verticalAlign: "middle",
-                margin: "0 5px 2px 5%",
-                fontSize: "1.5em",
-              }}
-            />
-            {distance?.toFixed(1)}
-            <span className="smallprint">&nbsp;{getUnitDistance()}</span>
-            <IonIcon
-              icon={walkIcon}
-              style={{
-                verticalAlign: "middle",
-                margin: "0 5px 2px 6%",
-                fontSize: "1.5em",
-              }}
-            />
-            {steps}&nbsp;<span className="smallprint">steps</span>
+            <IonText color="medium">
+              {/* <IonIcon
+                icon={timeIcon}
+                style={{
+                  verticalAlign: "middle",
+                  margin: "0 5px 2px 0",
+                  fontSize: "1.5em",
+                }}
+              /> */}
+              <span
+                style={{
+                  minWidth: "6rem",
+                  display: "inline-block",
+                  textAlign: "left",
+                }}
+              >
+                {time["min"]}
+                <small style={{ fontSize: "5px" }}>&nbsp;</small>
+                <span className="smallprint">min</span>&nbsp;
+                {("0" + time["sec"]).slice(-2)}
+                <small style={{ fontSize: "5px" }}>&nbsp;</small>
+                <span className="smallprint">sec</span>
+              </span>
+              <IonIcon
+                icon={distanceIcon}
+                style={{
+                  verticalAlign: "middle",
+                  margin: "0 5px 2px 5%",
+                  fontSize: "1.5em",
+                }}
+              />
+              {distance?.toFixed(1)}
+              <small style={{ fontSize: "5px" }}>&nbsp;</small>
+              <span className="smallprint">{getUnitDistance()}</span>
+              <IonIcon
+                icon={walkIcon}
+                style={{
+                  verticalAlign: "middle",
+                  margin: "0 5px 2px 6%",
+                  fontSize: "1.5em",
+                }}
+              />
+              {numberWithCommas(steps)}
+              <small style={{ fontSize: "5px" }}>&nbsp;</small>
+              <span className="smallprint">steps</span>
+            </IonText>
           </IonCol>
         </IonRow>
       </IonGrid>
