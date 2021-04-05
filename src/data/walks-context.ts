@@ -9,9 +9,11 @@ interface Context {
   moments: Moment[];
   updateWalk: ({}) => void;
   addMoment: (walkId: string, imagePath: string, audioPath: string, note: string, location: Location | null, timestamp: string) => void;
+  updateMoments: (moments: Moment[]) => void;
   deleteMoment: (momentId: string) => void;
   storeMoments: (userId: string) => void;
   resetWalk: () => void;
+  resetMoments: () => void;
   reset: () => void;
 }
 
@@ -22,9 +24,11 @@ const WalksContext = React.createContext<Context>({
   moments: [],
   updateWalk: () => {},
   addMoment: () => {},
+  updateMoments: () => {},
   deleteMoment: () => {},
   storeMoments: () => {},
   resetWalk: () => {},
+  resetMoments: () => {},
   reset: () => {},
 });
 

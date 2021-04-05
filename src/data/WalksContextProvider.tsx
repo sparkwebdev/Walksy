@@ -63,6 +63,10 @@ const WalksContextProvider: React.FC = (props) => {
     });
   };
 
+  const updateMoments = (moments: Moment[]) => {
+    setMoments(moments);
+  };
+
   const deleteMoment = (momentId: string) => {
     setMoments((curMoments) => {
       const remainingMoments = curMoments.filter(
@@ -93,6 +97,10 @@ const WalksContextProvider: React.FC = (props) => {
     setWalk({});
   };
 
+  const resetMoments = () => {
+    setMoments([]);
+  };
+
   const reset = () => {
     setWalk({});
     setMoments([]);
@@ -108,9 +116,11 @@ const WalksContextProvider: React.FC = (props) => {
         moments,
         updateWalk,
         addMoment,
+        updateMoments,
         deleteMoment,
         storeMoments,
         resetWalk,
+        resetMoments,
         reset,
       }}
     >

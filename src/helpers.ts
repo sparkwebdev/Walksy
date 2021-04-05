@@ -1,7 +1,18 @@
 import { Filesystem, FilesystemDirectory } from "@capacitor/core";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import exifr from "exifr";
 dayjs.extend(isSameOrAfter);
+
+
+interface UploadedFile {
+  type: string;
+  fileName: any;
+  data: any;
+  latitude: number | undefined;
+  longitude: number | undefined;
+  timestamp: string | undefined;
+}
 
 /* String functions */
 export const numberWithCommas = (x: string | number) => {
@@ -15,6 +26,47 @@ export const loadImage = async (imagePath: string) => {
     directory: FilesystemDirectory.Data,
   });
   return "data:image/jpeg;base64," + file.data;
+};
+
+
+const fileToDataURL = async (file: any) => {
+  var reader = new FileReader();
+  let type = file.type;
+  if (type === "image/jpeg" || type === "image/jpg") {
+    type = "image";
+    // } else if (type === "image/mp3") {
+    // type = "audio";
+  } else {
+    console.log(`File type '${type}' not supported`);
+    return;
+  }
+  let latitude: number, longitude: number;
+  const gpsData = await exifr.gps(file);
+  if (gpsData) {
+    latitude = gpsData.latitude;
+    longitude = gpsData.longitude;
+  }
+  const { CreateDate } = (await exifr.parse(file)) || undefined;
+  const timestamp = CreateDate ? new Date(CreateDate).toISOString() : "";
+  return new Promise(function (resolve, reject) {
+    reader.onload = function (event) {
+      const fileDetails: UploadedFile = {
+        type,
+        fileName: file.name,
+        data: event.target!.result,
+        latitude,
+        longitude,
+        timestamp,
+      };
+      resolve(fileDetails);
+    };
+    reader.readAsDataURL(file);
+  });
+};
+
+export const readAsDataURL = (target: any) => {
+  var filesArray = Array.prototype.slice.call(target.files);
+  return Promise.all(filesArray.map(fileToDataURL));
 };
 
 /* Date/time functions */

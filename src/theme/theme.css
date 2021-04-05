@@ -67,6 +67,9 @@ small {
   margin-right: auto;
   width: 100%;
 }
+.constrain--tiny {
+  max-width: 8rem;
+}
 .constrain--small {
   max-width: 16rem;
 }
@@ -194,7 +197,8 @@ ion-tab-button ion-label {
 .small-print {
   color: #777269;
 }
-.input-text {
+.input-text,
+.input-select {
   background: white;
   box-shadow: 2px 3px 0 #777269;
   border: solid 1px #777269;
@@ -203,6 +207,15 @@ ion-tab-button ion-label {
   padding: 0 10px !important;
   width: calc(100% - 20px);
 }
+.input-text--small,
+.input-select--small {
+  box-shadow: none;
+  font-size: 0.85em;
+  padding: 0 3px !important;
+  margin-left: 0;
+  margin-right: 0;
+  width: 100%;
+}
 .input-text .native-input[disabled] {
   opacity: 1;
   box-shadow: 0 !important;
@@ -210,6 +223,10 @@ ion-tab-button ion-label {
 .input-text[aria-disabled="true"] {
   box-shadow: none;
   border: none;
+}
+.input-select {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
 }
 
 .tooltip {
