@@ -54,7 +54,7 @@ const NewWalkMoments: React.FC<{
     const fileName = new Date().getTime() + ".jpeg";
     const base64 = await base64FromPath(takenPhoto.preview);
     Filesystem.writeFile({
-      path: fileName,
+      path: `moments/${fileName}`,
       data: base64,
       directory: FilesystemDirectory.Data,
     }).then(() => {
@@ -92,14 +92,14 @@ const NewWalkMoments: React.FC<{
     if (takenPhoto?.path) {
       const enteredImagePath = takenPhoto?.path || "";
       await Filesystem.readFile({
-        path: enteredImagePath,
+        path: `moments/${enteredImagePath}`,
         directory: FilesystemDirectory.Data,
       })
         .then((file) => {
           loadedPhotoPath = `data:image/jpeg;base64,${file.data}`;
         })
         .catch((e) => {
-          console.log("Couldn't save file", loadedPhotoPath);
+          console.log("Couldn't load file", loadedPhotoPath);
           resetMomentType();
         });
     }
