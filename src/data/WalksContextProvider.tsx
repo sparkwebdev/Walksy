@@ -4,6 +4,7 @@ import { Plugins } from "@capacitor/core";
 import WalksContext from "./walks-context";
 import { Walk, Moment, Location } from "../data/models";
 import { storeMomentHandler } from "../firebase";
+import { Filesystem, FilesystemDirectory } from "@capacitor/core";
 const { Storage } = Plugins;
 
 const WalksContextProvider: React.FC = (props) => {
@@ -27,13 +28,12 @@ const WalksContextProvider: React.FC = (props) => {
           storeMoments(userData.userId);
         }
       });
-      resetWalk();
     }
   }, [storedWalkId]);
 
   const updateWalk = async (data: {}) => {
-    const newWalk = { ...walk, ...data };
-    setWalk(newWalk);
+    const walkData = { ...walk, ...data };
+    setWalk(walkData);
   };
 
   const updateWalkIdForStorage = (walkId: string) => {
@@ -67,7 +67,7 @@ const WalksContextProvider: React.FC = (props) => {
     setMoments(moments);
   };
 
-  const deleteMoment = (momentId: string) => {
+  const deleteMoment = async (momentId: string) => {
     setMoments((curMoments) => {
       const remainingMoments = curMoments.filter(
         (moment) => moment.id !== momentId
@@ -88,22 +88,28 @@ const WalksContextProvider: React.FC = (props) => {
           });
       });
     }
-    if (moments.length === 0) {
-      setStoredWalkId("");
-    }
   };
 
   const resetWalk = () => {
     setWalk({});
   };
 
-  const resetMoments = () => {
+  const resetMoments = async () => {
     setMoments([]);
+    try {
+      await Filesystem.rmdir({
+        path: "/moments",
+        directory: FilesystemDirectory.Data,
+        recursive: true,
+      });
+    } catch (e) {
+      console.log(e, "Couldn't remove moment files");
+    }
   };
 
   const reset = () => {
     setWalk({});
-    setMoments([]);
+    resetMoments();
     setStoredWalkId("");
   };
 

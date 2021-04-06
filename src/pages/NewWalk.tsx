@@ -12,6 +12,7 @@ import {
   IonButton,
   IonCardTitle,
   IonLabel,
+  IonAlert,
 } from "@ionic/react";
 import { Plugins } from "@capacitor/core";
 import WalkTutorial from "../components/WalkTutorial";
@@ -51,6 +52,8 @@ const NewWalk: React.FC = () => {
   const [title, setTitle] = useState<string>(suggestedTitle());
   const [colour, setColour] = useState<string>(colours[0]);
 
+  const [continueWalkAlert, setContinueWalkAlert] = useState<boolean>(false);
+
   // Walk view state - Tutorial
   const [showTutorial, setShowTutorial] = useState<boolean | undefined>(
     undefined
@@ -88,11 +91,27 @@ const NewWalk: React.FC = () => {
   };
 
   const startWalkHandler = () => {
-    walksCtx.reset(); // To Do — check for existing data (previous walk) and handle?
-    const generatedWalkId = new Date().getTime().toString();
+    Storage.get({ key: "walk" }).then((data) => {
+      const userData = data.value ? JSON.parse(data.value) : null;
+      if (userData && Object.keys(userData).length > 0) {
+        setContinueWalkAlert(true);
+      } else {
+        startNewWalk();
+      }
+    });
+  };
 
+  const continueWalk = () => {
+    history.push({
+      pathname: `/walking`,
+    });
+  };
+
+  const startNewWalk = () => {
+    walksCtx.reset();
+    const generatedWalkId = new Date().getTime().toString();
     walksCtx.updateWalk({
-      walkId: generatedWalkId,
+      id: generatedWalkId,
       title,
       colour,
       userId,
@@ -101,7 +120,6 @@ const NewWalk: React.FC = () => {
 
     history.push({
       pathname: `/walking`,
-      state: { walkId: generatedWalkId, title: title, colour: colour },
     });
   };
 
@@ -221,6 +239,26 @@ const NewWalk: React.FC = () => {
           )}
         </IonCard>
       </IonContent>
+
+      <IonAlert
+        header={"Continue walk?"}
+        subHeader="You have a walk already in progress."
+        buttons={[
+          {
+            text: "No",
+            role: "cancel",
+            handler: startNewWalk,
+          },
+          {
+            text: "Yes, continue",
+            cssClass: "secondary",
+            handler: continueWalk,
+          },
+        ]}
+        isOpen={continueWalkAlert}
+        backdropDismiss={false}
+        onDidDismiss={() => setContinueWalkAlert(false)}
+      />
     </IonPage>
   );
 };

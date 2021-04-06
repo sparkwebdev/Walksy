@@ -88,6 +88,18 @@ export const storeWalkHandler = async (walkData: {}) => {
   }
 }
 
+export const updateWalkHandler = async (walkData: {}, walkId: string) => {
+  const entriesRef = firestore.collection("users-walks")
+  .doc(walkId)
+  .get()
+  .then((doc) => {
+    doc.ref.update(walkData);
+  }).catch((error)=> {
+    console.log("Error updating walk to storage", error);
+  })
+  return entriesRef;
+}
+
 export const storeMomentHandler = async (moment: Moment, walkId: string, userId: string) => {
   let momentToStore: Moment = {...moment};
   if (moment.imagePath !== "") {

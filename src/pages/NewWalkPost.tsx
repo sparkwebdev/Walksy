@@ -19,6 +19,7 @@ import {
 import { Moment } from "../data/models";
 import { appData } from "../data/appData";
 import WalksContext from "../data/walks-context";
+import { updateWalkHandler } from "../firebase";
 
 const suggestedDescriptors = appData.suggestedDescriptors;
 const descriptorsMaxCount = 3;
@@ -60,16 +61,12 @@ const NewWalkPost: React.FC<{
   };
 
   const chosenCoverImageHandler = () => {
-    walksCtx.updateWalk({
-      coverImage,
-    });
+    updateWalkHandler({ coverImage }, walksCtx.storedWalkId);
     setChosenCoverImage(true);
   };
 
   const chosenDescriptionHandler = () => {
-    walksCtx.updateWalk({
-      description,
-    });
+    updateWalkHandler({ description }, walksCtx.storedWalkId);
     setChosenDescription(true);
   };
 
@@ -230,7 +227,7 @@ const NewWalkPost: React.FC<{
             <p className="small-print">Would you like to share this walk?</p>
             <IonGrid>
               <IonRow>
-                <IonCol size="6">
+                <IonCol>
                   <IonButton
                     expand="block"
                     color="primary"
@@ -240,18 +237,6 @@ const NewWalkPost: React.FC<{
                   >
                     <IonIcon slot="start" icon={shareIcon} />
                     Share
-                  </IonButton>
-                </IonCol>
-                <IonCol size="6">
-                  <IonButton
-                    expand="block"
-                    color="success"
-                    onClick={() => {
-                      saveShareWalk(false);
-                    }}
-                  >
-                    <IonIcon slot="start" icon={finishIcon} />
-                    Done
                   </IonButton>
                 </IonCol>
               </IonRow>

@@ -19,7 +19,7 @@ import {
 } from "@ionic/react";
 import { Plugins } from "@capacitor/core";
 import Progress from "../components/Progress";
-import { Redirect, useLocation } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 import { Location } from "../data/models";
 import WalksContext from "../data/walks-context";
@@ -40,20 +40,14 @@ import { storeWalkHandler } from "../firebase";
 
 const { Geolocation } = Plugins;
 
-interface RecievedWalkValues {
-  walkId: string;
-  title: string;
-  colour: string;
-}
-
 const Walking: React.FC = () => {
   const { loggedIn } = useAuth();
-  const locationURL = useLocation<RecievedWalkValues>();
-  const { walkId } = locationURL.state || "";
-  const { title } = locationURL.state || "";
-  const { colour } = locationURL.state || "";
 
   const walksCtx = useContext(WalksContext);
+  const walkData = { ...walksCtx.walk };
+  const walkId = walkData.id;
+  const title = walkData.title;
+  const colour = walkData.colour;
 
   const history = useHistory();
   const [showPrompt, setShowPrompt] = useState(true);
@@ -77,6 +71,7 @@ const Walking: React.FC = () => {
   const [momentType, setMomentType] = useState<string>("");
 
   const [cancelWalkAlert, setCancelWalkAlert] = useState(false);
+  const [finishWalkAlert, setFinishWalkAlert] = useState(false);
 
   useEffect(() => {
     if (Object.keys(walksCtx.walk).length === 0) {
@@ -122,7 +117,7 @@ const Walking: React.FC = () => {
     });
   };
 
-  const endWalkHandler = () => {
+  const endWalkHandler = async () => {
     getLocation().then(() => {
       const endDate = new Date().toISOString();
       walksCtx.updateWalk({
@@ -134,6 +129,23 @@ const Walking: React.FC = () => {
       setEnd(endDate);
     });
   };
+
+  const storeWalk = async () => {
+    setLoading(true);
+    await storeWalkHandler(walksCtx.walk)
+      .then((storedWalkId) => {
+        walksCtx.updateWalkIdForStorage(storedWalkId!);
+        setLoading(false);
+      })
+      .catch(() => {
+        setLoading(false);
+      });
+  };
+
+  useEffect(() => {
+    if (!end) return;
+    storeWalk();
+  }, [end]);
 
   // Update state handlers
   const updateWalkStepsDistance = (steps: number, distance: number) => {
@@ -152,19 +164,11 @@ const Walking: React.FC = () => {
   };
 
   const saveShareWalkHandler = async (share: boolean) => {
-    setLoading(true);
-    const storedWalkId = await storeWalkHandler(walksCtx.walk)
-      .then((storedWalkId) => {
-        walksCtx.updateWalkIdForStorage(storedWalkId!);
-        setLoading(false);
-        history.push({
-          pathname: `/app/walk/${storedWalkId}`,
-          state: { share: share },
-        });
-      })
-      .catch(() => {
-        setLoading(false);
-      });
+    walksCtx.reset();
+    history.push({
+      pathname: `/app/walk/${walksCtx.storedWalkId}`,
+      state: { share: share },
+    });
   };
 
   if (!loggedIn || Object.keys(walksCtx.walk).length === 0) {
@@ -342,12 +346,64 @@ const Walking: React.FC = () => {
                     expand="block"
                     color="success"
                     fill="clear"
-                    onClick={endWalkHandler}
+                    onClick={() => setFinishWalkAlert(true)}
                   >
+                    <IonAlert
+                      header={"Are you sure?"}
+                      subHeader={
+                        walksCtx.moments.length === 0
+                          ? "You haven't added any moments yet."
+                          : "Finish walk?"
+                      }
+                      buttons={[
+                        {
+                          text: "No",
+                          role: "cancel",
+                        },
+                        {
+                          text: "Yes",
+                          cssClass: "secondary",
+                          handler: endWalkHandler,
+                        },
+                      ]}
+                      isOpen={finishWalkAlert}
+                      onDidDismiss={() => setFinishWalkAlert(false)}
+                    />
                     <IonIcon slot="start" icon={finishIcon} size="large" />
                     <big>
                       <strong>Finish</strong>
                     </big>
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </IonCardSubtitle>
+        </IonCardHeader>
+      )}
+
+      {end && (
+        <IonCardHeader
+          className="ion-no-padding"
+          color="light"
+          style={{
+            marginTop: "auto",
+            paddingTop: "5px",
+            paddingBottom: "20px",
+          }}
+        >
+          <IonCardSubtitle className="ion-no-margin constrain constrain--medium">
+            <IonGrid>
+              <IonRow>
+                <IonCol>
+                  <IonButton
+                    expand="block"
+                    color="success"
+                    onClick={() => {
+                      saveShareWalkHandler(false);
+                    }}
+                  >
+                    <IonIcon slot="start" icon={finishIcon} />
+                    Done
                   </IonButton>
                 </IonCol>
               </IonRow>
