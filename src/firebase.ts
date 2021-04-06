@@ -83,7 +83,7 @@ export const storeWalkHandler = async (walkData: {}) => {
     });
     return walkId;
   } catch (error) {
-    console.log("Error saving walk to storage");
+    console.log("Error saving walk to storage", error);
     return null;
   }
 }

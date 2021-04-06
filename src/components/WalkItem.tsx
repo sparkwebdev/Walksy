@@ -5,16 +5,7 @@ import {
   getTimeDiff,
   numberWithCommas,
 } from "../helpers";
-import {
-  IonBadge,
-  IonCardContent,
-  IonCol,
-  IonGrid,
-  IonIcon,
-  IonItem,
-  IonRow,
-  IonText,
-} from "@ionic/react";
+import { IonCol, IonGrid, IonIcon, IonRow, IonText } from "@ionic/react";
 
 import { getUnitDistance } from "../helpers";
 
