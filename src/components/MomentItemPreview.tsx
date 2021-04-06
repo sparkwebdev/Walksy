@@ -5,7 +5,7 @@ import { firestore } from "../firebase";
 import { toWalk, Walk } from "../data/models";
 
 const MomentItemPreview: React.FC<{
-  walkId?: string;
+  walkId: string;
   imageOnly?: boolean;
   showAuthor?: boolean;
   coverImage?: string;
