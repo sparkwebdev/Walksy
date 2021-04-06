@@ -121,40 +121,43 @@ const WalkItem: React.FC<{
                     marginTop: "5px",
                   }}
                 >
-                  {props.distance && props.distance > 0.1 && (
+                  {props.distance && props.distance > 0.1 ? (
                     <span>
-                      <IonIcon icon={distanceIcon} />
-                      &nbsp;
                       {props.distance.toFixed(2)} {getUnitDistance()}
                     </span>
-                  )}
+                  ) : null}
                   {props.userId === userId &&
-                    props.steps &&
-                    props.steps > 0 &&
-                    time &&
-                    time["min"] > 0 && (
-                      <>
-                        <span style={{ marginLeft: "10px" }}>
-                          <IonIcon icon={walkIcon} />
-                          &nbsp;
-                          {numberWithCommas(props.steps)}&nbsp;
-                          <span className="smallprint">steps</span>
-                        </span>
-                        <span style={{ marginLeft: "10px" }}>
-                          <IonIcon icon={timeIcon} />
-                          &nbsp;
-                          {time["min"]}&nbsp;
-                          <span className="smallprint">min</span>
-                        </span>
-                      </>
-                    )}
+                  props.steps &&
+                  props.steps > 0 &&
+                  time &&
+                  time["min"] > 0 ? (
+                    <>
+                      <span style={{ marginLeft: "10px" }}>
+                        <IonIcon icon={walkIcon} />
+                        &nbsp;
+                        {numberWithCommas(props.steps)}&nbsp;
+                        <span className="smallprint">steps</span>
+                      </span>
+                      <span style={{ marginLeft: "10px" }}>
+                        <IonIcon icon={timeIcon} />
+                        &nbsp;
+                        {time["min"]}&nbsp;
+                        <span className="smallprint">min</span>
+                      </span>
+                    </>
+                  ) : null}
                 </IonText>
               </IonText>
             </IonCol>
           </IonRow>
         </IonGrid>
-
-        <MomentsList moments={moments} colour={props.colour} />
+        {moments.length > 0 ? (
+          <MomentsList moments={moments} colour={props.colour} />
+        ) : (
+          <p className="ion-text-center text-body small-print">
+            No moments to show for this walk.
+          </p>
+        )}
       </div>
     </>
   );
