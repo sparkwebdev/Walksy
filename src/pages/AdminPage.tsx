@@ -20,7 +20,7 @@ import {
   IonToast,
   IonToggle,
 } from "@ionic/react";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import PageHeader from "../components/PageHeader";
 import { Redirect } from "react-router";
 import { useAuth } from "../auth";
@@ -33,9 +33,9 @@ import {
   readAsDataURL,
 } from "../helpers";
 import { checkmark as tickIcon } from "ionicons/icons";
-import WalkItem from "../components/WalkItem";
+// import WalkItem from "../components/WalkItem";
 import { storeWalkHandler } from "../firebase";
-import { Location } from "../data/models";
+import { Location, UploadedFile } from "../data/models";
 
 const suggestedDescriptors = appData.suggestedDescriptors;
 
@@ -46,22 +46,12 @@ const suggestedColour = generateHslaColors(1, undefined, undefined, true);
 const titleMaxLength = 40;
 const textAreaMaxLength = 280;
 
-// const saveImageHandler = async (file: string) => {
-//   const fileName = new Date().getTime() + ".jpeg";
-//   const base64 = await base64FromPath(file);
-//   Filesystem.writeFile({
-//     path: fileName,
-//     data: base64,
-//     directory: FilesystemDirectory.Data,
-//   }).then(() => {
-//     return fileName;
-//   });
-// };
-
 const AdminPage: React.FC = () => {
   const { loggedIn } = useAuth();
 
   const walksCtx = useContext(WalksContext);
+
+  // const [momentsOutput, setMomentsOutput] = useState<Moment[]>([]);
 
   const [type, setType] = useState<string>("curated");
   const [colour, setColour] = useState<string>(suggestedColour[0]);
@@ -77,10 +67,6 @@ const AdminPage: React.FC = () => {
   const [showPreview, setShowPreview] = useState<boolean>(false);
   const [editMoments, setEditMoments] = useState(false);
 
-  const [latitude, setLatitude] = useState<number>();
-  const refLatitude = useRef<HTMLIonInputElement>(null);
-  const refLongitude = useRef<HTMLIonInputElement>(null);
-
   const [chosenCoverImage, setChosenCoverImage] = useState<string>("");
 
   const [notice, setNotice] = useState<{
@@ -95,15 +81,20 @@ const AdminPage: React.FC = () => {
 
     readAsDataURL(event.target)
       .then((results: any) => {
-        for (let i = 0; i < results!.length; i++) {
+        results.sort((a: UploadedFile, b: UploadedFile) => {
+          var x = a["fileName"];
+          var y = b["fileName"];
+          return x < y ? 1 : x > y ? -1 : 0;
+        });
+        for (let i = 0; i < results.length; i++) {
           walksCtx.addMoment(
             "",
-            (results![i].type = "image" ? results![i].data : ""),
-            (results![i].type = "audio" ? results![i].data : ""),
+            results![i].type === "image" ? results![i].filePath : "",
+            results![i].type === "audio" ? results![i].filePath : "",
             "",
             {
-              lat: results![i].latitude,
-              lng: results![i].longitude,
+              lat: results![i].latitude || 0,
+              lng: results![i].longitude || 0,
             },
             results![i].timestamp
           );
@@ -115,6 +106,12 @@ const AdminPage: React.FC = () => {
         event.target.value = "";
       })
       .catch((e) => {
+        setNotice({
+          showNotice: true,
+          message:
+            "There was a problem uploading. Please check the type of files you are adding.",
+        });
+        event.target.value = "";
         console.log(e);
       });
   };
@@ -178,10 +175,25 @@ const AdminPage: React.FC = () => {
     value: string | Location
   ) => {
     const newMoments = walksCtx.moments.map((moment) => {
-      if (key === "location") {
+      if (key === "latitude" || key === "longitude") {
+        // if (key === "latitude") {
+        //   const currentLongitude = moment.location ? moment.location.lng : 0;
+        //   value = {
+        //     lat: +value,
+        //     lng: currentLongitude,
+        //   };
+        // }
+        // if (key === "longitude") {
+        //   const currentLatitude = moment.location ? moment.location.lat : 0;
+        //   value = {
+        //     lat: currentLatitude,
+        //     lng: +value,
+        //   };
+        // }
+        key = "location";
         value = {
-          lat: Number(refLatitude.current!.value),
-          lng: Number(refLongitude.current!.value),
+          lat: 1,
+          lng: 2,
         };
       }
       return moment.id === momentId ? { ...moment, [key]: value } : moment;
@@ -197,7 +209,54 @@ const AdminPage: React.FC = () => {
     walksCtx.deleteMoment(momentId);
   };
 
+  // const testeroo = () => {
+  //   return Promise.all(
+  //     walksCtx.moments.map((moment) => {
+  //       loadImage(moment.imagePath);
+  //     })
+  //   );
+  // };
+
+  // const transformMomentsOutput = async () => {
+  //   await testeroo().then((result) => {
+  //     console.log(result);
+  //   });
+  const transformMomentsOutput = async () => {
+    // const moments = [...walksCtx.moments];
+    // for (let i = 0; i < moments.length; i++) {
+    //   if (moments[i].imagePath && !moments[i].imagePath.startsWith("data:")) {
+    //     const finalPhotoUri = await Filesystem.getUri({
+    //       directory: FilesystemDirectory.Data,
+    //       path: `moments/${moments[i].imagePath}`,
+    //     });
+    //     console.log("0", finalPhotoUri.uri);
+    //     let photoPath = Capacitor.convertFileSrc(finalPhotoUri.uri);
+    //     console.log("1", Capacitor.convertFileSrc(finalPhotoUri.uri));
+    //     const filePath = await Filesystem.readFile({
+    //       path: `moments/${moments[i].imagePath}`,
+    //       directory: FilesystemDirectory.Data,
+    //     })
+    //       .then((file) => {
+    //         return `data:image/jpeg;base64,${file.data}`;
+    //       })
+    //       .catch((e: Error) => {
+    //         console.log(e);
+    //       });
+    //     if (filePath) {
+    //       // moments[i].imagePath = filePath;
+    //       setTesteroo(filePath);
+    //     }
+    //   } else if (moments[i].audioPath) {
+    //     // const audioPath = await loadImage(moments[i].audioPath);
+    //     // moments[i].audioPath = audioPath;
+    //   }
+    // }
+    // console.log(moments);
+    // setMomentsOutput(moments);
+  };
+
   useEffect(() => {
+    transformMomentsOutput();
     if (!chosenCoverImage) {
       const momentsWithImages = walksCtx.moments.filter(
         (moment) => moment.imagePath !== ""
@@ -212,16 +271,6 @@ const AdminPage: React.FC = () => {
     const description = [descriptor1, descriptor2, descriptor3]
       .filter(Boolean)
       .join(", ");
-    console.log({
-      title,
-      type,
-      overview,
-      description,
-      colour,
-      start,
-      end,
-      distance,
-    });
     walksCtx.updateWalk({
       title,
       type,
@@ -329,9 +378,7 @@ const AdminPage: React.FC = () => {
                   rows={7}
                   value={overview}
                   onIonChange={(event) => {
-                    event.detail.value !== "curated"
-                      ? setOverview("")
-                      : setOverview(event.detail!.value!);
+                    setOverview(event.detail!.value!);
                   }}
                 ></IonTextarea>
               </div>
@@ -510,6 +557,7 @@ const AdminPage: React.FC = () => {
                                       className="ion-text-center"
                                     >
                                       <img src={moment.imagePath} alt="" />
+                                      {moment.imagePath}
                                       <IonButton
                                         fill="clear"
                                         color="dark"
@@ -569,10 +617,11 @@ const AdminPage: React.FC = () => {
                                               className="input-text input-text--small"
                                               type="number"
                                               value={moment.location?.lat}
-                                              ref={refLatitude}
                                               onIonChange={(event) =>
-                                                setLatitude(
-                                                  +event.detail!.value!
+                                                updateMoment(
+                                                  moment.id,
+                                                  "latitude",
+                                                  event.detail!.value!
                                                 )
                                               }
                                             />
@@ -580,9 +629,9 @@ const AdminPage: React.FC = () => {
                                           <IonCol
                                             size="12"
                                             sizeSm="6"
-                                            style={{
-                                              opacity: !latitude ? 0.35 : 1,
-                                            }}
+                                            // style={{
+                                            //   opacity: !latitude ? 0.35 : 1,
+                                            // }}
                                           >
                                             <div>
                                               <IonLabel position="stacked">
@@ -592,12 +641,11 @@ const AdminPage: React.FC = () => {
                                                 className="input-text input-text--small"
                                                 type="number"
                                                 value={moment.location?.lng}
-                                                ref={refLongitude}
-                                                disabled={!latitude}
+                                                // disabled={!latitude}
                                                 onIonChange={(event) =>
                                                   updateMoment(
                                                     moment.id,
-                                                    "location",
+                                                    "longitude",
                                                     event.detail!.value!
                                                   )
                                                 }
@@ -610,7 +658,7 @@ const AdminPage: React.FC = () => {
                                         </IonRow>
                                       </IonGrid>
                                     </div>
-                                    <div hidden={true}>
+                                    <div hidden={false}>
                                       <IonLabel position="stacked">
                                         <small>Timestamp</small>
                                       </IonLabel>

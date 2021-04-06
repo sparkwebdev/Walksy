@@ -1,18 +1,10 @@
 import { Filesystem, FilesystemDirectory } from "@capacitor/core";
+import { base64FromPath } from "@ionic/react-hooks/filesystem";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import exifr from "exifr";
+import { UploadedFile } from "./data/models";
 dayjs.extend(isSameOrAfter);
-
-
-interface UploadedFile {
-  type: string;
-  fileName: any;
-  data: any;
-  latitude: number | undefined;
-  longitude: number | undefined;
-  timestamp: string | undefined;
-}
 
 /* String functions */
 export const numberWithCommas = (x: string | number) => {
@@ -21,18 +13,39 @@ export const numberWithCommas = (x: string | number) => {
 
 /* File functions */
 export const loadImage = async (imagePath: string) => {
-  const file = await Filesystem.readFile({
-    path: imagePath,
+  await Filesystem.readFile({
+    path: `moments/${imagePath}`,
     directory: FilesystemDirectory.Data,
+  }).then((file) => {
+    return "data:image/jpeg;base64," + file.data;
   });
-  return "data:image/jpeg;base64," + file.data;
 };
 
+const saveImageHandler = async (file: string) => {
+  const fileName = Math.floor(Math.random() * 99999) + new Date().getTime() + ".jpeg";
+  const base64 = await base64FromPath(file);
+  try {
+    Filesystem.writeFile({
+      path: `moments/${fileName}`,
+      data: base64,
+      directory: FilesystemDirectory.Data,
+    });
+    return fileName;
+  } catch {
+    console.log("Failed to write file");
+    return;
+  }
+};
 
 const fileToDataURL = async (file: any) => {
+  const savedFileName = await saveImageHandler(file).then((result) => {
+    return result;
+  }).catch((e) => {
+    console.log("36rt", e);
+  });
   var reader = new FileReader();
   let type = file.type;
-  if (type === "image/jpeg" || type === "image/jpg") {
+  if (type === "image/jpeg" || type === "image/jpg" || type === "image/png") {
     type = "image";
     // } else if (type === "image/mp3") {
     // type = "audio";
@@ -53,6 +66,7 @@ const fileToDataURL = async (file: any) => {
       const fileDetails: UploadedFile = {
         type,
         fileName: file.name,
+        filePath: savedFileName,
         data: event.target!.result,
         latitude,
         longitude,
@@ -61,6 +75,8 @@ const fileToDataURL = async (file: any) => {
       resolve(fileDetails);
     };
     reader.readAsDataURL(file);
+  }).catch((e) => {
+    console.log("Could not process upload", e);
   });
 };
 

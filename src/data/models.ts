@@ -54,6 +54,16 @@ export interface Photo {
   preview: string;
 }
 
+export interface UploadedFile {
+  type: "image" | "audio";
+  fileName: any;
+  filePath: any;
+  data: any;
+  latitude: number | undefined;
+  longitude: number | undefined;
+  timestamp: string | undefined;
+}
+
 export interface Entry {
   id: string;
   title: string;
