@@ -300,11 +300,13 @@ const HomePage: React.FC = () => {
                   <IonRow>
                     {moments.map((moment) => (
                       <IonCol key={moment.id}>
-                        <MomentItemPreview
-                          walkId={moment.walkId}
-                          coverImage={moment.imagePath}
-                          imageOnly={true}
-                        />
+                        {moment.walkId && (
+                          <MomentItemPreview
+                            walkId={moment.walkId}
+                            coverImage={moment.imagePath}
+                            imageOnly={true}
+                          />
+                        )}
                       </IonCol>
                     ))}
                   </IonRow>
