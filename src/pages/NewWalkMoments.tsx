@@ -21,6 +21,7 @@ import { close as cancelIcon, add as addIcon } from "ionicons/icons";
 import ImagePicker from "../components/ImagePicker";
 import { base64FromPath } from "@ionic/react-hooks/filesystem";
 import { Filesystem, FilesystemDirectory } from "@capacitor/core";
+import AudioRecord from "../components/AudioRecord";
 
 const noteMaxLength = 280;
 
@@ -153,14 +154,11 @@ const NewWalkMoments: React.FC<{
                 </div>
               )}
               {momentType === "Audio" && (
-                <IonRow>
-                  <IonCol>
-                    <IonItem>
-                      <IonLabel position="floating">Moment Audio Path</IonLabel>
-                      <IonInput type="text" ref={audioPathRef}></IonInput>
-                    </IonItem>
-                  </IonCol>
-                </IonRow>
+                <div className="ion-text-center ion-padding add-moment-audio">
+                  <div className="audio-picker ion-margin">
+                    <AudioRecord />
+                  </div>
+                </div>
               )}
               {(momentType === "Note" || takenPhoto) && (
                 <IonCard

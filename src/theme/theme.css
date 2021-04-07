@@ -689,6 +689,32 @@ ion-slides {
   height: 250px;
   object-fit: cover;
 }
+.add-moment-audio {
+  flex: 0 1 auto;
+  overflow: hidden;
+  height: 100%;
+  padding-top: 50px;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+.audio-picker {
+  width: 100%;
+}
+
+.audio-recorder {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.audio-recorder__record {
+  display: inline-block;
+  border-radius: 50% !important;
+  overflow: hidden;
+}
+
+.audio-recorder__record--on {
+  filter: hue-rotate(105deg) saturate(0.5) brightness(1.61);
+}
 
 .grid--half-with-full ion-col:nth-of-type(3n + 1) .walk-item--image-only {
   border-right: 1px solid var(--ion-color-primary-contrast);
