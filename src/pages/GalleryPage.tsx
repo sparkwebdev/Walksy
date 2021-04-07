@@ -74,6 +74,7 @@ const GalleryPage: React.FC = () => {
                 className="ion-no-margin gallery-group"
                 style={{ background: "#777269" }}
                 routerLink={`/app/walk/${moment[0].walkId}`}
+                key={moment[0].walkId}
               >
                 <IonGrid className="grid grid--half grid--half-with-full ion-no-padding">
                   <IonRow>
