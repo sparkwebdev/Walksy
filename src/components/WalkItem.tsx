@@ -6,6 +6,8 @@ import {
   numberWithCommas,
 } from "../helpers";
 import { IonCol, IonGrid, IonIcon, IonRow, IonText } from "@ionic/react";
+import Share from "../components/Share";
+import { isPlatform } from "@ionic/react";
 
 import { getUnitDistance } from "../helpers";
 
@@ -32,6 +34,7 @@ const WalkItem: React.FC<{
   coverImage?: string;
   type?: string;
   userId?: string;
+  shouldShare?: boolean;
 }> = (props) => {
   const { userId } = useAuth();
   const [displayName, setDisplayName] = useState<string>("");
@@ -152,7 +155,19 @@ const WalkItem: React.FC<{
           </IonRow>
         </IonGrid>
         {moments.length > 0 ? (
-          <MomentsList moments={moments} colour={props.colour} />
+          <>
+            <MomentsList moments={moments} colour={props.colour} />
+            {isPlatform("mobile") && moments.length > 0 && (
+              <Share
+                shareText={`Have a look at my ${
+                  props.title ? "'" + props.title + "'" : " latest walk"
+                } on Walksy...`}
+                shareImage={props.coverImage ? props.coverImage : ""}
+                shareUrl={`https://walksy.uk/walk/${props.id}`}
+                triggerShare={props.shouldShare}
+              />
+            )}
+          </>
         ) : (
           <p className="ion-text-center text-body small-print">
             No moments to show for this walk.

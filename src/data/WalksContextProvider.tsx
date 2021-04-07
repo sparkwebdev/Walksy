@@ -98,12 +98,12 @@ const WalksContextProvider: React.FC = (props) => {
     setMoments([]);
     try {
       await Filesystem.rmdir({
-        path: "/moments",
+        path: "moments",
         directory: FilesystemDirectory.Data,
         recursive: true,
       });
     } catch (e) {
-      console.log(e, "Couldn't remove moment files");
+      return;
     }
   };
 
