@@ -119,10 +119,15 @@ const WalksContextProvider: React.FC = (props) => {
     }
   };
 
+  const resetStoredImagesForCover = () => {
+    setStoredImagesForCover([]);
+  };
+
   const reset = () => {
     setWalk({});
     resetMoments();
     setStoredWalkId("");
+    resetStoredImagesForCover();
   };
 
   return (
@@ -141,6 +146,7 @@ const WalksContextProvider: React.FC = (props) => {
         storeMoments,
         resetWalk,
         resetMoments,
+        resetStoredImagesForCover,
         reset,
       }}
     >

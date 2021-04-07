@@ -16,6 +16,7 @@ interface Context {
   storeMoments: (userId: string) => void;
   resetWalk: () => void;
   resetMoments: () => void;
+  resetStoredImagesForCover: () => void;
   reset: () => void;
 }
 
@@ -33,6 +34,7 @@ const WalksContext = React.createContext<Context>({
   storeMoments: () => {},
   resetWalk: () => {},
   resetMoments: () => {},
+  resetStoredImagesForCover: () => {},
   reset: () => {},
 });
 

@@ -35,13 +35,21 @@ const NewWalkPost: React.FC<{
   const walksCtx = useContext(WalksContext);
 
   useEffect(() => {
-    walksCtx.storedImagesForCover.length < 2
-      ? setChosenCoverImage(true)
-      : setChosenCoverImage(false);
-    if (walksCtx.storedImagesForCover.length > 0) {
-      setCoverImage(walksCtx.storedImagesForCover[0]);
+    if (walksCtx.moments.length === 0) {
+      if (walksCtx.storedImagesForCover.length === 1) {
+        const image = walksCtx.storedImagesForCover[0];
+        updateWalkHandler({ coverImage: image }, walksCtx.storedWalkId);
+        setChosenCoverImage(true);
+        walksCtx.resetStoredImagesForCover();
+      } else if (walksCtx.storedImagesForCover.length > 1) {
+        const image = walksCtx.storedImagesForCover[0];
+        setCoverImage(image);
+        updateWalkHandler({ image }, walksCtx.storedWalkId);
+      } else if (walksCtx.storedImagesForCover.length === 0) {
+        setChosenCoverImage(true);
+      }
     }
-  }, []);
+  }, [walksCtx.moments]);
 
   const chooseKeywordHandler = (keyword: string) => {
     if (descriptors.includes(keyword)) {
@@ -56,6 +64,7 @@ const NewWalkPost: React.FC<{
   const chosenCoverImageHandler = () => {
     updateWalkHandler({ coverImage }, walksCtx.storedWalkId);
     setChosenCoverImage(true);
+    walksCtx.resetStoredImagesForCover();
   };
 
   const chosenDescriptionHandler = () => {
