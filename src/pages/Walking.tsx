@@ -248,7 +248,6 @@ const Walking: React.FC = () => {
               </div>
               <NewWalkPost
                 saveShareWalk={(share: boolean) => saveShareWalkHandler(share)}
-                moments={walksCtx.moments}
               />
             </>
           )}
