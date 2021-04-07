@@ -63,13 +63,10 @@ const WalkItemPreview: React.FC<{
     <>
       <IonCard
         className="ion-no-margin"
-        style={
-          props.overview
-            ? {
-                marginBottom: "8px",
-              }
-            : {}
-        }
+        style={{
+          marginBottom: "10px",
+          // backgroundColor: "transparent"
+        }}
       >
         <div className="walk-item">
           {props.coverImage && (
@@ -114,12 +111,8 @@ const WalkItemPreview: React.FC<{
                   <strong>{props.title}</strong>
                 </h2>
                 <p className="text-body">
-                  {props.userId !== userId && (
-                    <>
-                      by {displayName}
-                      <br />
-                    </>
-                  )}
+                  by {displayName}
+                  <br />
                   {props.type !== "curated" && (
                     <span className="ion-text-uppercase">
                       {props.start && formatDate(props.start, false)}

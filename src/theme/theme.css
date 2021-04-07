@@ -764,7 +764,8 @@ ion-slides {
   position: relative;
   width: 100%;
   height: 100%;
-  max-height: calc(22vh + 12vw);
+  max-height: calc(28vh + 12vw);
+  overflow: hidden;
 }
 .walk-item__overview {
   --background: rgba(255, 255, 255, 0.95);

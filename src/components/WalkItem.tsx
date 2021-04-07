@@ -108,11 +108,9 @@ const WalkItem: React.FC<{
                       <br />
                     </>
                   )}
-                  {props.type !== "curated" && (
-                    <span className="ion-text-uppercase">
-                      {props.start && formatDate(props.start, false)}
-                    </span>
-                  )}
+                  <span className="ion-text-uppercase">
+                    {props.start && formatDate(props.start, false)}
+                  </span>
                   {props.description && (
                     <span> — {props.description.join(", ")}</span>
                   )}
