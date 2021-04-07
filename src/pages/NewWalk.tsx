@@ -103,7 +103,7 @@ const NewWalk: React.FC = () => {
 
   const continueWalk = () => {
     history.push({
-      pathname: `/walking`,
+      pathname: "/walking",
     });
   };
 
@@ -119,7 +119,7 @@ const NewWalk: React.FC = () => {
     });
 
     history.push({
-      pathname: `/walking`,
+      pathname: "/walking",
     });
   };
 
