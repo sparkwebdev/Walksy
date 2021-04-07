@@ -13,7 +13,11 @@ const NewWalkMomentsOutput: React.FC<{
       <IonRow>
         <IonCol size="12" className="ion-text-center">
           {walksCtx.moments.length > 0 ? (
-            <MomentsList moments={walksCtx.moments} colour={props.colour} />
+            <MomentsList
+              moments={walksCtx.moments}
+              colour={props.colour}
+              canDelete={true}
+            />
           ) : (
             <div
               style={{ margin: "auto" }}
