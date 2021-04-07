@@ -57,11 +57,11 @@ const WalkItemPreviewMini: React.FC<{
             <span className="ion-text-uppercase">
               {formatDate(props.start, false)}
             </span>
-            {props.distance > 0.1 && (
+            {props.distance && props.distance > 0.1 ? (
               <span>
                 , {props.distance.toFixed(2)} {getUnitDistance()}
               </span>
-            )}
+            ) : null}
             {props.description && (
               <span> — {props.description.join(", ")}</span>
             )}

@@ -110,11 +110,11 @@ const WalkItem: React.FC<{
                   )}
                   {props.type !== "curated" && (
                     <span className="ion-text-uppercase">
-                      {props.start && formatDate(props.start, false)} — 
+                      {props.start && formatDate(props.start, false)}
                     </span>
                   )}
                   {props.description && (
-                    <span>{props.description.join(", ")}</span>
+                    <span> — {props.description.join(", ")}</span>
                   )}
                 </span>
                 <IonText

@@ -77,7 +77,7 @@ const NewWalkPost: React.FC<{
       <IonCardContent style={{ margin: "auto" }}>
         {coverImage && !chosenCoverImage && (
           <>
-            <div className="ion-text-center ion-padding ion-margin-top">
+            <div className="ion-text-center ion-padding">
               <IonCardTitle className="title text-heading">
                 Choose a cover image...
               </IonCardTitle>
@@ -85,7 +85,7 @@ const NewWalkPost: React.FC<{
                 Choose your favourite image from this walk...
               </p>
             </div>
-            <IonCard className="constrain constrain--medium">
+            <IonCard className="ion-no-margin constrain constrain--medium">
               <IonCardContent className="ion-no-padding cover-image-picker">
                 <div className="cover-image-picker__cover-image-container">
                   <img
@@ -134,8 +134,8 @@ const NewWalkPost: React.FC<{
         )}
         {!chosenDescription && chosenCoverImage && (
           <>
-            <div className="ion-text-center  constrain constrain--large">
-              <IonCardTitle className="title text-heading ion-margin-top">
+            <div className="ion-text-center constrain constrain--large">
+              <IonCardTitle className="title text-heading">
                 Describe this walk...
               </IonCardTitle>
               <p className="small-print">
@@ -245,7 +245,8 @@ const NewWalkPost: React.FC<{
         )}
       </IonCardContent>
       <IonToast
-        position="bottom"
+        position="middle"
+        color="success"
         isOpen={walksCtx.moments.length > 0}
         message={`Saving your moments: ${walksCtx.moments.length}`}
       />

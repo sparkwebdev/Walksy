@@ -137,20 +137,24 @@ const MomentsList: React.FC<{
           </li>
         ))}
       </ol>
-      <IonButton
-        className="moments-list__delete"
-        color={isEditing ? "success" : "danger"}
-        fill={isEditing ? "solid" : "clear"}
-        onClick={() => setIsEditing(!isEditing)}
-      >
-        {isEditing ? (
-          <IonIcon icon={doneIcon} slot="icon-only" size="small" />
-        ) : (
-          <IonIcon icon={deleteIcon} slot="icon-only" size="small" />
-        )}
-        &nbsp;
-        {isEditing ? "Done" : "Edit Moments"}
-      </IonButton>
+      {props.canDelete && (
+        <div className="ion-text-center">
+          <IonButton
+            className="moments-list__delete ion-margin-bottom"
+            color={isEditing ? "success" : "danger"}
+            fill={isEditing ? "solid" : "clear"}
+            onClick={() => setIsEditing(!isEditing)}
+          >
+            {isEditing ? (
+              <IonIcon icon={doneIcon} slot="icon-only" size="small" />
+            ) : (
+              <IonIcon icon={deleteIcon} slot="icon-only" size="small" />
+            )}
+            &nbsp;
+            {isEditing ? "Done" : "Edit Moments"}
+          </IonButton>
+        </div>
+      )}
       <IonModal
         isOpen={showMap}
         onDidDismiss={() => {

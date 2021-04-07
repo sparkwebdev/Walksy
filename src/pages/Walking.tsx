@@ -92,7 +92,7 @@ const Walking: React.FC = () => {
     }
     try {
       const position = await Geolocation.getCurrentPosition({
-        timeout: 3000,
+        timeout: 4000,
       });
       const location: Location = {
         lat: position.coords.latitude,
@@ -137,7 +137,9 @@ const Walking: React.FC = () => {
   };
 
   const storeWalk = async () => {
-    setLoading(true);
+    if (!loading) {
+      setLoading(true);
+    }
     await storeWalkHandler(walksCtx.walk)
       .then((storedWalkId) => {
         walksCtx.updateWalkIdForStorage(storedWalkId!);

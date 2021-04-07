@@ -122,11 +122,11 @@ const WalkItemPreview: React.FC<{
                   )}
                   {props.type !== "curated" && (
                     <span className="ion-text-uppercase">
-                      {props.start && formatDate(props.start, false)} — 
+                      {props.start && formatDate(props.start, false)}
                     </span>
                   )}
                   {props.description && (
-                    <span>{props.description.join(", ")}</span>
+                    <span> — {props.description.join(", ")}</span>
                   )}
                 </p>
                 <IonText
@@ -136,31 +136,31 @@ const WalkItemPreview: React.FC<{
                     marginTop: "5px",
                   }}
                 >
-                  {props.distance && props.distance > 0.1 && (
+                  {props.distance && props.distance > 0.1 ? (
                     <span>
                       <IonIcon icon={distanceIcon} />
                       &nbsp;
                       {props.distance.toFixed(2)} {getUnitDistance()}
                     </span>
-                  )}
+                  ) : null}
                   {props.userId === userId &&
-                    props.steps &&
-                    props.steps > 0 &&
-                    time &&
-                    time["min"] > 0 && (
+                  props.steps &&
+                  props.steps > 0 &&
+                  time &&
+                  time["min"] > 0 ? (
+                    <span style={{ marginLeft: "10px" }}>
+                      <IonIcon icon={walkIcon} />
+                      &nbsp;
+                      {numberWithCommas(props.steps)}&nbsp;
+                      <span className="smallprint">steps</span>
                       <span style={{ marginLeft: "10px" }}>
-                        <IonIcon icon={walkIcon} />
+                        <IonIcon icon={timeIcon} />
                         &nbsp;
-                        {numberWithCommas(props.steps)}&nbsp;
-                        <span className="smallprint">steps</span>
-                        <span style={{ marginLeft: "10px" }}>
-                          <IonIcon icon={timeIcon} />
-                          &nbsp;
-                          {time["min"]}&nbsp;
-                          <span className="smallprint">min</span>
-                        </span>
+                        {time["min"]}&nbsp;
+                        <span className="smallprint">min</span>
                       </span>
-                    )}
+                    </span>
+                  ) : null}
                 </IonText>
               </IonText>
             </IonItem>

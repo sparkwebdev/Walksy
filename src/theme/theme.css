@@ -480,7 +480,8 @@ ion-tab-button ion-label {
 .cover-image-picker {
   display: flex;
   flex-direction: column;
-  height: 50vh;
+  height: 350px;
+  max-height: 40vh;
 }
 .cover-image-picker__cover-image-container {
   flex: 0 1 auto;
