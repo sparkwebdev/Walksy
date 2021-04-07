@@ -102,12 +102,14 @@ export const updateWalkHandler = async (walkData: {}, walkId: string) => {
 
 export const storeMomentHandler = async (moment: Moment, walkId: string, userId: string) => {
   let momentToStore: Moment = {...moment};
+  let storedImgPath: string = "";
   if (moment.imagePath !== "") {
     await storeFilehandler(moment.imagePath).then((newUrl) => {
       momentToStore = {
         ...moment,
         imagePath: newUrl
       }
+      storedImgPath = newUrl;
     }).catch((e) => {
       console.log('error storing image', e);
     });
@@ -124,6 +126,7 @@ export const storeMomentHandler = async (moment: Moment, walkId: string, userId:
       console.log("Error storing moment");
       return null;
     })
+    return storedImgPath;
 };
 
 export const storeFilehandler = async (blobUrl: string) => {

@@ -7,9 +7,11 @@ interface Context {
   storedWalkId: string;
   updateWalkIdForStorage: (walkId: string) => void,
   moments: Moment[];
+  storedImagesForCover: string[];
   updateWalk: ({}) => void;
   addMoment: (walkId: string, imagePath: string, audioPath: string, note: string, location: Location | null, timestamp: string) => void;
   updateMoments: (moments: Moment[]) => void;
+  addStoredImagesForCover: (image: string) => void,
   deleteMoment: (momentId: string) => void;
   storeMoments: (userId: string) => void;
   resetWalk: () => void;
@@ -22,9 +24,11 @@ const WalksContext = React.createContext<Context>({
   storedWalkId: "",
   updateWalkIdForStorage: () => {},
   moments: [],
+  storedImagesForCover: [],
   updateWalk: () => {},
   addMoment: () => {},
   updateMoments: () => {},
+  addStoredImagesForCover: () => {},
   deleteMoment: () => {},
   storeMoments: () => {},
   resetWalk: () => {},

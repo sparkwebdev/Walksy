@@ -11,6 +11,9 @@ const WalksContextProvider: React.FC = (props) => {
   const [walk, setWalk] = useState<Walk | {}>({});
   const [storedWalkId, setStoredWalkId] = useState<string>("");
   const [moments, setMoments] = useState<Moment[]>([]);
+  const [storedImagesForCover, setStoredImagesForCover] = useState<string[]>(
+    []
+  );
 
   useEffect(() => {
     Storage.set({ key: "walk", value: JSON.stringify(walk) });
@@ -63,6 +66,12 @@ const WalksContextProvider: React.FC = (props) => {
     });
   };
 
+  const addStoredImagesForCover = (image: string) => {
+    setStoredImagesForCover((curImages) => {
+      return [...curImages, image];
+    });
+  };
+
   const updateMoments = (moments: Moment[]) => {
     setMoments(moments);
   };
@@ -80,7 +89,10 @@ const WalksContextProvider: React.FC = (props) => {
     if (storedWalkId !== "" && userId) {
       moments.forEach((moment) => {
         storeMomentHandler(moment, storedWalkId, userId)
-          .then(() => {
+          .then((newImagePath) => {
+            if (newImagePath) {
+              addStoredImagesForCover(newImagePath);
+            }
             deleteMoment(moment.id);
           })
           .catch((e) => {
@@ -120,9 +132,11 @@ const WalksContextProvider: React.FC = (props) => {
         storedWalkId,
         updateWalkIdForStorage,
         moments,
+        storedImagesForCover,
         updateWalk,
         addMoment,
         updateMoments,
+        addStoredImagesForCover,
         deleteMoment,
         storeMoments,
         resetWalk,

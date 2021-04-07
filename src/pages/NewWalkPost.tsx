@@ -10,13 +10,13 @@ import {
   IonInput,
   IonLabel,
   IonRow,
+  IonToast,
 } from "@ionic/react";
 import React, { useContext, useEffect, useState } from "react";
 import {
   checkmark as finishIcon,
   shareOutline as shareIcon,
 } from "ionicons/icons";
-import { Moment } from "../data/models";
 import { appData } from "../data/appData";
 import WalksContext from "../data/walks-context";
 import { updateWalkHandler } from "../firebase";
@@ -26,8 +26,7 @@ const descriptorsMaxCount = 3;
 
 const NewWalkPost: React.FC<{
   saveShareWalk: (share: boolean) => void;
-  moments: Moment[];
-}> = ({ saveShareWalk, moments }) => {
+}> = (props) => {
   const [description, setDescription] = useState<string[]>([]);
   const [chosenDescription, setChosenDescription] = useState<boolean>(false);
   const [chosenCoverImage, setChosenCoverImage] = useState<boolean>(false);
@@ -36,19 +35,13 @@ const NewWalkPost: React.FC<{
   const walksCtx = useContext(WalksContext);
 
   useEffect(() => {
-    const momentsWithImages = moments.filter(
-      (moment) => moment.imagePath !== ""
-    );
-    momentsWithImages.length < 2
+    walksCtx.storedImagesForCover.length < 2
       ? setChosenCoverImage(true)
       : setChosenCoverImage(false);
-    // const latestImage = moments.find((moment) => {
-    //   return moment.imagePath !== "";
-    // });
-    if (momentsWithImages.length > 0) {
-      setCoverImage(momentsWithImages[0].imagePath);
+    if (walksCtx.storedImagesForCover.length > 0) {
+      setCoverImage(walksCtx.storedImagesForCover[0]);
     }
-  }, [moments]);
+  }, []);
 
   const chooseKeywordHandler = (keyword: string) => {
     if (descriptors.includes(keyword)) {
@@ -92,31 +85,29 @@ const NewWalkPost: React.FC<{
                     className="cover-image-picker__cover-image"
                   />
                 </div>
-                {moments.length > 0 ? (
+                {walksCtx.storedImagesForCover.length > 0 ? (
                   <div className="cover-image-picker__scroller">
-                    {moments
-                      .filter((moment) => moment.imagePath !== "")
-                      .map((moment) => {
-                        return (
-                          <div
-                            key={moment.timestamp}
-                            onClick={() => {
-                              setCoverImage(moment.imagePath);
-                            }}
-                            className={
-                              coverImage === moment.imagePath
-                                ? "cover-image-picker__scroller-image-container cover-image-picker__scroller-image-container--chosen"
-                                : "cover-image-picker__scroller-image-container"
-                            }
-                          >
-                            <img
-                              src={moment.imagePath}
-                              alt=""
-                              className="cover-image-picker__scroller-image"
-                            />
-                          </div>
-                        );
-                      })}
+                    {walksCtx.storedImagesForCover.map((image, index) => {
+                      return (
+                        <div
+                          key={index}
+                          onClick={() => {
+                            setCoverImage(image);
+                          }}
+                          className={
+                            coverImage === image
+                              ? "cover-image-picker__scroller-image-container cover-image-picker__scroller-image-container--chosen"
+                              : "cover-image-picker__scroller-image-container"
+                          }
+                        >
+                          <img
+                            src={image}
+                            alt=""
+                            className="cover-image-picker__scroller-image"
+                          />
+                        </div>
+                      );
+                    })}
                   </div>
                 ) : null}
               </IonCardContent>
@@ -232,7 +223,7 @@ const NewWalkPost: React.FC<{
                     expand="block"
                     color="primary"
                     onClick={() => {
-                      saveShareWalk(true);
+                      props.saveShareWalk(true);
                     }}
                   >
                     <IonIcon slot="start" icon={shareIcon} />
@@ -244,6 +235,11 @@ const NewWalkPost: React.FC<{
           </div>
         )}
       </IonCardContent>
+      <IonToast
+        position="bottom"
+        isOpen={walksCtx.moments.length > 0}
+        message={`Saving your moments: ${walksCtx.moments.length}`}
+      />
     </>
   );
 };
