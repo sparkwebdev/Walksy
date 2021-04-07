@@ -41,57 +41,62 @@ const HomePage: React.FC = () => {
   useEffect(() => {
     const walksRef = firestore
       .collection("users-walks")
+      .where("userId", "==", userId)
       .limit(1)
-      .where("userId", "==", userId);
-    return walksRef.orderBy("start").onSnapshot(({ docs }) => {
-      setLoading(false);
+      .orderBy("start", "desc");
+    return walksRef.onSnapshot(({ docs }) => {
       setLatestWalk(docs.map(toWalk));
+      setLoading(false);
     });
   }, [userId]);
 
   useEffect(() => {
-    const walksRef = firestore.collection("users-walks");
-    return walksRef
+    const walksRef = firestore
+      .collection("users-walks")
       .where("type", "==", "curated")
       .limit(2)
-      .orderBy("start")
-      .onSnapshot(({ docs }) => {
-        setCuratedWalks(docs.map(toWalk));
-      });
+      .orderBy("start", "desc");
+    return walksRef.onSnapshot(({ docs }) => {
+      setCuratedWalks(docs.map(toWalk));
+      setLoading(false);
+    });
   }, []);
 
   useEffect(() => {
-    const walksRef = firestore.collection("users-walks");
-    return walksRef
+    const walksRef = firestore
+      .collection("users-walks")
       .where("type", "==", "featured")
       .limit(1)
-      .orderBy("start")
-      .onSnapshot(({ docs }) => {
-        setFeaturedWalk(docs.map(toWalk));
-      });
+      .orderBy("start", "desc");
+    return walksRef.onSnapshot(({ docs }) => {
+      setFeaturedWalk(docs.map(toWalk));
+      setLoading(false);
+    });
   }, []);
 
   useEffect(() => {
-    const walksRef = firestore.collection("users-walks");
-    return walksRef
+    const walksRef = firestore
+      .collection("users-walks")
       .where("type", "==", "user")
-      .orderBy("start")
-      .limit(6)
-      .onSnapshot(({ docs }) => {
-        setLatestUserWalks(docs.map(toWalk));
-      });
+      .orderBy("start", "desc")
+      .limit(6);
+    return walksRef.onSnapshot(({ docs }) => {
+      setLatestUserWalks(docs.map(toWalk));
+      setLoading(false);
+    });
   }, []);
 
   useEffect(() => {
     const momentsRef = firestore
       .collection("users-moments")
       .limit(30)
-      .orderBy("timestamp");
+      .orderBy("timestamp", "desc");
     return momentsRef.onSnapshot(({ docs }) => {
       const momentsWithImages = docs
         .map(toMoment)
         .filter((moment) => moment.imagePath !== "");
       setMoments(momentsWithImages.slice(0, 9));
+      setLoading(false);
     });
   }, []);
 
@@ -141,17 +146,41 @@ const HomePage: React.FC = () => {
                   key={walk.id}
                   routerLink={`/app/walk/${walk.id}`}
                 >
-                  <WalkItemPreview
-                    title={walk.title}
-                    colour={walk.colour}
-                    description={walk.description}
-                    start={walk.start}
-                    end={walk.end}
-                    steps={walk.steps}
-                    distance={walk.distance}
-                    coverImage={walk.coverImage}
-                    userId={walk.userId}
-                  />
+                  {walk.coverImage ? (
+                    <WalkItemPreview
+                      title={walk.title}
+                      colour={walk.colour}
+                      description={walk.description}
+                      start={walk.start}
+                      end={walk.end}
+                      steps={walk.steps}
+                      distance={walk.distance}
+                      coverImage={walk.coverImage}
+                      userId={userId}
+                    />
+                  ) : (
+                    <IonList lines="none" className="ion-no-padding">
+                      <IonItem
+                        className="ion-no-margin"
+                        routerLink={`/app/walk/${walk.id}`}
+                        style={{
+                          background: "rgba(255, 255, 255, 0.925)",
+                          borderBottom: `solid 5px ${walk.colour}`,
+                          lineHeight: "1.2",
+                          marginBottom: "10px",
+                        }}
+                        detail={true}
+                      >
+                        <WalkItemPreviewMini
+                          title={walk.title}
+                          description={walk.description}
+                          start={walk.start}
+                          distance={walk.distance}
+                          userId={walk.userId}
+                        />
+                      </IonItem>
+                    </IonList>
+                  )}
                 </IonRouterLink>
               ))}
               <IonButton
@@ -185,19 +214,41 @@ const HomePage: React.FC = () => {
                   key={walk.id}
                   routerLink={`/app/walk/${walk.id}`}
                 >
-                  <WalkItemPreview
-                    title={walk.title}
-                    colour={walk.colour}
-                    description={walk.description}
-                    start={walk.start}
-                    end={walk.end}
-                    steps={walk.steps}
-                    distance={walk.distance}
-                    coverImage={walk.coverImage}
-                    type={walk.type}
-                    overview={walk.overview}
-                    userId={walk.userId}
-                  />
+                  {walk.coverImage ? (
+                    <WalkItemPreview
+                      title={walk.title}
+                      colour={walk.colour}
+                      description={walk.description}
+                      start={walk.start}
+                      end={walk.end}
+                      steps={walk.steps}
+                      distance={walk.distance}
+                      coverImage={walk.coverImage}
+                      userId={userId}
+                    />
+                  ) : (
+                    <IonList lines="none" className="ion-no-padding">
+                      <IonItem
+                        className="ion-no-margin"
+                        routerLink={`/app/walk/${walk.id}`}
+                        style={{
+                          background: "rgba(255, 255, 255, 0.925)",
+                          borderBottom: `solid 5px ${walk.colour}`,
+                          lineHeight: "1.2",
+                          marginBottom: "10px",
+                        }}
+                        detail={true}
+                      >
+                        <WalkItemPreviewMini
+                          title={walk.title}
+                          description={walk.description}
+                          start={walk.start}
+                          distance={walk.distance}
+                          userId={walk.userId}
+                        />
+                      </IonItem>
+                    </IonList>
+                  )}
                 </IonRouterLink>
               ))}
               <IonButton
@@ -230,18 +281,41 @@ const HomePage: React.FC = () => {
                   key={walk.id}
                   routerLink={`/app/walk/${walk.id}`}
                 >
-                  <WalkItemPreview
-                    title={walk.title}
-                    colour={walk.colour}
-                    description={walk.description}
-                    start={walk.start}
-                    end={walk.end}
-                    steps={walk.steps}
-                    distance={walk.distance}
-                    coverImage={walk.coverImage}
-                    type={walk.type}
-                    userId={walk.userId}
-                  />
+                  {walk.coverImage ? (
+                    <WalkItemPreview
+                      title={walk.title}
+                      colour={walk.colour}
+                      description={walk.description}
+                      start={walk.start}
+                      end={walk.end}
+                      steps={walk.steps}
+                      distance={walk.distance}
+                      coverImage={walk.coverImage}
+                      userId={userId}
+                    />
+                  ) : (
+                    <IonList lines="none" className="ion-no-padding">
+                      <IonItem
+                        className="ion-no-margin"
+                        routerLink={`/app/walk/${walk.id}`}
+                        style={{
+                          background: "rgba(255, 255, 255, 0.925)",
+                          borderBottom: `solid 5px ${walk.colour}`,
+                          lineHeight: "1.2",
+                          marginBottom: "10px",
+                        }}
+                        detail={true}
+                      >
+                        <WalkItemPreviewMini
+                          title={walk.title}
+                          description={walk.description}
+                          start={walk.start}
+                          distance={walk.distance}
+                          userId={walk.userId}
+                        />
+                      </IonItem>
+                    </IonList>
+                  )}
                 </IonRouterLink>
               ))}
               <IonList lines="none">
