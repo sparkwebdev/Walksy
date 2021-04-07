@@ -73,13 +73,13 @@ export interface Entry {
 }
 
 export function toEntry(doc: firebase.default.firestore.DocumentSnapshot): Entry {
-  return  { id: doc.id, ...doc.data() } as Entry;
+  return  {...doc.data(), id: doc.id } as Entry;
 }
 
 export function toWalk(doc: firebase.default.firestore.DocumentSnapshot): Walk {
-  return  { id: doc.id, ...doc.data() } as Walk;
+  return  { ...doc.data(), id: doc.id } as Walk;
 }
 export function toMoment(doc: firebase.default.firestore.DocumentSnapshot): Moment {
-  return  { id: doc.id, ...doc.data() } as Moment;
+  return  { ...doc.data(), id: doc.id } as Moment;
 }
 
