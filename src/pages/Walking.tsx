@@ -46,7 +46,7 @@ const Walking: React.FC = () => {
   const walksCtx = useContext(WalksContext);
   const walkData = { ...walksCtx.walk };
   const walkId = walkData.id;
-  const title = walkData.title;
+  const title = walkData.title || "";
   const colour = walkData.colour;
 
   const history = useHistory();
@@ -101,16 +101,21 @@ const Walking: React.FC = () => {
       if (location !== null) {
         setLocations([...locations, location]);
       }
-      setLoading(false);
+      if (showLoading) {
+        setLoading(false);
+      }
       return location;
     } catch (e) {
-      setLoading(false);
+      if (showLoading) {
+        setLoading(false);
+      }
       setError({ showError: true, message: "Could not get your location" });
       return null;
     }
   };
 
   const cancelWalkHandler = () => {
+    setAddBarVisible(false);
     walksCtx.reset();
     history.push({
       pathname: `/app/new-walk`,
@@ -118,6 +123,7 @@ const Walking: React.FC = () => {
   };
 
   const endWalkHandler = async () => {
+    setAddBarVisible(false);
     getLocation().then(() => {
       const endDate = new Date().toISOString();
       walksCtx.updateWalk({
@@ -214,15 +220,17 @@ const Walking: React.FC = () => {
                 />
               </div>
               {/* Add Moment */}
-              <NewWalkMoments
-                walkId={walkId}
-                colour={colour}
-                momentType={momentType}
-                resetMomentType={() => {
-                  setMomentType("");
-                }}
-                getLocation={getLocation}
-              />
+              {walkId && colour && (
+                <NewWalkMoments
+                  walkId={walkId}
+                  colour={colour}
+                  momentType={momentType}
+                  resetMomentType={() => {
+                    setMomentType("");
+                  }}
+                  getLocation={getLocation}
+                />
+              )}
             </>
           )}
 
