@@ -124,7 +124,10 @@ const NewWalkPost: React.FC<{
             <IonGrid className="ion-text-center">
               <IonRow>
                 <IonCol className="ion-no-padding">
-                  <IonButton color="success" onClick={chosenCoverImageHandler}>
+                  <IonButton
+                    color="secondary"
+                    onClick={chosenCoverImageHandler}
+                  >
                     <strong>Next</strong>
                   </IonButton>
                 </IonCol>
@@ -194,7 +197,7 @@ const NewWalkPost: React.FC<{
                 <IonRow>
                   <IonCol className="ion-no-padding">
                     <IonButton
-                      color="success"
+                      color="secondary"
                       onClick={chosenDescriptionHandler}
                     >
                       <strong>Next</strong>
@@ -219,12 +222,12 @@ const NewWalkPost: React.FC<{
         {chosenCoverImage && chosenDescription && (
           <div className="ion-text-center ion-padding ion-margin-top">
             <img
-              src="assets/img/walksy-panel.svg"
+              src="assets/img/walksy-anim-jiggle.gif"
               alt=""
-              style={{ maxHeight: "22vh" }}
+              style={{ margin: "-60px auto -30px auto", maxHeight: "200px" }}
             />
-            <h2 className="title text-heading">Well done!</h2>
-            <p className="small-print">Would you like to share this walk?</p>
+            <h2 className="title text-heading">You’ve added your walk!</h2>
+            <p className="small-print">Hope to see you again here soon</p>
             <IonGrid>
               <IonRow>
                 <IonCol>
@@ -246,7 +249,7 @@ const NewWalkPost: React.FC<{
       </IonCardContent>
       <IonToast
         position="middle"
-        color="success"
+        color="secondary"
         isOpen={walksCtx.moments.length > 0}
         message={`Saving your moments: ${walksCtx.moments.length}`}
       />

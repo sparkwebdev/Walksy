@@ -406,7 +406,7 @@ const Walking: React.FC = () => {
                 <IonCol>
                   <IonButton
                     expand="block"
-                    color="success"
+                    color="secondary"
                     onClick={() => {
                       saveShareWalkHandler(false);
                     }}

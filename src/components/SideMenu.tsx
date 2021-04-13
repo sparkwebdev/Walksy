@@ -49,13 +49,17 @@ const SideMenu: React.FC = () => {
               <IonIcon icon={profileIcon} slot="start" size="small" />
               Profile &amp; Settings
             </IonItem>
+            <IonItem button routerLink="/app/latest-news">
+              <IonIcon icon={newsIcon} slot="start" size="small" />
+              Latest ArtWalk news
+            </IonItem>
             <IonItem button routerLink="/app/about">
               <IonIcon icon={aboutIcon} slot="start" size="small" />
               About this App
             </IonItem>
-            <IonItem button routerLink="/app/latest-news">
-              <IonIcon icon={newsIcon} slot="start" size="small" />
-              Latest ArtWalk news
+            <IonItem button routerLink="/app/welcome">
+              <IonIcon icon={aboutIcon} slot="start" size="small" />
+              View Welcome screens
             </IonItem>
           </IonMenuToggle>
         </IonList>

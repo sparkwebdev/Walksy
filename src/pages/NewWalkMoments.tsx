@@ -223,7 +223,7 @@ const NewWalkMoments: React.FC<{
                     <IonCol size="7">
                       <IonButton
                         expand="block"
-                        color="success"
+                        color="secondary"
                         onClick={
                           takenPhoto ? saveImageHandler : addMomentHandler
                         }

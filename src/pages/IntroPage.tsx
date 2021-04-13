@@ -17,8 +17,10 @@ import {
   IonToolbar,
   IonButtons,
 } from "@ionic/react";
+import { useAuth } from "../auth";
 
 const Intro: React.FC = () => {
+  const { loggedIn } = useAuth();
   const [onLastSlide, setOnLastSlide] = useState(false);
   const slides = useRef<HTMLIonSlidesElement>(null);
 
@@ -58,12 +60,16 @@ const Intro: React.FC = () => {
               alt=""
             />
             <div className="constrain constrain--medium ion-padding">
-              <h2 className="text-heading">&#8216;Walk &amp; See&#8217;</h2>
+              <h2 className="text-heading">
+                A library of walks, <br />
+                recording your nearby.
+              </h2>
+              {/* <h2 className="text-heading">&#8216;Walk &amp; See&#8217;</h2>
               <p className="text-body">
                 A fun way to do more walking, and to record those things we
                 observe as we walk our local landscapes. Find, Explore, and
                 Record walks in your nearby.
-              </p>
+              </p> */}
             </div>
           </IonSlide>
           <IonSlide>
@@ -154,24 +160,40 @@ const Intro: React.FC = () => {
               style={{ margin: "-60px auto 0 auto", maxHeight: "20vh" }}
             />
             <div className="constrain constrain--medium">
-              <IonCard>
-                <IonCardHeader className="ion-no-padding" color="dark">
-                  <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
-                    Get Started
-                  </IonCardSubtitle>
-                </IonCardHeader>
-                <IonCardContent>
-                  <IonText color="dark" className="ion-margin">
-                    <p>Please register to start your journey...</p>
-                  </IonText>
-                  <IonButton expand="block" routerLink="/register">
-                    Register
+              {loggedIn ? (
+                <>
+                  <img
+                    className="logo"
+                    src="assets/img/walksy-logo.svg"
+                    alt=""
+                    style={{
+                      maxHeight: "80px",
+                    }}
+                  />
+                  <IonButton className="ion-margin-top" routerLink="/app/home">
+                    Back to Home
                   </IonButton>
-                  <IonButton expand="block" fill="clear" routerLink="/login">
-                    Login
-                  </IonButton>
-                </IonCardContent>
-              </IonCard>
+                </>
+              ) : (
+                <IonCard>
+                  <IonCardHeader className="ion-no-padding" color="dark">
+                    <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
+                      Get Started
+                    </IonCardSubtitle>
+                  </IonCardHeader>
+                  <IonCardContent>
+                    <IonText color="dark" className="ion-margin">
+                      <p>Please register to start your journey...</p>
+                    </IonText>
+                    <IonButton expand="block" routerLink="/register">
+                      Register
+                    </IonButton>
+                    <IonButton expand="block" fill="clear" routerLink="/login">
+                      Login
+                    </IonButton>
+                  </IonCardContent>
+                </IonCard>
+              )}
             </div>
           </IonSlide>
         </IonSlides>

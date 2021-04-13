@@ -226,7 +226,7 @@ const NewWalk: React.FC = () => {
                           expand="block"
                           disabled={title === ""}
                           onClick={startWalkHandler}
-                          color="success"
+                          color="secondary"
                         >
                           Start Walk
                         </IonButton>

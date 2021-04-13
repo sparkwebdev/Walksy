@@ -127,7 +127,7 @@ const HomePage: React.FC = () => {
               marginBottom: "30px",
             }}
           >
-            <IonButton routerLink="/app/new-walk" color="success">
+            <IonButton routerLink="/app/new-walk" color="secondary">
               <IonIcon icon={walkIcon} slot="start" />
               Start a walk
             </IonButton>
@@ -205,8 +205,10 @@ const HomePage: React.FC = () => {
                 className="text-body small-print ion-padding-start ion-padding-end"
                 style={{ maxWidth: "32em" }}
               >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                A series of walks created by artists as part of many different
+                projects the Art Walk has produced around Edinburgh’s coastline
+                and outskirt areas, inviting us to rethink our local habitats
+                and city spaces.
               </p>
               {curatedWalks.map((walk) => (
                 <IonRouterLink
@@ -268,13 +270,6 @@ const HomePage: React.FC = () => {
                   <strong>Latest User Walks...</strong>
                 </IonText>
               </h2>
-              <p
-                className="text-body small-print ion-padding-start ion-padding-end"
-                style={{ maxWidth: "32em" }}
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
               {featuredWalk.map((walk) => (
                 <IonRouterLink
                   className="ion-no-margin ion-no-padding"
@@ -359,13 +354,6 @@ const HomePage: React.FC = () => {
                   <strong>Latest User Moments...</strong>
                 </IonText>
               </h2>
-              <p
-                className="text-body small-print ion-padding-start ion-padding-end"
-                style={{ maxWidth: "32em" }}
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-                eiusmod tempor incididunt ut labore et dolore magna aliqua.
-              </p>
               <IonCard
                 className="ion-no-margin"
                 style={{ background: "#777269" }}

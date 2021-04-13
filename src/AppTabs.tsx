@@ -16,20 +16,20 @@ import DiscoverEntryPage from "./pages/DiscoverEntryPage";
 import AboutPage from "./pages/AboutPage";
 import DiscoverPage from "./pages/DiscoverPage";
 import SettingsPage from "./pages/SettingsPage";
+import IntroPage from "./pages/IntroPage";
 import EntryPage from "./components/EntryPage";
+import SideMenu from "./components/SideMenu";
+import WellbeingPage from "./pages/WellbeingPage";
+import NewWalk from "./pages/NewWalk";
+import NewsPage from "./pages/NewsPage";
 
 import {
   home as homeIcon,
-  eye as browseIcon,
+  chatbubbles as wellbeingIcon,
   analytics as discoverIcon,
   footsteps as walkIcon,
   time as dashboardIcon,
 } from "ionicons/icons";
-import NewWalk from "./pages/NewWalk";
-import NewsPage from "./pages/NewsPage";
-
-import SideMenu from "./components/SideMenu";
-import GalleryPage from "./pages/GalleryPage";
 
 const AppTabs: React.FC = () => {
   const { loggedIn } = useAuth();
@@ -54,19 +54,22 @@ const AppTabs: React.FC = () => {
           <Route exact path="/app/dashboard">
             <DashboardPage />
           </Route>
-          <Route exact path="/app/gallery">
-            <GalleryPage />
+          <Route exact path="/app/wellbeing">
+            <WellbeingPage />
           </Route>
 
           {/* Sub Pages */}
-          <Route exact path="/app/about">
-            <AboutPage />
+          <Route exact path="/app/settings">
+            <SettingsPage />
           </Route>
           <Route exact path="/app/latest-news">
             <NewsPage />
           </Route>
-          <Route exact path="/app/settings">
-            <SettingsPage />
+          <Route exact path="/app/about">
+            <AboutPage />
+          </Route>
+          <Route exact path="/app/welcome">
+            <IntroPage />
           </Route>
 
           {/* Dynamic pages */}
@@ -97,9 +100,9 @@ const AppTabs: React.FC = () => {
             <IonIcon icon={dashboardIcon} />
             <IonLabel>My Walks</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="gallery" href="/app/gallery">
-            <IonIcon icon={browseIcon} />
-            <IonLabel>Gallery</IonLabel>
+          <IonTabButton tab="gallery" href="/app/wellbeing">
+            <IonIcon icon={wellbeingIcon} />
+            <IonLabel>Wellbeing</IonLabel>
           </IonTabButton>
         </IonTabBar>
       </IonTabs>

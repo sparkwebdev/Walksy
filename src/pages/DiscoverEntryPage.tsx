@@ -78,7 +78,7 @@ const DiscoverEntryPage: React.FC = () => {
                 <p className="text-body constrain constrain--small">
                   Please check back soon, or why not start your own walk?
                 </p>
-                <IonButton routerLink="/app/new-walk" color="success">
+                <IonButton routerLink="/app/new-walk" color="secondary">
                   <IonIcon icon={walkIcon} slot="start" />
                   Start a walk
                 </IonButton>
