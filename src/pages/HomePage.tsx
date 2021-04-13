@@ -110,7 +110,7 @@ const HomePage: React.FC = () => {
               <span className="ion-hide">Walksy</span>
               <img
                 className="logo"
-                src="assets/img/walksy-logo.svg"
+                src="assets/img/walksy-logo-2.svg"
                 alt=""
                 style={{
                   maxHeight: "80px",

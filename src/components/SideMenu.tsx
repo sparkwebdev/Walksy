@@ -24,7 +24,7 @@ const SideMenu: React.FC = () => {
       >
         <img
           className="logo"
-          src="assets/img/walksy-logo.svg"
+          src="assets/img/walksy-logo-2.svg"
           alt=""
           style={{
             marginTop: "50px",

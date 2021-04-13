@@ -75,7 +75,7 @@ const Intro: React.FC = () => {
           <IonSlide>
             <img
               className="intro__logo"
-              src="assets/img/walksy-logo.svg"
+              src="assets/img/walksy-logo-2.svg"
               alt=""
             />
             <div className="constrain constrain--medium ion-padding">
@@ -100,7 +100,7 @@ const Intro: React.FC = () => {
           <IonSlide>
             <img
               className="intro__logo"
-              src="assets/img/walksy-logo.svg"
+              src="assets/img/walksy-logo-2.svg"
               alt=""
             />
             <div className="constrain constrain--medium ion-padding">
@@ -122,7 +122,7 @@ const Intro: React.FC = () => {
           <IonSlide>
             <img
               className="intro__logo"
-              src="assets/img/walksy-logo.svg"
+              src="assets/img/walksy-logo-2.svg"
               alt=""
             />
             <div className="constrain constrain--medium ion-padding">
@@ -164,7 +164,7 @@ const Intro: React.FC = () => {
                 <>
                   <img
                     className="logo"
-                    src="assets/img/walksy-logo.svg"
+                    src="assets/img/walksy-logo-2.svg"
                     alt=""
                     style={{
                       maxHeight: "80px",
