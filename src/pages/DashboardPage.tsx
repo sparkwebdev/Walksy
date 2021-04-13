@@ -46,7 +46,7 @@ const DashboardPage: React.FC = () => {
                 steps={walk.steps}
                 distance={walk.distance}
                 coverImage={walk.coverImage}
-                userId={userId}
+                userId={walk.userId}
                 isMiniPreview={!walk.coverImage}
               />
             </IonRouterLink>

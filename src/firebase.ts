@@ -157,12 +157,18 @@ export const checkUniqueDisplayName = async (name: string) => {
 
 export const getRemoteUserData = async (userId: string) => {
   try {
-    const usersData = await firestore
+    const userData = await firestore
       .collection("users")
-      .doc(userId).get().then((user) => {
-        return user.data();
+      .where("userId", "==", userId)
+      .limit(1)
+      .get()
+      .then(({ docs }) => {
+        return docs[0].data();
+        // return docs.map((doc) => {
+        //   return doc.data();
+        // });
       })
-    return usersData;
+    return userData;
   } catch (error) {
     console.log("Error getting user data: ", error);
   }

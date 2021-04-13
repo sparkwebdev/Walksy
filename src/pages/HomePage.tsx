@@ -9,7 +9,6 @@ import {
   IonText,
   IonRouterLink,
   IonList,
-  IonItem,
   IonIcon,
   IonLoading,
 } from "@ionic/react";
@@ -130,7 +129,7 @@ const HomePage: React.FC = () => {
                     steps={walk.steps}
                     distance={walk.distance}
                     coverImage={walk.coverImage}
-                    userId={userId}
+                    userId={walk.userId}
                     isMiniPreview={!walk.coverImage}
                   />
                 </IonRouterLink>
@@ -175,7 +174,7 @@ const HomePage: React.FC = () => {
                     steps={walk.steps}
                     distance={walk.distance}
                     coverImage={walk.coverImage}
-                    userId={userId}
+                    userId={walk.userId}
                     isMiniPreview={!walk.coverImage}
                   />
                 </IonRouterLink>
@@ -211,7 +210,7 @@ const HomePage: React.FC = () => {
                     steps={walk.steps}
                     distance={walk.distance}
                     coverImage={walk.coverImage}
-                    userId={userId}
+                    userId={walk.userId}
                     isMiniPreview={!walk.coverImage}
                   />
                 </IonRouterLink>
@@ -228,7 +227,7 @@ const HomePage: React.FC = () => {
                       description={walk.description}
                       start={walk.start}
                       distance={walk.distance}
-                      userId={userId}
+                      userId={walk.userId}
                       isMiniPreview={true}
                     />
                   </IonRouterLink>
