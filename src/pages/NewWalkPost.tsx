@@ -49,7 +49,7 @@ const NewWalkPost: React.FC<{
       } else if (walksCtx.storedImagesForCover.length > 1) {
         const image = walksCtx.storedImagesForCover[0];
         setCoverImage(image);
-        updateWalkHandler({ image }, walksCtx.storedWalkId);
+        updateWalkHandler({ coverImage: image }, walksCtx.storedWalkId);
       } else if (walksCtx.storedImagesForCover.length === 0) {
         setChosenCoverImage(true);
       }
