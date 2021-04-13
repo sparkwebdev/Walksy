@@ -311,13 +311,14 @@ ion-tab-button ion-label {
   display: block;
 }
 .moments-list__note {
-  padding: 0.8em 1.3em 0.8em 1.6em;
-  font-size: 0.95em !important;
-  line-height: 1.5em !important;
+  padding: 1.5em 1.8em 1.5em 2em;
+  font-size: 1.5em !important;
+  line-height: 1.65em !important;
   text-align: left;
+  /* font-weight: bold; */
 }
 .moments-list__note::first-letter {
-  /* font-size: 1.3em !important; */
+  /* font-size: 2em !important; */
 }
 .moments-list-count {
   display: block;
@@ -564,7 +565,7 @@ ion-tab-button ion-label {
   font-size: 1.4rem !important;
   /* padding: 5px 15px; */
   margin-bottom: 5px;
-  max-width: calc(100vw - 5em);
+  max-width: calc(100% - 8em);
 }
 .walk-card__title small {
   line-height: 1.6;
@@ -576,9 +577,9 @@ ion-tab-button ion-label {
   padding: 0;
 }
 .walk-card:nth-child(2n) .walk-card__header .walk-card__title {
-  /* order: 2;
+  order: 2;
   margin-left: auto;
-  text-align: right; */
+  text-align: right;
 }
 .walk-card .walk-card__subtitle {
   color: var(--ion-color-medium) !important;
