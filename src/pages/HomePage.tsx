@@ -21,7 +21,7 @@ import { Moment, toMoment, toWalk, Walk } from "../data/models";
 import { firestore } from "../firebase";
 import {
   eyeOutline as browseIcon,
-  analyticsOutline as discoverIcon,
+  location as discoverIcon,
   timeOutline as dashboardIcon,
   peopleOutline as personIcon,
 } from "ionicons/icons";

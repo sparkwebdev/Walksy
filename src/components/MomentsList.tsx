@@ -11,9 +11,10 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { Moment } from "../data/models";
 import {
-  analyticsOutline as mapIcon,
+  location as mapIcon,
   trash as deleteIcon,
   checkmark as doneIcon,
+  createOutline as editingIcon,
 } from "ionicons/icons";
 import MapWithMarkers from "./MapWithMarkers";
 import WalksContext from "../data/walks-context";
@@ -69,11 +70,28 @@ const MomentsList: React.FC<{
               </span> */}
             </IonText>
           </IonCol>
-          <IonCol size="10" sizeSm="6" offsetSm="4">
-            <IonButton expand="block" onClick={viewMapHandler}>
+          <IonCol size="10" sizeSm="6" offsetSm="4" className="ion-text-right">
+            <IonButton
+              onClick={viewMapHandler}
+              className="ion-padding-start ion-padding-end"
+            >
               <IonIcon slot="start" icon={mapIcon} />
               View on Map
             </IonButton>
+            {props.canDelete && (
+              <IonButton
+                className="moments-list__delete"
+                color={isEditing ? "success" : "dark"}
+                // fill={isEditing ? "solid" : "clear"}
+                onClick={() => setIsEditing(!isEditing)}
+              >
+                {isEditing ? (
+                  <IonIcon icon={doneIcon} slot="icon-only" size="small" />
+                ) : (
+                  <IonIcon icon={editingIcon} slot="icon-only" size="small" />
+                )}
+              </IonButton>
+            )}
           </IonCol>
         </IonRow>
       </IonGrid>
@@ -98,8 +116,8 @@ const MomentsList: React.FC<{
             key={moment.id}
           >
             <IonGrid className="ion-no-padding">
-              <IonRow className="ion-no-margin">
-                <IonCol size={isEditing ? "9" : "12"}>
+              <IonRow className="ion-no-margin ion-align-items-center">
+                <IonCol size={isEditing ? "10" : "12"}>
                   {moment.imagePath && (
                     <IonCard className="moments-list__image-container ion-no-margin">
                       <img src={moment.imagePath} alt="" />
@@ -121,7 +139,7 @@ const MomentsList: React.FC<{
                   )}
                 </IonCol>
                 {props.canDelete && isEditing && (
-                  <IonCol>
+                  <IonCol className="ion-text-end">
                     <IonButton
                       className="moments-list__delete"
                       color="danger"
@@ -137,24 +155,6 @@ const MomentsList: React.FC<{
           </li>
         ))}
       </ol>
-      {props.canDelete && (
-        <div className="ion-text-center">
-          <IonButton
-            className="moments-list__delete ion-margin-bottom"
-            color={isEditing ? "success" : "danger"}
-            fill={isEditing ? "solid" : "clear"}
-            onClick={() => setIsEditing(!isEditing)}
-          >
-            {isEditing ? (
-              <IonIcon icon={doneIcon} slot="icon-only" size="small" />
-            ) : (
-              <IonIcon icon={deleteIcon} slot="icon-only" size="small" />
-            )}
-            &nbsp;
-            {isEditing ? "Done" : "Edit Moments"}
-          </IonButton>
-        </div>
-      )}
       <IonModal
         isOpen={showMap}
         onDidDismiss={() => {

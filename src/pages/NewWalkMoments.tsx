@@ -122,10 +122,7 @@ const NewWalkMoments: React.FC<{
   };
 
   return (
-    <IonCardContent
-      className="constrain constrain--large"
-      style={{ margin: "auto" }}
-    >
+    <IonCardContent className="constrain constrain--large">
       <NewWalkMomentsOutput colour={colour} />
 
       <IonModal
