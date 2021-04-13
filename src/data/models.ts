@@ -37,6 +37,8 @@ export interface Walk {
   userId: string;
   type: "user" | "curated" | "featured";
   overview: string;
+  location: string;
+  circular: boolean;
 }
 
 export interface Location {
