@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useState,
-  useRef,
-  useEffect,
-  useContext,
-} from "react";
+import React, { useCallback, useState, useRef, useEffect } from "react";
 import {
   GoogleMap,
   useLoadScript,
@@ -22,7 +16,6 @@ import {
   IonRow,
 } from "@ionic/react";
 import { close as cancelIcon } from "ionicons/icons";
-import WalksContext from "../data/walks-context";
 
 declare const window: any;
 
@@ -39,14 +32,13 @@ const options = {
 
 const MapWithMarkers: React.FC<{
   moments: Moment[];
+  locations?: Location[];
   colour?: string;
   onDismiss?: () => void;
 }> = (props) => {
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyB2do_Zm1jyT-IugUTa9HfLo8a6EplMMY8",
   });
-
-  const walksCtx = useContext(WalksContext);
 
   const [center, setCenter] = useState({
     lat: 55.953251,
@@ -70,12 +62,13 @@ const MapWithMarkers: React.FC<{
 
   const fitBounds = (map: any) => {
     const bounds = new window.google.maps.LatLngBounds();
-
-    const walk: any = walksCtx.walk;
-    const locations = walk.locations.map((location: Location) => {
-      bounds.extend(location);
-      return { lat: location!.lat, lng: location!.lng };
-    });
+    let locations: {}[] = [];
+    if (props.locations) {
+      locations = props.locations.map((location: Location) => {
+        bounds.extend(location);
+        return { lat: location!.lat, lng: location!.lng };
+      });
+    }
     map.fitBounds(bounds);
 
     if (props.moments.length < 2) {

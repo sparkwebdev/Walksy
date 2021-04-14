@@ -9,7 +9,7 @@ import {
   IonText,
 } from "@ionic/react";
 import React, { useContext, useEffect, useState } from "react";
-import { Moment } from "../data/models";
+import { Moment, Location } from "../data/models";
 import {
   location as mapIcon,
   trash as deleteIcon,
@@ -21,6 +21,7 @@ import WalksContext from "../data/walks-context";
 
 const MomentsList: React.FC<{
   moments: Moment[];
+  locations?: Location[];
   colour?: string;
   canDelete?: boolean;
   showMap?: boolean;
@@ -166,6 +167,7 @@ const MomentsList: React.FC<{
       >
         <MapWithMarkers
           moments={momentsWithLocations}
+          locations={props.locations ? props.locations : []}
           onDismiss={() => setShowMap(false)}
           colour={props.colour}
           key={mapKey}

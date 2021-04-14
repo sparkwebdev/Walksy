@@ -38,7 +38,7 @@ const WalkEntryPage: React.FC = () => {
       <IonContent className="ion-padding-bottom">
         <div className="ion-margin-bottom constrain constrain--large">
           <WalkItem
-            id={id}
+            id={walk!.id}
             title={walk?.title}
             colour={walk?.colour}
             description={walk?.description}
@@ -47,6 +47,7 @@ const WalkEntryPage: React.FC = () => {
             steps={walk?.steps}
             distance={walk?.distance}
             coverImage={walk?.coverImage}
+            locations={walk?.locations}
             type={walk?.type}
             userId={walk?.userId}
             shouldShare={share && walksCtx.moments.length === 0}

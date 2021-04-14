@@ -11,7 +11,7 @@ import { isPlatform } from "@ionic/react";
 
 import { getUnitDistance } from "../helpers";
 
-import { Moment, toMoment } from "../data/models";
+import { Moment, toMoment, Location } from "../data/models";
 
 import { firestore, getRemoteUserData } from "../firebase";
 import MomentsList from "./MomentsList";
@@ -23,7 +23,7 @@ import {
 } from "ionicons/icons";
 
 const WalkItem: React.FC<{
-  id?: string;
+  id: string;
   title?: string;
   colour?: string;
   description?: [];
@@ -32,6 +32,7 @@ const WalkItem: React.FC<{
   steps?: number;
   distance?: number;
   coverImage?: string;
+  locations?: Location[];
   type?: string;
   userId?: string;
   shouldShare?: boolean;
@@ -154,7 +155,11 @@ const WalkItem: React.FC<{
         </IonGrid>
         {moments.length > 0 ? (
           <>
-            <MomentsList moments={moments} colour={props.colour} />
+            <MomentsList
+              moments={moments}
+              locations={props.locations ? props.locations : []}
+              colour={props.colour}
+            />
             {isPlatform("mobile") && moments.length > 0 && (
               <Share
                 shareText={`Have a look at my ${
