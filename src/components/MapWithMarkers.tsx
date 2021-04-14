@@ -35,6 +35,7 @@ const MapWithMarkers: React.FC<{
   locations?: Location[];
   colour?: string;
   onDismiss?: () => void;
+  isWalking?: boolean;
 }> = (props) => {
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyB2do_Zm1jyT-IugUTa9HfLo8a6EplMMY8",
@@ -89,15 +90,6 @@ const MapWithMarkers: React.FC<{
     walkPath.setMap(map);
   };
 
-  const getMapMarker = (index: number) => {
-    if (index === props.moments.length - 1) {
-      return "./assets/icon/map_marker_start.svg";
-    } else if (index === 0) {
-      return "./assets/icon/map_marker_end.svg";
-    }
-    return "./assets/icon/map_marker.svg";
-  };
-
   if (loadError) return <div>Error loading maps.</div>;
   if (!isLoaded) return <div>Loading maps.</div>;
 
@@ -110,6 +102,21 @@ const MapWithMarkers: React.FC<{
         options={options}
         onLoad={onMapLoad}
       >
+        {props.locations && props.locations.length > 0 && (
+          <Marker
+            position={{
+              lat: props.locations![0].lat,
+              lng: props.locations![0].lng,
+            }}
+            icon={{
+              url: "./assets/icon/map_marker_start.svg",
+              scaledSize: new window.google.maps.Size(30, 30),
+              origin: new window.google.maps.Point(0, 0),
+              anchor: new window.google.maps.Point(15, 30),
+            }}
+          />
+        )}
+
         {props.moments.map((moment: Moment, index) => {
           return (
             <Marker
@@ -119,7 +126,7 @@ const MapWithMarkers: React.FC<{
                 lng: moment.location!.lng,
               }}
               icon={{
-                url: getMapMarker(index),
+                url: "./assets/icon/map_marker.svg",
                 scaledSize: new window.google.maps.Size(30, 30),
                 origin: new window.google.maps.Point(0, 0),
                 anchor: new window.google.maps.Point(15, 30),
@@ -134,6 +141,23 @@ const MapWithMarkers: React.FC<{
             />
           );
         })}
+
+        {props.locations && props.locations.length > 1 && (
+          <Marker
+            position={{
+              lat: props.locations![props.locations.length - 1].lat,
+              lng: props.locations![props.locations.length - 1].lng,
+            }}
+            icon={{
+              url: props.isWalking
+                ? "./assets/icon/map_marker_current_location.svg"
+                : "./assets/icon/map_marker_end.svg",
+              scaledSize: new window.google.maps.Size(30, 30),
+              origin: new window.google.maps.Point(0, 0),
+              anchor: new window.google.maps.Point(15, 30),
+            }}
+          />
+        )}
 
         {selected ? (
           <InfoWindow

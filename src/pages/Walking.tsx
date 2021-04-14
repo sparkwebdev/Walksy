@@ -148,6 +148,7 @@ const Walking: React.FC = () => {
       distance,
       locations,
     });
+    clearWatch();
     setEnd(endDate);
   };
 

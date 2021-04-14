@@ -20,6 +20,7 @@ const NewWalkMomentsOutput: React.FC<{
               locations={locations}
               colour={props.colour}
               canDelete={true}
+              isWalking={true}
             />
           ) : (
             <div

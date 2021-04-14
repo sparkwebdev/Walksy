@@ -25,6 +25,7 @@ const MomentsList: React.FC<{
   colour?: string;
   canDelete?: boolean;
   showMap?: boolean;
+  isWalking?: boolean;
 }> = (props) => {
   const walksCtx = useContext(WalksContext);
   const [momentsWithLocations, setMomentsWithLocations] = useState<Moment[]>(
@@ -171,6 +172,7 @@ const MomentsList: React.FC<{
           onDismiss={() => setShowMap(false)}
           colour={props.colour}
           key={mapKey}
+          isWalking={!!props.isWalking}
         />
       </IonModal>
     </>
