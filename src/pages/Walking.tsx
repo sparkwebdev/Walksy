@@ -101,6 +101,7 @@ const Walking: React.FC = () => {
       const newLocation: Location = {
         lat: watchPosition.coords.latitude,
         lng: watchPosition.coords.longitude,
+        timestamp: new Date().toISOString(),
       };
       const latestLoc = locations?.slice(-1).pop();
       if (latestLoc && locations) {
@@ -109,7 +110,10 @@ const Walking: React.FC = () => {
             lat: latestLoc.lat,
             lng: latestLoc.lng,
           },
-          newLocation,
+          {
+            lat: newLocation.lat,
+            lng: newLocation.lng,
+          },
           "km"
         );
         if (diff > 0.01) {

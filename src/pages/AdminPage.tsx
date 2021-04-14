@@ -95,6 +95,7 @@ const AdminPage: React.FC = () => {
             {
               lat: results![i].latitude || 0,
               lng: results![i].longitude || 0,
+              timestamp: new Date().toISOString(),
             },
             results![i].timestamp
           );
@@ -194,6 +195,7 @@ const AdminPage: React.FC = () => {
         value = {
           lat: 1,
           lng: 2,
+          timestamp: new Date().toISOString(),
         };
       }
       return moment.id === momentId ? { ...moment, [key]: value } : moment;
