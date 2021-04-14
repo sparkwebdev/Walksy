@@ -12,7 +12,6 @@ import {
   IonIcon,
   IonItem,
   IonLabel,
-  IonRouterLink,
   IonText,
 } from "@ionic/react";
 
@@ -41,7 +40,6 @@ const WalkItemPreview: React.FC<{
 }> = (props) => {
   const { userId } = useAuth();
   const [displayName, setDisplayName] = useState<string>("");
-  const [profilePic, setProfilePic] = useState<string>("");
   let time = null;
   if (props.start && props.end) {
     const timeDiff = getTimeDiff(props.start, props.end);
@@ -59,7 +57,6 @@ const WalkItemPreview: React.FC<{
 
   const loadUserData = (userData: any) => {
     setDisplayName(userData?.displayName);
-    setProfilePic(userData?.profilePic);
   };
 
   return (
@@ -118,15 +115,6 @@ const WalkItemPreview: React.FC<{
               >
                 {props.type}
               </IonBadge>
-            )}
-            {profilePic && (
-              <img
-                src={profilePic}
-                alt=""
-                className="walk-item__profile-badge profile-badge__image profile-badge__image--small"
-                width="40"
-                height="40"
-              />
             )}
             <IonCardContent
               className="walk-item__content ion-no-padding ion-no-margin"

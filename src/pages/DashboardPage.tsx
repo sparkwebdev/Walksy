@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  IonContent,
-  IonItem,
-  IonList,
-  IonLoading,
-  IonPage,
-  IonRouterLink,
-} from "@ionic/react";
+import { IonContent, IonLoading, IonPage, IonRouterLink } from "@ionic/react";
 import PageHeader from "../components/PageHeader";
 import { firestore } from "../firebase";
 import { Walk, toWalk } from "../data/models";

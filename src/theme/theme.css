@@ -161,31 +161,6 @@ ion-tab-button ion-label {
   font-family: "TheanoDidot" !important;
   color: var(--ion-color-medium);
 }
-.profile-badge {
-  text-align: center;
-  margin: 10px auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.profile-badge__image-prompt {
-  color: grey;
-  margin-top: 10px;
-}
-.profile-badge__image {
-  object-fit: cover;
-  width: 100px;
-  height: 100px;
-  border-radius: 50% !important;
-}
-.profile-badge__image--small {
-  width: 60px;
-  height: 60px;
-}
-.profile-badge__image--smaller {
-  width: 45px;
-  height: 45px;
-}
 
 /* Walk */
 .sub-title {
@@ -763,12 +738,6 @@ ion-slides {
   top: 20px;
   right: 0;
   padding: 8px 12px;
-}
-
-.walk-item .walk-item__profile-badge {
-  position: absolute;
-  top: 20px;
-  left: 20px;
 }
 
 .walk-item__content {

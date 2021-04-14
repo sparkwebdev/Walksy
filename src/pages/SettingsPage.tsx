@@ -46,7 +46,6 @@ const SettingsPage: React.FC = () => {
   const [lastName, setLastName] = useState("");
   const [age, setAge] = useState("");
   const [location, setLocation] = useState("");
-  const [profilePic, setProfilePic] = useState("");
 
   const [metric, setMetric] = useState(true);
   const [darkMode, setDarkMode] = useState(false);
@@ -90,7 +89,6 @@ const SettingsPage: React.FC = () => {
     setLastName(userData?.lastName);
     setAge(userData?.age);
     setLocation(userData?.location);
-    setProfilePic(userData?.profilePic);
   };
 
   const saveDetailsHandler = async () => {
@@ -105,7 +103,6 @@ const SettingsPage: React.FC = () => {
       lastName,
       age,
       location,
-      profilePic,
     })
       .then(() => {
         setEditing(false);
@@ -164,22 +161,7 @@ const SettingsPage: React.FC = () => {
         <IonGrid className="constrain constrain--large">
           <IonRow className="ion-margin-top">
             <IonCol>
-              <div className="profile-badge">
-                {profilePic && (
-                  <img
-                    src={profilePic}
-                    alt={`Profile for ${firstName} ${lastName}`}
-                    className="profile-badge__image"
-                    width="100"
-                    height="100"
-                  />
-                )}
-                {profilePic &&
-                  profilePic.startsWith("https://eu.ui-avatars.com") && (
-                    <small className="text-body profile-badge__image-prompt">
-                      Tap to change profile image
-                    </small>
-                  )}
+              <div className="ion-text-center">
                 {displayName && <h3>{displayName}</h3>}
                 {userCreatedAt && (
                   <IonCardSubtitle>

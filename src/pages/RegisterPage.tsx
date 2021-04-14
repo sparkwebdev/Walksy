@@ -114,8 +114,7 @@ const RegisterPage: React.FC = () => {
   const completeProfileHandler = async (
     displayName: string,
     age: string,
-    location: string,
-    profilePic: string
+    location: string
   ) => {
     setStatus({
       ...status,
@@ -128,7 +127,6 @@ const RegisterPage: React.FC = () => {
       displayName,
       location,
       age,
-      profilePic,
     })
       .then(() => {
         setStatus({
@@ -326,15 +324,9 @@ const RegisterPage: React.FC = () => {
                 onSubmit={(
                   displayName: string,
                   age: string,
-                  location: string,
-                  profilePic: string
+                  location: string
                 ) => {
-                  completeProfileHandler(
-                    displayName,
-                    age,
-                    location,
-                    profilePic
-                  );
+                  completeProfileHandler(displayName, age, location);
                 }}
               />
             )}

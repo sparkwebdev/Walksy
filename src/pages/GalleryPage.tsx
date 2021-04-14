@@ -21,7 +21,6 @@ const GalleryPage: React.FC = () => {
   const [moments, setMoments] = useState<Moment[][]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [displayName, setDisplayName] = useState<string>("");
-  const [profilePic, setProfilePic] = useState<string>("");
 
   useEffect(() => {
     if (userId) {
@@ -33,7 +32,6 @@ const GalleryPage: React.FC = () => {
 
   const loadUserData = (userData: any) => {
     setDisplayName(userData?.displayName);
-    setProfilePic(userData?.profilePic);
   };
 
   useEffect(() => {
@@ -97,16 +95,6 @@ const GalleryPage: React.FC = () => {
                             color: "#fff",
                           }}
                         >
-                          {profilePic && (
-                            <img
-                              src={profilePic}
-                              alt=""
-                              className="walk-item__profile-badge profile-badge__image profile-badge__image--smaller"
-                              width="40"
-                              height="40"
-                              style={{ marginRight: "10px" }}
-                            />
-                          )}
                           <p>
                             <strong>{displayName}</strong>
                           </p>

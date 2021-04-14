@@ -5,7 +5,6 @@ export interface UserProfile {
   age: string;
   location: string;
   displayName: string;
-  profilePic: string;
 }
 
 export interface UserPreferences {

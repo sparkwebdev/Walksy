@@ -1,5 +1,5 @@
-import { IonButton, IonPage } from "@ionic/react";
-import React, { Component, useState } from "react";
+import { IonButton } from "@ionic/react";
+import React, { useState } from "react";
 
 import Recorder from "react-mp3-recorder";
 

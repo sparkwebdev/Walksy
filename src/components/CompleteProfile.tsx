@@ -33,12 +33,7 @@ const CompleteProfile: React.FC<{
   firstName: string;
   lastName: string;
   userId: string;
-  onSubmit: (
-    displayName: string,
-    age: string,
-    location: string,
-    profilePic: string
-  ) => void;
+  onSubmit: (displayName: string, age: string, location: string) => void;
 }> = (props) => {
   const [status, setStatus] = useState({
     loading: false,
@@ -48,9 +43,6 @@ const CompleteProfile: React.FC<{
   const [displayName, setDisplayName] = useState<string>("");
   const [age, setAge] = useState<string>("");
   const [location, setLocation] = useState<string>("");
-  const [generatedProfileImage, setGeneratedProfileImage] = useState<string>(
-    ""
-  );
 
   const generateDisplayName = (firstName: string, lastName: string) => {
     const tryName = `${firstName} ${lastName}`
@@ -79,9 +71,6 @@ const CompleteProfile: React.FC<{
       generateDisplayName(props.firstName, props.lastName).then(
         (suggestedDisplayName) => {
           setDisplayName(suggestedDisplayName);
-          setGeneratedProfileImage(
-            `https://eu.ui-avatars.com/api/?name=${props.firstName}+${props.lastName}&background=${randomColour}&color=000`
-          );
         }
       );
     }
@@ -111,7 +100,7 @@ const CompleteProfile: React.FC<{
       error: false,
       errorMessage: "",
     });
-    props.onSubmit(displayName, location, age, generatedProfileImage);
+    props.onSubmit(displayName, location, age);
   };
 
   return (

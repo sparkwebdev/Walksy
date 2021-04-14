@@ -18,7 +18,6 @@ import MomentsList from "./MomentsList";
 import { useAuth } from "../auth";
 import {
   timerOutline as timeIcon,
-  arrowUpCircleOutline as distanceIcon,
   footstepsOutline as walkIcon,
 } from "ionicons/icons";
 
@@ -39,7 +38,6 @@ const WalkItem: React.FC<{
 }> = (props) => {
   const { userId } = useAuth();
   const [displayName, setDisplayName] = useState<string>("");
-  const [profilePic, setProfilePic] = useState<string>("");
   const timeDiff =
     props.end && props.start ? getTimeDiff(props.start, props.end) : 0;
   const time = getMinAndSec(timeDiff);
@@ -61,7 +59,6 @@ const WalkItem: React.FC<{
 
   const loadUserData = (userData: any) => {
     setDisplayName(userData?.displayName);
-    setProfilePic(userData?.profilePic);
   };
 
   return (
@@ -87,20 +84,6 @@ const WalkItem: React.FC<{
                 alignItems: "center",
               }}
             >
-              {profilePic && (
-                <div className="ion-text-center">
-                  <img
-                    src={profilePic}
-                    alt=""
-                    className="walk-item__profile-badge profile-badge__image profile-badge__image--small"
-                    width="40"
-                    height="40"
-                    style={{
-                      marginRight: "10px",
-                    }}
-                  />
-                </div>
-              )}
               <IonText className="text-heading">
                 <span className="text-body">
                   {props.userId !== userId && displayName && (
