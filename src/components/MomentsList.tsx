@@ -14,7 +14,7 @@ import {
   location as mapIcon,
   trash as deleteIcon,
   checkmark as doneIcon,
-  createOutline as editingIcon,
+  settingsOutline as editIcon,
 } from "ionicons/icons";
 import MapWithMarkers from "./MapWithMarkers";
 import WalksContext from "../data/walks-context";
@@ -83,14 +83,14 @@ const MomentsList: React.FC<{
             {props.canDelete && (
               <IonButton
                 className="moments-list__delete"
-                color={isEditing ? "success" : "dark"}
+                color={isEditing ? "success" : "secondary"}
                 // fill={isEditing ? "solid" : "clear"}
                 onClick={() => setIsEditing(!isEditing)}
               >
                 {isEditing ? (
                   <IonIcon icon={doneIcon} slot="icon-only" size="small" />
                 ) : (
-                  <IonIcon icon={editingIcon} slot="icon-only" size="small" />
+                  <IonIcon icon={editIcon} slot="icon-only" size="small" />
                 )}
               </IonButton>
             )}
@@ -119,7 +119,10 @@ const MomentsList: React.FC<{
           >
             <IonGrid className="ion-no-padding">
               <IonRow className="ion-no-margin ion-align-items-center">
-                <IonCol size={isEditing ? "10" : "12"}>
+                <IonCol
+                  size={isEditing ? "9" : "12"}
+                  sizeSm={isEditing ? "10" : "12"}
+                >
                   {moment.imagePath && (
                     <IonCard className="moments-list__image-container ion-no-margin">
                       <img src={moment.imagePath} alt="" />
