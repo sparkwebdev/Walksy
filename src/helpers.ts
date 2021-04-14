@@ -218,8 +218,8 @@ export function hslToHex(h: number, s: number, l: number) {
 
 /* Map and Geo functions */
 export function getDistanceBetweenPoints(
-  start: { lat: number; long: number },
-  end: { lat: number; long: number },
+  start: { lat: number; lng: number },
+  end: { lat: number; lng: number },
   unit: "km" | "miles"
 ) {
   let earthRadius = {
@@ -229,9 +229,9 @@ export function getDistanceBetweenPoints(
 
   let R = earthRadius[unit];
   let lat1 = start.lat;
-  let lon1 = start.long;
+  let lon1 = start.lng;
   let lat2 = end.lat;
-  let lon2 = end.long;
+  let lon2 = end.lng;
 
   let dLat = toRad(lat2 - lat1);
   let dLon = toRad(lon2 - lon1);

@@ -6,8 +6,6 @@ import {
   IonCol,
   IonGrid,
   IonIcon,
-  IonInput,
-  IonItem,
   IonLabel,
   IonModal,
   IonRow,
@@ -30,8 +28,8 @@ const NewWalkMoments: React.FC<{
   colour: string;
   momentType: string;
   resetMomentType: () => void;
-  getLocation: () => Promise<Location | null>;
-}> = ({ walkId, colour, momentType, resetMomentType, getLocation }) => {
+  latestLocation?: Location | null;
+}> = ({ walkId, colour, momentType, resetMomentType, latestLocation }) => {
   const walksCtx = useContext(WalksContext);
 
   // const imagePathRef = useRef<HTMLIonInputElement>(null);
@@ -104,21 +102,18 @@ const NewWalkMoments: React.FC<{
           resetMomentType();
         });
     }
-    getLocation()
-      .then((currentLocation) => {
-        walksCtx.addMoment(
-          walkId,
-          loadedPhotoPath,
-          enteredAudioPath!.toString(),
-          enteredNote!.toString(),
-          currentLocation,
-          new Date().toISOString()
-        );
-      })
-      .then(() => {
-        setTakenPhoto(null);
-        resetMomentType();
-      });
+    if (latestLocation !== undefined) {
+      walksCtx.addMoment(
+        walkId,
+        loadedPhotoPath,
+        enteredAudioPath!.toString(),
+        enteredNote!.toString(),
+        latestLocation,
+        new Date().toISOString()
+      );
+    }
+    setTakenPhoto(null);
+    resetMomentType();
   };
 
   return (
