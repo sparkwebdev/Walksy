@@ -32,6 +32,7 @@ const WalkItem: React.FC<{
   distance?: number;
   coverImage?: string;
   locations?: Location[];
+  location?: string;
   type?: string;
   userId?: string;
   shouldShare?: boolean;
@@ -85,20 +86,33 @@ const WalkItem: React.FC<{
               }}
             >
               <IonText className="text-heading">
-                <span className="text-body">
-                  {props.userId !== userId && displayName && (
-                    <>
-                      by {displayName}
-                      <br />
-                    </>
+                <ul className="walk-item__meta-data text-body">
+                  <li className="walk-item__details">
+                    {props.start ? (
+                      <span className="walk-item__detail ion-text-uppercase">
+                        {formatDate(props.start, false)}
+                      </span>
+                    ) : null}
+                    {props.location ? (
+                      <span className="walk-item__detail">
+                        , {props.location}
+                      </span>
+                    ) : null}
+                    {props.distance && props.distance > 0.1 ? (
+                      <span className="walk-item__detail">
+                        , {props.distance.toFixed(2)} {getUnitDistance()}
+                      </span>
+                    ) : null}
+                  </li>
+                  {displayName && (
+                    <li className="walk-item__username"> by {displayName}</li>
                   )}
-                  <span className="ion-text-uppercase">
-                    {props.start && formatDate(props.start, false)}
-                  </span>
                   {props.description && (
-                    <span> — {props.description.join(", ")}</span>
+                    <li className="walk-item__tags">
+                      #{props.description.join(" #")}
+                    </li>
                   )}
-                </span>
+                </ul>
                 <IonText
                   style={{
                     display: "flex",
