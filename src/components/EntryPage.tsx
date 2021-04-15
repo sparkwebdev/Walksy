@@ -39,7 +39,10 @@ const EntryPage: React.FC = () => {
                 </p>
               )}
               <div className="text-body" style={{ whiteSpace: "pre-line" }}>
-                {entry?.content && entry.content}
+                {entry?.content &&
+                  entry?.content
+                    .split("\n")
+                    .map((str, index) => <p key={index}>{str}</p>)}
               </div>
             </IonCol>
           </IonRow>
