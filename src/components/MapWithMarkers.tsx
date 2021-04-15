@@ -26,7 +26,8 @@ const mapContainerStyle = {
 
 const options = {
   styles: mapStyles,
-  disableDefaultUI: true,
+  fullscreenControl: false,
+  streetViewControl: false,
   zoomControl: true,
 };
 
