@@ -102,16 +102,15 @@ const NewWalkMoments: React.FC<{
           resetMomentType();
         });
     }
-    if (latestLocation !== undefined) {
-      walksCtx.addMoment(
-        walkId,
-        loadedPhotoPath,
-        enteredAudioPath!.toString(),
-        enteredNote!.toString(),
-        latestLocation,
-        new Date().toISOString()
-      );
-    }
+
+    walksCtx.addMoment(
+      walkId,
+      loadedPhotoPath,
+      enteredAudioPath!.toString(),
+      enteredNote!.toString(),
+      latestLocation || null,
+      new Date().toISOString()
+    );
     setTakenPhoto(null);
     resetMomentType();
   };
