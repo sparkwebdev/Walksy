@@ -540,7 +540,7 @@ ion-tab-button ion-label {
   font-size: 1.4rem !important;
   /* padding: 5px 15px; */
   margin-bottom: 5px;
-  max-width: calc(100% - 8em);
+  max-width: calc(100% - 6rem);
 }
 .walk-card__title small {
   line-height: 1.6;
