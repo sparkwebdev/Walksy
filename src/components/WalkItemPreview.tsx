@@ -36,6 +36,8 @@ const WalkItemPreview: React.FC<{
   type?: string;
   overview?: string;
   userId?: string;
+  location?: string;
+  isCircular?: boolean;
   isMiniPreview?: boolean;
 }> = (props) => {
   const { userId } = useAuth();
@@ -59,11 +61,40 @@ const WalkItemPreview: React.FC<{
     setDisplayName(userData?.displayName);
   };
 
+  const metaData = (
+    <>
+      <h3 className="walk-item__title text-heading">{props.title}</h3>
+      <ul className="walk-item__meta-data text-body">
+        <li className="walk-item__details">
+          {props.start ? (
+            <span className="walk-item__detail ion-text-uppercase">
+              {formatDate(props.start, false)}
+            </span>
+          ) : null}
+          {props.location ? (
+            <span className="walk-item__detail">, {props.location}</span>
+          ) : null}
+          {props.distance && props.distance > 0.1 ? (
+            <span className="walk-item__detail">
+              , {props.distance.toFixed(2)} {getUnitDistance()}
+            </span>
+          ) : null}
+        </li>
+        {displayName && (
+          <li className="walk-item__username"> by {displayName}</li>
+        )}
+        {props.description && (
+          <li className="walk-item__tags">#{props.description.join(" #")}</li>
+        )}
+      </ul>
+    </>
+  );
+
   return (
     <>
       {props.isMiniPreview ? (
         <IonItem
-          className="ion-no-margin"
+          className="ion-no-margin walk-item walk-item--mini"
           style={{
             background: "rgba(255, 255, 255, 0.925)",
             borderLeft: `solid 5px ${props.colour}`,
@@ -72,42 +103,20 @@ const WalkItemPreview: React.FC<{
           }}
           detail={true}
         >
-          <IonLabel className="text-heading">
-            {props.title}
-            <small
-              className="small-print"
-              style={{ lineHeight: "1.2em", fontSize: "0.9em" }}
-            >
-              <br /> by {displayName}
-              <br />
-              {props.start ? (
-                <span className="ion-text-uppercase">
-                  {formatDate(props.start, false)}
-                </span>
-              ) : null}
-              {props.distance && props.distance > 0.1 ? (
-                <span>
-                  , {props.distance.toFixed(2)} {getUnitDistance()}
-                </span>
-              ) : null}
-              {props.description && (
-                <span> — {props.description.join(", ")}</span>
-              )}
-            </small>
-          </IonLabel>
+          <IonLabel>{metaData}</IonLabel>
         </IonItem>
       ) : (
-        <IonCard className="ion-no-margin">
-          <div className="walk-item">
-            {props.coverImage && (
-              <img
-                className="walk-item__cover-image"
-                src={props.coverImage}
-                alt={props.title}
-                width="400"
-                height="300"
-              />
-            )}
+        <IonCard className="ion-no-margin walk-item walk-item--full">
+          {props.coverImage && (
+            <img
+              className="walk-item__cover-image"
+              src={props.coverImage}
+              alt={props.title}
+              width="400"
+              height="300"
+            />
+          )}
+          <div className="walk-item__type-container">
             {props.type && props.type !== "user" && (
               <IonBadge
                 className="ion-text-uppercase walk-item__type"
@@ -116,70 +125,29 @@ const WalkItemPreview: React.FC<{
                 {props.type}
               </IonBadge>
             )}
-            <IonCardContent
-              className="walk-item__content ion-no-padding ion-no-margin"
-              style={{
-                borderBottom: "solid 6px " + props.colour,
-              }}
-            >
-              <IonItem
-                className="ion-item-transparent"
-                lines="none"
-                detail={true}
+            {!!props.isCircular && (
+              <IonBadge
+                className="ion-text-uppercase walk-item__type"
+                color="tertiary"
               >
-                <IonText className="text-heading" color="medium">
-                  <h2 style={{ fontSize: "1.2em" }}>
-                    <strong>{props.title}</strong>
-                  </h2>
-                  <p className="text-body">
-                    by {displayName}
-                    <br />
-                    {props.type !== "curated" && (
-                      <span className="ion-text-uppercase">
-                        {props.start && formatDate(props.start, false)}
-                      </span>
-                    )}
-                    {props.description && (
-                      <span> — {props.description.join(", ")}</span>
-                    )}
-                  </p>
-                  <IonText
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      marginTop: "5px",
-                    }}
-                  >
-                    {props.distance && props.distance > 0.1 ? (
-                      <span>
-                        <IonIcon icon={distanceIcon} />
-                        &nbsp;
-                        {props.distance.toFixed(2)} {getUnitDistance()}
-                      </span>
-                    ) : null}
-                    {props.userId === userId &&
-                    props.steps &&
-                    props.steps > 0 &&
-                    time &&
-                    time["min"] > 0 ? (
-                      <span style={{ marginLeft: "10px" }}>
-                        <IonIcon icon={walkIcon} />
-                        &nbsp;
-                        {numberWithCommas(props.steps)}&nbsp;
-                        <span className="smallprint">steps</span>
-                        <span style={{ marginLeft: "10px" }}>
-                          <IonIcon icon={timeIcon} />
-                          &nbsp;
-                          {time["min"]}&nbsp;
-                          <span className="smallprint">min</span>
-                        </span>
-                      </span>
-                    ) : null}
-                  </IonText>
-                </IonText>
-              </IonItem>
-            </IonCardContent>
+                Circular
+              </IonBadge>
+            )}
           </div>
+          <IonCardContent
+            className="walk-item__content ion-no-padding ion-no-margin"
+            style={{
+              borderBottom: "solid 6px " + props.colour,
+            }}
+          >
+            <IonItem
+              className="ion-item-transparent"
+              lines="none"
+              detail={true}
+            >
+              <IonLabel color="medium">{metaData}</IonLabel>
+            </IonItem>
+          </IonCardContent>
           {props.overview && (
             <IonItem className="walk-item__overview" lines="none" detail={true}>
               <p className="text-heading">

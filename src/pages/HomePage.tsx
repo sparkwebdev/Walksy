@@ -130,6 +130,8 @@ const HomePage: React.FC = () => {
                     distance={walk.distance}
                     coverImage={walk.coverImage}
                     userId={walk.userId}
+                    isCircular={walk.circular}
+                    location={walk?.location}
                     isMiniPreview={!walk.coverImage}
                   />
                 </IonRouterLink>
@@ -175,6 +177,8 @@ const HomePage: React.FC = () => {
                     distance={walk.distance}
                     coverImage={walk.coverImage}
                     userId={walk.userId}
+                    isCircular={walk.circular}
+                    location={walk?.location}
                     isMiniPreview={!walk.coverImage}
                   />
                 </IonRouterLink>
@@ -211,6 +215,8 @@ const HomePage: React.FC = () => {
                     distance={walk.distance}
                     coverImage={walk.coverImage}
                     userId={walk.userId}
+                    isCircular={walk.circular}
+                    location={walk?.location}
                     isMiniPreview={!walk.coverImage}
                   />
                 </IonRouterLink>
@@ -228,6 +234,8 @@ const HomePage: React.FC = () => {
                       start={walk.start}
                       distance={walk.distance}
                       userId={walk.userId}
+                      isCircular={walk.circular}
+                      location={walk?.location}
                       isMiniPreview={true}
                     />
                   </IonRouterLink>

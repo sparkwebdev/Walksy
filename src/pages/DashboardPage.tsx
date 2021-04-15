@@ -40,6 +40,8 @@ const DashboardPage: React.FC = () => {
                 distance={walk.distance}
                 coverImage={walk.coverImage}
                 userId={walk.userId}
+                isCircular={walk.circular}
+                location={walk?.location}
                 isMiniPreview={!walk.coverImage}
               />
             </IonRouterLink>

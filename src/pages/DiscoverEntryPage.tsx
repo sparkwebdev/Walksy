@@ -102,6 +102,8 @@ const DiscoverEntryPage: React.FC = () => {
                       coverImage={walk.coverImage}
                       type={walk.type}
                       overview={walk.overview}
+                      isCircular={walk.circular}
+                      location={walk?.location}
                       userId={walk.userId}
                     />
                   </IonRouterLink>
