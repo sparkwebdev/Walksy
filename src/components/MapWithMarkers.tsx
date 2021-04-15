@@ -19,16 +19,9 @@ import { close as cancelIcon } from "ionicons/icons";
 
 declare const window: any;
 
-const mapContainerStyle = {
-  width: "100%",
-  height: "calc(100% - 84px)",
-};
-
 const options = {
   styles: mapStyles,
-  fullscreenControl: false,
-  streetViewControl: false,
-  zoomControl: true,
+  disableDefaultUI: true,
 };
 
 const MapWithMarkers: React.FC<{
@@ -41,6 +34,11 @@ const MapWithMarkers: React.FC<{
   const { isLoaded, loadError } = useLoadScript({
     googleMapsApiKey: "AIzaSyB2do_Zm1jyT-IugUTa9HfLo8a6EplMMY8",
   });
+
+  const mapContainerStyle = {
+    width: "100%",
+    height: !props.isWalking ? "35vh" : "calc(100% - 84px)",
+  };
 
   const [center, setCenter] = useState({
     lat: 55.953251,
@@ -197,9 +195,13 @@ const MapWithMarkers: React.FC<{
       <IonCardHeader
         className="ion-no-padding"
         color="light"
-        style={{
-          paddingBottom: "20px",
-        }}
+        style={
+          !!props.isWalking
+            ? {
+                paddingBottom: "20px",
+              }
+            : {}
+        }
       >
         <IonGrid>
           <IonRow>
@@ -227,14 +229,16 @@ const MapWithMarkers: React.FC<{
               = End
             </IonCol>
           </IonRow>
-          <IonRow>
-            <IonCol size="8" offset="2">
-              <IonButton expand="block" onClick={props.onDismiss}>
-                <IonIcon slot="start" icon={cancelIcon} />
-                Close Map
-              </IonButton>
-            </IonCol>
-          </IonRow>
+          {props.isWalking && (
+            <IonRow>
+              <IonCol size="8" offset="2">
+                <IonButton expand="block" onClick={props.onDismiss}>
+                  <IonIcon slot="start" icon={cancelIcon} />
+                  Close Map
+                </IonButton>
+              </IonCol>
+            </IonRow>
+          )}
         </IonGrid>
       </IonCardHeader>
     </>

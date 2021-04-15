@@ -49,7 +49,17 @@ const MomentsList: React.FC<{
   }, [props.moments]);
   return (
     <>
-      <IonGrid className="ion-no-padding">
+      {!props.isWalking && (
+        <MapWithMarkers
+          moments={momentsWithLocations}
+          locations={props.locations ? props.locations : []}
+          onDismiss={() => setShowMap(false)}
+          colour={props.colour}
+          key={mapKey}
+          isWalking={!!props.isWalking}
+        />
+      )}
+      <IonGrid className="ion-no-padding ion-margin-top">
         <IonRow>
           <IonCol size="2">
             <IonText
@@ -72,29 +82,36 @@ const MomentsList: React.FC<{
               </span> */}
             </IonText>
           </IonCol>
-          <IonCol size="10" sizeSm="6" offsetSm="4" className="ion-text-right">
-            <IonButton
-              onClick={viewMapHandler}
-              className="ion-padding-start ion-padding-end"
+          {!!props.isWalking && (
+            <IonCol
+              size="10"
+              sizeSm="6"
+              offsetSm="4"
+              className="ion-text-right"
             >
-              <IonIcon slot="start" icon={mapIcon} />
-              View on Map
-            </IonButton>
-            {props.canDelete && (
               <IonButton
-                className="moments-list__delete"
-                color={isEditing ? "success" : "secondary"}
-                // fill={isEditing ? "solid" : "clear"}
-                onClick={() => setIsEditing(!isEditing)}
+                onClick={viewMapHandler}
+                className="ion-padding-start ion-padding-end"
               >
-                {isEditing ? (
-                  <IonIcon icon={doneIcon} slot="icon-only" size="small" />
-                ) : (
-                  <IonIcon icon={editIcon} slot="icon-only" size="small" />
-                )}
+                <IonIcon slot="start" icon={mapIcon} />
+                View on Map
               </IonButton>
-            )}
-          </IonCol>
+              {props.canDelete && (
+                <IonButton
+                  className="moments-list__delete"
+                  color={isEditing ? "success" : "secondary"}
+                  // fill={isEditing ? "solid" : "clear"}
+                  onClick={() => setIsEditing(!isEditing)}
+                >
+                  {isEditing ? (
+                    <IonIcon icon={doneIcon} slot="icon-only" size="small" />
+                  ) : (
+                    <IonIcon icon={editIcon} slot="icon-only" size="small" />
+                  )}
+                </IonButton>
+              )}
+            </IonCol>
+          )}
         </IonRow>
       </IonGrid>
       <ol
@@ -160,24 +177,26 @@ const MomentsList: React.FC<{
           </li>
         ))}
       </ol>
-      <IonModal
-        isOpen={showMap}
-        onDidDismiss={() => {
-          setShowMap(false);
-        }}
-        onWillPresent={() => {
-          setMapKey(Math.random());
-        }}
-      >
-        <MapWithMarkers
-          moments={momentsWithLocations}
-          locations={props.locations ? props.locations : []}
-          onDismiss={() => setShowMap(false)}
-          colour={props.colour}
-          key={mapKey}
-          isWalking={!!props.isWalking}
-        />
-      </IonModal>
+      {!!props.isWalking && (
+        <IonModal
+          isOpen={showMap}
+          onDidDismiss={() => {
+            setShowMap(false);
+          }}
+          onWillPresent={() => {
+            setMapKey(Math.random());
+          }}
+        >
+          <MapWithMarkers
+            moments={momentsWithLocations}
+            locations={props.locations ? props.locations : []}
+            onDismiss={() => setShowMap(false)}
+            colour={props.colour}
+            key={mapKey}
+            isWalking={!!props.isWalking}
+          />
+        </IonModal>
+      )}
     </>
   );
 };

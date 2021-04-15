@@ -66,7 +66,7 @@ const Progress: React.FC<ContainerProps> = ({ start, updateWalk }) => {
               fontFamily: "monospace",
             }}
           >
-            <IonText color="medium">
+            <IonText color="light">
               {/* <IonIcon
                 icon={timeIcon}
                 style={{

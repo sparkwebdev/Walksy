@@ -18,6 +18,7 @@ import MomentsList from "./MomentsList";
 import { useAuth } from "../auth";
 import {
   timerOutline as timeIcon,
+  arrowUpCircleOutline as distanceIcon,
   footstepsOutline as walkIcon,
 } from "ionicons/icons";
 
@@ -107,7 +108,7 @@ const WalkItem: React.FC<{
                   {displayName && (
                     <li className="walk-item__username"> by {displayName}</li>
                   )}
-                  {props.description && (
+                  {props.description && props.description.length > 0 && (
                     <li className="walk-item__tags">
                       #{props.description.join(" #")}
                     </li>
@@ -120,6 +121,7 @@ const WalkItem: React.FC<{
                     marginTop: "5px",
                   }}
                 >
+                  <IonIcon icon={distanceIcon} />
                   {props.distance && props.distance > 0.1 ? (
                     <span>
                       {props.distance.toFixed(2)} {getUnitDistance()}
