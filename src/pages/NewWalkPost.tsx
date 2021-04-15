@@ -24,6 +24,7 @@ import WalksContext from "../data/walks-context";
 import { updateWalkHandler } from "../firebase";
 
 const suggestedDescriptors = appData.suggestedDescriptors;
+const locationMaxLength = 28;
 const descriptorsMaxCount = 3;
 
 const NewWalkPost: React.FC<{
@@ -152,9 +153,13 @@ const NewWalkPost: React.FC<{
             <IonInput
               type="text"
               value={location}
+              maxlength={locationMaxLength}
               onIonChange={(event) => setLocation(event.detail!.value!)}
               className="input-text"
             ></IonInput>
+            <p className="small-print">
+              {locationMaxLength - location.length} characters remaining
+            </p>
           </div>
           <div className="ion-text-center ion-padding constrain constrain--medium">
             <IonCardTitle className="title text-heading">
