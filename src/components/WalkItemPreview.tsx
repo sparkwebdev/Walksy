@@ -83,9 +83,9 @@ const WalkItemPreview: React.FC<{
         {displayName && (
           <li className="walk-item__username"> by {displayName}</li>
         )}
-        {props.description && (
+        {props.description && props.description.length > 0 ? (
           <li className="walk-item__tags">#{props.description.join(" #")}</li>
-        )}
+        ) : null}
       </ul>
     </>
   );

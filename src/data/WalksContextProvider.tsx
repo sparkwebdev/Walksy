@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 
 import { Plugins } from "@capacitor/core";
-import WalksContext from "./walks-context";
+import WalksContext, { defaultWalk } from "./walks-context";
 import { Walk, Moment, Location } from "../data/models";
 import { storeMomentHandler } from "../firebase";
 import { Filesystem, FilesystemDirectory } from "@capacitor/core";
 const { Storage } = Plugins;
 
 const WalksContextProvider: React.FC = (props) => {
-  const [walk, setWalk] = useState<Walk | {}>({});
+  const [walk, setWalk] = useState<Walk>(defaultWalk);
   const [storedWalkId, setStoredWalkId] = useState<string>("");
   const [moments, setMoments] = useState<Moment[]>([]);
   const [storedImagesForCover, setStoredImagesForCover] = useState<string[]>(
@@ -103,7 +103,7 @@ const WalksContextProvider: React.FC = (props) => {
   };
 
   const resetWalk = () => {
-    setWalk({});
+    setWalk(defaultWalk);
   };
 
   const resetMoments = async () => {
@@ -124,7 +124,7 @@ const WalksContextProvider: React.FC = (props) => {
   };
 
   const reset = () => {
-    setWalk({});
+    setWalk(defaultWalk);
     resetMoments();
     setStoredWalkId("");
     resetStoredImagesForCover();

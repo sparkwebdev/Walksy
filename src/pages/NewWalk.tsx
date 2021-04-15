@@ -80,6 +80,15 @@ const NewWalk: React.FC = () => {
     });
   }, [showTutorial]);
 
+  useEffect(() => {
+    Storage.get({ key: "walk" }).then((data) => {
+      const userData = data.value ? JSON.parse(data.value) : null;
+      if (userData && walksCtx.walk.start) {
+        setContinueWalkAlert(true);
+      }
+    });
+  }, []);
+
   const getHelpHandler = () => {
     if (showHelp) {
       setShowHelp(false);
@@ -91,14 +100,7 @@ const NewWalk: React.FC = () => {
   };
 
   const startWalkHandler = () => {
-    Storage.get({ key: "walk" }).then((data) => {
-      const userData = data.value ? JSON.parse(data.value) : null;
-      if (userData && Object.keys(userData).length > 0) {
-        setContinueWalkAlert(true);
-      } else {
-        startNewWalk();
-      }
-    });
+    startNewWalk();
   };
 
   const continueWalk = () => {

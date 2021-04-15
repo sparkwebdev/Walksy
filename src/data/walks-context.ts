@@ -2,8 +2,26 @@ import React from 'react';
 
 import { Walk, Moment, Location } from "../data/models";
 
+export const defaultWalk: Walk = {
+  id: "",
+  title: "",
+  colour: "#00ccb3",
+  description: [],
+  start: "",
+  end: "",
+  steps: 0,
+  distance: 0,
+  coverImage: "",
+  locations: [],
+  userId: "",
+  type: "user",
+  overview: "",
+  location: "",
+  circular: false,
+};
+
 interface Context {
-  walk: Walk | {};
+  walk: Walk;
   storedWalkId: string;
   updateWalkIdForStorage: (walkId: string) => void,
   moments: Moment[];
@@ -21,7 +39,7 @@ interface Context {
 }
 
 const WalksContext = React.createContext<Context>({
-  walk: {},
+  walk: defaultWalk,
   storedWalkId: "",
   updateWalkIdForStorage: () => {},
   moments: [],

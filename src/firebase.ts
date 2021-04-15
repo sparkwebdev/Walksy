@@ -3,7 +3,7 @@ import 'firebase/auth';
 import 'firebase/firestore';
 import 'firebase/storage';
 import { Plugins } from "@capacitor/core";
-import { Moment, UserProfile } from './data/models';
+import { Moment, UserProfile, Walk } from './data/models';
 
 const { Storage } = Plugins;
 
@@ -71,7 +71,7 @@ export const syncUserProfileToLocal = async (userId: string) => {
   return entriesRef;
 }
 
-export const storeWalkHandler = async (walkData: {}) => {
+export const storeWalkHandler = async (walkData: Walk) => {
   const walksRef = firestore.collection("users-walks");
   try {
     const walkId = await walksRef

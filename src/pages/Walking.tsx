@@ -79,7 +79,7 @@ const Walking: React.FC = () => {
   } = useWatchPosition();
 
   useEffect(() => {
-    if (Object.keys(walksCtx.walk).length === 0) {
+    if (walksCtx.walk.title === "") {
       return;
     }
     startWatch();
@@ -195,7 +195,7 @@ const Walking: React.FC = () => {
     });
   };
 
-  if (!loggedIn || Object.keys(walksCtx.walk).length === 0) {
+  if (!loggedIn || walksCtx.walk.title === "") {
     return <Redirect to="/app/new-walk" />;
   }
 
