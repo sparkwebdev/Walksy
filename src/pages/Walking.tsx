@@ -101,7 +101,7 @@ const Walking: React.FC = () => {
       const newLocation: Location = {
         lat: watchPosition.coords.latitude,
         lng: watchPosition.coords.longitude,
-        timestamp: new Date().toISOString(),
+        timestamp: Date.now(),
       };
       const latestLoc = locations?.slice(-1).pop();
       if (latestLoc && locations) {
