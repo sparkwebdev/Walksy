@@ -724,6 +724,7 @@ ion-slides {
 }  */
 .walk-item:not(.walk-item--image-only) .walk-item__cover-image {
   min-height: 18em;
+  max-height: 45vh;
 }
 
 .walk-item__title {

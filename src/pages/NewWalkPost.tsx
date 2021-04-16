@@ -146,23 +146,6 @@ const NewWalkPost: React.FC<{
         <>
           <div className="ion-text-center ion-padding constrain constrain--medium">
             <IonCardTitle className="title text-heading">
-              Choose a location...
-            </IonCardTitle>
-            <p className="small-print">Where was this walk?</p>
-            <IonLabel className="ion-hide">Walk location...</IonLabel>
-            <IonInput
-              type="text"
-              value={location}
-              maxlength={locationMaxLength}
-              onIonChange={(event) => setLocation(event.detail!.value!)}
-              className="input-text"
-            ></IonInput>
-            <p className="small-print">
-              {locationMaxLength - location.length} characters remaining
-            </p>
-          </div>
-          <div className="ion-text-center ion-padding constrain constrain--medium">
-            <IonCardTitle className="title text-heading">
               Circular route...
             </IonCardTitle>
             <p className="small-print">Was this walk in a loop?</p>
@@ -199,27 +182,44 @@ const NewWalkPost: React.FC<{
                 </IonCol>
               </IonRow>
             </IonGrid>
-            <IonGrid className="ion-text-center">
-              <IonRow>
-                <IonCol className="ion-no-padding">
-                  <IonButton color="secondary" onClick={chosenLocationHandler}>
-                    <strong>Next</strong>
-                  </IonButton>
-                </IonCol>
-              </IonRow>
-              <IonRow>
-                <IonCol className="ion-no-padding">
-                  <IonButton
-                    color="dark"
-                    fill="clear"
-                    onClick={chosenLocationHandler}
-                  >
-                    Skip
-                  </IonButton>
-                </IonCol>
-              </IonRow>
-            </IonGrid>
           </div>
+          <div className="ion-text-center ion-padding-bottom constrain constrain--medium">
+            <IonCardTitle className="title text-heading">
+              Add a location...
+            </IonCardTitle>
+            <p className="small-print">Where was this walk?</p>
+            <IonLabel className="ion-hide">Walk location...</IonLabel>
+            <IonInput
+              type="text"
+              value={location}
+              maxlength={locationMaxLength}
+              onIonChange={(event) => setLocation(event.detail!.value!)}
+              className="input-text"
+            ></IonInput>
+            <p className="small-print">
+              {locationMaxLength - location.length} characters remaining
+            </p>
+          </div>
+          <IonGrid className="ion-text-center">
+            <IonRow>
+              <IonCol className="ion-no-padding">
+                <IonButton color="secondary" onClick={chosenLocationHandler}>
+                  <strong>Next</strong>
+                </IonButton>
+              </IonCol>
+            </IonRow>
+            <IonRow>
+              <IonCol className="ion-no-padding">
+                <IonButton
+                  color="dark"
+                  fill="clear"
+                  onClick={chosenLocationHandler}
+                >
+                  Skip
+                </IonButton>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
         </>
       )}
       {!chosenDescription && chosenLocation && chosenCoverImage && (
@@ -325,6 +325,15 @@ const NewWalkPost: React.FC<{
                 >
                   <IonIcon slot="start" icon={shareIcon} />
                   Share
+                </IonButton>
+                <IonButton
+                  color="secondary"
+                  onClick={() => {
+                    props.saveShareWalk(false);
+                  }}
+                >
+                  <IonIcon slot="start" icon={finishIcon} />
+                  Done
                 </IonButton>
               </IonCol>
             </IonRow>

@@ -406,37 +406,6 @@ const Walking: React.FC = () => {
         </IonCardHeader>
       )}
 
-      {end && (
-        <IonCardHeader
-          className="ion-no-padding"
-          color="light"
-          style={{
-            marginTop: "auto",
-            paddingTop: "5px",
-            paddingBottom: "20px",
-          }}
-        >
-          <IonCardSubtitle className="ion-no-margin constrain constrain--medium">
-            <IonGrid>
-              <IonRow>
-                <IonCol>
-                  <IonButton
-                    expand="block"
-                    color="secondary"
-                    onClick={() => {
-                      saveShareWalkHandler(false);
-                    }}
-                  >
-                    <IonIcon slot="start" icon={finishIcon} />
-                    Done
-                  </IonButton>
-                </IonCol>
-              </IonRow>
-            </IonGrid>
-          </IonCardSubtitle>
-        </IonCardHeader>
-      )}
-
       <IonLoading message={"Loading..."} isOpen={loading} />
       <IonToast
         duration={2000}
