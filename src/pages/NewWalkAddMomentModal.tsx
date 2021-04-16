@@ -108,7 +108,6 @@ const NewWalkAddMomentModal: React.FC<{
           showError: true,
           message: "Not saved. Please try again.",
         });
-        return;
       }
       setLoading(false);
     }

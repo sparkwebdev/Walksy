@@ -26,9 +26,14 @@ const WalkEntryPage: React.FC = () => {
 
   useEffect(() => {
     const walkRef = firestore.collection("users-walks").doc(id);
-    walkRef.get().then((doc) => {
-      setWalk(toWalk(doc));
-    });
+    walkRef
+      .get()
+      .then((doc) => {
+        setWalk(toWalk(doc));
+      })
+      .catch((e) => {
+        console.log("Couldn't load user walks", e);
+      });
     setLoading(false);
   }, [id]);
 

@@ -37,9 +37,13 @@ const WalkItemPreview: React.FC<{
 
   useEffect(() => {
     if (props.userId) {
-      getRemoteUserData(props.userId).then((data) => {
-        loadUserData(data);
-      });
+      getRemoteUserData(props.userId)
+        .then((data) => {
+          loadUserData(data);
+        })
+        .catch((e) => {
+          console.log("Couldn't get remote user data", e);
+        });
     }
   }, [props.userId]);
 

@@ -56,19 +56,23 @@ const NewWalkMoments: React.FC<{
       path: `moments/${fileName}`,
       data: base64,
       directory: FilesystemDirectory.Data,
-    }).then(() => {
-      // setTakenPhoto((curPhoto) => {
-      //   return {
-      //     ...curPhoto!,
-      //     path: fileName,
-      //   };
-      // });
-      // addMomentHandler();
-      setTakenPhoto({
-        path: fileName,
-        preview: takenPhoto.preview,
+    })
+      .then(() => {
+        // setTakenPhoto((curPhoto) => {
+        //   return {
+        //     ...curPhoto!,
+        //     path: fileName,
+        //   };
+        // });
+        // addMomentHandler();
+        setTakenPhoto({
+          path: fileName,
+          preview: takenPhoto.preview,
+        });
+      })
+      .catch((e) => {
+        console.log("Couldn't write file", e);
       });
-    });
   };
 
   useEffect(() => {

@@ -55,12 +55,16 @@ const RegisterPage: React.FC = () => {
   useEffect(() => {
     Storage.get({
       key: "userProfile",
-    }).then((data) => {
-      if (data.value) {
-        const userProfile = JSON.parse(data.value);
-        setUserHasProfileComplete(!!userProfile.displayName);
-      }
-    });
+    })
+      .then((data) => {
+        if (data.value) {
+          const userProfile = JSON.parse(data.value);
+          setUserHasProfileComplete(!!userProfile.displayName);
+        }
+      })
+      .catch((e) => {
+        console.log("Couldn't get user profile", e);
+      });
   }, []);
 
   const registerHandler = async () => {
@@ -93,6 +97,9 @@ const RegisterPage: React.FC = () => {
             setUserDefaultPreferences();
             setUserHasProfile(true);
           }
+        })
+        .catch((e) => {
+          console.log("Couldn't create user", e);
         });
       setStatus({ loading: false, error: false, errorMessage: "" });
     } catch (error) {

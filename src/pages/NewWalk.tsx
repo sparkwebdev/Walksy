@@ -75,18 +75,26 @@ const NewWalk: React.FC = () => {
   useEffect(() => {
     Storage.get({
       key: "showWalkTutorial",
-    }).then((data) => {
-      setShowTutorial(data.value ? JSON.parse(data.value) : true);
-    });
+    })
+      .then((data) => {
+        setShowTutorial(data.value ? JSON.parse(data.value) : true);
+      })
+      .catch((e) => {
+        console.log("Couldn't get show tutorial status", e);
+      });
   }, [showTutorial]);
 
   useEffect(() => {
-    Storage.get({ key: "walk" }).then((data) => {
-      const userData = data.value ? JSON.parse(data.value) : null;
-      if (userData && walksCtx.walk.start) {
-        setContinueWalkAlert(true);
-      }
-    });
+    Storage.get({ key: "walk" })
+      .then((data) => {
+        const userData = data.value ? JSON.parse(data.value) : null;
+        if (userData && walksCtx.walk.start) {
+          setContinueWalkAlert(true);
+        }
+      })
+      .catch((e) => {
+        console.log("Couldn't get walk", e);
+      });
   }, []);
 
   const getHelpHandler = () => {

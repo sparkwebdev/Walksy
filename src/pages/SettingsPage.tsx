@@ -61,26 +61,34 @@ const SettingsPage: React.FC = () => {
   useEffect(() => {
     Storage.get({
       key: "userProfile",
-    }).then((data) => {
-      if (data.value) {
-        const userData = JSON.parse(data.value);
-        loadUserData(userData);
-      } else if (userId) {
-        getRemoteUserData(userId).then((userData) => {
+    })
+      .then((data) => {
+        if (data.value) {
+          const userData = JSON.parse(data.value);
           loadUserData(userData);
-          syncUserProfileToLocal(userId);
-        });
-      }
-    });
+        } else if (userId) {
+          getRemoteUserData(userId).then((userData) => {
+            loadUserData(userData);
+            syncUserProfileToLocal(userId);
+          });
+        }
+      })
+      .catch((e) => {
+        console.log("Couldn't get user preferences", e);
+      });
     Storage.get({
       key: "userPreferences",
-    }).then((data) => {
-      if (data.value) {
-        const userPreferences = JSON.parse(data.value);
-        setMetric(userPreferences.metric);
-        setDarkMode(userPreferences.darkMode);
-      }
-    });
+    })
+      .then((data) => {
+        if (data.value) {
+          const userPreferences = JSON.parse(data.value);
+          setMetric(userPreferences.metric);
+          setDarkMode(userPreferences.darkMode);
+        }
+      })
+      .catch((e) => {
+        console.log("Couldn't get user preferences", e);
+      });
   }, [userId]);
 
   const loadUserData = (userData: any) => {
@@ -126,16 +134,20 @@ const SettingsPage: React.FC = () => {
   const savePreferencesHandler = async (name: string, value: boolean) => {
     Storage.get({
       key: "userPreferences",
-    }).then((result) => {
-      const updated: UserPreferences = {
-        ...JSON.parse(result.value),
-        [name]: value,
-      };
-      Storage.set({
-        key: "userPreferences",
-        value: JSON.stringify(updated),
+    })
+      .then((result) => {
+        const updated: UserPreferences = {
+          ...JSON.parse(result.value),
+          [name]: value,
+        };
+        Storage.set({
+          key: "userPreferences",
+          value: JSON.stringify(updated),
+        });
+      })
+      .catch((e) => {
+        console.log("Couldn't get user preferences", e);
       });
-    });
   };
 
   const updateEmailHandler = async () => {

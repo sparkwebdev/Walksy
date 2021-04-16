@@ -25,12 +25,16 @@ const WalksContextProvider: React.FC = (props) => {
 
   useEffect(() => {
     if (storedWalkId !== "") {
-      Storage.get({ key: "userProfile" }).then((data) => {
-        const userData = data.value ? JSON.parse(data.value) : null;
-        if (userData.userId) {
-          storeMoments(userData.userId);
-        }
-      });
+      Storage.get({ key: "userProfile" })
+        .then((data) => {
+          const userData = data.value ? JSON.parse(data.value) : null;
+          if (userData.userId) {
+            storeMoments(userData.userId);
+          }
+        })
+        .catch((e) => {
+          console.log("Couldn't get user profile", e);
+        });
     }
   }, [storedWalkId]);
 
@@ -115,7 +119,7 @@ const WalksContextProvider: React.FC = (props) => {
         recursive: true,
       });
     } catch (e) {
-      return;
+      console.log("Couldn't reset moments. ", resetMoments);
     }
   };
 

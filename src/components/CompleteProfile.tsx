@@ -42,16 +42,18 @@ const CompleteProfile: React.FC<{
       .toLowerCase()
       .replace(" ", "_")
       .replace(/\W/g, "");
-    const generatedDisplayName = checkUniqueDisplayName(tryName).then(
-      (isUnique) => {
+    const generatedDisplayName = checkUniqueDisplayName(tryName)
+      .then((isUnique) => {
         if (isUnique) {
           return tryName;
         } else {
           const newDisplayName = generatePseudoRandomDisplayName(tryName);
           return newDisplayName;
         }
-      }
-    );
+      })
+      .catch((e) => {
+        console.log("Couldn't check unique display name", e);
+      });
     return generatedDisplayName;
   };
 
@@ -61,11 +63,13 @@ const CompleteProfile: React.FC<{
 
   useEffect(() => {
     if (props.userId) {
-      generateDisplayName(props.firstName, props.lastName).then(
-        (suggestedDisplayName) => {
+      generateDisplayName(props.firstName, props.lastName)
+        .then((suggestedDisplayName) => {
           setDisplayName(suggestedDisplayName);
-        }
-      );
+        })
+        .catch((e) => {
+          console.log("Couldn't generate display name", e);
+        });
     }
   }, [props.userId]);
 

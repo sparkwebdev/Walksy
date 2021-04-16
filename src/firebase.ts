@@ -51,8 +51,8 @@ export const updateUserProfile = async (userData: UserProfile) => {
     userDoc.ref.update(userData);
   }).then(() => {
     syncUserProfileToLocal(userData.userId);
-  }).catch((error)=> {
-    console.log(error);
+  }).catch((e)=> {
+    console.log("Couldn't check unique display name", e);
   })
   return entriesRef;
 }
@@ -80,6 +80,9 @@ export const storeWalkHandler = async (walkData: Walk) => {
     })
     .then((data) => {
       return data.id;
+    })
+    .catch((e) => {
+      console.log("Couldn't get users walks", e);
     });
     return walkId;
   } catch (error) {
@@ -149,6 +152,9 @@ export const checkUniqueDisplayName = async (name: string) => {
       .then((querySnapshot) => {
         return querySnapshot.empty ? true : false;
       })
+      .catch((e) => {
+        console.log("Couldn't get users", e);
+      });
     return isUnique;
   } catch (error)  {
     console.log("Error getting data: ", error);
@@ -168,6 +174,9 @@ export const getRemoteUserData = async (userId: string) => {
         //   return doc.data();
         // });
       })
+      .catch((e) => {
+        console.log("Couldn't get users", e);
+      });
     return userData;
   } catch (error) {
     console.log("Error getting user data: ", error);

@@ -14,9 +14,14 @@ const MomentItemPreview: React.FC<{
 
   useEffect(() => {
     const walkRef = firestore.collection("users-walks").doc(props.walkId);
-    walkRef.get().then((doc) => {
-      setWalk(toWalk(doc));
-    });
+    walkRef
+      .get()
+      .then((doc) => {
+        setWalk(toWalk(doc));
+      })
+      .catch((e) => {
+        console.log("Couldn't get user walks", e);
+      });
   }, [props.walkId]);
 
   return (
