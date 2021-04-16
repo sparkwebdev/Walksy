@@ -1,11 +1,7 @@
 import {
   IonPage,
   IonContent,
-  IonCard,
   IonButton,
-  IonGrid,
-  IonRow,
-  IonCol,
   IonText,
   IonRouterLink,
   IonList,
@@ -14,18 +10,17 @@ import {
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../auth";
-import MomentItemPreview from "../components/MomentItemPreview";
 import PageHeader from "../components/PageHeader";
 import WalkItemPreview from "../components/WalkItemPreview";
-import { Moment, toMoment, toWalk, Walk } from "../data/models";
+import { Moment, toWalk, Walk } from "../data/models";
 import { firestore } from "../firebase";
 import {
-  eyeOutline as browseIcon,
   location as discoverIcon,
   timeOutline as dashboardIcon,
   peopleOutline as personIcon,
 } from "ionicons/icons";
 import StartWalk from "../atoms/StartWalk";
+import MomentsGroup from "../components/MomentsGroup";
 
 const HomePage: React.FC = () => {
   const { userId } = useAuth();
@@ -33,8 +28,11 @@ const HomePage: React.FC = () => {
   const [latestWalk, setLatestWalk] = useState<Walk[]>([]);
   const [curatedWalks, setCuratedWalks] = useState<Walk[]>([]);
   const [featuredWalk, setFeaturedWalk] = useState<Walk[]>([]);
-  const [moments, setMoments] = useState<Moment[]>([]);
   const [latestUserWalks, setLatestUserWalks] = useState<Walk[]>([]);
+  const [
+    latestUserWalksWithCoverImage,
+    setLatestUserWalksWithCoverImage,
+  ] = useState<Walk[]>([]);
 
   // Fetch Latest Walk (current user)
   useEffect(() => {
@@ -74,30 +72,20 @@ const HomePage: React.FC = () => {
     });
   }, []);
 
-  // Fetch (up to 6) latest Users Walks
+  // Fetch (up to 10) latest Users Walks
   useEffect(() => {
     const walksRef = firestore
       .collection("users-walks")
       .where("type", "==", "user")
       .orderBy("start", "desc")
-      .limit(6);
+      .limit(10);
     return walksRef.onSnapshot(({ docs }) => {
       setLatestUserWalks(docs.map(toWalk));
-      setLoading(false);
-    });
-  }, []);
-
-  // Fetch Moments with Images
-  useEffect(() => {
-    const momentsRef = firestore
-      .collection("users-moments")
-      .limit(30)
-      .orderBy("timestamp", "desc");
-    return momentsRef.onSnapshot(({ docs }) => {
-      const momentsWithImages = docs
-        .map(toMoment)
-        .filter((moment) => moment.imagePath !== "");
-      setMoments(momentsWithImages.slice(0, 9));
+      // Filter ones with coverImage
+      const walksWithCoverImage = docs.map(toWalk).filter((walk) => {
+        return walk.coverImage !== "";
+      });
+      setLatestUserWalksWithCoverImage([...walksWithCoverImage]);
       setLoading(false);
     });
   }, []);
@@ -222,7 +210,7 @@ const HomePage: React.FC = () => {
                 </IonRouterLink>
               ))}
               <IonList lines="none">
-                {latestUserWalks.map((walk) => (
+                {latestUserWalks.slice(0, 2).map((walk) => (
                   <IonRouterLink
                     key={walk.id}
                     routerLink={`/app/walk/${walk.id}`}
@@ -250,42 +238,25 @@ const HomePage: React.FC = () => {
               </IonButton>
             </div>
           )}
-
-          {moments.length > 0 && (
           <hr className="separator" />
+          {latestUserWalksWithCoverImage.length > 0 && (
             <>
               <h2 className="text-heading ion-padding-start ion-padding-end">
                 <IonText color="primary">
                   <strong>Latest User Moments...</strong>
                 </IonText>
               </h2>
-              <IonCard
-                className="ion-no-margin"
-                style={{ background: "#777269" }}
-              >
-                <IonGrid className="grid grid--half grid--half-with-full ion-no-padding">
-                  <IonRow>
-                    {moments.map((moment) => (
-                      <IonCol key={moment.id}>
-                        {moment.walkId && (
-                          <MomentItemPreview
-                            walkId={moment.walkId}
-                            coverImage={moment.imagePath}
-                            imageOnly={true}
-                          />
-                        )}
-                      </IonCol>
-                    ))}
-                  </IonRow>
-                </IonGrid>
-              </IonCard>
-              <IonButton
-                className="ion-margin-top ion-margin-bottom ion-margin-start"
-                routerLink="/app/gallery"
-              >
-                <IonIcon icon={browseIcon} slot="start" />
-                View Gallery
-              </IonButton>
+
+              {latestUserWalksWithCoverImage.slice(0, 4).map((walk) => (
+                <div key={walk.id}>
+                  <MomentsGroup
+                    walkId={walk.id}
+                    walkTitle={walk.title}
+                    walkColour={walk.colour}
+                    userId={walk.userId}
+                  />
+                </div>
+              ))}
             </>
           )}
         </div>
