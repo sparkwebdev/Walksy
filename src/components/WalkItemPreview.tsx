@@ -1,28 +1,15 @@
 import React, { useEffect, useState } from "react";
-import {
-  formatDate,
-  getMinAndSec,
-  getTimeDiff,
-  numberWithCommas,
-} from "../helpers";
+import { formatDate, getMinAndSec, getTimeDiff } from "../helpers";
 import {
   IonBadge,
   IonCard,
   IonCardContent,
-  IonIcon,
   IonItem,
   IonLabel,
-  IonText,
 } from "@ionic/react";
 
 import { getUnitDistance } from "../helpers";
 import { getRemoteUserData } from "../firebase";
-import { useAuth } from "../auth";
-import {
-  timerOutline as timeIcon,
-  arrowUpCircleOutline as distanceIcon,
-  footstepsOutline as walkIcon,
-} from "ionicons/icons";
 
 const WalkItemPreview: React.FC<{
   title: string;
@@ -40,7 +27,6 @@ const WalkItemPreview: React.FC<{
   isCircular?: boolean;
   isMiniPreview?: boolean;
 }> = (props) => {
-  const { userId } = useAuth();
   const [displayName, setDisplayName] = useState<string>("");
   let time = null;
   if (props.start && props.end) {

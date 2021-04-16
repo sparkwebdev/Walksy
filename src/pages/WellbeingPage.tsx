@@ -2,7 +2,7 @@ import { IonPage, IonContent } from "@ionic/react";
 import React from "react";
 import PageHeader from "../components/PageHeader";
 
-const GalleryPage: React.FC = () => {
+const WellBeingPage: React.FC = () => {
   return (
     <IonPage>
       <PageHeader title="Wellbeing" />
@@ -15,4 +15,4 @@ const GalleryPage: React.FC = () => {
   );
 };
 
-export default GalleryPage;
+export default WellBeingPage;

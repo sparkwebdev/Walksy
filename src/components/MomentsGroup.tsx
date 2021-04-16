@@ -4,7 +4,6 @@ import {
   IonRow,
   IonCol,
   IonCardContent,
-  IonText,
   IonLabel,
   IonItem,
 } from "@ionic/react";

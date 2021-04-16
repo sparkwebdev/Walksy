@@ -12,7 +12,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../auth";
 import PageHeader from "../components/PageHeader";
 import WalkItemPreview from "../components/WalkItemPreview";
-import { Moment, toWalk, Walk } from "../data/models";
+import { toWalk, Walk } from "../data/models";
 import { firestore } from "../firebase";
 import {
   location as discoverIcon,

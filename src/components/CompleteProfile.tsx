@@ -22,13 +22,6 @@ import React, { useEffect, useState } from "react";
 import { checkUniqueDisplayName } from "../firebase";
 import { generateHslaColors } from "../helpers";
 
-const randomColour = generateHslaColors(
-  1,
-  undefined,
-  undefined,
-  true
-)[0].replace("#", "");
-
 const CompleteProfile: React.FC<{
   firstName: string;
   lastName: string;
