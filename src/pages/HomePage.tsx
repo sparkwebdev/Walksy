@@ -145,7 +145,7 @@ const HomePage: React.FC = () => {
               </IonButton>
             </>
           )}
-
+          <hr className="separator" />
           {curatedWalks.length > 0 && (
             <>
               <h2 className="text-heading ion-padding-start ion-padding-end">
@@ -192,7 +192,7 @@ const HomePage: React.FC = () => {
               </IonButton>
             </>
           )}
-
+          <hr className="separator" />
           {latestUserWalks.length > 0 && (
             <div className="ion-margin-bottom ion-padding-bottom">
               <h2 className="text-heading ion-padding-start ion-padding-end">
@@ -252,6 +252,7 @@ const HomePage: React.FC = () => {
           )}
 
           {moments.length > 0 && (
+          <hr className="separator" />
             <>
               <h2 className="text-heading ion-padding-start ion-padding-end">
                 <IonText color="primary">

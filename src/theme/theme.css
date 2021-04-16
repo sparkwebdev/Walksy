@@ -903,3 +903,8 @@ ion-slides {
   color: #000;
   /* text-shadow: 1px 1px 1px var(--ion-color-dark); */
 }
+
+.separator {
+  margin: 30px 0;
+  border-top: dotted 2px var(--ion-color-secondary);
+}
