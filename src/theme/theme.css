@@ -686,6 +686,8 @@ ion-slides {
   display: inline-block;
   border-radius: 50% !important;
   overflow: hidden;
+  height: 5em;
+  width: 5em;
 }
 
 .audio-recorder__record--on {

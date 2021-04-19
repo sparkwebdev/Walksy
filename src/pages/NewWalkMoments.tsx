@@ -19,7 +19,7 @@ import { close as cancelIcon, add as addIcon } from "ionicons/icons";
 import ImagePicker from "../components/ImagePicker";
 import { base64FromPath } from "@ionic/react-hooks/filesystem";
 import { Filesystem, FilesystemDirectory } from "@capacitor/core";
-import AudioRecord from "../components/AudioRecord";
+import AudioPicker from "../components/AudioPicker";
 
 const noteMaxLength = 280;
 
@@ -38,12 +38,34 @@ const NewWalkMoments: React.FC<{
   const [note, setNote] = useState<string>("");
 
   const [takenPhoto, setTakenPhoto] = useState<Photo | null>();
+  const [recordedAudioFilename, setRecordedAudioFilename] = useState<
+    string | null
+  >(null);
 
   const imagePickerRef = useRef<any>();
 
   const photoPickHandler = (photo: Photo) => {
     setTakenPhoto(photo);
     // resetMomentType();
+  };
+
+  const audioPickHandler = (audioFilename: string) => {
+    setRecordedAudioFilename(audioFilename);
+  };
+  const audioPickDeleteHandler = async (audioFilename: string) => {
+    if (audioFilename) {
+      await Filesystem.deleteFile({
+        path: `moments/${audioFilename}`,
+        directory: FilesystemDirectory.Data,
+      })
+        .then((result) => {
+          setRecordedAudioFilename(null);
+        })
+        .catch((e) => {
+          console.log("could not delete 2: ", audioFilename, e);
+        });
+    }
+    setRecordedAudioFilename(null);
   };
 
   const saveImageHandler = async () => {
@@ -82,16 +104,16 @@ const NewWalkMoments: React.FC<{
   }, [takenPhoto]);
 
   const addMomentHandler = async () => {
-    const enteredAudioPath = audioPathRef.current?.value || "";
     const enteredNote = noteRef.current?.value || "";
     if (
-      enteredAudioPath.toString().trim().length === 0 &&
+      !recordedAudioFilename &&
       enteredNote.toString().trim().length === 0 &&
       !takenPhoto
     ) {
       return;
     }
     let loadedPhotoPath = "";
+    let loadedAudioPath = "";
     if (takenPhoto?.path) {
       const enteredImagePath = takenPhoto?.path || "";
       await Filesystem.readFile({
@@ -105,17 +127,31 @@ const NewWalkMoments: React.FC<{
           console.log("Couldn't load file", loadedPhotoPath);
           resetMomentType();
         });
+    } else if (recordedAudioFilename) {
+      const enteredAudioPath = recordedAudioFilename || "";
+      await Filesystem.readFile({
+        path: `moments/${enteredAudioPath}`,
+        directory: FilesystemDirectory.Data,
+      })
+        .then((file) => {
+          loadedAudioPath = `data:audio/aac;base64,${file.data}`;
+        })
+        .catch((e) => {
+          console.log("Couldn't load file", loadedAudioPath);
+          resetMomentType();
+        });
     }
 
     walksCtx.addMoment(
       walkId,
       loadedPhotoPath,
-      enteredAudioPath!.toString(),
+      loadedAudioPath,
       enteredNote!.toString(),
       latestLocation || null,
       new Date().toISOString()
     );
     setTakenPhoto(null);
+    setRecordedAudioFilename(null);
     resetMomentType();
   };
 
@@ -151,7 +187,11 @@ const NewWalkMoments: React.FC<{
               {momentType === "Audio" && (
                 <div className="ion-text-center ion-padding add-moment-audio">
                   <div className="audio-picker ion-margin">
-                    <AudioRecord />
+                    <AudioPicker
+                      onAudioPick={(fileName: string) => {
+                        audioPickHandler(fileName);
+                      }}
+                    />
                   </div>
                 </div>
               )}
@@ -208,6 +248,9 @@ const NewWalkMoments: React.FC<{
                         color="danger"
                         onClick={() => {
                           setTakenPhoto(null);
+                          if (recordedAudioFilename) {
+                            audioPickDeleteHandler(recordedAudioFilename);
+                          }
                           resetMomentType();
                         }}
                       >
@@ -225,7 +268,8 @@ const NewWalkMoments: React.FC<{
                         disabled={
                           (note.length < 1 ||
                             note.toString().trim().length < 1) &&
-                          !takenPhoto
+                          !takenPhoto &&
+                          !recordedAudioFilename
                         }
                       >
                         <IonIcon slot="start" icon={addIcon} />

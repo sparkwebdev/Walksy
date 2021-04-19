@@ -105,16 +105,26 @@ export const updateWalkHandler = async (walkData: {}, walkId: string) => {
 
 export const storeMomentHandler = async (moment: Moment, walkId: string, userId: string) => {
   let momentToStore: Moment = {...moment};
-  let storedImgPath: string = "";
+  let storedFilePath: string = "";
   if (moment.imagePath !== "") {
     await storeFilehandler(moment.imagePath).then((newUrl) => {
       momentToStore = {
         ...moment,
         imagePath: newUrl
       }
-      storedImgPath = newUrl;
+      storedFilePath = newUrl;
     }).catch((e) => {
-      console.log('error storing image', e);
+      console.log('error storing file', e);
+    });
+  } else if (moment.audioPath !== "") {
+    await storeFilehandler(moment.audioPath).then((newUrl) => {
+      momentToStore = {
+        ...moment,
+        audioPath: newUrl
+      }
+      storedFilePath = newUrl;
+    }).catch((e) => {
+      console.log('error storing file', e);
     });
   }
   const momentsRef = firestore.collection("users-moments");
@@ -129,11 +139,15 @@ export const storeMomentHandler = async (moment: Moment, walkId: string, userId:
       console.log("Error storing moment");
       return null;
     })
-    return storedImgPath;
+    if (moment.imagePath !== "") {
+      return storedFilePath;
+    } else {
+      return;
+    }
 };
 
 export const storeFilehandler = async (blobUrl: string) => {
-  const fileInputRef = storage.ref(`/moments/${Date.now()}`);
+  const fileInputRef = storage.ref(`/moments/${Date.now()}_${Math.floor(Math.random() * 900 + 100)}`);
   const response = await fetch(blobUrl);
   const blob = await response.blob();
   const snapshot = await fileInputRef.put(blob);
