@@ -712,6 +712,10 @@ ion-slides {
   /* border-bottom: 2px solid var(--ion-color-primary-contrast); */
 }
 
+.walk-item--image-only {
+  height: 100%;
+}
+
 .gallery-group:last-child
   .grid--half-with-full
   ion-col:nth-of-type(3n + 3)

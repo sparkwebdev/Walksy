@@ -45,7 +45,6 @@ const MomentsGroup: React.FC<{
       .limit(3);
     return momentsRef.onSnapshot(({ docs }) => {
       const moments = docs.map(toMoment);
-      console.log(moments);
       setMoments(moments);
     });
   }, []);

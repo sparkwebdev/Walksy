@@ -6,6 +6,7 @@ import {
   IonCardContent,
   IonItem,
   IonLabel,
+  IonList,
 } from "@ionic/react";
 
 import { getUnitDistance } from "../helpers";
@@ -83,18 +84,20 @@ const WalkItemPreview: React.FC<{
   return (
     <>
       {props.isMiniPreview ? (
-        <IonItem
-          className="ion-no-margin walk-item walk-item--mini"
-          style={{
-            background: "rgba(255, 255, 255, 0.925)",
-            borderLeft: `solid 5px ${props.colour}`,
-            lineHeight: "1.2",
-            marginBottom: "1px",
-          }}
-          detail={true}
-        >
-          <IonLabel>{metaData}</IonLabel>
-        </IonItem>
+        <IonList lines="none">
+          <IonItem
+            className="ion-no-margin walk-item walk-item--mini"
+            style={{
+              background: "rgba(255, 255, 255, 0.925)",
+              borderLeft: `solid 5px ${props.colour}`,
+              lineHeight: "1.2",
+              marginBottom: "1px",
+            }}
+            detail={true}
+          >
+            <IonLabel>{metaData}</IonLabel>
+          </IonItem>
+        </IonList>
       ) : (
         <IonCard className="ion-no-margin walk-item walk-item--full">
           {props.coverImage && (

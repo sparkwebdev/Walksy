@@ -41,7 +41,7 @@ const fileToDataURL = async (file: any) => {
   const savedFileName = await saveImageHandler(file).then((result) => {
     return result;
   }).catch((e) => {
-    console.log("36rt", e);
+    console.log("Cannot save Image", e);
   });
   var reader = new FileReader();
   let type = file.type;

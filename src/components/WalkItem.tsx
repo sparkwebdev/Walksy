@@ -125,11 +125,13 @@ const WalkItem: React.FC<{
                     marginTop: "5px",
                   }}
                 >
-                  <IonIcon icon={distanceIcon} />
                   {props.distance && props.distance > 0.1 ? (
-                    <span>
-                      {props.distance.toFixed(2)} {getUnitDistance()}
-                    </span>
+                    <>
+                      <IonIcon icon={distanceIcon} />
+                      <span>
+                        {props.distance.toFixed(2)} {getUnitDistance()}
+                      </span>
+                    </>
                   ) : null}
                   {props.userId === userId &&
                   props.steps &&
