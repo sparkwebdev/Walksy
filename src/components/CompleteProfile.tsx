@@ -65,7 +65,9 @@ const CompleteProfile: React.FC<{
     if (props.userId) {
       generateDisplayName(props.firstName, props.lastName)
         .then((suggestedDisplayName) => {
-          setDisplayName(suggestedDisplayName);
+          if (suggestedDisplayName) {
+            setDisplayName(suggestedDisplayName);
+          }
         })
         .catch((e) => {
           console.log("Couldn't generate display name", e);
