@@ -155,7 +155,9 @@ const AdminPage: React.FC = () => {
 
     await storeWalkHandler(walksCtx.walk)
       .then((storedWalkId) => {
-        walksCtx.updateWalkIdForStorage(storedWalkId!);
+        if (storedWalkId) {
+          walksCtx.updateWalkIdForStorage(storedWalkId!);
+        }
       })
       .catch(() => {
         setNotice({

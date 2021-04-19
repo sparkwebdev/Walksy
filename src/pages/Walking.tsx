@@ -158,7 +158,9 @@ const Walking: React.FC = () => {
     }
     await storeWalkHandler(walksCtx.walk)
       .then((storedWalkId) => {
-        walksCtx.updateWalkIdForStorage(storedWalkId!);
+        if (storedWalkId) {
+          walksCtx.updateWalkIdForStorage(storedWalkId!);
+        }
         setLoading(false);
       })
       .catch(() => {
