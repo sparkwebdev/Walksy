@@ -51,7 +51,7 @@ const MapWithMarkers: React.FC<{
     } else {
       return;
     }
-  }, [props.moments]);
+  }, [props.moments, props.locations]);
 
   const mapRef = useRef(null);
   const onMapLoad = useCallback((map) => {
