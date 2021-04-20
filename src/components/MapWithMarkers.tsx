@@ -151,18 +151,26 @@ const MapWithMarkers: React.FC<{
               url: props.isWalking
                 ? "./assets/icon/map_marker_current_location.svg"
                 : "./assets/icon/map_marker_end.svg",
-              scaledSize: new window.google.maps.Size(30, 30),
+              scaledSize: props.isWalking
+                ? new window.google.maps.Size(20, 20)
+                : new window.google.maps.Size(30, 30),
               origin: new window.google.maps.Point(0, 0),
-              anchor: new window.google.maps.Point(15, 30),
+              anchor: props.isWalking
+                ? new window.google.maps.Point(10, 10)
+                : new window.google.maps.Point(15, 30),
             }}
           />
         )}
 
         {selected ? (
           <InfoWindow
-            position={{
-              lat: selected.location!.lat,
-              lng: selected.location!.lng,
+            options={{
+              pixelOffset: new window.google.maps.Size(0, -10),
+
+              position: {
+                lat: selected.location!.lat,
+                lng: selected.location!.lng,
+              },
             }}
             onCloseClick={() => {
               setSelected(null);
