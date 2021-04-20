@@ -61,7 +61,7 @@ const WalkItem: React.FC<{
     return momentsRef.orderBy("timestamp").onSnapshot(({ docs }) => {
       setMoments(docs.map(toMoment));
     });
-  }, [props.id]);
+  }, [props.id, props.userId]);
 
   const loadUserData = (userData: any) => {
     setDisplayName(userData?.displayName);

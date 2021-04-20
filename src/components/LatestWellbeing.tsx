@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IonList, IonItem, IonLabel, IonText, IonBadge } from "@ionic/react";
+import { IonText, IonBadge } from "@ionic/react";
 import { firestore } from "../firebase";
 import { Entry, toEntry } from "../data/models";
 import dayjs from "dayjs";

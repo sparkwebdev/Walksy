@@ -94,7 +94,7 @@ const Walking: React.FC = () => {
     return () => {
       clearWatch();
     };
-  }, [end]);
+  }, [end, clearWatch]);
 
   useLayoutEffect(() => {
     if (watchPosition) {
@@ -123,7 +123,7 @@ const Walking: React.FC = () => {
         setLocations([newLocation]);
       }
     }
-  }, [watchPosition]);
+  }, [watchPosition, locations]);
 
   useLayoutEffect(() => {
     if (locations) {

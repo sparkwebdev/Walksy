@@ -133,9 +133,9 @@ const HomePage: React.FC = () => {
               </IonButton>
             </>
           )}
-          <hr className="separator" />
           {curatedWalks.length > 0 && (
             <>
+              <hr className="separator" />
               <h2 className="text-heading ion-padding-start ion-padding-end">
                 <IonText color="primary">
                   <strong>Curated Walks...</strong>
@@ -180,37 +180,16 @@ const HomePage: React.FC = () => {
               </IonButton>
             </>
           )}
-          <hr className="separator" />
           {latestUserWalks.length > 0 && (
-            <div className="ion-margin-bottom ion-padding-bottom">
-              <h2 className="text-heading ion-padding-start ion-padding-end">
-                <IonText color="primary">
-                  <strong>Latest User Walks...</strong>
-                </IonText>
-              </h2>
-              {featuredWalk.map((walk) => (
-                <IonRouterLink
-                  key={walk.id}
-                  routerLink={`/app/walk/${walk.id}`}
-                >
-                  <WalkItemPreview
-                    title={walk.title}
-                    colour={walk.colour}
-                    description={walk.description}
-                    start={walk.start}
-                    end={walk.end}
-                    steps={walk.steps}
-                    distance={walk.distance}
-                    coverImage={walk.coverImage}
-                    userId={walk.userId}
-                    isCircular={walk.circular}
-                    location={walk?.location}
-                    isMiniPreview={!walk.coverImage}
-                  />
-                </IonRouterLink>
-              ))}
-              <IonList lines="none">
-                {latestUserWalks.slice(0, 2).map((walk) => (
+            <>
+              <hr className="separator" />
+              <div className="ion-margin-bottom ion-padding-bottom">
+                <h2 className="text-heading ion-padding-start ion-padding-end">
+                  <IonText color="primary">
+                    <strong>Latest User Walks...</strong>
+                  </IonText>
+                </h2>
+                {featuredWalk.map((walk) => (
                   <IonRouterLink
                     key={walk.id}
                     routerLink={`/app/walk/${walk.id}`}
@@ -220,27 +199,50 @@ const HomePage: React.FC = () => {
                       colour={walk.colour}
                       description={walk.description}
                       start={walk.start}
+                      end={walk.end}
+                      steps={walk.steps}
                       distance={walk.distance}
+                      coverImage={walk.coverImage}
                       userId={walk.userId}
                       isCircular={walk.circular}
                       location={walk?.location}
-                      isMiniPreview={true}
+                      isMiniPreview={!walk.coverImage}
                     />
                   </IonRouterLink>
                 ))}
-              </IonList>
-              <IonButton
-                className="ion-margin-start"
-                routerLink="/app/dashboard"
-              >
-                <IonIcon icon={personIcon} slot="start" />
-                Latest User Walks
-              </IonButton>
-            </div>
+                <IonList lines="none">
+                  {latestUserWalks.slice(0, 2).map((walk) => (
+                    <IonRouterLink
+                      key={walk.id}
+                      routerLink={`/app/walk/${walk.id}`}
+                    >
+                      <WalkItemPreview
+                        title={walk.title}
+                        colour={walk.colour}
+                        description={walk.description}
+                        start={walk.start}
+                        distance={walk.distance}
+                        userId={walk.userId}
+                        isCircular={walk.circular}
+                        location={walk?.location}
+                        isMiniPreview={true}
+                      />
+                    </IonRouterLink>
+                  ))}
+                </IonList>
+                <IonButton
+                  className="ion-margin-start"
+                  routerLink="/app/dashboard"
+                >
+                  <IonIcon icon={personIcon} slot="start" />
+                  Latest User Walks
+                </IonButton>
+              </div>
+            </>
           )}
-          <hr className="separator" />
           {latestUserWalksWithCoverImage.length > 0 && (
             <>
+              <hr className="separator" />
               <h2 className="text-heading ion-padding-start ion-padding-end">
                 <IonText color="primary">
                   <strong>Latest User Moments...</strong>

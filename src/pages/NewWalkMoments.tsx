@@ -33,7 +33,7 @@ const NewWalkMoments: React.FC<{
   const walksCtx = useContext(WalksContext);
 
   // const imagePathRef = useRef<HTMLIonInputElement>(null);
-  const audioPathRef = useRef<HTMLIonInputElement>(null);
+  // const audioPathRef = useRef<HTMLIonInputElement>(null);
   const noteRef = useRef<HTMLIonTextareaElement>(null);
   const [note, setNote] = useState<string>("");
 

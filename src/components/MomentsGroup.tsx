@@ -47,7 +47,7 @@ const MomentsGroup: React.FC<{
       const moments = docs.map(toMoment);
       setMoments(moments);
     });
-  }, []);
+  }, [props.walkId]);
 
   return (
     <div className="ion-margin-bottom">

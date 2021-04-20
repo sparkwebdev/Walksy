@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { formatDate, getMinAndSec, getTimeDiff } from "../helpers";
+import { formatDate } from "../helpers";
 import {
   IonBadge,
   IonCard,
@@ -29,12 +29,6 @@ const WalkItemPreview: React.FC<{
   isMiniPreview?: boolean;
 }> = (props) => {
   const [displayName, setDisplayName] = useState<string>("");
-  let time = null;
-  if (props.start && props.end) {
-    const timeDiff = getTimeDiff(props.start, props.end);
-    const timeResult = getMinAndSec(timeDiff);
-    time = timeResult;
-  }
 
   useEffect(() => {
     if (props.userId) {

@@ -20,7 +20,6 @@ import {
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { checkUniqueDisplayName } from "../firebase";
-import { generateHslaColors } from "../helpers";
 
 const CompleteProfile: React.FC<{
   firstName: string;
