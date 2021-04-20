@@ -1,5 +1,6 @@
-import { IonPage, IonContent } from "@ionic/react";
+import { IonPage, IonContent, IonGrid, IonRow, IonCol } from "@ionic/react";
 import React from "react";
+import LatestWellbeing from "../components/LatestWellbeing";
 import PageHeader from "../components/PageHeader";
 
 const WellBeingPage: React.FC = () => {
@@ -7,9 +8,13 @@ const WellBeingPage: React.FC = () => {
     <IonPage>
       <PageHeader title="Wellbeing" />
       <IonContent>
-        <div className="constrain constrain--large">
-          <p>Wellbeing content</p>
-        </div>
+        <IonGrid className="constrain constrain--large">
+          <IonRow className="ion-margin-top">
+            <IonCol>
+              <LatestWellbeing count={10} />
+            </IonCol>
+          </IonRow>
+        </IonGrid>
       </IonContent>
     </IonPage>
   );
