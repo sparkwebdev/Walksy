@@ -30,9 +30,11 @@ const LatestNews: React.FC<ContainerProps> = ({ count = 3 }) => {
         >
           <IonLabel>
             <h2 className="text-heading">{entry.title}</h2>
-            <h3 className="text-heading">
-              {dayjs(entry.date).format("dddd, DD MMM 'YY")}
-            </h3>
+            {entry.createdAt && (
+              <h3 className="text-heading">
+                {dayjs(entry.createdAt).format("dddd, DD MMM 'YY")}
+              </h3>
+            )}
             {entry.excerpt && <p className="text-body">{entry.excerpt}</p>}
           </IonLabel>
         </IonItem>

@@ -69,9 +69,10 @@ export interface UploadedFile {
 export interface Entry {
   id: string;
   title: string;
-  excerpt: string;
-  date: string;
-  content: string;
+  excerpt?: string;
+  createdAt?: string;
+  category?: string;
+  content?: string;
 }
 
 export function toEntry(doc: firebase.default.firestore.DocumentSnapshot): Entry {

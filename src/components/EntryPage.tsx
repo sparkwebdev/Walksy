@@ -31,9 +31,9 @@ const EntryPage: React.FC = () => {
         <IonGrid className="constrain constrain--large">
           <IonRow className="ion-margin-top">
             <IonCol>
-              {entry?.date && (
+              {entry?.createdAt && (
                 <p className="text-heading">
-                  {dayjs(entry?.date).format("dddd, DD MMM 'YY")}
+                  {dayjs(entry?.createdAt).format("dddd, DD MMM 'YY")}
                 </p>
               )}
               <h1 className="text-heading">{entry?.title}</h1>
