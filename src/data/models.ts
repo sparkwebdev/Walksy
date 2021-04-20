@@ -43,7 +43,7 @@ export interface Walk {
 export interface Location {
   lat: number;
   lng: number;
-  timestamp: number;
+  timestamp?: number;
 }
 
 export interface Time { 
