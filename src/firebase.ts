@@ -74,10 +74,12 @@ export const syncUserProfileToLocal = async (userId: string) => {
 export const storeWalkHandler = async (walkData: Walk) => {
   const walksRef = firestore.collection("users-walks");
   try {
+    const data = {
+      ...walkData
+    }
+    let {id, ...dataMinusId} = data;
     const walkId = await walksRef
-    .add({
-      ...walkData,
-    })
+    .add(dataMinusId)
     .then((data) => {
       return data.id;
     })
@@ -128,9 +130,14 @@ export const storeMomentHandler = async (moment: Moment, walkId: string, userId:
     });
   }
   const momentsRef = firestore.collection("users-moments");
+
+  const data = {
+    ...momentToStore
+  }
+  let {id, ...dataMinusId} = data;
   await momentsRef
     .add({
-      ...momentToStore,
+      ...dataMinusId,
       walkId,
       userId,
     }).then((result) => {
