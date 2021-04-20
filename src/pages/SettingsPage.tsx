@@ -1,6 +1,5 @@
 import {
   IonAlert,
-  IonBadge,
   IonButton,
   IonCard,
   IonCardContent,
@@ -19,7 +18,6 @@ import {
   IonRow,
   IonSelect,
   IonSelectOption,
-  IonToggle,
 } from "@ionic/react";
 import React, { useContext, useEffect, useState } from "react";
 import {
@@ -34,7 +32,7 @@ import { useAuth } from "../auth";
 import PageHeader from "../components/PageHeader";
 import { Storage } from "@capacitor/core";
 import { formatDate } from "../helpers";
-import { UserPreferences } from "../data/models";
+// import { UserPreferences } from "../data/models";
 import WalksContext from "../data/walks-context";
 
 const SettingsPage: React.FC = () => {
@@ -47,8 +45,8 @@ const SettingsPage: React.FC = () => {
   const [age, setAge] = useState("");
   const [location, setLocation] = useState("");
 
-  const [metric, setMetric] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
+  // const [metric, setMetric] = useState(true);
+  // const [darkMode, setDarkMode] = useState(false);
 
   const [editing, setEditing] = useState(false);
 
@@ -76,19 +74,19 @@ const SettingsPage: React.FC = () => {
       .catch((e) => {
         console.log("Couldn't get user preferences", e);
       });
-    Storage.get({
-      key: "userPreferences",
-    })
-      .then((data) => {
-        if (data.value) {
-          const userPreferences = JSON.parse(data.value);
-          setMetric(userPreferences.metric);
-          setDarkMode(userPreferences.darkMode);
-        }
-      })
-      .catch((e) => {
-        console.log("Couldn't get user preferences", e);
-      });
+    // Storage.get({
+    //   key: "userPreferences",
+    // })
+    //   .then((data) => {
+    //     if (data.value) {
+    //       const userPreferences = JSON.parse(data.value);
+    //       setMetric(userPreferences.metric);
+    //       setDarkMode(userPreferences.darkMode);
+    //     }
+    //   })
+    //   .catch((e) => {
+    //     console.log("Couldn't get user preferences", e);
+    //   });
   }, [userId]);
 
   const loadUserData = (userData: any) => {
@@ -131,24 +129,24 @@ const SettingsPage: React.FC = () => {
       });
   };
 
-  const savePreferencesHandler = async (name: string, value: boolean) => {
-    Storage.get({
-      key: "userPreferences",
-    })
-      .then((result) => {
-        const updated: UserPreferences = {
-          ...JSON.parse(result.value),
-          [name]: value,
-        };
-        Storage.set({
-          key: "userPreferences",
-          value: JSON.stringify(updated),
-        });
-      })
-      .catch((e) => {
-        console.log("Couldn't get user preferences", e);
-      });
-  };
+  // const savePreferencesHandler = async (name: string, value: boolean) => {
+  //   Storage.get({
+  //     key: "userPreferences",
+  //   })
+  //     .then((result) => {
+  //       const updated: UserPreferences = {
+  //         ...JSON.parse(result.value),
+  //         [name]: value,
+  //       };
+  //       Storage.set({
+  //         key: "userPreferences",
+  //         value: JSON.stringify(updated),
+  //       });
+  //     })
+  //     .catch((e) => {
+  //       console.log("Couldn't get user preferences", e);
+  //     });
+  // };
 
   const updateEmailHandler = async () => {
     console.log("should update email");
