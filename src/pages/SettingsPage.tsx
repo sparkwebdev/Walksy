@@ -345,7 +345,7 @@ const SettingsPage: React.FC = () => {
               </IonCard>
             </IonCol>
           </IonRow>
-          <IonRow>
+          {/* <IonRow>
             <IonCol>
               <IonCard className="ion-padding-bottom constrain-medium">
                 <IonCardHeader className="ion-no-padding" color="dark">
@@ -397,7 +397,7 @@ const SettingsPage: React.FC = () => {
                 </IonCardContent>
               </IonCard>
             </IonCol>
-          </IonRow>
+          </IonRow> */}
           <IonRow>
             <IonCol>
               <IonCard>
