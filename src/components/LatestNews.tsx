@@ -14,7 +14,7 @@ const LatestNews: React.FC<ContainerProps> = ({ count = 3 }) => {
   useEffect(() => {
     const entriesRef = firestore.collection("entries");
     return entriesRef
-      .orderBy("date")
+      .orderBy("createdAt", "desc")
       .limit(count)
       .onSnapshot(({ docs }) => setEntries(docs.map(toEntry)));
   }, [count]);
@@ -36,6 +36,9 @@ const LatestNews: React.FC<ContainerProps> = ({ count = 3 }) => {
               </h3>
             )}
             {entry.excerpt && <p className="text-body">{entry.excerpt}</p>}
+            {!entry.excerpt && entry.content && (
+              <p className="text-body">{entry.content.substring(1, 175)}...</p>
+            )}
           </IonLabel>
         </IonItem>
       ))}
