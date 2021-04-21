@@ -102,21 +102,35 @@ const MapWithMarkers: React.FC<{
         onLoad={onMapLoad}
       >
         {props.locations && props.locations.length > 0 && (
-          <Marker
-            position={{
-              lat: props.locations![0].lat,
-              lng: props.locations![0].lng,
-            }}
-            icon={{
-              url: "./assets/icon/map_marker_start.svg",
-              scaledSize: new window.google.maps.Size(30, 30),
-              origin: new window.google.maps.Point(0, 0),
-              anchor: new window.google.maps.Point(15, 30),
-            }}
-          />
+          <>
+            <Marker
+              position={{
+                lat: props.locations![0].lat,
+                lng: props.locations![0].lng,
+              }}
+              icon={{
+                url: "./assets/icon/map_marker_start.svg",
+                scaledSize: new window.google.maps.Size(30, 30),
+                origin: new window.google.maps.Point(0, 0),
+                anchor: new window.google.maps.Point(15, 30),
+              }}
+            />
+            <Marker
+              position={{
+                lat: props.locations![props.locations.length - 1].lat,
+                lng: props.locations![props.locations.length - 1].lng,
+              }}
+              icon={{
+                url: "./assets/icon/map_marker_current_location.svg",
+                scaledSize: new window.google.maps.Size(20, 20),
+                origin: new window.google.maps.Point(0, 0),
+                anchor: new window.google.maps.Point(10, 10),
+              }}
+            />
+          </>
         )}
 
-        {props.moments.map((moment: Moment, index) => {
+        {props.moments.map((moment: Moment) => {
           return (
             <Marker
               key={moment.timestamp}
@@ -141,23 +155,17 @@ const MapWithMarkers: React.FC<{
           );
         })}
 
-        {props.locations && props.locations.length > 1 && (
+        {props.locations && props.locations.length > 0 && !props.isWalking && (
           <Marker
             position={{
               lat: props.locations![props.locations.length - 1].lat,
               lng: props.locations![props.locations.length - 1].lng,
             }}
             icon={{
-              url: props.isWalking
-                ? "./assets/icon/map_marker_current_location.svg"
-                : "./assets/icon/map_marker_end.svg",
-              scaledSize: props.isWalking
-                ? new window.google.maps.Size(20, 20)
-                : new window.google.maps.Size(30, 30),
+              url: "./assets/icon/map_marker_end.svg",
+              scaledSize: new window.google.maps.Size(30, 30),
               origin: new window.google.maps.Point(0, 0),
-              anchor: props.isWalking
-                ? new window.google.maps.Point(10, 10)
-                : new window.google.maps.Point(15, 30),
+              anchor: new window.google.maps.Point(15, 30),
             }}
           />
         )}
@@ -176,7 +184,7 @@ const MapWithMarkers: React.FC<{
               setSelected(null);
             }}
           >
-            <div>
+            <div className="infowindow">
               {selected.note && <p className="text-heading">{selected.note}</p>}
               {selected.imagePath && (
                 <img
