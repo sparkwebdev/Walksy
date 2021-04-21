@@ -388,41 +388,22 @@ ion-tab-button ion-label {
 }
 
 .info-bubble--alt,
-.info-bubble--fitness {
+.info-bubble--01,
+.info-bubble:nth-child(2n + 1) {
   background-color: var(--ion-color-tertiary);
 }
 .info-bubble--alt::after,
-.info-bubble--fitness::after {
+.info-bubble--01::after,
+.info-bubble:nth-child(2n + 1)::after {
   right: 80%;
   border-width: 20px 0 0 20px;
   border-color: var(--ion-color-tertiary) transparent transparent transparent;
 }
-.info-bubble--lifestyle {
-  background-color: var(--ion-color-dark);
-}
-.info-bubble--lifestyle::after {
-  right: 80%;
-  border-width: 20px 0 0 20px;
-  border-color: var(--ion-color-dark) transparent transparent transparent;
-}
-.info-bubble--mindfulness {
-  background-color: var(--ion-color-primary);
-}
-.info-bubble--mindfulness::after {
-  right: 80%;
-  border-width: 20px 0 0 20px;
-  border-color: var(--ion-color-primary) transparent transparent transparent;
-}
-.info-bubble:not(:first-child) {
+.info-bubble:nth-child(2) {
   margin-top: 40px;
 }
-.info-bubble:nth-child(2n + 1)::after {
-  right: 80%;
-  border-width: 20px 0 0 20px;
-}
-.info-bubble:nth-child(2n + 2)::after {
-  right: 20%;
-  border-width: 20px 20px 0 0;
+.info-bubble:nth-child(1n + 2) {
+  margin-bottom: 40px;
 }
 
 .add-moment-modal .modal-wrapper {
@@ -533,6 +514,7 @@ ion-tab-button ion-label {
 
 .walk-card {
   position: relative;
+  height: 100%;
 }
 
 .walk-card__image {
@@ -562,7 +544,7 @@ ion-tab-button ion-label {
   font-size: 1.4rem !important;
   /* padding: 5px 15px; */
   margin-bottom: 5px;
-  max-width: calc(100% - 6rem);
+  max-width: calc(100vw - 6rem);
 }
 .walk-card__title small {
   line-height: 1.6;

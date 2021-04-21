@@ -68,7 +68,7 @@ export interface UploadedFile {
 
 export interface Entry {
   id: string;
-  title: string;
+  title?: string;
   excerpt?: string;
   createdAt?: string;
   category?: string;

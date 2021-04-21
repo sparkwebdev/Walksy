@@ -14,7 +14,7 @@ const LatestWellbeing: React.FC<ContainerProps> = ({ count = 12 }) => {
   useEffect(() => {
     const entriesRef = firestore.collection("wellbeing-entries");
     return entriesRef
-      .orderBy("createdAt")
+      .orderBy("createdAt", "desc")
       .limit(count)
       .onSnapshot(({ docs }) => setEntries(docs.map(toEntry)));
   }, [count]);
