@@ -51,7 +51,15 @@ const MapWithMarkers: React.FC<{
     } else {
       return;
     }
-  }, [props.moments, props.locations]);
+  }, [props.moments]);
+
+  useEffect(() => {
+    if (mapRef.current && props.locations && props.locations?.length > 1) {
+      setPath(mapRef.current);
+    } else {
+      return;
+    }
+  }, [props.locations]);
 
   const mapRef = useRef(null);
   const onMapLoad = useCallback((map) => {
@@ -78,6 +86,15 @@ const MapWithMarkers: React.FC<{
         }
       });
       return;
+    }
+  };
+
+  const setPath = (map: any) => {
+    let locations: {}[] = [];
+    if (props.locations) {
+      locations = props.locations.map((location: Location) => {
+        return { lat: location!.lat, lng: location!.lng };
+      });
     }
     const walkPath = new window.google.maps.Polyline({
       path: locations,
