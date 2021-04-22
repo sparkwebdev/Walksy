@@ -116,7 +116,7 @@ const Walking: React.FC = () => {
           },
           "km"
         );
-        if (diff > 0.01) {
+        if (diff > 0.005) {
           setLocations([...locations, newLocation]);
         }
       } else {

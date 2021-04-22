@@ -51,20 +51,21 @@ const MapWithMarkers: React.FC<{
     } else {
       return;
     }
-  }, [props.moments]);
+  }, [props.moments, props.locations]);
 
   useEffect(() => {
-    if (mapRef.current && props.locations && props.locations?.length > 1) {
+    if (mapRef.current && props.locations && props.locations?.length > 0) {
       setPath(mapRef.current);
     } else {
       return;
     }
-  }, [props.locations]);
+  }, [props.locations, props.moments]);
 
   const mapRef = useRef(null);
   const onMapLoad = useCallback((map) => {
     mapRef.current = map;
     fitBounds(map);
+    setPath(map);
   }, []);
   const [selected, setSelected] = useState<Moment | null>();
 
