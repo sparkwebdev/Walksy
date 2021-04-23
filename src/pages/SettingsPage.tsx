@@ -19,7 +19,7 @@ import {
   IonSelect,
   IonSelectOption,
 } from "@ionic/react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   auth,
   getRemoteUserData,
@@ -40,15 +40,17 @@ const SettingsPage: React.FC = () => {
   const walksCtx = useContext(WalksContext);
 
   const [displayName, setDisplayName] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [age, setAge] = useState("");
-  const [location, setLocation] = useState("");
+
+  const firstNameRef = useRef<HTMLIonInputElement>(null);
+  const lastNameRef = useRef<HTMLIonInputElement>(null);
+  const ageRef = useRef<HTMLIonSelectElement>(null);
+  const locationRef = useRef<HTMLIonInputElement>(null);
 
   // const [metric, setMetric] = useState(true);
   // const [darkMode, setDarkMode] = useState(false);
 
-  const [editing, setEditing] = useState(false);
+  const [editing, setEditing] = useState<boolean>(false);
+  const [storedDetails, setStoredDetails] = useState<any>();
 
   const [status, setStatus] = useState({
     loading: false,
@@ -90,11 +92,29 @@ const SettingsPage: React.FC = () => {
   }, [userId]);
 
   const loadUserData = (userData: any) => {
-    setDisplayName(userData?.displayName);
-    setFirstName(userData?.firstName);
-    setLastName(userData?.lastName);
-    setAge(userData?.age);
-    setLocation(userData?.location);
+    firstNameRef.current!.value = userData?.firstName;
+    lastNameRef.current!.value = userData?.lastName;
+    ageRef.current!.value = userData?.age;
+    locationRef.current!.value = userData?.location;
+  };
+
+  const editDetailsHandler = () => {
+    setEditing(true);
+    const currentDetails = {
+      firstName: firstNameRef.current!.value,
+      lastName: lastNameRef.current!.value,
+      age: ageRef.current!.value,
+      location: locationRef.current!.value,
+    };
+    setStoredDetails(currentDetails);
+  };
+
+  const cancelEditDetailsHandler = () => {
+    setEditing(false);
+    firstNameRef.current!.value = storedDetails.firstName;
+    lastNameRef.current!.value = storedDetails.lastName;
+    ageRef.current!.value = storedDetails.age;
+    locationRef.current!.value = storedDetails.location;
   };
 
   const saveDetailsHandler = async () => {
@@ -105,10 +125,10 @@ const SettingsPage: React.FC = () => {
     await updateUserProfile({
       userId: userId!,
       displayName,
-      firstName,
-      lastName,
-      age,
-      location,
+      firstName: firstNameRef.current!.value!.toString(),
+      lastName: lastNameRef.current!.value!.toString(),
+      age: ageRef.current!.value,
+      location: locationRef.current!.value!.toString(),
     })
       .then(() => {
         setEditing(false);
@@ -207,11 +227,8 @@ const SettingsPage: React.FC = () => {
                       </IonLabel>
                       <IonInput
                         type="text"
-                        value={firstName}
                         readonly={!editing}
-                        onIonChange={(event) =>
-                          setFirstName(event.detail!.value!)
-                        }
+                        ref={firstNameRef}
                       />
                       {editing && (
                         <IonIcon
@@ -227,11 +244,8 @@ const SettingsPage: React.FC = () => {
                       </IonLabel>
                       <IonInput
                         type="text"
-                        value={lastName}
                         readonly={!editing}
-                        onIonChange={(event) =>
-                          setLastName(event.detail!.value!)
-                        }
+                        ref={lastNameRef}
                       />
                       {editing && (
                         <IonIcon
@@ -245,11 +259,7 @@ const SettingsPage: React.FC = () => {
                       <IonLabel position="fixed">
                         <small>Age</small>
                       </IonLabel>
-                      <IonSelect
-                        onIonChange={(event) => setAge(event.detail!.value!)}
-                        value={age}
-                        disabled={!editing}
-                      >
+                      <IonSelect disabled={!editing} ref={ageRef}>
                         <IonSelectOption value="under-11">
                           Under 11
                         </IonSelectOption>
@@ -286,11 +296,8 @@ const SettingsPage: React.FC = () => {
                       </IonLabel>
                       <IonInput
                         type="text"
-                        value={location}
                         readonly={!editing}
-                        onIonChange={(event) =>
-                          setLocation(event.detail!.value!)
-                        }
+                        ref={locationRef}
                       />
                       {editing && (
                         <IonIcon
@@ -314,7 +321,7 @@ const SettingsPage: React.FC = () => {
                             <IonButton
                               className="ion-margin-end"
                               color="danger"
-                              onClick={() => setEditing(false)}
+                              onClick={cancelEditDetailsHandler}
                             >
                               Cancel
                             </IonButton>
@@ -329,9 +336,7 @@ const SettingsPage: React.FC = () => {
                         ) : (
                           <IonButton
                             color={editing ? "success" : "primary"}
-                            onClick={() => {
-                              setEditing(!editing);
-                            }}
+                            onClick={editDetailsHandler}
                           >
                             Edit Details
                           </IonButton>
@@ -399,7 +404,7 @@ const SettingsPage: React.FC = () => {
           <IonRow>
             <IonCol>
               <IonCard>
-                <IonCardHeader className="ion-no-padding" color="dark">
+                {/* <IonCardHeader className="ion-no-padding" color="dark">
                   <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
                     Your Account
                   </IonCardSubtitle>
@@ -437,9 +442,10 @@ const SettingsPage: React.FC = () => {
                       </IonButton>
                     </IonItem>
                   </IonList>
-                </IonCardContent>
+                </IonCardContent> */}
                 <IonCardHeader
-                  className="ion-no-padding ion-margin-top"
+                  // className="ion-no-padding ion-margin-top"
+                  className="ion-no-padding"
                   color="light"
                 >
                   <IonGrid>
