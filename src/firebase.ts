@@ -4,7 +4,7 @@ import 'firebase/firestore';
 import 'firebase/storage';
 import { Plugins } from "@capacitor/core";
 import { Location, Moment, UserProfile, Walk } from './data/models';
-import simplify from "simplify-js";
+// import simplify from "simplify-js";
 
 interface Point {
 	x: number;
@@ -83,26 +83,26 @@ export const storeWalkHandler = async (walkData: Walk) => {
     const data = {
       ...walkData
     }
-    const locations: Location[] = data.locations;
-    const locationsToBeSimplified = locations.map((location: Location) => {
-      const newLocation: Point = {
-        x: location.lat,
-        y: location.lng,
-      }
-      return newLocation;
-    });
-    const simplifiedLocations = simplify(locationsToBeSimplified, 0.75, false).map((location: Point) => {
-      const newLocationMapped: Location = {
-        lat: location.x,
-        lng: location.y,
-      }
-      return newLocationMapped;
-    });
-    const dataWithSimplifiedLocations: Walk = {
-      ...data,
-      locations: simplifiedLocations
-    }
-    let {id, ...dataMinusId} = dataWithSimplifiedLocations;
+    // const locations: Location[] = data.locations;
+    // const locationsToBeSimplified = locations.map((location: Location) => {
+    //   const newLocation: Point = {
+    //     x: location.lat,
+    //     y: location.lng,
+    //   }
+    //   return newLocation;
+    // });
+    // const simplifiedLocations = simplify(locationsToBeSimplified, 0.75, false).map((location: Point) => {
+    //   const newLocationMapped: Location = {
+    //     lat: location.x,
+    //     lng: location.y,
+    //   }
+    //   return newLocationMapped;
+    // });
+    // const dataWithSimplifiedLocations: Walk = {
+    //   ...data,
+    //   locations: simplifiedLocations
+    // }
+    let {id, ...dataMinusId} = data;
     const walkId = await walksRef
     .add(dataMinusId)
     .then((data) => {
