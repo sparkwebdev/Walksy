@@ -371,6 +371,8 @@ ion-tab-button ion-label {
   border-radius: 1em !important;
   position: relative;
   padding: 20px;
+}
+.info-bubble * {
   color: var(--ion-color-primary-contrast);
 }
 

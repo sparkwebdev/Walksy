@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IonText, IonBadge } from "@ionic/react";
+import { IonBadge } from "@ionic/react";
 import { firestore } from "../firebase";
 import { Entry, toEntry } from "../data/models";
 import dayjs from "dayjs";
@@ -30,11 +30,7 @@ const LatestWellbeing: React.FC<ContainerProps> = ({ count = 12 }) => {
           <IonBadge className="info-bubble__category" color="light">
             {entry.category}
           </IonBadge>
-          {entry.content && (
-            <p className="text-body">
-              <IonText color="light">{entry.content}</IonText>
-            </p>
-          )}
+          {entry.content && <p className="text-body">{entry.content}</p>}
           {entry.createdAt && (
             <p className="text-heading">
               {dayjs(entry.createdAt).format("dddd, DD MMM 'YY")}

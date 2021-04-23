@@ -78,7 +78,7 @@ const HomePage: React.FC = () => {
       .collection("users-walks")
       .where("type", "==", "user")
       .orderBy("start", "desc")
-      .limit(10);
+      .limit(16);
     return walksRef.onSnapshot(({ docs }) => {
       setLatestUserWalks(docs.map(toWalk));
       // Filter ones with coverImage
