@@ -91,7 +91,7 @@ export const storeWalkHandler = async (walkData: Walk) => {
       }
       return newLocation;
     });
-    const simplifiedLocations = simplify(locationsToBeSimplified, 2, false).map((location: Point) => {
+    const simplifiedLocations = simplify(locationsToBeSimplified, 0.75, false).map((location: Point) => {
       const newLocationMapped: Location = {
         lat: location.x,
         lng: location.y,
