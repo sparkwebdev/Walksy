@@ -925,16 +925,24 @@ ion-col:nth-of-type(3n + 3) .walk-item--image-only .walk-item__cover-image {
 }
 
 .infowindow {
+  min-width: 100px;
+}
+.infowindow * {
+  margin: 5px 0;
+  max-width: 100%;
+}
+.infowindow audio {
+  margin: 10px 0;
+  max-width: 90%;
   min-width: 200px;
 }
 .infowindow p {
-  margin: 0;
   max-width: 100%;
   font-size: 1.2em;
 }
 .infowindow img {
-  box-shadow: 0 1px 5px 2px rgb(0 0 0 / 35%);
-  max-height: 200px !important;
+  box-shadow: 0 1px 3px 1px rgb(0 0 0 / 25%);
+  max-height: 15vh !important;
   width: auto !important;
   margin: 6px auto;
   max-width: 100%;
