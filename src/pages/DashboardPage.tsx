@@ -87,7 +87,7 @@ const DashboardPage: React.FC = () => {
                     }}
                   >
                     <IonText color="light">
-                      {totalWalks} Walks
+                      {totalWalks} <small>Walks</small>
                       <IonIcon
                         icon={distanceIcon}
                         style={{
@@ -116,9 +116,9 @@ const DashboardPage: React.FC = () => {
               </IonGrid>
             </IonCard>
             <div className="constrain constrain--large">
-              <h2 className="text-heading">
+              <h2 className="text-heading ion-padding-start ion-padding-end">
                 <IonText color="primary">
-                  <strong>Latest Walks...</strong>
+                  <strong>Your Latest Walks...</strong>
                 </IonText>
               </h2>
               {walks.map((walk) => (
