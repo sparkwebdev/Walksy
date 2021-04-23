@@ -179,6 +179,7 @@ const NewWalk: React.FC = () => {
                   <IonInput
                     type="text"
                     value={title}
+                    autocapitalize="on"
                     maxlength={titleMaxLength}
                     onIonChange={(event) => setTitle(event.detail.value as any)}
                     className="input-text"

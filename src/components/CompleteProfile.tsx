@@ -158,6 +158,7 @@ const CompleteProfile: React.FC<{
             </IonLabel>
             <IonInput
               type="text"
+              autocapitalize="on"
               value={location}
               onIonChange={(event) => setLocation(event.detail!.value!)}
               onIonFocus={() =>

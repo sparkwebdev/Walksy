@@ -92,6 +92,7 @@ const SettingsPage: React.FC = () => {
   }, [userId]);
 
   const loadUserData = (userData: any) => {
+    setDisplayName(userData?.displayName);
     firstNameRef.current!.value = userData?.firstName;
     lastNameRef.current!.value = userData?.lastName;
     ageRef.current!.value = userData?.age;
@@ -227,6 +228,7 @@ const SettingsPage: React.FC = () => {
                       </IonLabel>
                       <IonInput
                         type="text"
+                        autocapitalize="on"
                         readonly={!editing}
                         ref={firstNameRef}
                       />
@@ -244,6 +246,7 @@ const SettingsPage: React.FC = () => {
                       </IonLabel>
                       <IonInput
                         type="text"
+                        autocapitalize="on"
                         readonly={!editing}
                         ref={lastNameRef}
                       />
@@ -297,6 +300,7 @@ const SettingsPage: React.FC = () => {
                       <IonInput
                         type="text"
                         readonly={!editing}
+                        autocapitalize="on"
                         ref={locationRef}
                       />
                       {editing && (

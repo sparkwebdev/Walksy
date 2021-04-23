@@ -192,6 +192,7 @@ const NewWalkPost: React.FC<{
             <IonInput
               type="text"
               value={location}
+              autocapitalize="on"
               maxlength={locationMaxLength}
               onIonChange={(event) => setLocation(event.detail!.value!)}
               className="input-text"

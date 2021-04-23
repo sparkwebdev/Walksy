@@ -183,6 +183,7 @@ const RegisterPage: React.FC = () => {
                       <IonInput
                         type="text"
                         value={firstName}
+                        autocapitalize="on"
                         onIonChange={(event) =>
                           setFirstName(event.detail!.value!)
                         }
@@ -201,6 +202,7 @@ const RegisterPage: React.FC = () => {
                       </IonLabel>
                       <IonInput
                         type="text"
+                        autocapitalize="on"
                         value={lastName}
                         onIonChange={(event) =>
                           setLastName(event.detail!.value!)
