@@ -119,7 +119,7 @@ const WalksContextProvider: React.FC = (props) => {
         recursive: true,
       });
     } catch (e) {
-      console.log("Couldn't reset moments. ", resetMoments);
+      console.log("Couldn't reset moments.", e);
     }
   };
 
