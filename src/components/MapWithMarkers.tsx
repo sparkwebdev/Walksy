@@ -22,6 +22,7 @@ declare const window: any;
 const options = {
   styles: mapStyles,
   disableDefaultUI: true,
+  zoomControl: true,
 };
 
 const MapWithMarkers: React.FC<{
