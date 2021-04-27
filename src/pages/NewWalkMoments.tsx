@@ -62,7 +62,7 @@ const NewWalkMoments: React.FC<{
           setRecordedAudioFilename(null);
         })
         .catch((e) => {
-          console.log("could not delete 2: ", audioFilename, e);
+          console.log("could not delete: ", audioFilename, e);
         });
     }
     setRecordedAudioFilename(null);
