@@ -36,12 +36,28 @@ import NewWalkMoments from "./NewWalkMoments";
 import PageHeader from "../components/PageHeader";
 import ProgressOverview from "../components/ProgressOverview";
 import { storeWalkHandler } from "../firebase";
-
-import { useWatchPosition } from "@ionic/react-hooks/geolocation";
+import { usePlatform } from "@ionic/react-hooks/platform";
+import {
+  useCurrentPosition,
+  availableFeatures,
+} from "@ionic/react-hooks/geolocation";
 import { getDistanceBetweenPoints } from "../helpers";
 
 const Walking: React.FC = () => {
   const { loggedIn } = useAuth();
+
+  const { platform } = usePlatform();
+  const {
+    error: errorLocation,
+    currentPosition,
+    getPosition,
+  } = useCurrentPosition();
+
+  const getCurrentLocation = () => {
+    if (availableFeatures.getCurrentPosition) {
+      getPosition();
+    }
+  };
 
   const walksCtx = useContext(WalksContext);
   const walkData = { ...walksCtx.walk };
@@ -72,17 +88,11 @@ const Walking: React.FC = () => {
   const [cancelWalkAlert, setCancelWalkAlert] = useState(false);
   const [finishWalkAlert, setFinishWalkAlert] = useState(false);
 
-  const {
-    currentPosition: watchPosition,
-    startWatch,
-    clearWatch,
-  } = useWatchPosition();
-
   useEffect(() => {
     if (walksCtx.walk.title === "") {
       return;
     }
-    startWatch();
+    getCurrentLocation();
     const startDate = new Date().toISOString();
     walksCtx.updateWalk({
       start: startDate,
@@ -91,17 +101,11 @@ const Walking: React.FC = () => {
   }, []);
 
   useLayoutEffect(() => {
-    return () => {
-      clearWatch();
-    };
-  }, [end]);
-
-  useLayoutEffect(() => {
-    if (watchPosition) {
+    if (currentPosition && currentPosition.coords.latitude) {
       const newLocation: Location = {
-        lat: watchPosition.coords.latitude,
-        lng: watchPosition.coords.longitude,
-        timestamp: Date.now(),
+        lat: currentPosition.coords.latitude,
+        lng: currentPosition.coords.longitude,
+        timestamp: currentPosition.timestamp,
       };
       const latestLoc = locations?.slice(-1).pop();
       if (latestLoc && locations) {
@@ -123,7 +127,7 @@ const Walking: React.FC = () => {
         setLocations([newLocation]);
       }
     }
-  }, [watchPosition]);
+  }, [currentPosition]);
 
   useLayoutEffect(() => {
     if (locations) {
@@ -148,7 +152,6 @@ const Walking: React.FC = () => {
       distance,
       locations,
     });
-    clearWatch();
     setEnd(endDate);
   };
 
@@ -170,6 +173,7 @@ const Walking: React.FC = () => {
 
   useEffect(() => {
     if (!end) return;
+    getCurrentLocation();
     storeWalk();
   }, [end]);
 
@@ -227,6 +231,14 @@ const Walking: React.FC = () => {
             minHeight: "85%",
           }}
         >
+          {locations.length}
+          {locations.slice(0, 3).map((location: Location) => {
+            return (
+              <li>
+                1{location.lat} — {location.lng}
+              </li>
+            );
+          })}
           {/* Walk In Progress view state */}
           {start && !end && (
             <>
@@ -237,6 +249,7 @@ const Walking: React.FC = () => {
                   updateWalk={(steps: number, distance: number) =>
                     updateWalkStepsDistance(steps, distance)
                   }
+                  updateLocation={getCurrentLocation}
                 />
               </div>
               {/* Add Moment */}
@@ -248,6 +261,7 @@ const Walking: React.FC = () => {
                   resetMomentType={() => {
                     setMomentType("");
                   }}
+                  updateLocation={getCurrentLocation}
                   latestLocation={locations?.slice(-1).pop()}
                 />
               )}

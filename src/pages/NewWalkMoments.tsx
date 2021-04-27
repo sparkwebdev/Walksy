@@ -28,8 +28,16 @@ const NewWalkMoments: React.FC<{
   colour: string;
   momentType: string;
   resetMomentType: () => void;
+  updateLocation: () => void;
   latestLocation?: Location | null;
-}> = ({ walkId, colour, momentType, resetMomentType, latestLocation }) => {
+}> = ({
+  walkId,
+  colour,
+  momentType,
+  resetMomentType,
+  updateLocation,
+  latestLocation,
+}) => {
   const walksCtx = useContext(WalksContext);
 
   // const imagePathRef = useRef<HTMLIonInputElement>(null);
@@ -112,6 +120,7 @@ const NewWalkMoments: React.FC<{
     ) {
       return;
     }
+    updateLocation();
     let loadedPhotoPath = "";
     let loadedAudioPath = "";
     if (takenPhoto?.path) {

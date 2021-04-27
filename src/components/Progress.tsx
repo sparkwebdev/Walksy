@@ -23,9 +23,14 @@ import { Time } from "../data/models";
 interface ContainerProps {
   start: string;
   updateWalk: (steps: number, distance: number) => void;
+  updateLocation: () => void;
 }
 
-const Progress: React.FC<ContainerProps> = ({ start, updateWalk }) => {
+const Progress: React.FC<ContainerProps> = ({
+  start,
+  updateWalk,
+  updateLocation,
+}) => {
   const [time, setTime] = useState<Time>({
     min: 0,
     sec: 0,
@@ -35,10 +40,15 @@ const Progress: React.FC<ContainerProps> = ({ start, updateWalk }) => {
 
   useEffect(() => {
     let ticker: any = null;
+    let seconds = 0;
     ticker = setInterval(() => {
       const timeDiff = getTimeDiff(start, new Date().toISOString());
       const minAndSec = getMinAndSec(timeDiff);
       setTime(minAndSec);
+      seconds++;
+      if (seconds % 15 === 0) {
+        updateLocation();
+      }
     }, 1000);
     Pedometer.startPedometerUpdates().subscribe((data) => {
       setSteps(data.numberOfSteps);
