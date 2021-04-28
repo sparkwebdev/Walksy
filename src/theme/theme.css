@@ -378,6 +378,9 @@ ion-tab-button ion-label {
 .info-bubble * {
   color: var(--ion-color-primary-contrast);
 }
+.info-bubble__category {
+  color: var(--ion-color-dark);
+}
 
 .info-bubble::after {
   position: absolute;
