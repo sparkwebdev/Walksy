@@ -10,31 +10,26 @@ import React from "react";
 import { Redirect, Route } from "react-router";
 import { useAuth } from "./auth";
 import HomePage from "./pages/HomePage";
-import WalkEntryPage from "./pages/WalkEntryPage";
-import DashboardPage from "./pages/DashboardPage";
-import DiscoverEntryPage from "./pages/DiscoverEntryPage";
-import AboutPage from "./pages/AboutPage";
-import DiscoverPage from "./pages/DiscoverPage";
-import SettingsPage from "./pages/SettingsPage";
-import IntroPage from "./pages/IntroPage";
-import EntryPage from "./components/EntryPage";
-import SideMenu from "./components/SideMenu";
-import WellbeingPage from "./pages/WellbeingPage";
-import NewWalk from "./pages/NewWalk";
-import NewsPage from "./pages/NewsPage";
+import EditWalksPage from "./pages/EditWalksPage";
+import EditNewsPage from "./pages/EditNewsPage";
+import { auth } from "./firebase";
 
 import {
   home as homeIcon,
-  chatbubbles as wellbeingIcon,
-  analytics as discoverIcon,
+  chatbubbles as newsIcon,
   footsteps as walkIcon,
-  time as dashboardIcon,
 } from "ionicons/icons";
+import { appData } from "./data/appData";
 
 const AppTabs: React.FC = () => {
-  const { loggedIn } = useAuth();
+  const { loggedIn, userEmail } = useAuth();
+
+  if (userEmail !== appData.adminEmail) {
+    auth.signOut();
+  }
+
   if (!loggedIn) {
-    return <Redirect to="/intro" />;
+    return <Redirect to="/login" />;
   }
 
   return (
@@ -45,42 +40,11 @@ const AppTabs: React.FC = () => {
           <Route exact path="/app/home">
             <HomePage />
           </Route>
-          <Route exact path="/app/discover">
-            <DiscoverPage />
+          <Route exact path="/app/edit-walks">
+            <EditWalksPage />
           </Route>
-          <Route path="/app/new-walk">
-            <NewWalk />
-          </Route>
-          <Route exact path="/app/dashboard">
-            <DashboardPage />
-          </Route>
-          <Route exact path="/app/wellbeing">
-            <WellbeingPage />
-          </Route>
-
-          {/* Sub Pages */}
-          <Route exact path="/app/settings">
-            <SettingsPage />
-          </Route>
-          <Route exact path="/app/latest-news">
-            <NewsPage />
-          </Route>
-          <Route exact path="/app/about">
-            <AboutPage />
-          </Route>
-          <Route exact path="/app/welcome">
-            <IntroPage />
-          </Route>
-
-          {/* Dynamic pages */}
-          <Route exact path="/app/walk/:id">
-            <WalkEntryPage />
-          </Route>
-          <Route exact path="/app/discover/:id">
-            <DiscoverEntryPage />
-          </Route>
-          <Route exact path="/app/entries/:id">
-            <EntryPage />
+          <Route exact path="/app/edit-news">
+            <EditNewsPage />
           </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
@@ -88,25 +52,16 @@ const AppTabs: React.FC = () => {
             <IonIcon icon={homeIcon} />
             <IonLabel>Home</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="discover" href="/app/discover">
-            <IonIcon icon={discoverIcon} />
-            <IonLabel>Discover</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="walk" href="/app/new-walk">
+          <IonTabButton tab="walk" href="/app/edit-walks">
             <IonIcon icon={walkIcon} />
-            <IonLabel>Walk</IonLabel>
+            <IonLabel>Edit Walks</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="dashboard" href="/app/dashboard">
-            <IonIcon icon={dashboardIcon} />
-            <IonLabel>My Walks</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="gallery" href="/app/wellbeing">
-            <IonIcon icon={wellbeingIcon} />
-            <IonLabel>Wellbeing</IonLabel>
+          <IonTabButton tab="gallery" href="/app/edit-news">
+            <IonIcon icon={newsIcon} />
+            <IonLabel>Edit News</IonLabel>
           </IonTabButton>
         </IonTabBar>
       </IonTabs>
-      <SideMenu />
     </>
   );
 };

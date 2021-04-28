@@ -18,5 +18,6 @@ export const appData =
       "urban",
       "rural",
       // "citycentre",
-    ]
+    ],
+    adminEmail: "admin@walksy.uk"
   }

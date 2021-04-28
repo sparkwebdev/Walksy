@@ -228,3 +228,11 @@ export const getRemoteUserData = async (userId: string) => {
     console.log("Error getting user data: ", error);
   }
 };
+
+export const deleteStoredItem = async (collection: string, id: string) => {
+  await firestore.collection(collection).doc(id).delete().then(() => {
+      console.log("Document successfully deleted!");
+  }).catch((error) => {
+      console.error("Error removing document: ", error);
+  });
+};

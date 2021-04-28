@@ -144,14 +144,6 @@ const LoginPage: React.FC = () => {
                       <IonButton expand="block" onClick={loginHandler}>
                         Login
                       </IonButton>
-                      <IonButton
-                        expand="block"
-                        fill="clear"
-                        routerLink="/register"
-                        className="ion-margin-top"
-                      >
-                        Don't have an account?
-                      </IonButton>
                     </IonCol>
                   </IonRow>
                 </IonGrid>
