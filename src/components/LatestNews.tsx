@@ -30,6 +30,7 @@ const LatestNews: React.FC<ContainerProps> = ({ count = 3 }) => {
           style={{
             background: "rgba(255, 255, 255, 0.925)",
           }}
+          detail={true}
         >
           <IonLabel className="ion-padding-start ion-padding-end">
             <h2 className="text-heading">{entry.title}</h2>
