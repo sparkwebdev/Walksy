@@ -163,6 +163,18 @@ const HomePage: React.FC = () => {
             </>
           )}
         </div>
+        <IonGrid>
+          <IonRow>
+            <IonCol className="ion-text-center">
+              <IonButton routerLink="/privacy" fill="clear">
+                Privacy Policy
+              </IonButton>
+              <IonButton routerLink="/copyright" fill="clear">
+                Copyright
+              </IonButton>
+            </IonCol>
+          </IonRow>
+        </IonGrid>
       </IonContent>
       <IonLoading isOpen={loading} />
     </IonPage>
