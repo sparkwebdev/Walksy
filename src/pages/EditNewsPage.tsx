@@ -38,16 +38,12 @@ const EditNewsPage: React.FC = () => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [excerpt, setExcerpt] = useState<string>("");
-  const [createdAt, setCreatedAt] = useState<string>(new Date().toISOString());
+  const [createdAt, setCreatedAt] = useState<string>(
+    dayjs().format("YYYY-MM-DDThh:mm")
+  );
 
   const addEntry = async () => {
     setCurrentAction("Add");
-    const data = {
-      title,
-      excerpt,
-      content,
-      createdAt: dayjs().format("YYYY-MM-DDThh:mm"),
-    };
   };
 
   const editEntry = (entryId: string) => {
