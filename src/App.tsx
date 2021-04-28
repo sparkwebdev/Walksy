@@ -10,7 +10,6 @@ import EntryPage from "./components/EntryPage";
 import NewsPage from "./pages/NewsPage";
 import AboutPage from "./pages/AboutPage";
 import PrivacyPage from "./pages/PrivacyPage";
-import CopyrightPage from "./pages/CopyrightPage";
 
 const App: React.FC = () => {
   return (
@@ -34,9 +33,6 @@ const App: React.FC = () => {
           </Route>
           <Route exact path="/privacy">
             <PrivacyPage />
-          </Route>
-          <Route exact path="/copyright">
-            <CopyrightPage />
           </Route>
           <Redirect exact path="/" to="/" />
           <Route>

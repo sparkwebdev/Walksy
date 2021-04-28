@@ -169,9 +169,6 @@ const HomePage: React.FC = () => {
               <IonButton routerLink="/privacy" fill="clear">
                 Privacy Policy
               </IonButton>
-              <IonButton routerLink="/copyright" fill="clear">
-                Copyright
-              </IonButton>
             </IonCol>
           </IonRow>
         </IonGrid>
