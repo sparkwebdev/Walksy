@@ -78,19 +78,19 @@ const HomePage: React.FC = () => {
           </div>
           <IonGrid>
             <IonRow style={{ opacity: 0.2 }}>
-              <IonCol offsetSm="2" size="4">
+              <IonCol offset="1" offsetSm="2" size="5" sizeSm="4">
                 <a href="/">
                   <img src="assets/img/btn-app-store.png" alt="" />
                 </a>
               </IonCol>
-              <IonCol size="4">
+              <IonCol size="5" sizeSm="4">
                 <a href="/">
                   <img src="assets/img/btn-google-play.png" alt="" />
                 </a>
               </IonCol>
             </IonRow>
             <IonRow>
-              <IonCol className="ion-text-center ion-text-uppercase">
+              <IonCol className="ion-text-center">
                 <h3>
                   <IonText color="secondary">
                     <strong>Coming Soon!</strong>

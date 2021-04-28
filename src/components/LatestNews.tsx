@@ -20,15 +20,18 @@ const LatestNews: React.FC<ContainerProps> = ({ count = 3 }) => {
   }, [count]);
 
   return (
-    <IonList lines="none">
+    <IonList>
       {entries.map((entry) => (
         <IonItem
           className="ion-no-margin ion-no-padding"
           button
           key={entry.id}
           routerLink={`/entries/${entry.id}`}
+          style={{
+            background: "rgba(255, 255, 255, 0.925)",
+          }}
         >
-          <IonLabel>
+          <IonLabel className="ion-padding-start ion-padding-end">
             <h2 className="text-heading">{entry.title}</h2>
             {entry.createdAt && (
               <h3 className="text-heading">
