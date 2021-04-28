@@ -79,6 +79,9 @@ small {
 .constrain--large {
   max-width: 36rem;
 }
+.constrain--wide {
+  max-width: 48rem;
+}
 .centered-content {
   min-height: calc(100vh - 196px);
   display: flex;
