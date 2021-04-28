@@ -54,7 +54,7 @@ const MomentsGroup: React.FC<{
       <IonCard
         className="ion-no-margin gallery-group"
         style={{ background: "#777269" }}
-        routerLink={`/app/walk/${props.walkId}`}
+        routerLink={`/walk/${props.walkId}`}
       >
         <IonGrid className="grid grid--half grid--half-with-full ion-no-padding">
           <IonRow>

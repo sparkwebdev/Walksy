@@ -20,13 +20,13 @@ const LatestNews: React.FC<ContainerProps> = ({ count = 3 }) => {
   }, [count]);
 
   return (
-    <IonList>
+    <IonList lines="none">
       {entries.map((entry) => (
         <IonItem
           className="ion-no-margin ion-no-padding"
           button
           key={entry.id}
-          routerLink={`/app/entries/${entry.id}`}
+          routerLink={`/entries/${entry.id}`}
         >
           <IonLabel>
             <h2 className="text-heading">{entry.title}</h2>

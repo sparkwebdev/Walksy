@@ -15,7 +15,7 @@ import PageHeader from "../components/PageHeader";
 const AboutPage: React.FC = () => {
   return (
     <IonPage>
-      <PageHeader title="About" />
+      <PageHeader title="About" back={true} />
       <IonContent>
         <IonGrid className="constrain constrain--large">
           <IonRow className="ion-margin-top">

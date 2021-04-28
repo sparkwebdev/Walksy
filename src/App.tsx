@@ -1,49 +1,41 @@
-import { IonApp, IonLoading } from "@ionic/react";
+import { IonApp } from "@ionic/react";
 import React from "react";
 import { IonReactRouter } from "@ionic/react-router";
-import AppTabs from "./AppTabs";
 import { Redirect, Route, Switch } from "react-router";
-import { AuthContext, useAuthInit } from "./auth";
 
-import IntroPage from "./pages/IntroPage";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
 import NotFoundPage from "./pages/NotFoundPage";
-import Walking from "./pages/Walking";
+import HomePage from "./pages/HomePage";
+import WalkEntryPage from "./pages/WalkEntryPage";
+import EntryPage from "./components/EntryPage";
+import NewsPage from "./pages/NewsPage";
+import AboutPage from "./pages/AboutPage";
 
 const App: React.FC = () => {
-  const { loading, auth } = useAuthInit();
-  if (loading) {
-    return <IonLoading isOpen />;
-  }
-
   return (
     <IonApp>
-      <AuthContext.Provider value={auth!}>
-        <IonReactRouter>
-          <Switch>
-            <Route exact path="/intro">
-              <IntroPage />
-            </Route>
-            <Route exact path="/login">
-              <LoginPage />
-            </Route>
-            <Route exact path="/register">
-              <RegisterPage />
-            </Route>
-            <Route path="/walking">
-              <Walking />
-            </Route>
-            <Route path="/app">
-              <AppTabs />
-            </Route>
-            <Redirect exact path="/" to="/app/home" />
-            <Route>
-              <NotFoundPage />
-            </Route>
-          </Switch>
-        </IonReactRouter>
-      </AuthContext.Provider>
+      <IonReactRouter>
+        <Switch>
+          <Route exact path="/">
+            <HomePage />
+          </Route>
+          <Route exact path="/walk/:id">
+            <WalkEntryPage />
+          </Route>
+          <Route exact path="/entries/:id">
+            <EntryPage />
+          </Route>
+          <Route exact path="/latest-news">
+            <NewsPage />
+          </Route>
+          <Route exact path="/about">
+            <AboutPage />
+          </Route>
+          <Redirect exact path="/" to="/" />
+          <Route>
+            <NotFoundPage />
+          </Route>
+        </Switch>
+      </IonReactRouter>
     </IonApp>
   );
 };

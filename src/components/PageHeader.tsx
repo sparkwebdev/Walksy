@@ -26,7 +26,7 @@ const PageHeader: React.FC<ContainerProps> = ({
   showTool,
   toolText,
   toolAction,
-  defaultHref = "/app/home",
+  defaultHref = "/",
 }) => {
   const location = useLocation();
   return (

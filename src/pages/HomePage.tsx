@@ -1,76 +1,32 @@
 import {
   IonPage,
   IonContent,
-  IonButton,
   IonText,
   IonRouterLink,
   IonList,
-  IonIcon,
   IonLoading,
+  IonCol,
+  IonGrid,
+  IonRow,
+  IonToolbar,
+  IonHeader,
+  IonTitle,
+  IonButton,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
-import { useAuth } from "../auth";
-import PageHeader from "../components/PageHeader";
 import WalkItemPreview from "../components/WalkItemPreview";
 import { toWalk, Walk } from "../data/models";
 import { firestore } from "../firebase";
-import {
-  location as discoverIcon,
-  timeOutline as dashboardIcon,
-  peopleOutline as personIcon,
-} from "ionicons/icons";
-import StartWalk from "../atoms/StartWalk";
 import MomentsGroup from "../components/MomentsGroup";
+import LatestNews from "../components/LatestNews";
 
 const HomePage: React.FC = () => {
-  const { userId } = useAuth();
   const [loading, setLoading] = useState<boolean>(true);
-  const [latestWalk, setLatestWalk] = useState<Walk[]>([]);
-  const [curatedWalks, setCuratedWalks] = useState<Walk[]>([]);
-  const [featuredWalk, setFeaturedWalk] = useState<Walk[]>([]);
   const [latestUserWalks, setLatestUserWalks] = useState<Walk[]>([]);
   const [
     latestUserWalksWithCoverImage,
     setLatestUserWalksWithCoverImage,
   ] = useState<Walk[]>([]);
-
-  // Fetch Latest Walk (current user)
-  useEffect(() => {
-    const walksRef = firestore
-      .collection("users-walks")
-      .where("userId", "==", userId)
-      .limit(1)
-      .orderBy("start", "desc");
-    return walksRef.onSnapshot(({ docs }) => {
-      setLatestWalk(docs.map(toWalk));
-    });
-  }, [userId]);
-
-  // Fetch (up to 2) Curated Walks
-  useEffect(() => {
-    const walksRef = firestore
-      .collection("users-walks")
-      .where("type", "==", "curated")
-      .limit(2)
-      .orderBy("start", "desc");
-    return walksRef.onSnapshot(({ docs }) => {
-      setCuratedWalks(docs.map(toWalk));
-      setLoading(false);
-    });
-  }, []);
-
-  // Fetch latest Featured Walk
-  useEffect(() => {
-    const walksRef = firestore
-      .collection("users-walks")
-      .where("type", "==", "featured")
-      .limit(1)
-      .orderBy("start", "desc");
-    return walksRef.onSnapshot(({ docs }) => {
-      setFeaturedWalk(docs.map(toWalk));
-      setLoading(false);
-    });
-  }, []);
 
   // Fetch (up to 10) latest Users Walks
   useEffect(() => {
@@ -79,107 +35,80 @@ const HomePage: React.FC = () => {
       .where("type", "==", "user")
       .orderBy("start", "desc")
       .limit(16);
-    return walksRef.onSnapshot(({ docs }) => {
-      setLatestUserWalks(docs.map(toWalk));
-      // Filter ones with coverImage
-      const walksWithCoverImage = docs.map(toWalk).filter((walk) => {
-        return walk.coverImage !== "";
-      });
-      setLatestUserWalksWithCoverImage([...walksWithCoverImage]);
-      setLoading(false);
-    });
+    return walksRef.onSnapshot(
+      ({ docs }) => {
+        setLatestUserWalks(docs.map(toWalk));
+        // Filter ones with coverImage
+        const walksWithCoverImage = docs.map(toWalk).filter((walk) => {
+          return walk.coverImage !== "";
+        });
+        setLatestUserWalksWithCoverImage([...walksWithCoverImage]);
+        setLoading(false);
+      },
+      (error) => {
+        setLoading(false);
+      }
+    );
   }, []);
 
   return (
     <IonPage>
-      <PageHeader title="Welcome" />
+      <IonHeader>
+        <IonToolbar className="page-header">
+          <IonTitle className="ion-text-center">Welcome</IonTitle>
+        </IonToolbar>
+      </IonHeader>
       <IonContent>
-        <StartWalk />
         <div className="constrain constrain--large">
-          {latestWalk.length > 0 && (
-            <>
-              <h2 className="text-heading ion-padding-start ion-padding-end">
-                <IonText color="primary">
-                  <strong>Your latest walk</strong>
-                </IonText>
-              </h2>
-              {latestWalk.map((walk) => (
-                <IonRouterLink
-                  key={walk.id}
-                  routerLink={`/app/walk/${walk.id}`}
-                >
-                  <WalkItemPreview
-                    title={walk.title}
-                    colour={walk.colour}
-                    description={walk.description}
-                    start={walk.start}
-                    end={walk.end}
-                    steps={walk.steps}
-                    distance={walk.distance}
-                    coverImage={walk.coverImage}
-                    userId={walk.userId}
-                    isCircular={walk.circular}
-                    location={walk?.location}
-                    isMiniPreview={!walk.coverImage}
-                  />
-                </IonRouterLink>
-              ))}
-              <IonButton
-                className="ion-margin-top ion-margin-bottom ion-margin-start"
-                routerLink="/app/dashboard"
-              >
-                <IonIcon icon={dashboardIcon} slot="start" />
-                View Dashboard
-              </IonButton>
-            </>
-          )}
-          {curatedWalks.length > 0 && (
-            <>
-              <hr className="separator" />
-              <h2 className="text-heading ion-padding-start ion-padding-end">
-                <IonText color="primary">
-                  <strong>Curated Walks...</strong>
-                </IonText>
-              </h2>
-              <p
-                className="text-body small-print ion-padding-start ion-padding-end"
-                style={{ maxWidth: "32em" }}
-              >
-                A series of walks created by artists as part of many different
-                projects the Art Walk has produced around Edinburgh’s coastline
-                and outskirt areas, inviting us to rethink our local habitats
-                and city spaces.
-              </p>
-              {curatedWalks.map((walk) => (
-                <IonRouterLink
-                  key={walk.id}
-                  routerLink={`/app/walk/${walk.id}`}
-                >
-                  <WalkItemPreview
-                    title={walk.title}
-                    colour={walk.colour}
-                    description={walk.description}
-                    start={walk.start}
-                    end={walk.end}
-                    steps={walk.steps}
-                    distance={walk.distance}
-                    coverImage={walk.coverImage}
-                    userId={walk.userId}
-                    isCircular={walk.circular}
-                    location={walk?.location}
-                    isMiniPreview={!walk.coverImage}
-                  />
-                </IonRouterLink>
-              ))}
-              <IonButton
-                className="ion-margin-top ion-margin-bottom ion-margin-start"
-                routerLink="/app/discover"
-              >
-                <IonIcon icon={discoverIcon} slot="start" />
-                Discover Walks
-              </IonButton>
-            </>
-          )}
+          <div className="ion-text-center ion-margin-bottom">
+            <h2>
+              <span className="ion-hide">Walksy</span>
+              <img
+                className="logo"
+                src="assets/img/walksy-logo-2.svg"
+                alt=""
+                style={{
+                  maxHeight: "80px",
+                }}
+              />
+            </h2>
+            <h3 className="text-heading constrain constrain--small">
+              Walking &amp; recording your&nbsp;nearby.
+            </h3>
+          </div>
+          <IonGrid>
+            <IonRow style={{ opacity: 0.2 }}>
+              <IonCol offsetSm="2" size="4">
+                <a href="/">
+                  <img src="assets/img/btn-app-store.png" alt="" />
+                </a>
+              </IonCol>
+              <IonCol size="4">
+                <a href="/">
+                  <img src="assets/img/btn-google-play.png" alt="" />
+                </a>
+              </IonCol>
+            </IonRow>
+            <IonRow>
+              <IonCol className="ion-text-center ion-text-uppercase">
+                <h3>
+                  <IonText color="secondary">
+                    <strong>Coming Soon!</strong>
+                  </IonText>
+                </h3>
+                <IonButton routerLink="/about">Find out more</IonButton>
+              </IonCol>
+            </IonRow>
+          </IonGrid>
+          <hr className="separator" />
+          <div className="ion-margin-bottom ion-padding-bottom">
+            <h2 className="text-heading ion-padding-start ion-padding-end">
+              <IonText color="primary">
+                <strong>Latest News...</strong>
+              </IonText>
+            </h2>
+            <LatestNews />
+          </div>
           {latestUserWalks.length > 0 && (
             <>
               <hr className="separator" />
@@ -189,32 +118,11 @@ const HomePage: React.FC = () => {
                     <strong>Latest User Walks...</strong>
                   </IonText>
                 </h2>
-                {featuredWalk.map((walk) => (
-                  <IonRouterLink
-                    key={walk.id}
-                    routerLink={`/app/walk/${walk.id}`}
-                  >
-                    <WalkItemPreview
-                      title={walk.title}
-                      colour={walk.colour}
-                      description={walk.description}
-                      start={walk.start}
-                      end={walk.end}
-                      steps={walk.steps}
-                      distance={walk.distance}
-                      coverImage={walk.coverImage}
-                      userId={walk.userId}
-                      isCircular={walk.circular}
-                      location={walk?.location}
-                      isMiniPreview={!walk.coverImage}
-                    />
-                  </IonRouterLink>
-                ))}
                 <IonList lines="none">
-                  {latestUserWalks.slice(0, 2).map((walk) => (
+                  {latestUserWalks.slice(0, 3).map((walk) => (
                     <IonRouterLink
                       key={walk.id}
-                      routerLink={`/app/walk/${walk.id}`}
+                      routerLink={`/walk/${walk.id}`}
                     >
                       <WalkItemPreview
                         title={walk.title}
@@ -230,13 +138,6 @@ const HomePage: React.FC = () => {
                     </IonRouterLink>
                   ))}
                 </IonList>
-                <IonButton
-                  className="ion-margin-start"
-                  routerLink="/app/dashboard"
-                >
-                  <IonIcon icon={personIcon} slot="start" />
-                  Latest User Walks
-                </IonButton>
               </div>
             </>
           )}
