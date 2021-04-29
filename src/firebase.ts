@@ -231,7 +231,7 @@ export const getRemoteUserData = async (userId: string) => {
 
 export const deleteStoredItem = async (collection: string, id: string) => {
   await firestore.collection(collection).doc(id).delete().then(() => {
-      console.log("Document successfully deleted!");
+      console.log("Document successfully deleted!", id);
   }).catch((error) => {
       console.error("Error removing document: ", error);
   });

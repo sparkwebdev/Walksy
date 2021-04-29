@@ -199,6 +199,7 @@ const EditWellbeingPage: React.FC = () => {
                       className="ion-margin"
                       color={loading ? "dark" : "secondary"}
                       onClick={storeEntry}
+                      disabled={!title && !content}
                     >
                       {loading ? "Saving" : "Save"}
                     </IonButton>

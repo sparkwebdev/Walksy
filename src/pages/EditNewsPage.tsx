@@ -197,6 +197,7 @@ const EditNewsPage: React.FC = () => {
                       className="ion-margin"
                       color={loading ? "dark" : "secondary"}
                       onClick={storeEntry}
+                      disabled={!title || (!excerpt && !content)}
                     >
                       {loading ? "Saving" : "Save"}
                     </IonButton>
