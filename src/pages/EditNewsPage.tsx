@@ -159,6 +159,7 @@ const EditNewsPage: React.FC = () => {
                       <IonItem>
                         <IonLabel position="stacked">Title</IonLabel>
                         <IonInput
+                          className="input-text input-text--small"
                           type="text"
                           value={title}
                           onIonChange={(e) => setTitle(e.detail!.value!)}
@@ -167,6 +168,7 @@ const EditNewsPage: React.FC = () => {
                       <IonItem>
                         <IonLabel position="stacked">Created At</IonLabel>
                         <IonInput
+                          className="input-text input-text--small"
                           type="datetime-local"
                           value={createdAt}
                           onIonChange={(e) => setCreatedAt(e.detail!.value!)}
@@ -175,6 +177,7 @@ const EditNewsPage: React.FC = () => {
                       <IonItem>
                         <IonLabel position="stacked">Excerpt</IonLabel>
                         <IonTextarea
+                          className="input-text input-text--small"
                           rows={3}
                           value={excerpt}
                           onIonChange={(e) => setExcerpt(e.detail.value!)}
@@ -183,6 +186,7 @@ const EditNewsPage: React.FC = () => {
                       <IonItem>
                         <IonLabel position="stacked">Content</IonLabel>
                         <IonTextarea
+                          className="input-text input-text--small"
                           rows={8}
                           value={content}
                           onIonChange={(e) => setContent(e.detail.value!)}
