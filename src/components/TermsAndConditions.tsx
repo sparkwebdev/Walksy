@@ -11,6 +11,7 @@ import {
 } from "@ionic/react";
 import React from "react";
 import { appData } from "../data/appData";
+import PrivacyPolicy from "./PrivacyPolicy";
 
 const TermsAndConditions: React.FC<{
   onDismiss: () => void;
@@ -24,7 +25,7 @@ const TermsAndConditions: React.FC<{
           </IonCardSubtitle>
         </IonCardHeader>
         <IonCardContent className="ion-margin-top small-print">
-          {appData.privacyPolicy}
+          <PrivacyPolicy />
         </IonCardContent>
         <IonCardHeader className="ion-no-padding ion-margin-top" color="light">
           <IonGrid>
