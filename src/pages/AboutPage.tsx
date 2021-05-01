@@ -21,7 +21,7 @@ const AboutPage: React.FC = () => {
           <IonRow className="ion-margin-top">
             <IonCol>
               <p className="text-body">
-                The &#8216;Walksy&#8217; (Walk &amp; See) App has been devised
+                The &#8216;Walksy.&#8217; (Walk &amp; See) App has been devised
                 and created by Art Walk Projects (Edinburgh). Minim adipisicing
                 aliqua esse sunt Lorem eu consequat enim exercitation veniam
                 minim. Quis duis consequat aute nostrud elit non sint esse ipsum

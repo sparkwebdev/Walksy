@@ -61,6 +61,7 @@ const Intro: React.FC = () => {
             />
             <div className="constrain constrain--medium ion-padding">
               <h2 className="text-heading">
+                Walk &amp; See <br />
                 A library of walks, <br />
                 recording your nearby.
               </h2>
@@ -79,22 +80,24 @@ const Intro: React.FC = () => {
               alt=""
             />
             <div className="constrain constrain--medium ion-padding">
-              <h3 className="text-heading">
-                <span>Browse</span> <br />
-                <span className="text-body">
-                  our curated art walks or other users&#8217; walks
+              <h2 className="text-heading">
+                Browse <br />
+                <span className="text-body" style={{ fontSize: "0.7em" }}>
+                  our curated art walks or other users&#8217;&nbsp;walks
                 </span>
-              </h3>
-              <h3 className="text-heading">
-                <span>Make</span> <br />
-                <span className="text-body">
-                  your own walk by capturing what you see
+              </h2>
+              <h2 className="text-heading">
+                Make <br />
+                <span className="text-body" style={{ fontSize: "0.7em" }}>
+                  your own walk by capturing what&nbsp;you&nbsp;see
                 </span>
-              </h3>
-              <h3 className="text-heading">
-                <span>Watch</span> <br />
-                <span className="text-body">your steps, distance +more</span>
-              </h3>
+              </h2>
+              <h2 className="text-heading">
+                Watch <br />
+                <span className="text-body" style={{ fontSize: "0.7em" }}>
+                  your steps, distance + more
+                </span>
+              </h2>
             </div>
           </IonSlide>
           <IonSlide>
@@ -109,10 +112,8 @@ const Intro: React.FC = () => {
                 alt=""
                 style={{ margin: "-60px auto -30px auto" }}
               />
-              <h3 className="text-heading">
-                <span>Join in recording your Nearby</span>
-              </h3>
-              <p className="text-body">
+              <h2 className="text-heading">Join in recording your Nearby</h2>
+              <p className="text-body" style={{ fontSize: "0.85em" }}>
                 Join in creating this library of walks that shape our collective
                 outdoors. You can add images, sounds or notes to form your
                 walks, whilst monitoring your distance&nbsp;&amp;&nbsp;steps.
@@ -126,14 +127,14 @@ const Intro: React.FC = () => {
               alt=""
             />
             <div className="constrain constrain--medium ion-padding">
-              <p className="text-body">
-                The &#8216;Walksy&#8217; (Walk &amp; See) App has been devised
+              <p className="text-body" style={{ fontSize: "0.85em" }}>
+                The &#8216;Walksy.&#8217; (Walk &amp; See) App has been devised
                 and created by Art Walk Projects (Edinburgh) offering a creative
                 way to record our outdoors, whilst encouraging us to walk more
                 and improve our&nbsp;wellbeing.
               </p>
               <IonGrid>
-                <p className="text-heading">Funded by:</p>
+                <h2 className="text-heading">Funded by:</h2>
                 <IonRow className="ion-align-items-center">
                   <IonCol className="ion-padding">
                     <img

@@ -15,7 +15,7 @@ const Share: React.FC<{
 
   const options = {
     message: text,
-    subject: "Sharing from Walksy",
+    subject: "Sharing from Walksy.",
     files: [image],
     url: url,
   };
