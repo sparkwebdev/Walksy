@@ -47,9 +47,7 @@ const MapWithMarkers: React.FC<{
   });
 
   useEffect(() => {
-    console.log("1a");
     if (mapRef.current && props.moments.length > 1) {
-      console.log("1b");
       fitBounds(mapRef.current);
     } else {
       return;
@@ -57,9 +55,8 @@ const MapWithMarkers: React.FC<{
   }, [props.moments, props.locations]);
 
   useEffect(() => {
-    console.log("2a");
     if (mapRef.current && props.locations && props.locations?.length > 0) {
-      console.log("2b");
+      fitBounds(mapRef.current);
       setPath(mapRef.current);
     } else {
       return;
@@ -69,7 +66,6 @@ const MapWithMarkers: React.FC<{
   const mapRef = useRef(null);
   const onMapLoad = useCallback(
     (map) => {
-      console.log("3");
       mapRef.current = map;
       fitBounds(map);
       setPath(map);
