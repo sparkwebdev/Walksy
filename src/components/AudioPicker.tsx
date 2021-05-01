@@ -19,7 +19,7 @@ import {
 
 const { VoiceRecorder } = Plugins;
 let ticker: any = null;
-const maximumDuration = 15;
+const maximumDuration = 30;
 
 const AudioPicker: React.FC<{
   onAudioPick: (filename: string) => void;
