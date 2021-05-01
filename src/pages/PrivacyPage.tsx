@@ -1,7 +1,6 @@
 import React from "react";
 import { IonContent, IonPage } from "@ionic/react";
 import PageHeader from "../components/PageHeader";
-import { appData } from "../data/appData";
 import PrivacyPolicy from "../components/PrivacyPolicy";
 
 const CopyrightPage: React.FC = () => {

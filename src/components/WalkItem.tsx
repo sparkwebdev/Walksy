@@ -69,7 +69,7 @@ const WalkItem: React.FC<{
 
   return (
     <>
-      <div className="walk-item-new_ ion-padding-start ion-padding-end">
+      <div className="ion-padding-start ion-padding-end">
         <IonGrid className="ion-margin-bottom ion-padding-bottom">
           <IonRow
             className="ion-align-items-center"

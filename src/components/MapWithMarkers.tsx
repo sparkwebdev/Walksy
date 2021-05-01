@@ -63,11 +63,14 @@ const MapWithMarkers: React.FC<{
   }, [props.locations, props.moments]);
 
   const mapRef = useRef(null);
-  const onMapLoad = useCallback((map) => {
-    mapRef.current = map;
-    fitBounds(map);
-    setPath(map);
-  }, []);
+  const onMapLoad = useCallback(
+    (map) => {
+      mapRef.current = map;
+      fitBounds(map);
+      setPath(map);
+    },
+    [props.locations, props.moments]
+  );
   const [selected, setSelected] = useState<Moment | null>();
 
   const fitBounds = (map: any) => {
