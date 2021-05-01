@@ -45,6 +45,7 @@ const MomentsList: React.FC<{
     );
     if (momentsLoc!.length > 0) {
       setMomentsWithLocations(momentsLoc);
+      setMapKey(Math.random());
     }
   }, [props.moments]);
   return (
