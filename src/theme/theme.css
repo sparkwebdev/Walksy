@@ -835,52 +835,6 @@ ion-col:nth-of-type(3n + 3) .walk-item--image-only .walk-item__cover-image {
 .walk-item__moment-image {
   display: block;
 }
-
-.walk-item-new {
-  position: relative;
-  background-color: var(--ion-color-dark);
-}
-
-.walk-item-new__image {
-  width: 100%;
-  height: 100%;
-  /* height: 60vh; */
-  object-fit: cover;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 0;
-  position: absolute;
-  /* background: var(--ion-color-dark); */
-}
-.walk-item-new__image::before {
-  content: "";
-  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.65));
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 0;
-  z-index: -1;
-}
-.walk-item-new__details {
-  padding: 20px;
-  margin-top: 20vh;
-  position: relative;
-  color: var(--ion-color-dark-contrast);
-  z-index: 1;
-}
-.walk-item-new__details::before {
-  content: "";
-  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.65));
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  top: 0;
-  z-index: -1;
-}
 .walk-item__moment-audio {
   /* min-height: 35vh;
   padding-top: 5vh;
