@@ -86,7 +86,7 @@ const DiscoverPage: React.FC = () => {
               <IonCardTitle className="walk-card__title text-body">
                 Curated Walks
                 <br />
-                <small>Lorem ipsum dolor sit amet, consectetur.</small>
+                <small>Walking artist created walks</small>
               </IonCardTitle>
               <IonCardSubtitle className="walk-card__subtitle text-body">
                 {curatedWalksCount}
@@ -108,7 +108,7 @@ const DiscoverPage: React.FC = () => {
               <IonCardTitle className="walk-card__title text-body">
                 Featured Walks
                 <br />
-                <small>Consectetur adipiscing elit, sed do eiusmod.</small>
+                <small>Specially themed walks</small>
               </IonCardTitle>
               <IonCardSubtitle className="walk-card__subtitle text-body">
                 {featuredWalks}
@@ -128,11 +128,9 @@ const DiscoverPage: React.FC = () => {
             />
             <IonCardHeader className="walk-card__header">
               <IonCardTitle className="walk-card__title text-body">
-                Latest User Walks
+                Latest Walks
                 <br />
-                <small>
-                  Tempor incididunt ut labore et dolore magna aliqua.
-                </small>
+                <small>Recent walks from users</small>
               </IonCardTitle>
               <IonCardSubtitle className="walk-card__subtitle text-body">
                 {latestWalksCount}
