@@ -56,7 +56,6 @@ const MapWithMarkers: React.FC<{
 
   useEffect(() => {
     if (mapRef.current && props.locations && props.locations?.length > 0) {
-      fitBounds(mapRef.current);
       setPath(mapRef.current);
     } else {
       return;
