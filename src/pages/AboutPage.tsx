@@ -22,15 +22,7 @@ const AboutPage: React.FC = () => {
             <IonCol>
               <p className="text-body">
                 The &#8216;Walksy.&#8217; (Walk &amp; See) App has been devised
-                and created by Art Walk Projects (Edinburgh). Minim adipisicing
-                aliqua esse sunt Lorem eu consequat enim exercitation veniam
-                minim. Quis duis consequat aute nostrud elit non sint esse ipsum
-                laborum exercitation labore elit amet.
-              </p>
-              <p className="text-body">
-                Aliqua veniam voluptate elit voluptate sunt dolor duis magna.
-                Ipsum laboris eu sint labore excepteur magna anim officia irure
-                labore. Aliqua incididunt non fugiat ullamco non.
+                and created by Art Walk Projects (Edinburgh).
               </p>
             </IonCol>
           </IonRow>
