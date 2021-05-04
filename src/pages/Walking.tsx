@@ -17,6 +17,7 @@ import {
   IonCardContent,
   IonCard,
 } from "@ionic/react";
+import { Plugins } from "@capacitor/core";
 import Progress from "../components/Progress";
 import { Redirect } from "react-router-dom";
 
@@ -36,28 +37,12 @@ import NewWalkMoments from "./NewWalkMoments";
 import PageHeader from "../components/PageHeader";
 import ProgressOverview from "../components/ProgressOverview";
 import { storeWalkHandler } from "../firebase";
-import { usePlatform } from "@ionic/react-hooks/platform";
-import {
-  useCurrentPosition,
-  availableFeatures,
-} from "@ionic/react-hooks/geolocation";
 import { getDistanceBetweenPoints } from "../helpers";
+
+const { Geolocation } = Plugins;
 
 const Walking: React.FC = () => {
   const { loggedIn } = useAuth();
-
-  const { platform } = usePlatform();
-  const {
-    error: errorLocation,
-    currentPosition,
-    getPosition,
-  } = useCurrentPosition();
-
-  const getCurrentLocation = () => {
-    if (availableFeatures.getCurrentPosition) {
-      getPosition();
-    }
-  };
 
   const walksCtx = useContext(WalksContext);
   const walkData = { ...walksCtx.walk };
@@ -92,23 +77,57 @@ const Walking: React.FC = () => {
     if (walksCtx.walk.title === "") {
       return;
     }
-    getCurrentLocation();
-    const startDate = new Date().toISOString();
-    walksCtx.updateWalk({
-      start: startDate,
-    });
-    setStart(startDate);
+    getLocation(true)
+      .then((newLocation) => {
+        if (newLocation) {
+          const startDate = new Date().toISOString();
+          walksCtx.updateWalk({
+            start: startDate,
+          });
+          setStart(startDate);
+        }
+      })
+      .catch((e) => {
+        setError({ showError: true, message: "Could not get your location" });
+      });
   }, []);
 
-  useLayoutEffect(() => {
-    if (currentPosition && currentPosition.coords.latitude) {
+  const getLocation = async (showLoading: boolean = true) => {
+    if (showLoading) {
+      setLoading(true);
+    }
+    try {
+      const position = await Geolocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 5000, // 5 seconds
+        // maximumAge: 1000 * 3600 * 24, // 24 hours
+      });
       const newLocation: Location = {
-        lat: currentPosition.coords.latitude,
-        lng: currentPosition.coords.longitude,
-        timestamp: currentPosition.timestamp,
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+        timestamp: position.timestamp,
       };
-      const latestLoc = locations?.slice(-1).pop();
-      if (latestLoc && locations) {
+      updateLocations(newLocation, !showLoading);
+      if (showLoading) {
+        setLoading(false);
+      }
+      return newLocation;
+    } catch (e) {
+      if (showLoading) {
+        setLoading(false);
+      }
+      setError({ showError: true, message: "Could not get your location" });
+      return null;
+    }
+  };
+
+  const updateLocations = (newLocation: Location, compare: boolean = false) => {
+    setLocations((curLocations) => {
+      if (!compare) {
+        return curLocations.concat([newLocation]);
+      }
+      const latestLoc = curLocations?.slice(-1).pop();
+      if (latestLoc) {
         const diff = getDistanceBetweenPoints(
           {
             lat: latestLoc.lat,
@@ -121,13 +140,12 @@ const Walking: React.FC = () => {
           "km"
         );
         if (diff > 0.005) {
-          setLocations([...locations, newLocation]);
+          return curLocations.concat([newLocation]);
         }
-      } else {
-        setLocations([newLocation]);
       }
-    }
-  }, [currentPosition]);
+      return curLocations;
+    });
+  };
 
   useLayoutEffect(() => {
     if (locations) {
@@ -145,14 +163,16 @@ const Walking: React.FC = () => {
 
   const endWalkHandler = async () => {
     setAddBarVisible(false);
-    const endDate = new Date().toISOString();
-    walksCtx.updateWalk({
-      end: endDate,
-      steps,
-      distance,
-      locations,
+    getLocation().then(() => {
+      const endDate = new Date().toISOString();
+      walksCtx.updateWalk({
+        end: endDate,
+        steps,
+        distance,
+        locations,
+      });
+      setEnd(endDate);
     });
-    setEnd(endDate);
   };
 
   const storeWalk = async () => {
@@ -172,8 +192,11 @@ const Walking: React.FC = () => {
   };
 
   useEffect(() => {
+    walksCtx.updateWalk({ locations });
+  }, [locations]);
+
+  useEffect(() => {
     if (!end) return;
-    getCurrentLocation();
     storeWalk();
   }, [end]);
 
@@ -231,14 +254,6 @@ const Walking: React.FC = () => {
             minHeight: "85%",
           }}
         >
-          {locations.length}
-          {locations.slice(0, 3).map((location: Location) => {
-            return (
-              <li>
-                1{location.lat} — {location.lng}
-              </li>
-            );
-          })}
           {/* Walk In Progress view state */}
           {start && !end && (
             <>
@@ -249,7 +264,7 @@ const Walking: React.FC = () => {
                   updateWalk={(steps: number, distance: number) =>
                     updateWalkStepsDistance(steps, distance)
                   }
-                  updateLocation={getCurrentLocation}
+                  getLocation={getLocation}
                 />
               </div>
               {/* Add Moment */}
@@ -261,8 +276,7 @@ const Walking: React.FC = () => {
                   resetMomentType={() => {
                     setMomentType("");
                   }}
-                  updateLocation={getCurrentLocation}
-                  latestLocation={locations?.slice(-1).pop()}
+                  getLocation={getLocation}
                 />
               )}
             </>

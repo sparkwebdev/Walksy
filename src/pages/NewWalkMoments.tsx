@@ -28,16 +28,8 @@ const NewWalkMoments: React.FC<{
   colour: string;
   momentType: string;
   resetMomentType: () => void;
-  updateLocation: () => void;
-  latestLocation?: Location | null;
-}> = ({
-  walkId,
-  colour,
-  momentType,
-  resetMomentType,
-  updateLocation,
-  latestLocation,
-}) => {
+  getLocation: (showLoading: boolean) => Promise<Location | null>;
+}> = ({ walkId, colour, momentType, resetMomentType, getLocation }) => {
   const walksCtx = useContext(WalksContext);
 
   // const imagePathRef = useRef<HTMLIonInputElement>(null);
@@ -120,7 +112,6 @@ const NewWalkMoments: React.FC<{
     ) {
       return;
     }
-    updateLocation();
     let loadedPhotoPath = "";
     let loadedAudioPath = "";
     if (takenPhoto?.path) {
@@ -150,18 +141,22 @@ const NewWalkMoments: React.FC<{
           resetMomentType();
         });
     }
-
-    walksCtx.addMoment(
-      walkId,
-      loadedPhotoPath,
-      loadedAudioPath,
-      enteredNote!.toString(),
-      latestLocation || null,
-      new Date().toISOString()
-    );
-    setTakenPhoto(null);
-    setRecordedAudioFilename(null);
-    resetMomentType();
+    getLocation(true)
+      .then((currentLocation) => {
+        walksCtx.addMoment(
+          walkId,
+          loadedPhotoPath,
+          loadedAudioPath,
+          enteredNote!.toString(),
+          currentLocation,
+          new Date().toISOString()
+        );
+      })
+      .then(() => {
+        setTakenPhoto(null);
+        setRecordedAudioFilename(null);
+        resetMomentType();
+      });
   };
 
   return (
