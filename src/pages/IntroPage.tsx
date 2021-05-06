@@ -134,21 +134,35 @@ const Intro: React.FC = () => {
                 and improve our&nbsp;wellbeing.
               </p>
               <IonGrid>
-                <h2 className="text-heading">Funded by:</h2>
-                <IonRow className="ion-align-items-center">
-                  <IonCol className="ion-padding">
-                    <img
-                      className="intro__partner"
-                      src="assets/img/login_smarter-choices.svg"
-                      alt=""
-                    />
-                  </IonCol>
-                  <IonCol className="ion-padding">
-                    <img
-                      className="intro__partner"
-                      src="assets/img/logo_community-fund.svg"
-                      alt=""
-                    />
+                <IonRow className="ion-margin-top">
+                  <IonCol>
+                    <IonCard className="ion-no-margin">
+                      <IonCardHeader className="ion-no-padding" color="dark">
+                        <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
+                          Supported by:
+                        </IonCardSubtitle>
+                      </IonCardHeader>
+                      <IonCardContent>
+                        <IonGrid>
+                          <IonRow class="ion-align-items-center">
+                            <IonCol>
+                              <img
+                                className="intro__partner ion-margin"
+                                src="assets/img/login_smarter-choices.svg"
+                                alt=""
+                              />
+                            </IonCol>
+                            <IonCol>
+                              <img
+                                className="intro__partner"
+                                src="assets/img/logo_community-fund.svg"
+                                alt=""
+                              />
+                            </IonCol>
+                          </IonRow>
+                        </IonGrid>
+                      </IonCardContent>
+                    </IonCard>
                   </IonCol>
                 </IonRow>
               </IonGrid>

@@ -30,6 +30,7 @@ import {
   footsteps as walkIcon,
   time as dashboardIcon,
 } from "ionicons/icons";
+import PrivacyPage from "./pages/PrivacyPage";
 
 const AppTabs: React.FC = () => {
   const { loggedIn } = useAuth();
@@ -70,6 +71,9 @@ const AppTabs: React.FC = () => {
           </Route>
           <Route exact path="/app/welcome">
             <IntroPage />
+          </Route>
+          <Route exact path="/app/privacy">
+            <PrivacyPage />
           </Route>
 
           {/* Dynamic pages */}

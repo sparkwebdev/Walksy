@@ -61,6 +61,10 @@ const SideMenu: React.FC = () => {
               <IonIcon icon={aboutIcon} slot="start" size="small" />
               View Welcome screens
             </IonItem>
+            <IonItem button routerLink="/app/privacy">
+              <IonIcon icon={aboutIcon} slot="start" size="small" />
+              Privacy Policy
+            </IonItem>
           </IonMenuToggle>
         </IonList>
       </IonContent>
