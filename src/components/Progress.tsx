@@ -18,19 +18,14 @@ import {
   numberWithCommas,
 } from "../helpers";
 import { Pedometer } from "@ionic-native/pedometer";
-import { Location, Time } from "../data/models";
+import { Time } from "../data/models";
 
 interface ContainerProps {
   start: string;
   updateWalk: (steps: number, distance: number) => void;
-  getLocation: (showLoading: boolean) => Promise<Location | null>;
 }
 
-const Progress: React.FC<ContainerProps> = ({
-  start,
-  updateWalk,
-  getLocation,
-}) => {
+const Progress: React.FC<ContainerProps> = ({ start, updateWalk }) => {
   const [time, setTime] = useState<Time>({
     min: 0,
     sec: 0,
@@ -46,9 +41,6 @@ const Progress: React.FC<ContainerProps> = ({
       const minAndSec = getMinAndSec(timeDiff);
       setTime(minAndSec);
       seconds++;
-      if (seconds % 15 === 0) {
-        getLocation(false);
-      }
     }, 1000);
     Pedometer.startPedometerUpdates().subscribe((data) => {
       setSteps(data.numberOfSteps);

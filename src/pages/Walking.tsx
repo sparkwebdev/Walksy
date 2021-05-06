@@ -38,6 +38,8 @@ import PageHeader from "../components/PageHeader";
 import ProgressOverview from "../components/ProgressOverview";
 import { storeWalkHandler } from "../firebase";
 import { getDistanceBetweenPoints } from "../helpers";
+import { GeolocationOptions } from "@ionic-native/geolocation";
+let watch: any = null;
 
 const { Geolocation } = Plugins;
 
@@ -77,48 +79,85 @@ const Walking: React.FC = () => {
     if (walksCtx.walk.title === "") {
       return;
     }
+    const startDate = new Date().toISOString();
     getLocation(true)
-      .then((newLocation) => {
-        if (newLocation) {
-          const startDate = new Date().toISOString();
-          walksCtx.updateWalk({
-            start: startDate,
-          });
-          setStart(startDate);
-        }
+      .then(() => {
+        setStart(startDate);
+        watch = Geolocation.watchPosition(
+          {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 10000,
+          },
+          (position, err) => {
+            if (position) {
+              const newLocation: Location = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude,
+                timestamp: position.timestamp,
+              };
+              updateLocations(newLocation, true);
+            }
+          }
+        );
       })
       .catch((e) => {
         setError({ showError: true, message: "Could not get your location" });
       });
+    walksCtx.updateWalk({
+      start: startDate,
+      locations,
+    });
+    return () => {
+      if (watch !== null) {
+        Geolocation.clearWatch(watch);
+        Geolocation.clearWatch({
+          id: watch,
+        });
+      }
+    };
   }, []);
+
+  const internalGetCurrentPosition = async (
+    options: GeolocationOptions = {
+      // maximumAge: 3000,
+      timeout: 5000,
+      enableHighAccuracy: true,
+    }
+  ): Promise<GeolocationPosition> => {
+    return new Promise<any>((resolve, reject) => {
+      const id = Geolocation.watchPosition(options, (position, err) => {
+        Geolocation.clearWatch({ id });
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve(position);
+      });
+    });
+  };
 
   const getLocation = async (showLoading: boolean = true) => {
     if (showLoading) {
       setLoading(true);
     }
-    try {
-      const position = await Geolocation.getCurrentPosition({
-        enableHighAccuracy: true,
-        timeout: 5000, // 5 seconds
-        // maximumAge: 1000 * 3600 * 24, // 24 hours
+    const position = internalGetCurrentPosition()
+      .then((position) => {
+        const newLocation: Location = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+          timestamp: position.timestamp,
+        };
+        updateLocations(newLocation, !showLoading);
+        setLoading(false);
+        return newLocation;
+      })
+      .catch((e) => {
+        setLoading(false);
+        setError({ showError: true, message: "Could not get your location" });
+        return null;
       });
-      const newLocation: Location = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-        timestamp: position.timestamp,
-      };
-      updateLocations(newLocation, !showLoading);
-      if (showLoading) {
-        setLoading(false);
-      }
-      return newLocation;
-    } catch (e) {
-      if (showLoading) {
-        setLoading(false);
-      }
-      setError({ showError: true, message: "Could not get your location" });
-      return null;
-    }
+    return position;
   };
 
   const updateLocations = (newLocation: Location, compare: boolean = false) => {
@@ -264,7 +303,6 @@ const Walking: React.FC = () => {
                   updateWalk={(steps: number, distance: number) =>
                     updateWalkStepsDistance(steps, distance)
                   }
-                  getLocation={getLocation}
                 />
               </div>
               {/* Add Moment */}
@@ -276,7 +314,6 @@ const Walking: React.FC = () => {
                   resetMomentType={() => {
                     setMomentType("");
                   }}
-                  getLocation={getLocation}
                 />
               )}
             </>
