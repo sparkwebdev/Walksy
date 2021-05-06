@@ -47,15 +47,20 @@ const MapWithMarkers: React.FC<{
   });
 
   useEffect(() => {
-    if (mapRef.current && props.locations) {
-      if (props.locations.length > 1) {
-        fitBounds(mapRef.current);
-        setPath(mapRef.current);
-      }
+    if (mapRef.current && props.locations && props.locations.length > 1) {
+      setPath(mapRef.current);
     } else {
       return;
     }
   }, [props.locations]);
+
+  useEffect(() => {
+    if (mapRef.current && props.moments) {
+      fitBounds(mapRef.current);
+    } else {
+      return;
+    }
+  }, [props.moments]);
 
   const mapRef = useRef(null);
   const onMapLoad = useCallback(
