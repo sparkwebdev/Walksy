@@ -153,7 +153,13 @@ const MomentsList: React.FC<{
                     </IonCard>
                   )}
                   {moment.note && (
-                    <IonCard className="moments-list__note text-body ion-no-margin">
+                    <IonCard
+                      className={
+                        moment.imagePath
+                          ? "moments-list__note moments-list__note--caption text-body ion-no-margin"
+                          : "moments-list__note text-body ion-no-margin"
+                      }
+                    >
                       {moment.note.split("\n").map((str, index) => (
                         <p key={index}>{str}</p>
                       ))}

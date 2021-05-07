@@ -289,15 +289,16 @@ ion-tab-button ion-label {
   display: block;
 }
 .moments-list__note {
-  padding: 1.5em 1.8em 1.5em 2em;
-  font-size: 1.5em !important;
+  padding: 1.5em;
   line-height: 1.65em !important;
   text-align: left;
-  /* font-weight: bold; */
 }
-/* .moments-list__note::first-letter {
-  font-size: 2em !important;
-} */
+.moments-list__note p {
+  font-size: 1.25em !important;
+}
+.moments-list__note--caption p {
+  font-size: 1.05em !important;
+}
 .moments-list-count {
   display: block;
   position: relative;
