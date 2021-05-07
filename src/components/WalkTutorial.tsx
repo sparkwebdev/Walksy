@@ -11,7 +11,7 @@ const WalkTutorial: React.FC<{
   onFinish: () => void;
 }> = ({ onFinish }) => {
   return (
-    <div className="centered-content centered-content">
+    <div className="centered-content">
       <div className="constrain constrain--medium ion-padding-start ion-padding-end">
         <IonSlides pager={true}>
           <IonSlide>

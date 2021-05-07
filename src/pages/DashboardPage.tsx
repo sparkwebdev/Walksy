@@ -70,7 +70,7 @@ const DashboardPage: React.FC = () => {
             </IonButton>
           </div>
         ) : (
-          <>
+          <div className="constrain constrain--large">
             <IonCard className="progress-panel" color="tertiary">
               <p className="ion-text-center ion-no-margin ion-padding-top">
                 <strong className="ion-text-uppercase">Your Totals: </strong>
@@ -143,7 +143,7 @@ const DashboardPage: React.FC = () => {
                 </IonRouterLink>
               ))}
             </div>
-          </>
+          </div>
         )}
       </IonContent>
       <IonLoading isOpen={loading} />
