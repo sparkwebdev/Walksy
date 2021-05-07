@@ -118,6 +118,9 @@ const AdminPage: React.FC = () => {
   };
 
   const addWalkHandler = async () => {
+    if (!walksCtx.walk) {
+      return;
+    }
     if (!title || !colour || !start || !type) {
       setNotice({
         showNotice: true,
@@ -127,7 +130,7 @@ const AdminPage: React.FC = () => {
       });
       return;
     }
-    if (walksCtx.moments.length < 1) {
+    if (walksCtx.moments && walksCtx.moments.length < 1) {
       setNotice({
         showNotice: true,
         noticeColour: "danger",
@@ -135,7 +138,7 @@ const AdminPage: React.FC = () => {
       });
       return;
     }
-    const momentsWithoutErrors = walksCtx.moments.filter((moment) => {
+    const momentsWithoutErrors = walksCtx.moments?.filter((moment) => {
       return (
         moment.location?.lat &&
         moment.location?.lat !== 0 &&
@@ -143,7 +146,7 @@ const AdminPage: React.FC = () => {
         (moment.audioPath || moment.imagePath || moment.note)
       );
     });
-    if (momentsWithoutErrors.length < 1) {
+    if (momentsWithoutErrors && momentsWithoutErrors.length < 1) {
       setNotice({
         showNotice: true,
         noticeColour: "danger",
@@ -177,6 +180,9 @@ const AdminPage: React.FC = () => {
     key: string,
     value: string | Location
   ) => {
+    if (!walksCtx.moments) {
+      return;
+    }
     const newMoments = walksCtx.moments.map((moment) => {
       if (key === "latitude" || key === "longitude") {
         // if (key === "latitude") {
@@ -262,10 +268,10 @@ const AdminPage: React.FC = () => {
   useEffect(() => {
     transformMomentsOutput();
     if (!chosenCoverImage) {
-      const momentsWithImages = walksCtx.moments.filter(
+      const momentsWithImages = walksCtx.moments?.filter(
         (moment) => moment.imagePath !== ""
       );
-      if (momentsWithImages.length > 0) {
+      if (momentsWithImages && momentsWithImages.length > 0) {
         setChosenCoverImage(momentsWithImages[0].id);
       }
     }
@@ -303,15 +309,17 @@ const AdminPage: React.FC = () => {
     index: number,
     direction: "up" | "down"
   ) => {
-    const momentsTarget = walksCtx.moments.find(
+    const momentsTarget = walksCtx.moments?.find(
       (moment) => moment.id === momentId
     );
-    const momentsNew = walksCtx.moments.filter(
+    const momentsNew = walksCtx.moments?.filter(
       (moment) => moment.id !== momentId
     );
     const newIndex = direction === "up" ? index - 1 : index + 1;
-    momentsNew.splice(newIndex, 0, momentsTarget!);
-    walksCtx.updateMoments(momentsNew);
+    if (momentsNew) {
+      momentsNew.splice(newIndex, 0, momentsTarget!);
+      walksCtx.updateMoments(momentsNew);
+    }
   };
 
   if (!loggedIn) {
@@ -532,7 +540,7 @@ const AdminPage: React.FC = () => {
                   + Add Note
                 </IonButton>
                 <br />
-                {walksCtx.moments.length > 0 && (
+                {walksCtx.moments && walksCtx.moments.length > 0 && (
                   <IonButton
                     onClick={() => walksCtx.resetMoments()}
                     fill="clear"
@@ -544,7 +552,7 @@ const AdminPage: React.FC = () => {
               </IonCardContent>
             </IonCard>
             <IonGrid>
-              {walksCtx.moments.map((moment, index) => {
+              {walksCtx.moments?.map((moment, index) => {
                 return (
                   <IonRow key={moment.id}>
                     <IonGrid>
@@ -706,6 +714,7 @@ const AdminPage: React.FC = () => {
                           <br />
                           <IonButton
                             color={
+                              walksCtx.moments &&
                               index === walksCtx.moments.length - 1
                                 ? "dark"
                                 : "primary"
@@ -713,7 +722,10 @@ const AdminPage: React.FC = () => {
                             onClick={() =>
                               moveMomentHandler(moment.id, index, "down")
                             }
-                            disabled={index === walksCtx.moments.length - 1}
+                            disabled={
+                              walksCtx.moments &&
+                              index === walksCtx.moments.length - 1
+                            }
                           >
                             &#8964;
                           </IonButton>

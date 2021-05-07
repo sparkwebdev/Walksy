@@ -87,8 +87,8 @@ const NewWalk: React.FC = () => {
   useEffect(() => {
     Storage.get({ key: "walk" })
       .then((data) => {
-        const userData = data.value ? JSON.parse(data.value) : null;
-        if (userData && walksCtx.walk.start) {
+        const walkData = data.value ? JSON.parse(data.value) : null;
+        if (walkData && walksCtx.walk && walksCtx.walk.start) {
           setContinueWalkAlert(true);
         }
       })
@@ -117,8 +117,11 @@ const NewWalk: React.FC = () => {
     });
   };
 
-  const startNewWalk = () => {
+  const cancelWalk = () => {
     walksCtx.reset();
+  };
+
+  const startNewWalk = () => {
     const generatedWalkId = new Date().getTime().toString();
     walksCtx.updateWalk({
       id: generatedWalkId,
@@ -258,7 +261,7 @@ const NewWalk: React.FC = () => {
           {
             text: "No",
             role: "cancel",
-            handler: startNewWalk,
+            handler: cancelWalk,
           },
           {
             text: "Yes, continue",

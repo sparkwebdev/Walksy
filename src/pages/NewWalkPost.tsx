@@ -41,7 +41,7 @@ const NewWalkPost: React.FC<{
   const walksCtx = useContext(WalksContext);
 
   useEffect(() => {
-    if (walksCtx.moments.length === 0) {
+    if (walksCtx.moments && walksCtx.moments.length === 0) {
       if (walksCtx.storedImagesForCover.length === 1) {
         const image = walksCtx.storedImagesForCover[0];
         updateWalkHandler({ coverImage: image }, walksCtx.storedWalkId);
@@ -344,8 +344,8 @@ const NewWalkPost: React.FC<{
       <IonToast
         position="middle"
         color="secondary"
-        isOpen={walksCtx.moments.length > 0}
-        message={`Saving your moments: ${walksCtx.moments.length}`}
+        isOpen={!!walksCtx.moments && walksCtx.moments.length > 0}
+        message={`Saving your moments: ${walksCtx.moments?.length}`}
       />
     </IonCardContent>
   );

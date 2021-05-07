@@ -56,14 +56,16 @@ const WalkEntryPage: React.FC = () => {
             location={walk?.location}
             type={walk?.type}
             userId={walk?.userId}
-            shouldShare={share && walksCtx.moments.length === 0}
+            shouldShare={
+              share && !!walksCtx.moments && walksCtx.moments.length === 0
+            }
           />
         </div>
       </IonContent>
       <IonAlert
         header={"Saving your moments..."}
-        subHeader={`${walksCtx.moments.length} to go`}
-        isOpen={walksCtx.moments.length > 0}
+        subHeader={`${walksCtx.moments?.length} to go`}
+        isOpen={!!walksCtx.moments && walksCtx.moments.length > 0}
         backdropDismiss={false}
       />
       <IonLoading isOpen={loading} />

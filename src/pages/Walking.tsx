@@ -76,38 +76,44 @@ const Walking: React.FC = () => {
   const [finishWalkAlert, setFinishWalkAlert] = useState(false);
 
   useEffect(() => {
-    if (walksCtx.walk.title === "") {
+    if (walksCtx.walk && walksCtx.walk.title === "") {
       return;
     }
-    const startDate = new Date().toISOString();
-    getLocation(true)
-      .then(() => {
-        setStart(startDate);
-        watch = Geolocation.watchPosition(
-          {
-            enableHighAccuracy: true,
-            timeout: 5000,
-            maximumAge: 10000,
-          },
-          (position, err) => {
-            if (position) {
-              const newLocation: Location = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude,
-                timestamp: position.timestamp,
-              };
-              updateLocations(newLocation, true);
-            }
-          }
-        );
-      })
-      .catch((e) => {
-        setError({ showError: true, message: "Could not get your location" });
+    watch = Geolocation.watchPosition(
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 10000,
+      },
+      (position, err) => {
+        if (position) {
+          const newLocation: Location = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            timestamp: position.timestamp,
+          };
+          updateLocations(newLocation, true);
+        }
+      }
+    );
+    if (walksCtx.walk && walksCtx.walk.start) {
+      setStart(walksCtx.walk.start);
+      setSteps(walksCtx.walk.steps);
+      setDistance(walksCtx.walk.distance);
+      setLocations(walksCtx.walk.locations);
+    } else {
+      const startDate = new Date().toISOString();
+      getLocation(true)
+        .then(() => {
+          setStart(startDate);
+        })
+        .catch((e) => {
+          setError({ showError: true, message: "Could not get your location" });
+        });
+      walksCtx.updateWalk({
+        start: startDate,
       });
-    walksCtx.updateWalk({
-      start: startDate,
-      locations,
-    });
+    }
     return () => {
       if (watch !== null) {
         Geolocation.clearWatch(watch);
@@ -215,6 +221,9 @@ const Walking: React.FC = () => {
   };
 
   const storeWalk = async () => {
+    if (!walksCtx.walk) {
+      return;
+    }
     if (!loading) {
       setLoading(true);
     }
@@ -229,10 +238,6 @@ const Walking: React.FC = () => {
         setLoading(false);
       });
   };
-
-  useEffect(() => {
-    walksCtx.updateWalk({ locations });
-  }, [locations]);
 
   useEffect(() => {
     if (!end) return;
@@ -263,7 +268,7 @@ const Walking: React.FC = () => {
     });
   };
 
-  if (!loggedIn || walksCtx.walk.title === "") {
+  if (!loggedIn || (walksCtx.walk && walksCtx.walk.title === "")) {
     return <Redirect to="/app/new-walk" />;
   }
 
@@ -278,7 +283,7 @@ const Walking: React.FC = () => {
       >
         {!end && (
           <IonFab vertical="bottom" slot="fixed" edge horizontal="center">
-            {walksCtx.moments.length < 1 && showPrompt && (
+            {walksCtx.moments && walksCtx.moments.length < 1 && showPrompt && (
               <div className="tooltip text-body">Add a moment...</div>
             )}
             <IonFabButton onClick={showAddBarHandler} activated={addBarVisible}>
@@ -443,7 +448,7 @@ const Walking: React.FC = () => {
                     <IonAlert
                       header={"Are you sure?"}
                       subHeader={
-                        walksCtx.moments.length === 0
+                        !walksCtx.moments || walksCtx.moments.length === 0
                           ? "You haven't added any moments yet."
                           : "Finish walk?"
                       }

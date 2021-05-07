@@ -141,15 +141,16 @@ const NewWalkMoments: React.FC<{
         });
     }
 
-    const latestLocation: Location | null =
-      walksCtx.walk.locations.slice(-1).pop() || null;
+    const latestLocation: Location | undefined = walksCtx.walk?.locations
+      .slice(-1)
+      .pop();
 
     walksCtx.addMoment(
       walkId,
       loadedPhotoPath,
       loadedAudioPath,
       enteredNote!.toString(),
-      latestLocation,
+      latestLocation || null,
       new Date().toISOString()
     );
     setTakenPhoto(null);
