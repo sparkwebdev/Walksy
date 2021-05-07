@@ -215,7 +215,9 @@ export const getRemoteUserData = async (userId: string) => {
       .limit(1)
       .get()
       .then(({ docs }) => {
-        return docs[0].data();
+        if (docs[0]) {
+          return docs[0].data();
+        }
         // return docs.map((doc) => {
         //   return doc.data();
         // });
