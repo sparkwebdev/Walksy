@@ -31,35 +31,70 @@ const DashboardPage: React.FC = () => {
   const [totalDistance, setTotalDistance] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [likedWalkIds, setLikedWalkIds] = useState<string[]>([]);
+  const [likedWalks, setLikedWalks] = useState<Walk[]>([]);
+
   useEffect(() => {
-    const walksRef = firestore
+    firestore
       .collection("users-walks")
-      .where("userId", "==", userId)
-      .orderBy("start", "desc");
-    return walksRef.onSnapshot((result) => {
-      setTotalWalks(result.size);
-      const totalSteps = result.docs
-        .map(toWalk)
-        .map((walk) => {
-          return walk.steps;
-        })
-        .reduce((a, b) => a + b, 0);
-      setTotalSteps(totalSteps);
-      const totalDistance = result.docs
-        .map(toWalk)
-        .map((walk) => {
-          return walk.distance;
-        })
-        .reduce((a, b) => a + b, 0);
-      setTotalDistance(totalDistance);
-      setWalks(result.docs.slice(0, 9).map(toWalk));
-      setLoading(false);
-    });
+      .where("userId", "==", "userId")
+      .onSnapshot((result) => {
+        setTotalWalks(result.size);
+        const totalSteps = result.docs
+          .map(toWalk)
+          .map((walk) => {
+            return walk.steps;
+          })
+          .reduce((a, b) => a + b, 0);
+        setTotalSteps(totalSteps);
+        const totalDistance = result.docs
+          .map(toWalk)
+          .map((walk) => {
+            return walk.distance;
+          })
+          .reduce((a, b) => a + b, 0);
+        setTotalDistance(totalDistance);
+        setWalks(result.docs.slice(0, 9).map(toWalk));
+        setLoading(false);
+      });
+
+    var docRef = firestore
+      .collection("users-likes")
+      .where("users", "array-contains", userId);
+    docRef
+      .get()
+      .then((query) => {
+        const likedWalkIds = query.docs.map((result) => {
+          return result.id;
+        });
+        setLikedWalkIds(likedWalkIds);
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
+      });
   }, [userId]);
+
+  useEffect(() => {
+    likedWalkIds?.forEach((id) => {
+      var walkRef = firestore.collection("users-walks").doc(id);
+      walkRef
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            setLikedWalks((curLikedWalks) => {
+              return curLikedWalks?.concat(toWalk(doc));
+            });
+          }
+        })
+        .catch((error) => {
+          console.log("Error getting document:", error);
+        });
+    });
+  }, [likedWalkIds]);
 
   return (
     <IonPage>
-      <PageHeader title="My Walks" />
+      <PageHeader title="Dashboard" />
       <IonContent>
         {totalWalks === 0 ? (
           <div className="ion-text-center ion-margin">
@@ -127,6 +162,7 @@ const DashboardPage: React.FC = () => {
                   routerLink={`/app/walk/${walk.id}`}
                 >
                   <WalkItemPreview
+                    id={walk.id}
                     title={walk.title}
                     colour={walk.colour}
                     description={walk.description}
@@ -145,6 +181,33 @@ const DashboardPage: React.FC = () => {
             </div>
           </div>
         )}
+        {likedWalkIds && (
+          <h2 className="text-heading ion-padding-start ion-padding-end">
+            <IonText color="primary">
+              <strong>Your Liked Walks...</strong>
+            </IonText>
+          </h2>
+        )}
+        {likedWalks &&
+          likedWalks.map((walk) => (
+            <IonRouterLink key={walk.id} routerLink={`/app/walk/${walk.id}`}>
+              <WalkItemPreview
+                id={walk.id}
+                title={walk.title}
+                colour={walk.colour}
+                description={walk.description}
+                start={walk.start}
+                end={walk.end}
+                steps={walk.steps}
+                distance={walk.distance}
+                coverImage={walk.coverImage}
+                userId={walk.userId}
+                isCircular={walk.circular}
+                location={walk?.location}
+                isMiniPreview={true}
+              />
+            </IonRouterLink>
+          ))}
       </IonContent>
       <IonLoading isOpen={loading} />
     </IonPage>

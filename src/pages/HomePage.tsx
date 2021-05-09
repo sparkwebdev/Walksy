@@ -109,6 +109,7 @@ const HomePage: React.FC = () => {
                   routerLink={`/app/walk/${walk.id}`}
                 >
                   <WalkItemPreview
+                    id={walk.id}
                     title={walk.title}
                     colour={walk.colour}
                     description={walk.description}
@@ -156,6 +157,7 @@ const HomePage: React.FC = () => {
                   routerLink={`/app/walk/${walk.id}`}
                 >
                   <WalkItemPreview
+                    id={walk.id}
                     title={walk.title}
                     colour={walk.colour}
                     description={walk.description}
@@ -195,6 +197,7 @@ const HomePage: React.FC = () => {
                     routerLink={`/app/walk/${walk.id}`}
                   >
                     <WalkItemPreview
+                      id={walk.id}
                       title={walk.title}
                       colour={walk.colour}
                       description={walk.description}
@@ -217,6 +220,7 @@ const HomePage: React.FC = () => {
                       routerLink={`/app/walk/${walk.id}`}
                     >
                       <WalkItemPreview
+                        id={walk.id}
                         title={walk.title}
                         colour={walk.colour}
                         description={walk.description}

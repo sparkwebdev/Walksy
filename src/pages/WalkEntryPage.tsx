@@ -41,26 +41,28 @@ const WalkEntryPage: React.FC = () => {
     <IonPage>
       <PageHeader title="Walk" back={true} />
       <IonContent className="ion-padding-bottom">
-        <div className="ion-margin-bottom constrain constrain--large">
-          <WalkItem
-            id={id}
-            title={walk?.title}
-            colour={walk?.colour}
-            description={walk?.description}
-            start={walk?.start}
-            end={walk?.end}
-            steps={walk?.steps}
-            distance={walk?.distance}
-            coverImage={walk?.coverImage}
-            locations={walk?.locations}
-            location={walk?.location}
-            type={walk?.type}
-            userId={walk?.userId}
-            shouldShare={
-              share && !!walksCtx.moments && walksCtx.moments.length === 0
-            }
-          />
-        </div>
+        {walk && (
+          <div className="ion-margin-bottom constrain constrain--large">
+            <WalkItem
+              id={walk.id}
+              title={walk.title}
+              colour={walk.colour}
+              description={walk.description}
+              start={walk.start}
+              end={walk.end}
+              steps={walk.steps}
+              distance={walk.distance}
+              coverImage={walk.coverImage}
+              locations={walk.locations}
+              location={walk.location}
+              type={walk.type}
+              userId={walk.userId!}
+              shouldShare={
+                share && !!walksCtx.moments && walksCtx.moments.length === 0
+              }
+            />
+          </div>
+        )}
       </IonContent>
       <IonAlert
         header={"Saving your moments..."}

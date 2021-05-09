@@ -102,7 +102,7 @@ const AppTabs: React.FC = () => {
           </IonTabButton>
           <IonTabButton tab="dashboard" href="/app/dashboard">
             <IonIcon icon={dashboardIcon} />
-            <IonLabel>My Walks</IonLabel>
+            <IonLabel>Dashboard</IonLabel>
           </IonTabButton>
           <IonTabButton tab="gallery" href="/app/wellbeing">
             <IonIcon icon={wellbeingIcon} />
