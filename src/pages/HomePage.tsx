@@ -46,48 +46,44 @@ const HomePage: React.FC = () => {
     });
   }, [userId]);
 
-  // Fetch (up to 2) Curated Walks
   useEffect(() => {
-    const walksRef = firestore
+    // Fetch (up to 2) Curated Walks
+    firestore
       .collection("users-walks")
       .where("type", "==", "curated")
       .limit(2)
-      .orderBy("start", "desc");
-    return walksRef.onSnapshot(({ docs }) => {
-      setCuratedWalks(docs.map(toWalk));
-      setLoading(false);
-    });
-  }, []);
+      .orderBy("start", "desc")
+      .onSnapshot(({ docs }) => {
+        setCuratedWalks(docs.map(toWalk));
+        setLoading(false);
+      });
 
-  // Fetch latest Featured Walk
-  useEffect(() => {
-    const walksRef = firestore
+    // Fetch latest Featured Walk
+    firestore
       .collection("users-walks")
       .where("type", "==", "featured")
       .limit(1)
-      .orderBy("start", "desc");
-    return walksRef.onSnapshot(({ docs }) => {
-      setFeaturedWalk(docs.map(toWalk));
-      setLoading(false);
-    });
-  }, []);
+      .orderBy("start", "desc")
+      .onSnapshot(({ docs }) => {
+        setFeaturedWalk(docs.map(toWalk));
+        setLoading(false);
+      });
 
-  // Fetch (up to 10) latest Users Walks
-  useEffect(() => {
-    const walksRef = firestore
+    // Fetch (up to 10) latest Users Walks
+    firestore
       .collection("users-walks")
       .where("type", "==", "user")
       .orderBy("start", "desc")
-      .limit(16);
-    return walksRef.onSnapshot(({ docs }) => {
-      setLatestUserWalks(docs.map(toWalk));
-      // Filter ones with coverImage
-      const walksWithCoverImage = docs.map(toWalk).filter((walk) => {
-        return walk.coverImage !== "";
+      .limit(16)
+      .onSnapshot(({ docs }) => {
+        setLatestUserWalks(docs.map(toWalk));
+        // Filter ones with coverImage
+        const walksWithCoverImage = docs.map(toWalk).filter((walk) => {
+          return walk.coverImage !== "";
+        });
+        setLatestUserWalksWithCoverImage([...walksWithCoverImage]);
+        setLoading(false);
       });
-      setLatestUserWalksWithCoverImage([...walksWithCoverImage]);
-      setLoading(false);
-    });
   }, []);
 
   return (
