@@ -28,7 +28,8 @@ const NewWalkMoments: React.FC<{
   colour: string;
   momentType: string;
   resetMomentType: () => void;
-}> = ({ walkId, colour, momentType, resetMomentType }) => {
+  getLocation: () => Promise<Location | null>;
+}> = ({ walkId, colour, momentType, resetMomentType, getLocation }) => {
   const walksCtx = useContext(WalksContext);
 
   // const imagePathRef = useRef<HTMLIonInputElement>(null);
@@ -37,9 +38,8 @@ const NewWalkMoments: React.FC<{
   const [note, setNote] = useState<string>("");
 
   const [takenPhoto, setTakenPhoto] = useState<Photo | null>();
-  const [recordedAudioFilename, setRecordedAudioFilename] = useState<
-    string | null
-  >(null);
+  const [recordedAudioFilename, setRecordedAudioFilename] =
+    useState<string | null>(null);
 
   const imagePickerRef = useRef<any>();
 
@@ -57,7 +57,7 @@ const NewWalkMoments: React.FC<{
         path: `moments/${audioFilename}`,
         directory: FilesystemDirectory.Data,
       })
-        .then((result) => {
+        .then(() => {
           setRecordedAudioFilename(null);
         })
         .catch((e) => {
@@ -145,14 +145,20 @@ const NewWalkMoments: React.FC<{
       .slice(-1)
       .pop();
 
-    walksCtx.addMoment(
-      walkId,
-      loadedPhotoPath,
-      loadedAudioPath,
-      enteredNote!.toString(),
-      latestLocation || null,
-      new Date().toISOString()
-    );
+    getLocation()
+      .then((newLocation) => {
+        walksCtx.addMoment(
+          walkId,
+          loadedPhotoPath,
+          loadedAudioPath,
+          enteredNote!.toString(),
+          newLocation || latestLocation || null,
+          new Date().toISOString()
+        );
+      })
+      .catch((e) => {
+        console.log("Could not get your location", e);
+      });
     setTakenPhoto(null);
     setRecordedAudioFilename(null);
     resetMomentType();

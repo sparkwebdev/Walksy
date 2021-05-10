@@ -18,7 +18,7 @@ import {
   IonCardContent,
   IonCard,
 } from "@ionic/react";
-import { Plugins, LocalNotification } from "@capacitor/core";
+import { Plugins } from "@capacitor/core";
 import Progress from "../components/Progress";
 import { Redirect } from "react-router-dom";
 
@@ -39,7 +39,6 @@ import PageHeader from "../components/PageHeader";
 import ProgressOverview from "../components/ProgressOverview";
 import { storeWalkHandler } from "../firebase";
 import { getDistanceBetweenPoints } from "../helpers";
-import { GeolocationOptions } from "@ionic-native/geolocation";
 import { cancelNotifications } from "../components/Notifications";
 let watch: any = null;
 
@@ -81,23 +80,6 @@ const Walking: React.FC = () => {
     if (walksCtx.walk && walksCtx.walk.title === "") {
       return;
     }
-    watch = Geolocation.watchPosition(
-      {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 10000,
-      },
-      (position, err) => {
-        if (position) {
-          const newLocation: Location = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-            timestamp: position.timestamp,
-          };
-          updateLocations(newLocation, true);
-        }
-      }
-    );
     if (walksCtx.walk && walksCtx.walk.start) {
       setStart(walksCtx.walk.start);
       setSteps(walksCtx.walk.steps);
@@ -124,6 +106,24 @@ const Walking: React.FC = () => {
         start: startDate,
       });
     }
+    watch = Geolocation.watchPosition(
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 10000,
+      },
+      (position, err) => {
+        if (position) {
+          const newLocation: Location = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            timestamp: position.timestamp,
+            accuracy: position.coords.accuracy,
+          };
+          updateLocations(newLocation, true);
+        }
+      }
+    );
     return () => {
       if (watch !== null) {
         Geolocation.clearWatch(watch);
@@ -134,54 +134,38 @@ const Walking: React.FC = () => {
     };
   }, []);
 
-  const internalGetCurrentPosition = async (
-    options: GeolocationOptions = {
-      // maximumAge: 3000,
-      timeout: 5000,
-      enableHighAccuracy: true,
-    }
-  ): Promise<GeolocationPosition> => {
-    return new Promise<any>((resolve, reject) => {
-      const id = Geolocation.watchPosition(options, (position, err) => {
-        Geolocation.clearWatch({ id });
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(position);
-      });
-    });
-  };
-
   const getLocation = async (showLoading: boolean = true) => {
     if (showLoading) {
       setLoading(true);
     }
-    const position = internalGetCurrentPosition()
-      .then((position) => {
-        const newLocation: Location = {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-          timestamp: position.timestamp,
-        };
-        updateLocations(newLocation, !showLoading);
-        setLoading(false);
-        return newLocation;
-      })
-      .catch((e) => {
-        setLoading(false);
-        setError({ showError: true, message: "Could not get your location" });
-        return null;
+    try {
+      const position = await Geolocation.getCurrentPosition({
+        timeout: 4000,
       });
-    return position;
+      const newLocation: Location = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+        timestamp: position.timestamp,
+        accuracy: position.coords.accuracy,
+      };
+      if (newLocation) {
+        updateLocations(newLocation, false);
+      }
+      setLoading(false);
+      return newLocation;
+    } catch (e) {
+      setLoading(false);
+      setError({ showError: true, message: "Could not get your location" });
+      return null;
+    }
   };
 
   const updateLocations = (newLocation: Location, compare: boolean = false) => {
     setLocations((curLocations) => {
-      if (!compare) {
+      const latestLoc = curLocations?.slice(-1).pop();
+      if (!compare || !latestLoc) {
         return curLocations.concat([newLocation]);
       }
-      const latestLoc = curLocations?.slice(-1).pop();
       if (latestLoc) {
         const diff = getDistanceBetweenPoints(
           {
@@ -194,7 +178,10 @@ const Walking: React.FC = () => {
           },
           "km"
         );
-        if (diff > 0.005) {
+        if (
+          diff > 0.005 &&
+          (!newLocation.accuracy || newLocation.accuracy < 12)
+        ) {
           return curLocations.concat([newLocation]);
         }
       }
@@ -320,6 +307,14 @@ const Walking: React.FC = () => {
                   }
                 />
               </div>
+              {locations.slice(-3).map((location: Location) => {
+                return (
+                  <span key={location.timestamp}>
+                    {location.lat} - {location.lng} ({location.accuracy})
+                    <br />
+                  </span>
+                );
+              })}
               {/* Add Moment */}
               {walkId && colour && (
                 <NewWalkMoments
@@ -329,6 +324,7 @@ const Walking: React.FC = () => {
                   resetMomentType={() => {
                     setMomentType("");
                   }}
+                  getLocation={getLocation}
                 />
               )}
             </>

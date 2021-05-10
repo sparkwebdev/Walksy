@@ -44,6 +44,7 @@ export interface Location {
   lat: number;
   lng: number;
   timestamp?: number;
+  accuracy?: number;
 }
 
 export interface Time { 
