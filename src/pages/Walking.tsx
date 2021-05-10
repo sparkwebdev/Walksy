@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext, useLayoutEffect } from "react";
+
 import {
   IonPage,
   IonContent,
@@ -17,7 +18,7 @@ import {
   IonCardContent,
   IonCard,
 } from "@ionic/react";
-import { Plugins } from "@capacitor/core";
+import { Plugins, LocalNotification } from "@capacitor/core";
 import Progress from "../components/Progress";
 import { Redirect } from "react-router-dom";
 
@@ -39,9 +40,10 @@ import ProgressOverview from "../components/ProgressOverview";
 import { storeWalkHandler } from "../firebase";
 import { getDistanceBetweenPoints } from "../helpers";
 import { GeolocationOptions } from "@ionic-native/geolocation";
+import { cancelNotifications } from "../components/Notifications";
 let watch: any = null;
 
-const { Geolocation } = Plugins;
+const { Geolocation, Storage } = Plugins;
 
 const Walking: React.FC = () => {
   const { loggedIn } = useAuth();
@@ -103,6 +105,14 @@ const Walking: React.FC = () => {
       setLocations(walksCtx.walk.locations);
     } else {
       const startDate = new Date().toISOString();
+      Storage.set({
+        key: "latestWalk",
+        value: JSON.stringify(startDate),
+      });
+
+      // Cancel notifications
+      cancelNotifications();
+
       getLocation(true)
         .then(() => {
           setStart(startDate);

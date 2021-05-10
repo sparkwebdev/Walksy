@@ -29,6 +29,7 @@ import PageHeader from "../components/PageHeader";
 import CompleteProfile from "../components/CompleteProfile";
 import TermsAndConditions from "../components/TermsAndConditions";
 import { UserPreferences } from "../data/models";
+import { initNotifications } from "../components/Notifications";
 
 const { Storage } = Plugins;
 
@@ -96,6 +97,8 @@ const RegisterPage: React.FC = () => {
             setGeneratedUserId(userCredential.user!.uid);
             setUserDefaultPreferences();
             setUserHasProfile(true);
+            // Init notifications
+            initNotifications();
           }
         })
         .catch((e) => {
