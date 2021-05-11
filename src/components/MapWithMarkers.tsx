@@ -137,7 +137,6 @@ const MapWithMarkers: React.FC<{
         }
 
         polyline2.setMap(mapRef.current);
-        // map.fitBounds(bounds);
       }
     });
 
