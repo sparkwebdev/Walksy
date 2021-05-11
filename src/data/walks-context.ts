@@ -21,10 +21,10 @@ export const defaultWalk: Walk = {
 };
 
 interface Context {
-  walk: Walk;
+  walk?: Walk;
   storedWalkId: string;
   updateWalkIdForStorage: (walkId: string) => void,
-  moments: Moment[];
+  moments?: Moment[];
   storedImagesForCover: string[];
   updateWalk: ({}) => void;
   addMoment: (walkId: string, imagePath: string, audioPath: string, note: string, location: Location | null, timestamp: string) => void;

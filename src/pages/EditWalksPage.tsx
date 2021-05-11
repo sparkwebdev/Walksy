@@ -587,6 +587,7 @@ const EditWalksPage: React.FC = () => {
                       <IonRow>
                         <IonCol size="10">
                           <WalkItemPreview
+                            id={walk.id}
                             title={walk.title}
                             colour={walk.colour}
                             description={walk.description}

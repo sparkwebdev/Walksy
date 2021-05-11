@@ -8,12 +8,39 @@ import { Filesystem, FilesystemDirectory } from "@capacitor/core";
 const { Storage } = Plugins;
 
 const WalksContextProvider: React.FC = (props) => {
-  const [walk, setWalk] = useState<Walk>(defaultWalk);
+  const [walk, setWalk] = useState<Walk>();
   const [storedWalkId, setStoredWalkId] = useState<string>("");
-  const [moments, setMoments] = useState<Moment[]>([]);
+  const [moments, setMoments] = useState<Moment[]>();
   const [storedImagesForCover, setStoredImagesForCover] = useState<string[]>(
     []
   );
+
+  useEffect(() => {
+    Storage.get({ key: "walk" })
+      .then((data) => {
+        const walkData = data.value ? JSON.parse(data.value) : null;
+        if (walkData) {
+          setWalk(walkData);
+        } else {
+          setWalk(defaultWalk);
+        }
+      })
+      .catch((e) => {
+        setWalk(defaultWalk);
+        console.log("No walk data", e);
+      });
+    Storage.get({ key: "moments" })
+      .then((data) => {
+        const momentsData = data.value ? JSON.parse(data.value) : null;
+        if (momentsData) {
+          setMoments(momentsData);
+        }
+      })
+      .catch((e) => {
+        setMoments([]);
+        console.log("No moments data", e);
+      });
+  }, []);
 
   useEffect(() => {
     Storage.set({ key: "walk", value: JSON.stringify(walk) });
@@ -39,8 +66,10 @@ const WalksContextProvider: React.FC = (props) => {
   }, [storedWalkId]);
 
   const updateWalk = async (data: {}) => {
-    const walkData = { ...walk, ...data };
-    setWalk(walkData);
+    if (walk) {
+      const walkData = { ...walk, ...data };
+      setWalk(walkData);
+    }
   };
 
   const updateWalkIdForStorage = (walkId: string) => {
@@ -66,6 +95,9 @@ const WalksContextProvider: React.FC = (props) => {
     };
 
     setMoments((curMoments) => {
+      if (!curMoments) {
+        return;
+      }
       return [newMoment].concat(curMoments);
     });
   };
@@ -82,6 +114,9 @@ const WalksContextProvider: React.FC = (props) => {
 
   const deleteMoment = async (momentId: string) => {
     setMoments((curMoments) => {
+      if (!curMoments) {
+        return;
+      }
       const remainingMoments = curMoments.filter(
         (moment) => moment.id !== momentId
       );
@@ -90,6 +125,9 @@ const WalksContextProvider: React.FC = (props) => {
   };
 
   const storeMoments = async (userId: string) => {
+    if (!moments) {
+      return;
+    }
     if (storedWalkId !== "" && userId) {
       moments.forEach((moment) => {
         storeMomentHandler(moment, storedWalkId, userId)
@@ -128,7 +166,7 @@ const WalksContextProvider: React.FC = (props) => {
   };
 
   const reset = () => {
-    setWalk(defaultWalk);
+    resetWalk();
     resetMoments();
     setStoredWalkId("");
     resetStoredImagesForCover();
