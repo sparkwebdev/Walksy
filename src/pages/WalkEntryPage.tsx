@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { IonContent, IonLoading, IonPage } from "@ionic/react";
+import { IonAlert, IonContent, IonLoading, IonPage } from "@ionic/react";
 import PageHeader from "../components/PageHeader";
 import WalkItem from "../components/WalkItem";
 import { useParams } from "react-router";
@@ -65,6 +65,17 @@ const WalkEntryPage: React.FC = () => {
           </div>
         )}
       </IonContent>
+      <IonAlert
+        header={"Saving your moments..."}
+        subHeader={`${walksCtx.moments?.length} to go`}
+        isOpen={
+          !!walksCtx.moments &&
+          walksCtx.moments.length > 0 &&
+          !!walksCtx.walk &&
+          walksCtx.walk.end !== ""
+        }
+        backdropDismiss={false}
+      />
       <IonLoading isOpen={loading} />
     </IonPage>
   );
