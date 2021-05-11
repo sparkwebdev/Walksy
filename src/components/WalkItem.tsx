@@ -57,6 +57,7 @@ const WalkItem: React.FC<{
   const [currentUserHasLiked, setCurrentUserHasLiked] = useState<boolean>();
   const [storingLikeChoice, setStoringLikeChoice] = useState<boolean>(false);
   const [likers, setLikers] = useState<string[]>();
+  const [doesLike, setDoesLike] = useState<boolean>();
 
   const likeHandler = () => {
     if (userId) {
@@ -126,16 +127,22 @@ const WalkItem: React.FC<{
                   disabled={storingLikeChoice}
                 >
                   <div className="like-button__inner">
-                    <IonIcon
-                      icon={
-                        userId && likers?.includes(userId)
-                          ? likedIcon
-                          : likeIcon
-                      }
-                      size="large"
-                      color="tertiary"
-                      className="like-button__icon"
-                    />
+                    {likers?.includes(userId!) && (
+                      <IonIcon
+                        icon={likedIcon}
+                        size="large"
+                        color="tertiary"
+                        className="like-button__icon"
+                      />
+                    )}
+                    {!likers?.includes(userId!) && (
+                      <IonIcon
+                        icon={likeIcon}
+                        size="large"
+                        color="tertiary"
+                        className="like-button__icon"
+                      />
+                    )}
                     {likers && (
                       <IonText className="like-button__count" color="dark">
                         {likers?.length} like
