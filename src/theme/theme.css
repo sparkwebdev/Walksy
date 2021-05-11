@@ -632,10 +632,6 @@ ion-slides {
   --ion-item-color: var(--ion-color-primary-contrast);
   margin: 0 10px;
   border-radius: 0 0 10px 10px !important;
-  position: fixed;
-  z-index: 10;
-  width: calc(100% - 20px);
-  margin-top: -75px;
 }
 .progress-panel__text {
   white-space: nowrap;

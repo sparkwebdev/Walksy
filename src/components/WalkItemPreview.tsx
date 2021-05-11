@@ -90,7 +90,7 @@ const WalkItemPreview: React.FC<{
         <div className="like-button">
           <IonIcon
             icon={likedIcon}
-            color="tertiary"
+            color={props.isMiniPreview ? "dark" : "light"}
             className="like-button__icon"
           />
           <IonText

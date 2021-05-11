@@ -38,6 +38,7 @@ const WalkItem: React.FC<{
   steps?: number;
   distance?: number;
   coverImage?: string;
+  overview?: string;
   locations?: Location[];
   location?: string;
   type?: string;
@@ -53,6 +54,7 @@ const WalkItem: React.FC<{
   const [currentUserHasLiked, setCurrentUserHasLiked] = useState<boolean>();
   const [storingLikeChoice, setStoringLikeChoice] = useState<boolean>(false);
   const [likers, setLikers] = useState<string[]>();
+  const [doesLike, setDoesLike] = useState<boolean>();
 
   const likeHandler = () => {
     if (userId) {
@@ -122,16 +124,22 @@ const WalkItem: React.FC<{
                   disabled={storingLikeChoice}
                 >
                   <div className="like-button__inner">
-                    <IonIcon
-                      icon={
-                        userId && likers?.includes(userId)
-                          ? likedIcon
-                          : likeIcon
-                      }
-                      size="large"
-                      color="tertiary"
-                      className="like-button__icon"
-                    />
+                    {likers?.includes(userId!) && (
+                      <IonIcon
+                        icon={likedIcon}
+                        size="large"
+                        color="tertiary"
+                        className="like-button__icon"
+                      />
+                    )}
+                    {!likers?.includes(userId!) && (
+                      <IonIcon
+                        icon={likeIcon}
+                        size="large"
+                        color="tertiary"
+                        className="like-button__icon"
+                      />
+                    )}
                     {likers && (
                       <IonText className="like-button__count" color="dark">
                         {likers?.length} like
@@ -217,6 +225,11 @@ const WalkItem: React.FC<{
               </IonText>
             </IonCol>
           </IonRow>
+          {props.overview && (
+            <IonRow>
+              <IonCol className="text-body">{props.overview}</IonCol>
+            </IonRow>
+          )}
         </IonGrid>
         {moments.length > 0 ? (
           <>
