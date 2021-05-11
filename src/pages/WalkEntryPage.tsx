@@ -53,6 +53,7 @@ const WalkEntryPage: React.FC = () => {
               steps={walk.steps}
               distance={walk.distance}
               coverImage={walk.coverImage}
+              overview={walk.overview}
               locations={walk.locations}
               location={walk.location}
               type={walk.type}
@@ -67,7 +68,12 @@ const WalkEntryPage: React.FC = () => {
       <IonAlert
         header={"Saving your moments..."}
         subHeader={`${walksCtx.moments?.length} to go`}
-        isOpen={!!walksCtx.moments && walksCtx.moments.length > 0}
+        isOpen={
+          !!walksCtx.moments &&
+          walksCtx.moments.length > 0 &&
+          !!walksCtx.walk &&
+          walksCtx.walk.end !== ""
+        }
         backdropDismiss={false}
       />
       <IonLoading isOpen={loading} />

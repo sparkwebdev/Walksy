@@ -137,7 +137,6 @@ const MapWithMarkers: React.FC<{
         }
 
         polyline2.setMap(mapRef.current);
-        // map.fitBounds(bounds);
       }
     });
 
@@ -195,7 +194,7 @@ const MapWithMarkers: React.FC<{
                 anchor: new window.google.maps.Point(15, 30),
               }}
             />
-            {/* <Marker
+            <Marker
               position={{
                 lat: props.locations![props.locations.length - 1].lat,
                 lng: props.locations![props.locations.length - 1].lng,
@@ -206,7 +205,7 @@ const MapWithMarkers: React.FC<{
                 origin: new window.google.maps.Point(0, 0),
                 anchor: new window.google.maps.Point(10, 10),
               }}
-            /> */}
+            />
           </>
         )}
 

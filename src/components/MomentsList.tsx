@@ -60,7 +60,7 @@ const MomentsList: React.FC<{
 
   return (
     <>
-      {!props.isWalking && (
+      {!props.isWalking && momentsWithLocations && (
         <MapWithMarkers
           moments={momentsWithLocations}
           locations={props.locations ? props.locations : []}
