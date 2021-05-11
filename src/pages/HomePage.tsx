@@ -231,7 +231,7 @@ const HomePage: React.FC = () => {
                 </IonList>
                 <IonButton
                   className="ion-margin-start"
-                  routerLink="/app/dashboard"
+                  routerLink="/app/discover/latest"
                 >
                   <IonIcon icon={personIcon} slot="start" />
                   Latest User Walks
