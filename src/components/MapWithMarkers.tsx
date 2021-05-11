@@ -24,6 +24,8 @@ const options = {
   disableDefaultUI: true,
   zoomControl: true,
 };
+let startLocation: any = null;
+let endLocation: any = null;
 
 const MapWithMarkers: React.FC<{
   moments: Moment[];
@@ -47,20 +49,20 @@ const MapWithMarkers: React.FC<{
   });
 
   useEffect(() => {
-    if (mapRef.current && props.moments.length > 1) {
-      fitBounds(mapRef.current);
-    } else {
-      return;
-    }
-  }, [props.moments, props.locations]);
-
-  useEffect(() => {
-    if (mapRef.current && props.locations && props.locations?.length > 0) {
+    if (mapRef.current && props.locations && props.locations.length > 1) {
       setPath(mapRef.current);
     } else {
       return;
     }
-  }, [props.locations, props.moments]);
+  }, [props.locations]);
+
+  useEffect(() => {
+    if (mapRef.current && props.moments) {
+      fitBounds(mapRef.current);
+    } else {
+      return;
+    }
+  }, [props.moments]);
 
   const mapRef = useRef(null);
   const onMapLoad = useCallback(
@@ -71,6 +73,7 @@ const MapWithMarkers: React.FC<{
     },
     [props.locations, props.moments]
   );
+
   const [selected, setSelected] = useState<Moment | null>();
 
   const fitBounds = (map: any) => {
@@ -83,6 +86,60 @@ const MapWithMarkers: React.FC<{
       });
     }
     map.fitBounds(bounds);
+    var directionsService = new window.google.maps.DirectionsService();
+
+    const waypointsFromMoments = props.moments.map((moment: Moment) => {
+      return {
+        location: new window.google.maps.LatLng(
+          moment.location!.lat,
+          moment.location!.lng
+        ),
+      };
+    });
+    var request = {
+      origin: locations[0],
+      destination: locations[locations.length - 1],
+      waypoints: waypointsFromMoments.slice(0, 25),
+      travelMode: window.google.maps.DirectionsTravelMode.WALKING,
+    };
+
+    var polyline2 = new window.google.maps.Polyline({
+      path: [],
+      strokeColor: "#FF0000",
+      strokeWeight: 5,
+    });
+
+    directionsService.route(request, function (response: any, status: any) {
+      if (status == window.google.maps.DirectionsStatus.OK) {
+        var bounds = new window.google.maps.LatLngBounds();
+        var route = response.routes[0];
+        startLocation = new Object();
+        endLocation = new Object();
+
+        var path = response.routes[0].overview_path;
+        var legs = response.routes[0].legs;
+        let i, j, k;
+        for (i = 0; i < legs.length; i++) {
+          if (i == 0) {
+            startLocation.latlng = legs[i].start_location;
+            startLocation.address = legs[i].start_address;
+          }
+          endLocation.latlng = legs[i].end_location;
+          endLocation.address = legs[i].end_address;
+          var steps = legs[i].steps;
+          for (j = 0; j < steps.length; j++) {
+            var nextSegment = steps[j].path;
+            for (k = 0; k < nextSegment.length; k++) {
+              polyline2.getPath().push(nextSegment[k]);
+              bounds.extend(nextSegment[k]);
+            }
+          }
+        }
+
+        polyline2.setMap(mapRef.current);
+        // map.fitBounds(bounds);
+      }
+    });
 
     if (props.moments.length < 2) {
       window.google.maps.event.addListenerOnce(map, "idle", function () {
@@ -108,6 +165,7 @@ const MapWithMarkers: React.FC<{
       strokeOpacity: 1.0,
       strokeWeight: 5,
     });
+
     walkPath.setMap(map);
   };
 

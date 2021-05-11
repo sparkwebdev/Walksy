@@ -4,15 +4,19 @@ import {
   IonBadge,
   IonCard,
   IonCardContent,
+  IonIcon,
   IonItem,
   IonLabel,
   IonList,
+  IonText,
 } from "@ionic/react";
 
 import { getUnitDistance } from "../helpers";
-import { getRemoteUserData } from "../firebase";
+import { firestore, getRemoteUserData } from "../firebase";
+import { heart as likedIcon } from "ionicons/icons";
 
 const WalkItemPreview: React.FC<{
+  id: string;
   title: string;
   colour: string;
   description?: [];
@@ -29,6 +33,7 @@ const WalkItemPreview: React.FC<{
   isMiniPreview?: boolean;
 }> = (props) => {
   const [displayName, setDisplayName] = useState<string>("");
+  const [likeCount, setLikeCount] = useState<number>();
 
   useEffect(() => {
     if (props.userId) {
@@ -41,6 +46,15 @@ const WalkItemPreview: React.FC<{
         });
     }
   }, [props.userId]);
+
+  useEffect(() => {
+    firestore
+      .collection("users-likes")
+      .doc(props.id)
+      .onSnapshot((doc) => {
+        setLikeCount(doc.data()?.users.length);
+      });
+  }, [props.id, props.userId]);
 
   const loadUserData = (userData: any) => {
     setDisplayName(userData?.displayName);
@@ -72,6 +86,21 @@ const WalkItemPreview: React.FC<{
           <li className="walk-item__tags">#{props.description.join(" #")}</li>
         ) : null}
       </ul>
+      {likeCount ? (
+        <div className="like-button">
+          <IonIcon
+            icon={likedIcon}
+            color="tertiary"
+            className="like-button__icon"
+          />
+          <IonText
+            className="like-button__count"
+            color={props.isMiniPreview ? "dark" : "light"}
+          >
+            {likeCount}
+          </IonText>
+        </div>
+      ) : null}
     </>
   );
 

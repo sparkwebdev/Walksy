@@ -23,20 +23,17 @@ import LatestNews from "../components/LatestNews";
 const HomePage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [latestUserWalks, setLatestUserWalks] = useState<Walk[]>([]);
-  const [
-    latestUserWalksWithCoverImage,
-    setLatestUserWalksWithCoverImage,
-  ] = useState<Walk[]>([]);
+  const [latestUserWalksWithCoverImage, setLatestUserWalksWithCoverImage] =
+    useState<Walk[]>([]);
 
-  // Fetch (up to 10) latest Users Walks
   useEffect(() => {
-    const walksRef = firestore
+    // Fetch (up to 10) latest Users Walks
+    firestore
       .collection("users-walks")
       .where("type", "==", "user")
       .orderBy("start", "desc")
-      .limit(16);
-    return walksRef.onSnapshot(
-      ({ docs }) => {
+      .limit(16)
+      .onSnapshot(({ docs }) => {
         setLatestUserWalks(docs.map(toWalk));
         // Filter ones with coverImage
         const walksWithCoverImage = docs.map(toWalk).filter((walk) => {
@@ -44,11 +41,7 @@ const HomePage: React.FC = () => {
         });
         setLatestUserWalksWithCoverImage([...walksWithCoverImage]);
         setLoading(false);
-      },
-      (error) => {
-        setLoading(false);
-      }
-    );
+      });
   }, []);
 
   return (
@@ -125,6 +118,7 @@ const HomePage: React.FC = () => {
                       routerLink={`/walk/${walk.id}`}
                     >
                       <WalkItemPreview
+                        id={walk.id}
                         title={walk.title}
                         colour={walk.colour}
                         description={walk.description}

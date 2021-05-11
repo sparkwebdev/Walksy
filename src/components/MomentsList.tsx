@@ -1,4 +1,5 @@
 import {
+  IonAlert,
   IonButton,
   IonCard,
   IonCol,
@@ -35,11 +36,19 @@ const MomentsList: React.FC<{
   const [mapKey, setMapKey] = useState<number>(Math.random());
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
+  const [deleteMomentAlert, setDeleteMomentAlert] = useState<boolean>(false);
+  const [momentItemIdToDelete, setMomentItemIdToDelete] = useState<string>("");
+
   const viewMapHandler = () => {
     setShowMap(true);
   };
 
+  const deleteMoment = () => {
+    walksCtx.deleteMoment(momentItemIdToDelete);
+  };
+
   useEffect(() => {
+    setIsEditing(false);
     const momentsLoc = props.moments?.filter(
       (moment) => moment.location !== null
     );
@@ -48,6 +57,7 @@ const MomentsList: React.FC<{
       setMapKey(Math.random());
     }
   }, [props.moments]);
+
   return (
     <>
       {!props.isWalking && (
@@ -154,7 +164,13 @@ const MomentsList: React.FC<{
                     </IonCard>
                   )}
                   {moment.note && (
-                    <IonCard className="moments-list__note text-body ion-no-margin">
+                    <IonCard
+                      className={
+                        moment.imagePath
+                          ? "moments-list__note moments-list__note--caption text-body ion-no-margin"
+                          : "moments-list__note text-body ion-no-margin"
+                      }
+                    >
                       {moment.note.split("\n").map((str, index) => (
                         <p key={index}>{str}</p>
                       ))}
@@ -166,7 +182,10 @@ const MomentsList: React.FC<{
                     <IonButton
                       className="moments-list__delete"
                       color="danger"
-                      onClick={() => walksCtx.deleteMoment(moment.id)}
+                      onClick={() => {
+                        setMomentItemIdToDelete(moment.id);
+                        setDeleteMomentAlert(true);
+                      }}
                       hidden={!isEditing}
                     >
                       <IonIcon icon={deleteIcon} slot="icon-only" />
@@ -177,6 +196,26 @@ const MomentsList: React.FC<{
             </IonGrid>
           </li>
         ))}
+        <IonAlert
+          isOpen={deleteMomentAlert}
+          onDidDismiss={() => {
+            setDeleteMomentAlert(false);
+            setMomentItemIdToDelete("");
+          }}
+          header={"Delete Moment"}
+          subHeader={"Are you sure?"}
+          buttons={[
+            {
+              text: "No",
+              role: "cancel",
+            },
+            {
+              text: "Yes",
+              cssClass: "secondary",
+              handler: deleteMoment,
+            },
+          ]}
+        />
       </ol>
       {!!props.isWalking && (
         <IonModal

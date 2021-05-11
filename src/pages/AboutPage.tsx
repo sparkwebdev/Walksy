@@ -21,17 +21,52 @@ const AboutPage: React.FC = () => {
           <IonRow className="ion-margin-top">
             <IonCol>
               <p className="text-body">
-                The &#8216;Walksy.&#8217; (Walk &amp; See) App has been devised
-                and created by Art Walk Projects (Edinburgh). Minim adipisicing
-                aliqua esse sunt Lorem eu consequat enim exercitation veniam
-                minim. Quis duis consequat aute nostrud elit non sint esse ipsum
-                laborum exercitation labore elit amet.
+                The 'Walksy.' (Walk &amp; See) App builds a collective library
+                around walking. The App has been created to encourage more
+                walking in our local environments and across neighbourhoods,
+                providing a fun way to engage with our outdoors through an image
+                based process of recording walks. Over time we hope for a
+                library of walks to be created through the App collecting user’s
+                walking journeys; of the places uncovered, recording the
+                specific details observed or heard while we walk. Our curated
+                walks show routes that walking practice artists have created,
+                offering ways to reconsider our walking landscapes and
+                cityscapes, with some focussed around a particular outdoor art
+                trail or relating to a specific project we’ve produced. We hope
+                users enjoy the act of creating walks for the app by using
+                either images, audio or text to describe their walk, at the same
+                time as improving their wellbeing.
               </p>
               <p className="text-body">
-                Aliqua veniam voluptate elit voluptate sunt dolor duis magna.
-                Ipsum laboris eu sint labore excepteur magna anim officia irure
-                labore. Aliqua incididunt non fugiat ullamco non.
+                Created for 2021 at a time when many of us have experienced
+                various lockdowns, we feel its an exciting time to launch a
+                walking App and to see where people take their walks,
+                discovering new places to go during this time.
               </p>
+              <p className="text-body">
+                The App has been devised and created by Art Walk Projects
+                (Edinburgh) working with app developer Steven Park, and
+                supported by Smarter Choices, Smarter Places (Paths for All) &
+                The National Lottery Community Fund.
+              </p>
+              <p className="text-body">
+                We will be developing the App over time, and welcome user’s
+                feedback via email{" "}
+                <a href="mailto:walksy@artwalkporty.co.uk">
+                  walksy@artwalkporty.co.uk
+                </a>
+              </p>
+
+              <h3 className="text-heading ion-text-center">
+                <a href="http://www.artwalkprojects.co.uk">
+                  artwalkprojects.co.uk
+                </a>
+              </h3>
+              <h3 className="text-heading ion-text-center">
+                <a href="mailto:walksy@artwalkporty.co.uk">
+                  walksy@artwalkporty.co.uk
+                </a>
+              </h3>
             </IonCol>
           </IonRow>
           <IonRow className="ion-margin-top">
@@ -39,7 +74,7 @@ const AboutPage: React.FC = () => {
               <IonCard className="ion-no-margin">
                 <IonCardHeader className="ion-no-padding" color="dark">
                   <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
-                    Funded by:
+                    Supported by:
                   </IonCardSubtitle>
                 </IonCardHeader>
                 <IonCardContent>
@@ -65,22 +100,10 @@ const AboutPage: React.FC = () => {
               </IonCard>
             </IonCol>
           </IonRow>
-          <IonRow>
+          <IonRow className="ion-margin ion-text-center">
             <IonCol>
               <p className="text-body">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-                accusantium doloremque laudantium, totam rem aperiam, eaque ipsa
-                quae ab illo inventore veritatis et quasi architecto beatae
-                vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia
-                voluptas sit aspernatur aut odit aut fugit, sed quia
-                consequuntur magni dolores eos qui ratione voluptatem sequi
-                nesciunt.
-              </p>
-              <p className="text-body">
-                Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
-                consectetur, adipisci velit, sed quia non numquam eius modi
-                tempora incidunt ut labore et dolore magnam aliquam quaerat
-                voluptatem.
+                &copy; 2021 Art Walk Projects CIC All Rights Reserved
               </p>
             </IonCol>
           </IonRow>

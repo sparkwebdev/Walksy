@@ -130,6 +130,29 @@ export const updateWalkHandler = async (walkData: {}, walkId: string) => {
   return entriesRef;
 }
 
+export const storeLikeHandler = async (like: boolean, walkId: string, userId: string) => {
+  const likesRef = firestore.collection('users-likes').doc(walkId);
+  likesRef.get()
+  .then((doc) => {
+    if (doc.exists) {
+      if (!doc.data()?.users.includes(userId)) {
+        likesRef.update({users: firebase.firestore.FieldValue.arrayUnion(userId)});
+      } else {
+        likesRef.update({users: firebase.firestore.FieldValue.arrayRemove(userId)});
+      }
+    } else {
+      likesRef.set(
+        {
+          users: [
+            userId
+          ]
+        }
+      ) 
+    }
+  });
+  return likesRef;
+}
+
 export const storeMomentHandler = async (moment: Moment, walkId: string, userId: string) => {
   let momentToStore: Moment = {...moment};
   let storedFilePath: string = "";
@@ -215,7 +238,9 @@ export const getRemoteUserData = async (userId: string) => {
       .limit(1)
       .get()
       .then(({ docs }) => {
-        return docs[0].data();
+        if (docs[0]) {
+          return docs[0].data();
+        }
         // return docs.map((doc) => {
         //   return doc.data();
         // });

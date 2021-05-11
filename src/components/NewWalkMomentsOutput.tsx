@@ -9,15 +9,14 @@ const NewWalkMomentsOutput: React.FC<{
   colour: string;
 }> = (props) => {
   const walksCtx = useContext(WalksContext);
-  const walk: Walk = { ...walksCtx.walk };
   return (
     <IonGrid>
       <IonRow>
         <IonCol size="12" className="ion-text-center">
-          {walksCtx.moments.length > 0 ? (
+          {walksCtx.moments && walksCtx.moments.length > 0 ? (
             <MomentsList
               moments={walksCtx.moments}
-              locations={walk.locations}
+              locations={walksCtx.walk?.locations}
               colour={props.colour}
               canDelete={true}
               isWalking={true}
