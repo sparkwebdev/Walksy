@@ -29,10 +29,8 @@ const HomePage: React.FC = () => {
   const [curatedWalks, setCuratedWalks] = useState<Walk[]>([]);
   const [featuredWalk, setFeaturedWalk] = useState<Walk[]>([]);
   const [latestUserWalks, setLatestUserWalks] = useState<Walk[]>([]);
-  const [
-    latestUserWalksWithCoverImage,
-    setLatestUserWalksWithCoverImage,
-  ] = useState<Walk[]>([]);
+  const [latestUserWalksWithCoverImage, setLatestUserWalksWithCoverImage] =
+    useState<Walk[]>([]);
 
   // Fetch Latest Walk (current user)
   useEffect(() => {
@@ -162,6 +160,7 @@ const HomePage: React.FC = () => {
                     steps={walk.steps}
                     distance={walk.distance}
                     coverImage={walk.coverImage}
+                    overview={walk.overview}
                     userId={walk.userId}
                     isCircular={walk.circular}
                     location={walk?.location}

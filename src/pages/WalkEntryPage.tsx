@@ -53,6 +53,7 @@ const WalkEntryPage: React.FC = () => {
               steps={walk.steps}
               distance={walk.distance}
               coverImage={walk.coverImage}
+              overview={walk.overview}
               locations={walk.locations}
               location={walk.location}
               type={walk.type}

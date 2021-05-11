@@ -41,6 +41,7 @@ const WalkItem: React.FC<{
   steps?: number;
   distance?: number;
   coverImage?: string;
+  overview?: string;
   locations?: Location[];
   location?: string;
   type?: string;
@@ -220,6 +221,11 @@ const WalkItem: React.FC<{
               </IonText>
             </IonCol>
           </IonRow>
+          {props.overview && (
+            <IonRow>
+              <IonCol className="text-body">{props.overview}</IonCol>
+            </IonRow>
+          )}
         </IonGrid>
         {moments.length > 0 ? (
           <>
