@@ -23,9 +23,16 @@ import { Time } from "../data/models";
 interface ContainerProps {
   start: string;
   updateWalk: (steps: number, distance: number) => void;
+  savedSteps: number;
+  savedDistance: number;
 }
 
-const Progress: React.FC<ContainerProps> = ({ start, updateWalk }) => {
+const Progress: React.FC<ContainerProps> = ({
+  start,
+  updateWalk,
+  savedSteps,
+  savedDistance,
+}) => {
   const [time, setTime] = useState<Time>({
     min: 0,
     sec: 0,
@@ -53,7 +60,7 @@ const Progress: React.FC<ContainerProps> = ({ start, updateWalk }) => {
   }, [start]);
 
   useEffect(() => {
-    updateWalk(steps, distance);
+    updateWalk(savedSteps + steps, savedDistance + distance);
   }, [distance, steps, updateWalk]);
 
   return (
@@ -63,12 +70,12 @@ const Progress: React.FC<ContainerProps> = ({ start, updateWalk }) => {
           <IonCol
             className="ion-text-center"
             style={{
-              fontSize: "1.15em",
+              fontSize: "clamp(1em, 4vw, 1.4em)",
               padding: "10px 0",
               fontFamily: "monospace",
             }}
           >
-            <IonText color="light">
+            <IonText className="progress-panel__text" color="light">
               {/* <IonIcon
                 icon={timeIcon}
                 style={{
@@ -79,39 +86,40 @@ const Progress: React.FC<ContainerProps> = ({ start, updateWalk }) => {
               /> */}
               <span
                 style={{
-                  minWidth: "6rem",
+                  minWidth: "5em",
                   display: "inline-block",
                   textAlign: "left",
                 }}
               >
                 {time["min"]}
+                <small style={{ fontSize: "2px" }}>&nbsp;</small>
+                <span className="smallprint">min</span>
                 <small style={{ fontSize: "5px" }}>&nbsp;</small>
-                <span className="smallprint">min</span>&nbsp;
                 {("0" + time["sec"]).slice(-2)}
-                <small style={{ fontSize: "5px" }}>&nbsp;</small>
+                <small style={{ fontSize: "2px" }}>&nbsp;</small>
                 <span className="smallprint">sec</span>
               </span>
               <IonIcon
                 icon={distanceIcon}
                 style={{
                   verticalAlign: "middle",
-                  margin: "0 5px 2px 5%",
-                  fontSize: "1.5em",
+                  margin: "0 2px 2px 3%",
+                  fontSize: "1.4em",
                 }}
               />
-              {distance?.toFixed(1)}
-              <small style={{ fontSize: "5px" }}>&nbsp;</small>
+              {(savedDistance + distance).toFixed(1)}
+              <small style={{ fontSize: "2px" }}>&nbsp;</small>
               <span className="smallprint">{getUnitDistance()}</span>
               <IonIcon
                 icon={walkIcon}
                 style={{
                   verticalAlign: "middle",
-                  margin: "0 5px 2px 6%",
-                  fontSize: "1.5em",
+                  margin: "0 2px 2px 4%",
+                  fontSize: "1.4em",
                 }}
               />
-              {numberWithCommas(steps)}
-              <small style={{ fontSize: "5px" }}>&nbsp;</small>
+              {numberWithCommas(savedSteps + steps)}
+              <small style={{ fontSize: "2px" }}>&nbsp;</small>
               <span className="smallprint">steps</span>
             </IonText>
           </IonCol>

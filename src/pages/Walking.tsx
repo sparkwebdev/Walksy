@@ -68,6 +68,8 @@ const Walking: React.FC = () => {
   const [start, setStart] = useState<string>("");
   const [steps, setSteps] = useState<number>(0);
   const [distance, setDistance] = useState<number>(0);
+  const [savedSteps, setSavedSteps] = useState<number>(0);
+  const [savedDistance, setSavedDistance] = useState<number>(0);
   const [locations, setLocations] = useState<Location[]>([]);
   const [end, setEnd] = useState<string>("");
 
@@ -82,6 +84,8 @@ const Walking: React.FC = () => {
     }
     if (walksCtx.walk && walksCtx.walk.start) {
       setStart(walksCtx.walk.start);
+      setSavedSteps(walksCtx.walk.steps);
+      setSavedDistance(walksCtx.walk.distance);
       setSteps(walksCtx.walk.steps);
       setDistance(walksCtx.walk.distance);
       setLocations(walksCtx.walk.locations);
@@ -247,6 +251,12 @@ const Walking: React.FC = () => {
     setDistance(distance);
   };
 
+  useLayoutEffect(() => {
+    if (steps) {
+      walksCtx.updateWalk({ steps, distance });
+    }
+  }, [steps]);
+
   const showAddBarHandler = () => {
     setShowPrompt(false);
     setAddBarVisible(!addBarVisible);
@@ -299,22 +309,21 @@ const Walking: React.FC = () => {
           {start && !end && (
             <>
               {/* Progress */}
-              <div className="constrain constrain--large">
+              <div
+                className="constrain constrain--large"
+                style={{
+                  paddingTop: "75px",
+                }}
+              >
                 <Progress
                   start={start}
                   updateWalk={(steps: number, distance: number) =>
                     updateWalkStepsDistance(steps, distance)
                   }
+                  savedSteps={savedSteps}
+                  savedDistance={savedDistance}
                 />
               </div>
-              {locations.slice(-3).map((location: Location) => {
-                return (
-                  <span key={location.timestamp}>
-                    {location.lat} - {location.lng} ({location.accuracy})
-                    <br />
-                  </span>
-                );
-              })}
               {/* Add Moment */}
               {walkId && colour && (
                 <NewWalkMoments
