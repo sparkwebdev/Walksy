@@ -309,12 +309,7 @@ const Walking: React.FC = () => {
           {start && !end && (
             <>
               {/* Progress */}
-              <div
-                className="constrain constrain--large"
-                style={{
-                  paddingTop: "75px",
-                }}
-              >
+              <div className="constrain constrain--large">
                 <Progress
                   start={start}
                   updateWalk={(steps: number, distance: number) =>
