@@ -96,118 +96,125 @@ const DashboardPage: React.FC = () => {
     <IonPage>
       <PageHeader title="Dashboard" />
       <IonContent>
-        {totalWalks === 0 ? (
-          <div className="ion-text-center ion-margin">
-            <p className="ion-padding">You have no walks!</p>
-            <IonButton routerLink="/app/new-walk" color="secondary">
-              <IonIcon icon={walkIcon} slot="start" />
-              Start a walk
-            </IonButton>
-          </div>
-        ) : (
-          <div className="constrain constrain--large">
-            <IonCard className="progress-panel" color="tertiary">
-              <p className="ion-text-center ion-no-margin ion-padding-top">
-                <strong className="ion-text-uppercase">Your Totals: </strong>
-                {userCreatedAt && <em>since: {formatDate(userCreatedAt)}</em>}
-              </p>
-              <IonGrid>
-                <IonRow className="ion-justify-content-center">
-                  <IonCol
-                    className="ion-text-center"
-                    style={{
-                      fontSize: "1.15em",
-                      padding: "10px 0",
-                      fontFamily: "monospace",
-                    }}
-                  >
-                    <IonText color="light">
-                      {totalWalks} <small>Walks</small>
-                      <IonIcon
-                        icon={distanceIcon}
-                        style={{
-                          verticalAlign: "middle",
-                          margin: "0 5px 2px 5%",
-                          fontSize: "1.5em",
-                        }}
-                      />
-                      {totalDistance?.toFixed(1)}
-                      <small style={{ fontSize: "5px" }}>&nbsp;</small>
-                      <span className="smallprint">{getUnitDistance()}</span>
-                      <IonIcon
-                        icon={walkIcon}
-                        style={{
-                          verticalAlign: "middle",
-                          margin: "0 5px 2px 6%",
-                          fontSize: "1.5em",
-                        }}
-                      />
-                      {numberWithCommas(totalSteps)}
-                      <small style={{ fontSize: "5px" }}>&nbsp;</small>
-                      <span className="smallprint">steps</span>
-                    </IonText>
-                  </IonCol>
-                </IonRow>
-              </IonGrid>
-            </IonCard>
-            <div className="constrain constrain--large">
-              <h2 className="text-heading ion-padding-start ion-padding-end">
-                <IonText color="primary">
-                  <strong>Your Latest Walks...</strong>
-                </IonText>
-              </h2>
-              {walks.map((walk) => (
-                <IonRouterLink
-                  key={walk.id}
-                  routerLink={`/app/walk/${walk.id}`}
-                >
-                  <WalkItemPreview
-                    id={walk.id}
-                    title={walk.title}
-                    colour={walk.colour}
-                    description={walk.description}
-                    start={walk.start}
-                    end={walk.end}
-                    steps={walk.steps}
-                    distance={walk.distance}
-                    coverImage={walk.coverImage}
-                    userId={walk.userId}
-                    isCircular={walk.circular}
-                    location={walk?.location}
-                    isMiniPreview={!walk.coverImage}
-                  />
-                </IonRouterLink>
-              ))}
+        <div className="constrain constrain--large ion-margin-bottom">
+          {totalWalks === 0 ? (
+            <div className="ion-text-center ion-margin">
+              <p className="ion-padding">You have no walks!</p>
+              <IonButton
+                routerLink="/app/new-walk"
+                color="secondary"
+                className="ion-margin-bottom"
+              >
+                <IonIcon icon={walkIcon} slot="start" />
+                Start a walk
+              </IonButton>
+              <hr className="separator" />
             </div>
-          </div>
-        )}
-        {likedWalkIds && (
-          <h2 className="text-heading ion-padding-start ion-padding-end">
-            <IonText color="primary">
-              <strong>Your Liked Walks...</strong>
-            </IonText>
-          </h2>
-        )}
-        {likedWalks &&
-          likedWalks.map((walk) => (
-            <IonRouterLink key={walk.id} routerLink={`/app/walk/${walk.id}`}>
-              <WalkItemPreview
-                id={walk.id}
-                title={walk.title}
-                colour={walk.colour}
-                description={walk.description}
-                start={walk.start}
-                end={walk.end}
-                steps={walk.steps}
-                distance={walk.distance}
-                coverImage={walk.coverImage}
-                userId={walk.userId}
-                isCircular={walk.circular}
-                location={walk?.location}
-                isMiniPreview={true}
-              />
-            </IonRouterLink>
-          ))}
+          ) : (
+            <>
+              <IonCard className="progress-panel" color="tertiary">
+                <p className="ion-text-center ion-no-margin ion-padding-top">
+                  <strong className="ion-text-uppercase">Your Totals: </strong>
+                  {userCreatedAt && <em>since: {formatDate(userCreatedAt)}</em>}
+                </p>
+                <IonGrid>
+                  <IonRow className="ion-justify-content-center">
+                    <IonCol
+                      className="ion-text-center"
+                      style={{
+                        fontSize: "1.15em",
+                        padding: "10px 0",
+                        fontFamily: "monospace",
+                      }}
+                    >
+                      <IonText color="light">
+                        {totalWalks} <small>Walks</small>
+                        <IonIcon
+                          icon={distanceIcon}
+                          style={{
+                            verticalAlign: "middle",
+                            margin: "0 5px 2px 5%",
+                            fontSize: "1.5em",
+                          }}
+                        />
+                        {totalDistance?.toFixed(1)}
+                        <small style={{ fontSize: "5px" }}>&nbsp;</small>
+                        <span className="smallprint">{getUnitDistance()}</span>
+                        <IonIcon
+                          icon={walkIcon}
+                          style={{
+                            verticalAlign: "middle",
+                            margin: "0 5px 2px 6%",
+                            fontSize: "1.5em",
+                          }}
+                        />
+                        {numberWithCommas(totalSteps)}
+                        <small style={{ fontSize: "5px" }}>&nbsp;</small>
+                        <span className="smallprint">steps</span>
+                      </IonText>
+                    </IonCol>
+                  </IonRow>
+                </IonGrid>
+              </IonCard>
+              <div className="constrain constrain--large">
+                <h2 className="text-heading ion-padding-start ion-padding-end">
+                  <IonText color="primary">
+                    <strong>Your Latest Walks...</strong>
+                  </IonText>
+                </h2>
+                {walks.map((walk) => (
+                  <IonRouterLink
+                    key={walk.id}
+                    routerLink={`/app/walk/${walk.id}`}
+                  >
+                    <WalkItemPreview
+                      id={walk.id}
+                      title={walk.title}
+                      colour={walk.colour}
+                      description={walk.description}
+                      start={walk.start}
+                      end={walk.end}
+                      steps={walk.steps}
+                      distance={walk.distance}
+                      coverImage={walk.coverImage}
+                      userId={walk.userId}
+                      isCircular={walk.circular}
+                      location={walk?.location}
+                      isMiniPreview={!walk.coverImage}
+                    />
+                  </IonRouterLink>
+                ))}
+              </div>
+            </>
+          )}
+          {likedWalks && (
+            <h2 className="text-heading ion-padding-start ion-padding-end ion-margin-top">
+              <IonText color="primary">
+                <strong>Your Liked Walks...</strong>
+              </IonText>
+            </h2>
+          )}
+          {likedWalks &&
+            likedWalks.map((walk) => (
+              <IonRouterLink key={walk.id} routerLink={`/app/walk/${walk.id}`}>
+                <WalkItemPreview
+                  id={walk.id}
+                  title={walk.title}
+                  colour={walk.colour}
+                  description={walk.description}
+                  start={walk.start}
+                  end={walk.end}
+                  steps={walk.steps}
+                  distance={walk.distance}
+                  coverImage={walk.coverImage}
+                  userId={walk.userId}
+                  isCircular={walk.circular}
+                  location={walk?.location}
+                  isMiniPreview={true}
+                />
+              </IonRouterLink>
+            ))}
+        </div>
       </IonContent>
       <IonLoading isOpen={loading} />
     </IonPage>
