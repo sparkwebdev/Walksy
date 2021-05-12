@@ -292,13 +292,6 @@ const NewWalkMoments: React.FC<{
           )}
         </div>
       </IonModal>
-      {/* <NewWalkAddMomentModal
-          updateMoment={(imagePath: string, audioPath: string, note: string) =>
-            updateMomentImageAudioNote(imagePath, audioPath, note)
-          }
-          cancelMoment={() => clearMomentHandler()}
-          type={momentType}
-        /> */}
     </IonCardContent>
   );
 };
