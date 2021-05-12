@@ -146,7 +146,7 @@ const WalkItem: React.FC<{
                     {likers && (
                       <IonText className="like-button__count" color="dark">
                         {likers?.length} like
-                        {likers?.length > 1 && <span>s</span>}
+                        {likers?.length !== 1 && <span>s</span>}
                       </IonText>
                     )}
                   </div>
