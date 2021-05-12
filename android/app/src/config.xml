@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+  <access origin="*" />
+
+<preference name="ANDROID_SUPPORT_V4_VERSION" default="27.+"/>
+<framework src="com.android.support:supportv4:$ANDROID_SUPPORT_V4_VERSION"/>
+
+  
+</widget>
