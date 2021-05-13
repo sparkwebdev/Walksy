@@ -98,18 +98,30 @@ const Walking: React.FC = () => {
 
       // Cancel notifications
       cancelNotifications();
-
       getLocation(true)
         .then(() => {
           setStart(startDate);
+          startWatchPosition();
+          walksCtx.updateWalk({
+            start: startDate,
+          });
         })
         .catch((e) => {
+          startWatchPosition();
           setError({ showError: true, message: "Could not get your location" });
         });
-      walksCtx.updateWalk({
-        start: startDate,
-      });
     }
+    return () => {
+      if (watch !== null) {
+        Geolocation.clearWatch(watch);
+        Geolocation.clearWatch({
+          id: watch,
+        });
+      }
+    };
+  }, []);
+
+  const startWatchPosition = () => {
     watch = Geolocation.watchPosition(
       {
         enableHighAccuracy: true,
@@ -128,15 +140,7 @@ const Walking: React.FC = () => {
         }
       }
     );
-    return () => {
-      if (watch !== null) {
-        Geolocation.clearWatch(watch);
-        Geolocation.clearWatch({
-          id: watch,
-        });
-      }
-    };
-  }, []);
+  };
 
   const getLocation = async (showLoading: boolean = true) => {
     if (showLoading) {
