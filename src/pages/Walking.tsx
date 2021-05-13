@@ -184,7 +184,7 @@ const Walking: React.FC = () => {
         );
         if (
           diff > 0.005 &&
-          (!newLocation.accuracy || newLocation.accuracy < 8)
+          (!newLocation.accuracy || newLocation.accuracy < 10.01)
         ) {
           return curLocations.concat([newLocation]);
         }
