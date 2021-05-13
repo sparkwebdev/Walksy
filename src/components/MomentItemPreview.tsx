@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IonCardContent, IonText } from "@ionic/react";
+import { IonCardContent, IonImg, IonText } from "@ionic/react";
 
 import { firestore } from "../firebase";
 import { toWalk, Walk } from "../data/models";
@@ -31,12 +31,10 @@ const MomentItemPreview: React.FC<{
       }
     >
       {props.coverImage && walk?.title && (
-        <img
+        <IonImg
           className="walk-item__cover-image"
           src={props.coverImage}
           alt={walk.title}
-          height="300"
-          width="400"
         />
       )}
       {!props.imageOnly && !props.showAuthor && (
