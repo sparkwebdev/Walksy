@@ -107,7 +107,7 @@ const WalkItemPreview: React.FC<{
 
   return (
     <>
-      {props.isMiniPreview ? (
+      {props.isMiniPreview || !props.coverImage ? (
         <IonList lines="none">
           <IonItem
             className="ion-no-margin walk-item walk-item--mini"
