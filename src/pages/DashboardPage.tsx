@@ -37,7 +37,7 @@ const DashboardPage: React.FC = () => {
   useEffect(() => {
     firestore
       .collection("users-walks")
-      .where("userId", "==", "userId")
+      .where("userId", "==", userId)
       .onSnapshot((result) => {
         setTotalWalks(result.size);
         const totalSteps = result.docs
