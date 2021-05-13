@@ -94,7 +94,7 @@ const DashboardPage: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader title="Dashboard" />
+      <PageHeader title="My Walks" />
       <IonContent>
         <div className="constrain constrain--large ion-margin-bottom">
           {totalWalks === 0 ? (

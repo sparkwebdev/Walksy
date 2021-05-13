@@ -124,7 +124,7 @@ const HomePage: React.FC = () => {
                 routerLink="/app/dashboard"
               >
                 <IonIcon icon={dashboardIcon} slot="start" />
-                View Dashboard
+                View Walks
               </IonButton>
             </>
           )}
