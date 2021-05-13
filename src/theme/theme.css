@@ -933,3 +933,7 @@ ion-col:nth-of-type(3n + 3) .walk-item--image-only .walk-item__cover-image {
   flex-flow: column nowrap;
   align-items: center;
 }
+
+.spinner {
+  margin: 50px 0;
+}

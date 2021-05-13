@@ -489,7 +489,7 @@ const SettingsPage: React.FC = () => {
           </IonRow>
         </IonGrid>
       </IonContent>
-      <IonLoading isOpen={status.loading} />
+      <IonLoading isOpen={status.loading} message={"Please wait..."} />
     </IonPage>
   );
 };

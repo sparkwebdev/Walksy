@@ -492,7 +492,7 @@ const Walking: React.FC = () => {
         </IonCardHeader>
       )}
 
-      <IonLoading message={"Loading..."} isOpen={loading} />
+      <IonLoading message={"Please wait..."} isOpen={loading} />
       <IonToast
         duration={2000}
         position="bottom"

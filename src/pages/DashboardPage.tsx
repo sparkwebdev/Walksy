@@ -218,7 +218,7 @@ const DashboardPage: React.FC = () => {
             ))}
         </div>
       </IonContent>
-      <IonLoading isOpen={loading} />
+      <IonLoading isOpen={loading} message={"Please wait..."} />
     </IonPage>
   );
 };
