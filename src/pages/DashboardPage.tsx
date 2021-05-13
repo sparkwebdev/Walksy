@@ -37,7 +37,7 @@ const DashboardPage: React.FC = () => {
   useEffect(() => {
     firestore
       .collection("users-walks")
-      .where("userId", "==", "userId")
+      .where("userId", "==", userId)
       .onSnapshot((result) => {
         setTotalWalks(result.size);
         const totalSteps = result.docs
@@ -94,7 +94,7 @@ const DashboardPage: React.FC = () => {
 
   return (
     <IonPage>
-      <PageHeader title="Dashboard" />
+      <PageHeader title="My Walks" />
       <IonContent>
         <div className="constrain constrain--large ion-margin-bottom">
           {totalWalks === 0 ? (
