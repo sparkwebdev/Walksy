@@ -4,7 +4,6 @@ import {
   IonText,
   IonRouterLink,
   IonList,
-  IonLoading,
   IonCol,
   IonGrid,
   IonRow,
@@ -12,6 +11,7 @@ import {
   IonHeader,
   IonTitle,
   IonButton,
+  IonSpinner,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import WalkItemPreview from "../components/WalkItemPreview";
@@ -102,7 +102,12 @@ const HomePage: React.FC = () => {
             </h2>
             <LatestNews />
           </div>
-          {latestUserWalks.length > 0 && (
+          {loading && (
+            <div className="spinner ion-text-center">
+              <IonSpinner color="primary" name="dots" />
+            </div>
+          )}
+          {!loading && latestUserWalks.length > 0 && (
             <>
               <hr className="separator" />
               <div className="ion-margin-bottom ion-padding-bottom">
@@ -135,7 +140,7 @@ const HomePage: React.FC = () => {
               </div>
             </>
           )}
-          {latestUserWalksWithCoverImage.length > 0 && (
+          {!loading && latestUserWalksWithCoverImage.length > 0 && (
             <>
               <hr className="separator" />
               <h2 className="text-heading ion-padding-start ion-padding-end">
@@ -167,7 +172,6 @@ const HomePage: React.FC = () => {
           </IonRow>
         </IonGrid>
       </IonContent>
-      <IonLoading isOpen={loading} />
     </IonPage>
   );
 };

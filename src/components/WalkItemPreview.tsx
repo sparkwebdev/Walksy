@@ -5,6 +5,7 @@ import {
   IonCard,
   IonCardContent,
   IonIcon,
+  IonImg,
   IonItem,
   IonLabel,
   IonList,
@@ -106,7 +107,7 @@ const WalkItemPreview: React.FC<{
 
   return (
     <>
-      {props.isMiniPreview ? (
+      {props.isMiniPreview || !props.coverImage ? (
         <IonList lines="none">
           <IonItem
             className="ion-no-margin walk-item walk-item--mini"
@@ -124,12 +125,10 @@ const WalkItemPreview: React.FC<{
       ) : (
         <IonCard className="ion-no-margin walk-item walk-item--full">
           {props.coverImage && (
-            <img
+            <IonImg
               className="walk-item__cover-image"
               src={props.coverImage}
               alt={props.title}
-              width="400"
-              height="300"
             />
           )}
           <div className="walk-item__type-container">
