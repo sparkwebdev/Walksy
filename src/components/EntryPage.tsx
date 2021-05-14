@@ -36,14 +36,26 @@ const EntryPage: React.FC = () => {
                   {dayjs(entry?.createdAt).format("dddd, DD MMM 'YY")}
                 </p>
               )}
-              <h1 className="text-heading">{entry?.title}</h1>
+              <h1 className="text-heading" style={{ lineHeight: 1.6 }}>
+                {entry?.title}
+              </h1>
 
               {entry?.excerpt && (
-                <p className="text-body">
-                  <big>{entry.excerpt}</big>
+                <p
+                  className="text-body"
+                  style={{ lineHeight: 1.6, fontSize: "1em" }}
+                >
+                  {entry.excerpt}
                 </p>
               )}
-              <div className="text-body" style={{ whiteSpace: "pre-line" }}>
+              <div
+                className="text-body"
+                style={{
+                  whiteSpace: "pre-line",
+                  lineHeight: 1.6,
+                  fontSize: "1em",
+                }}
+              >
                 {entry?.content &&
                   entry?.content
                     .split("\n")
