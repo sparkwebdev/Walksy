@@ -14,7 +14,7 @@ const PrivacyPolicy: React.FC = () => {
         using the App. Any information about age is gathered simply to record
         the breadth of use of the App. You can edit any of this information
         should you wish to at any time through the profile section of the App.
-        If you wish to unregister at any time you can do so by emailing
+        If you wish to unregister at any time you can do so by emailing{" "}
         <a href="mailto:walksy@artwalkporty.co.uk">walksy@artwalkporty.co.uk</a>
         .
       </p>
