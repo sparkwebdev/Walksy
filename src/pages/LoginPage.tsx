@@ -152,7 +152,7 @@ const LoginPage: React.FC = () => {
           </div>
         </div>
       </IonContent>
-      <IonLoading isOpen={status.loading} />
+      <IonLoading isOpen={status.loading} message={"Please wait..."} />
     </IonPage>
   );
 };
