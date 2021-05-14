@@ -44,9 +44,7 @@ const PrivacyPolicy: React.FC = () => {
         EH15 1DU
       </p>
 
-      <p>
-        <a href="https://walksy.uk/privacy">View our full Privacy Policy</a>.
-      </p>
+      <hr className="separator" />
     </>
   );
 };

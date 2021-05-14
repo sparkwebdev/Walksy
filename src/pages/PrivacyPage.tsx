@@ -2,6 +2,7 @@ import React from "react";
 import { IonContent, IonPage } from "@ionic/react";
 import PageHeader from "../components/PageHeader";
 import PrivacyPolicy from "../components/PrivacyPolicy";
+import PrivacyPolicyExtended from "../components/PrivacyPolicyExtended";
 
 const PrivacyPage: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const PrivacyPage: React.FC = () => {
           style={{ lineHeight: 2 }}
         >
           <PrivacyPolicy />
+          <PrivacyPolicyExtended />
         </div>
       </IonContent>
     </IonPage>
