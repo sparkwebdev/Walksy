@@ -187,7 +187,7 @@ const CompleteProfile: React.FC<{
           Continue
         </IonButton>
       </IonCardContent>
-      <IonLoading isOpen={status.loading} />
+      <IonLoading isOpen={status.loading} message={"Please wait..."} />
     </IonCard>
   );
 };

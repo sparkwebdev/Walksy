@@ -23,21 +23,42 @@ const LatestNews: React.FC<ContainerProps> = ({ count = 3 }) => {
     <IonList>
       {entries.map((entry) => (
         <IonItem
-          className="ion-no-margin ion-no-padding"
+          className="ion-no-margin ion-no-padding ion-text-wrap ion-margin-bottom"
           button
           key={entry.id}
+          detail
           routerLink={`/app/entries/${entry.id}`}
         >
-          <IonLabel>
-            <h2 className="text-heading">{entry.title}</h2>
+          <IonLabel className="ion-text-wrap">
+            <h2
+              className="text-heading"
+              style={{ lineHeight: 1.6, fontSize: "1.2em" }}
+            >
+              {entry.title}
+            </h2>
             {entry.createdAt && (
-              <h3 className="text-heading">
+              <h3
+                className="text-heading"
+                style={{ lineHeight: 1.6, margin: "10px 0" }}
+              >
                 {dayjs(entry.createdAt).format("dddd, DD MMM 'YY")}
               </h3>
             )}
-            {entry.excerpt && <p className="text-body">{entry.excerpt}</p>}
+            {entry.excerpt && (
+              <p
+                className="text-body ion-padding-bottom"
+                style={{ lineHeight: 1.6, fontSize: "1em" }}
+              >
+                {entry.excerpt.substring(0, 225)}...
+              </p>
+            )}
             {!entry.excerpt && entry.content && (
-              <p className="text-body">{entry.content.substring(1, 175)}...</p>
+              <p
+                className="text-body ion-padding-bottom"
+                style={{ lineHeight: 1.6, fontSize: "1em" }}
+              >
+                {entry.content.substring(0, 225)}...
+              </p>
             )}
           </IonLabel>
         </IonItem>

@@ -6,7 +6,7 @@ import {
   IonRouterLink,
   IonList,
   IonIcon,
-  IonLoading,
+  IonSpinner,
 } from "@ionic/react";
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../auth";
@@ -90,7 +90,12 @@ const HomePage: React.FC = () => {
       <IonContent>
         <StartWalk />
         <div className="constrain constrain--large">
-          {latestWalk.length > 0 && (
+          {loading && (
+            <div className="spinner ion-text-center">
+              <IonSpinner color="primary" name="dots" />
+            </div>
+          )}
+          {!loading && latestWalk.length > 0 && (
             <>
               <h2 className="text-heading ion-padding-start ion-padding-end">
                 <IonText color="primary">
@@ -128,7 +133,7 @@ const HomePage: React.FC = () => {
               </IonButton>
             </>
           )}
-          {curatedWalks.length > 0 && (
+          {!loading && curatedWalks.length > 0 && (
             <>
               <hr className="separator" />
               <h2 className="text-heading ion-padding-start ion-padding-end">
@@ -177,7 +182,7 @@ const HomePage: React.FC = () => {
               </IonButton>
             </>
           )}
-          {latestUserWalks.length > 0 && (
+          {!loading && latestUserWalks.length > 0 && (
             <>
               <hr className="separator" />
               <div className="ion-margin-bottom ion-padding-bottom">
@@ -239,7 +244,7 @@ const HomePage: React.FC = () => {
               </div>
             </>
           )}
-          {latestUserWalksWithCoverImage.length > 0 && (
+          {!loading && latestUserWalksWithCoverImage.length > 0 && (
             <>
               <hr className="separator" />
               <h2 className="text-heading ion-padding-start ion-padding-end">
@@ -262,7 +267,6 @@ const HomePage: React.FC = () => {
           )}
         </div>
       </IonContent>
-      <IonLoading isOpen={loading} />
     </IonPage>
   );
 };

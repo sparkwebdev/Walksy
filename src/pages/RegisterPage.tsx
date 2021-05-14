@@ -43,9 +43,8 @@ const RegisterPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showPasswordIcon, setPasswordIcon] = useState(eyeIcon);
   const [userHasProfile, setUserHasProfile] = useState(false);
-  const [userHasProfileComplete, setUserHasProfileComplete] = useState<boolean>(
-    false
-  );
+  const [userHasProfileComplete, setUserHasProfileComplete] =
+    useState<boolean>(false);
   const [status, setStatus] = useState({
     loading: false,
     error: false,
@@ -351,7 +350,7 @@ const RegisterPage: React.FC = () => {
         <TermsAndConditions onDismiss={() => setShowTermsModal(false)} />
       </IonModal>
 
-      <IonLoading isOpen={status.loading} />
+      <IonLoading isOpen={status.loading} message={"Please wait..."} />
     </IonPage>
   );
 };

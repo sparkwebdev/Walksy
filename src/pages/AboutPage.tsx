@@ -51,10 +51,7 @@ const AboutPage: React.FC = () => {
               </p>
               <p className="text-body">
                 We will be developing the App over time, and welcome user’s
-                feedback via email{" "}
-                <a href="mailto:walksy@artwalkporty.co.uk">
-                  walksy@artwalkporty.co.uk
-                </a>
+                feedback. Please get in touch:
               </p>
 
               <h3 className="text-heading ion-text-center">

@@ -5,6 +5,7 @@ import {
   IonCol,
   IonGrid,
   IonIcon,
+  IonImg,
   IonModal,
   IonRow,
   IonText,
@@ -152,7 +153,7 @@ const MomentsList: React.FC<{
                 >
                   {moment.imagePath && (
                     <IonCard className="moments-list__image-container ion-no-margin">
-                      <img src={moment.imagePath} alt="" />
+                      <IonImg src={moment.imagePath} alt="" />
                     </IonCard>
                   )}
                   {moment.audioPath && (

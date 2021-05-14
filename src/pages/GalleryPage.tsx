@@ -110,7 +110,7 @@ const GalleryPage: React.FC = () => {
               </IonCard>
             ))}
         </div>
-        <IonLoading isOpen={loading} />
+        <IonLoading isOpen={loading} message={"Please wait..."} />
       </IonContent>
     </IonPage>
   );

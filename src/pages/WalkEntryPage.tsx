@@ -76,7 +76,7 @@ const WalkEntryPage: React.FC = () => {
         }
         backdropDismiss={false}
       />
-      <IonLoading isOpen={loading} />
+      <IonLoading isOpen={loading} message={"Please wait..."} />
     </IonPage>
   );
 };
