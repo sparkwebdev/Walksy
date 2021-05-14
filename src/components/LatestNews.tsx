@@ -20,7 +20,7 @@ const LatestNews: React.FC<ContainerProps> = ({ count = 3 }) => {
   }, [count]);
 
   return (
-    <IonList>
+    <IonList className="ion-padding-start ion-padding-end">
       {entries.map((entry) => (
         <IonItem
           className="ion-no-margin ion-no-padding ion-text-wrap ion-margin-bottom"
