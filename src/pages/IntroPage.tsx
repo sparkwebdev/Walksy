@@ -112,9 +112,9 @@ const Intro: React.FC = () => {
                 alt=""
                 style={{ margin: "-60px auto -30px auto" }}
               />
-              <h2 className="text-heading">Join in recording your Nearby</h2>
+              <h2 className="text-heading">Record your Nearby</h2>
               <p className="text-body" style={{ fontSize: "0.85em" }}>
-                Join in creating this library of walks that shape our collective
+                Join in adding to our library of walks, recording our collective
                 outdoors. You can add images, sounds or notes to form your
                 walks, whilst monitoring your distance&nbsp;&amp;&nbsp;steps.
               </p>
