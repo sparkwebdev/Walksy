@@ -11,8 +11,6 @@ interface Point {
 	y: number;
 }
 
-const { Storage } = Plugins;
-
 const firebaseConfig = {
   apiKey: "AIzaSyCH3mAowMeafUfJCB7Eir6XSuf3Y33TxIU",
   authDomain: "daily-moments-b8c81.firebaseapp.com",
@@ -37,9 +35,7 @@ export const createUserProfile = async (userData: UserProfile) => {
       ...userData
     };
     try {
-      await userRef.set(userProfileData).then(() => {
-        Storage.set({ key: "userProfile", value: JSON.stringify(userProfileData) });
-      });
+      userRef.set(userProfileData);
     } catch (error) {
       console.log('error creating user', error.message);
     }
@@ -47,34 +43,15 @@ export const createUserProfile = async (userData: UserProfile) => {
   }
 }
 
-export const updateUserProfile = async (userData: UserProfile) => {
-  const entriesRef = firestore.collection("users")
-  .where("userId", "==", userData.userId)
-  .limit(1)
-  .get()
-  .then((query) => {
-    const userDoc = query.docs[0];
-    userDoc.ref.update(userData);
-  }).then(() => {
-    syncUserProfileToLocal(userData.userId);
-  }).catch((e)=> {
-    console.log("Couldn't check unique display name", e);
-  })
-  return entriesRef;
-}
-
-export const syncUserProfileToLocal = async (userId: string) => {
-  const entriesRef = firestore.collection("users")
-  .where("userId", "==", userId)
-  .limit(1)
-  .get()
-  .then((query) => {
-    const userDoc = query.docs[0];
-    Storage.set({ key: "userProfile", value: JSON.stringify(userDoc.data()) });
+export const updateUserProfile = async (userId: string, userData: {}) => {
+  const userRef = firestore.doc(`users/${userId}`);
+  const snapShot = await userRef.get()
+  .then((doc) => {
+    doc.ref.update(userData);
   }).catch((error)=> {
-    console.log(error);
+    console.log("Error updating user", error);
   })
-  return entriesRef;
+  return snapShot;
 }
 
 export const storeWalkHandler = async (walkData: Walk) => {

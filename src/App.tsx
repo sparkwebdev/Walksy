@@ -4,6 +4,7 @@ import { IonReactRouter } from "@ionic/react-router";
 import AppTabs from "./AppTabs";
 import { Redirect, Route, Switch } from "react-router";
 import { AuthContext, useAuthInit } from "./auth";
+import WalksContextProvider from "./data/WalksContextProvider";
 
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -17,20 +18,22 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <AuthContext.Provider value={auth!}>
-        <IonReactRouter>
-          <Switch>
-            <Route exact path="/login">
-              <LoginPage />
-            </Route>
-            <Route path="/app">
-              <AppTabs />
-            </Route>
-            <Redirect exact path="/" to="/app/home" />
-            <Route>
-              <NotFoundPage />
-            </Route>
-          </Switch>
-        </IonReactRouter>
+        <WalksContextProvider>
+          <IonReactRouter>
+            <Switch>
+              <Route exact path="/login">
+                <LoginPage />
+              </Route>
+              <Route path="/app">
+                <AppTabs />
+              </Route>
+              <Redirect exact path="/" to="/app/home" />
+              <Route>
+                <NotFoundPage />
+              </Route>
+            </Switch>
+          </IonReactRouter>
+        </WalksContextProvider>
       </AuthContext.Provider>
     </IonApp>
   );
