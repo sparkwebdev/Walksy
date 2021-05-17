@@ -61,16 +61,10 @@ const Intro: React.FC = () => {
             />
             <div className="constrain constrain--medium ion-padding">
               <h2 className="text-heading">
-                Walk &amp; See <br />
-                A library of walks, <br />
-                recording your nearby.
+                Walk &amp; See. <br />
+                Join Us <br />
+                in recording your&nbsp;outdoors.
               </h2>
-              {/* <h2 className="text-heading">&#8216;Walk &amp; See&#8217;</h2>
-              <p className="text-body">
-                A fun way to do more walking, and to record those things we
-                observe as we walk our local landscapes. Find, Explore, and
-                Record walks in your nearby.
-              </p> */}
             </div>
           </IonSlide>
           <IonSlide>

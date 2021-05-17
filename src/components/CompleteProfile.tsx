@@ -98,7 +98,7 @@ const CompleteProfile: React.FC<{
       error: false,
       errorMessage: "",
     });
-    props.onSubmit(displayName, location, age);
+    props.onSubmit(displayName, age, location);
   };
 
   return (
@@ -183,6 +183,7 @@ const CompleteProfile: React.FC<{
           className="ion-margin"
           expand="block"
           onClick={submitHandler}
+          disabled={!displayName}
         >
           Continue
         </IonButton>

@@ -19,19 +19,15 @@ import {
   IonText,
   IonCardSubtitle,
 } from "@ionic/react";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Redirect } from "react-router";
-import { Plugins } from "@capacitor/core";
 import { useAuth } from "../auth";
-import { auth, createUserProfile } from "../firebase";
+import { auth, createUserProfile, updateUserProfile } from "../firebase";
 import { eye as eyeIcon, eyeOff as eyeOffIcon } from "ionicons/icons";
 import PageHeader from "../components/PageHeader";
 import CompleteProfile from "../components/CompleteProfile";
 import TermsAndConditions from "../components/TermsAndConditions";
-import { UserPreferences } from "../data/models";
 import { initNotifications } from "../components/Notifications";
-
-const { Storage } = Plugins;
 
 const RegisterPage: React.FC = () => {
   const { loggedIn } = useAuth();
@@ -51,21 +47,6 @@ const RegisterPage: React.FC = () => {
     errorMessage: "",
   });
   const [showTermsModal, setShowTermsModal] = useState(false);
-
-  useEffect(() => {
-    Storage.get({
-      key: "userProfile",
-    })
-      .then((data) => {
-        if (data.value) {
-          const userProfile = JSON.parse(data.value);
-          setUserHasProfileComplete(!!userProfile.displayName);
-        }
-      })
-      .catch((e) => {
-        console.log("Couldn't get user profile", e);
-      });
-  }, []);
 
   const registerHandler = async () => {
     if (!firstName || !lastName) {
@@ -94,9 +75,8 @@ const RegisterPage: React.FC = () => {
         .then((userCredential) => {
           if (userCredential.user) {
             setGeneratedUserId(userCredential.user!.uid);
-            setUserDefaultPreferences();
+            createProfileHandler(userCredential.user!.uid);
             setUserHasProfile(true);
-            // Init notifications
             initNotifications();
           }
         })
@@ -109,15 +89,34 @@ const RegisterPage: React.FC = () => {
     }
   };
 
-  const setUserDefaultPreferences = () => {
-    const defaultPreferences: UserPreferences = {
-      metric: true,
-      darkMode: false,
-    };
-    Storage.set({
-      key: "userPreferences",
-      value: JSON.stringify(defaultPreferences),
+  const createProfileHandler = async (generatedUserId: string) => {
+    setStatus({
+      ...status,
+      loading: true,
     });
+    await createUserProfile({
+      userId: generatedUserId,
+      firstName,
+      lastName,
+      displayName: "",
+      location: "",
+      age: "",
+    })
+      .then(() => {
+        setStatus({
+          loading: false,
+          error: false,
+          errorMessage: "",
+        });
+      })
+      .catch(() => {
+        setStatus({
+          loading: false,
+          error: true,
+          errorMessage: "Error creating user profile",
+        });
+        console.log("Error creating user profile");
+      });
   };
 
   const completeProfileHandler = async (
@@ -129,13 +128,10 @@ const RegisterPage: React.FC = () => {
       ...status,
       loading: true,
     });
-    await createUserProfile({
-      userId: generatedUserId,
-      firstName,
-      lastName,
+    await updateUserProfile(generatedUserId, {
       displayName,
-      location,
       age,
+      location,
     })
       .then(() => {
         setStatus({
@@ -149,9 +145,8 @@ const RegisterPage: React.FC = () => {
         setStatus({
           loading: false,
           error: true,
-          errorMessage: "Error creating user profile",
+          errorMessage: "Error updating user profile",
         });
-        console.log("Error creating user profile");
       });
   };
 

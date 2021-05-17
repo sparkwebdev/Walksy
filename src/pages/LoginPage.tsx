@@ -21,7 +21,7 @@ import {
 import React, { useRef, useState } from "react";
 import { Redirect } from "react-router";
 import { useAuth } from "../auth";
-import { auth, syncUserProfileToLocal } from "../firebase";
+import { auth } from "../firebase";
 import PageHeader from "../components/PageHeader";
 import { eye as eyeIcon, eyeOff as eyeOffIcon } from "ionicons/icons";
 
@@ -50,9 +50,6 @@ const LoginPage: React.FC = () => {
         email.toString(),
         password.toString()
       );
-      if (credential.user?.uid) {
-        syncUserProfileToLocal(credential.user.uid);
-      }
       return credential;
     } catch (error) {
       setStatus({ loading: false, error: true, errorMessage: error.message });
