@@ -43,8 +43,6 @@ const PrivacyPolicy: React.FC = () => {
         Scotland SC525677 with our registered address: 1/1 Kings Place Edinburgh
         EH15 1DU
       </p>
-
-      <hr className="separator" />
     </>
   );
 };

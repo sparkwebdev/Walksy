@@ -14,6 +14,9 @@ const PrivacyPage: React.FC = () => {
           style={{ lineHeight: 2 }}
         >
           <PrivacyPolicy />
+
+          <hr className="separator" />
+
           <PrivacyPolicyExtended />
         </div>
       </IonContent>
