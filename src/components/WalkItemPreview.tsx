@@ -123,46 +123,48 @@ const WalkItemPreview: React.FC<{
           </IonItem>
         </IonList>
       ) : (
-        <IonCard className="ion-no-margin walk-item walk-item--full">
-          {props.coverImage && (
-            <IonImg
-              className="walk-item__cover-image"
-              src={props.coverImage}
-              alt={props.title}
-            />
-          )}
-          <div className="walk-item__type-container">
-            {props.type && props.type !== "user" && (
-              <IonBadge
-                className="ion-text-uppercase walk-item__type"
-                color={props.type === "curated" ? "secondary" : "primary"}
-              >
-                {props.type}
-              </IonBadge>
+        <>
+          <IonCard className="ion-no-margin walk-item walk-item--full">
+            {props.coverImage && (
+              <IonImg
+                className="walk-item__cover-image"
+                src={props.coverImage}
+                alt={props.title}
+              />
             )}
-            {!!props.isCircular && (
-              <IonBadge
-                className="ion-text-uppercase walk-item__type"
-                color="tertiary"
-              >
-                Circular
-              </IonBadge>
-            )}
-          </div>
-          <IonCardContent
-            className="walk-item__content ion-no-padding ion-no-margin"
-            style={{
-              borderBottom: "solid 6px " + props.colour,
-            }}
-          >
-            <IonItem
-              className="ion-item-transparent"
-              lines="none"
-              detail={true}
+            <div className="walk-item__type-container">
+              {props.type && props.type !== "user" && (
+                <IonBadge
+                  className="ion-text-uppercase walk-item__type"
+                  color={props.type === "curated" ? "secondary" : "primary"}
+                >
+                  {props.type}
+                </IonBadge>
+              )}
+              {!!props.isCircular && (
+                <IonBadge
+                  className="ion-text-uppercase walk-item__type"
+                  color="tertiary"
+                >
+                  Circular
+                </IonBadge>
+              )}
+            </div>
+            <IonCardContent
+              className="walk-item__content ion-no-padding ion-no-margin"
+              style={{
+                borderBottom: "solid 6px " + props.colour,
+              }}
             >
-              <IonLabel color="medium">{metaData}</IonLabel>
-            </IonItem>
-          </IonCardContent>
+              <IonItem
+                className="ion-item-transparent"
+                lines="none"
+                detail={true}
+              >
+                <IonLabel color="medium">{metaData}</IonLabel>
+              </IonItem>
+            </IonCardContent>
+          </IonCard>
           {props.overview && (
             <IonItem className="walk-item__overview" lines="none" detail={true}>
               <p className="text-heading">
@@ -172,7 +174,7 @@ const WalkItemPreview: React.FC<{
               </p>
             </IonItem>
           )}
-        </IonCard>
+        </>
       )}
     </>
   );
