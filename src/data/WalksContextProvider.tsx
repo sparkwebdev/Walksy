@@ -36,6 +36,8 @@ const WalksContextProvider: React.FC = (props) => {
         const momentsData = data.value ? JSON.parse(data.value) : null;
         if (momentsData) {
           setMoments(momentsData);
+        } else {
+          setMoments([]);
         }
       })
       .catch((e) => {
