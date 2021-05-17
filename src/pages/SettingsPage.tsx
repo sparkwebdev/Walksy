@@ -20,19 +20,13 @@ import {
   IonSelectOption,
 } from "@ionic/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import {
-  auth,
-  getRemoteUserData,
-  syncUserProfileToLocal,
-  updateUserProfile,
-} from "../firebase";
+import { auth, getRemoteUserData, updateUserProfile } from "../firebase";
 
 import { create as editingIcon } from "ionicons/icons";
 import { useAuth } from "../auth";
 import PageHeader from "../components/PageHeader";
 import { Storage } from "@capacitor/core";
 import { formatDate } from "../helpers";
-// import { UserPreferences } from "../data/models";
 import WalksContext from "../data/walks-context";
 
 const SettingsPage: React.FC = () => {
@@ -46,9 +40,6 @@ const SettingsPage: React.FC = () => {
   const ageRef = useRef<HTMLIonSelectElement>(null);
   const locationRef = useRef<HTMLIonInputElement>(null);
 
-  // const [metric, setMetric] = useState(true);
-  // const [darkMode, setDarkMode] = useState(false);
-
   const [editing, setEditing] = useState<boolean>(false);
   const [storedDetails, setStoredDetails] = useState<any>();
 
@@ -59,36 +50,11 @@ const SettingsPage: React.FC = () => {
   });
 
   useEffect(() => {
-    Storage.get({
-      key: "userProfile",
-    })
-      .then((data) => {
-        if (data.value) {
-          const userData = JSON.parse(data.value);
-          loadUserData(userData);
-        } else if (userId) {
-          getRemoteUserData(userId).then((userData) => {
-            loadUserData(userData);
-            syncUserProfileToLocal(userId);
-          });
-        }
-      })
-      .catch((e) => {
-        console.log("Couldn't get user preferences", e);
+    if (userId) {
+      getRemoteUserData(userId).then((userData) => {
+        loadUserData(userData);
       });
-    // Storage.get({
-    //   key: "userPreferences",
-    // })
-    //   .then((data) => {
-    //     if (data.value) {
-    //       const userPreferences = JSON.parse(data.value);
-    //       setMetric(userPreferences.metric);
-    //       setDarkMode(userPreferences.darkMode);
-    //     }
-    //   })
-    //   .catch((e) => {
-    //     console.log("Couldn't get user preferences", e);
-    //   });
+    }
   }, [userId]);
 
   const loadUserData = (userData: any) => {
@@ -123,9 +89,7 @@ const SettingsPage: React.FC = () => {
       ...status,
       loading: true,
     });
-    await updateUserProfile({
-      userId: userId!,
-      displayName,
+    await updateUserProfile(userId!, {
       firstName: firstNameRef.current!.value!.toString(),
       lastName: lastNameRef.current!.value!.toString(),
       age: ageRef.current!.value,
@@ -150,38 +114,11 @@ const SettingsPage: React.FC = () => {
       });
   };
 
-  // const savePreferencesHandler = async (name: string, value: boolean) => {
-  //   Storage.get({
-  //     key: "userPreferences",
-  //   })
-  //     .then((result) => {
-  //       const updated: UserPreferences = {
-  //         ...JSON.parse(result.value),
-  //         [name]: value,
-  //       };
-  //       Storage.set({
-  //         key: "userPreferences",
-  //         value: JSON.stringify(updated),
-  //       });
-  //     })
-  //     .catch((e) => {
-  //       console.log("Couldn't get user preferences", e);
-  //     });
-  // };
-
-  const updateEmailHandler = async () => {
-    console.log("should update email");
-  };
-
-  const updatePasswordHandler = async () => {
-    console.log("should update password");
-  };
-
   const [logoutAlert, setLogoutAlert] = useState(false);
 
   const logoutHandler = () => {
     walksCtx.reset();
-    Storage.remove({ key: "userProfile" });
+    Storage.remove({ key: "userProfile" }); // Legacy, no longer used
     auth.signOut();
   };
 
