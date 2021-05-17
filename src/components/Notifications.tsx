@@ -21,8 +21,7 @@ export const initNotifications: any = async (hour: number, minute: number) => {
         },
         {
           title: "We’ve not seen you in a while.",
-          body:
-            "Hope you’re enjoying Walksy and you’d like to add your own walk soon.",
+          body: "Hope you’re enjoying Walksy. and you’d like to add your own walk soon.",
           id: 2,
           schedule: { at: new Date(new Date().getTime() + 2419200000) }, // 4 weeks
         },
