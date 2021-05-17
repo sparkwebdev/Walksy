@@ -5,9 +5,11 @@ import WalksContext, { defaultWalk } from "./walks-context";
 import { Walk, Moment, Location } from "../data/models";
 import { storeMomentHandler } from "../firebase";
 import { Filesystem, FilesystemDirectory } from "@capacitor/core";
+import { useAuth } from "../auth";
 const { Storage } = Plugins;
 
 const WalksContextProvider: React.FC = (props) => {
+  const { userId } = useAuth();
   const [walk, setWalk] = useState<Walk>();
   const [storedWalkId, setStoredWalkId] = useState<string>("");
   const [moments, setMoments] = useState<Moment[]>();
@@ -34,6 +36,8 @@ const WalksContextProvider: React.FC = (props) => {
         const momentsData = data.value ? JSON.parse(data.value) : null;
         if (momentsData) {
           setMoments(momentsData);
+        } else {
+          setMoments([]);
         }
       })
       .catch((e) => {
@@ -51,17 +55,8 @@ const WalksContextProvider: React.FC = (props) => {
   }, [moments]);
 
   useEffect(() => {
-    if (storedWalkId !== "") {
-      Storage.get({ key: "userProfile" })
-        .then((data) => {
-          const userData = data.value ? JSON.parse(data.value) : null;
-          if (userData.userId) {
-            storeMoments(userData.userId);
-          }
-        })
-        .catch((e) => {
-          console.log("Couldn't get user profile", e);
-        });
+    if (storedWalkId !== "" && userId) {
+      storeMoments(userId);
     }
   }, [storedWalkId]);
 

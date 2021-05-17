@@ -2,6 +2,7 @@ import { IonApp } from "@ionic/react";
 import React from "react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route, Switch } from "react-router";
+import WalksContextProvider from "./data/WalksContextProvider";
 
 import NotFoundPage from "./pages/NotFoundPage";
 import HomePage from "./pages/HomePage";
@@ -14,32 +15,34 @@ import PrivacyPage from "./pages/PrivacyPage";
 const App: React.FC = () => {
   return (
     <IonApp>
-      <IonReactRouter>
-        <Switch>
-          <Route exact path="/">
-            <HomePage />
-          </Route>
-          <Route exact path="/walk/:id">
-            <WalkEntryPage />
-          </Route>
-          <Route exact path="/entries/:id">
-            <EntryPage />
-          </Route>
-          <Route exact path="/latest-news">
-            <NewsPage />
-          </Route>
-          <Route exact path="/about">
-            <AboutPage />
-          </Route>
-          <Route exact path="/privacy">
-            <PrivacyPage />
-          </Route>
-          <Redirect exact path="/" to="/" />
-          <Route>
-            <NotFoundPage />
-          </Route>
-        </Switch>
-      </IonReactRouter>
+      <WalksContextProvider>
+        <IonReactRouter>
+          <Switch>
+            <Route exact path="/">
+              <HomePage />
+            </Route>
+            <Route exact path="/walk/:id">
+              <WalkEntryPage />
+            </Route>
+            <Route exact path="/entries/:id">
+              <EntryPage />
+            </Route>
+            <Route exact path="/latest-news">
+              <NewsPage />
+            </Route>
+            <Route exact path="/about">
+              <AboutPage />
+            </Route>
+            <Route exact path="/privacy">
+              <PrivacyPage />
+            </Route>
+            <Redirect exact path="/" to="/" />
+            <Route>
+              <NotFoundPage />
+            </Route>
+          </Switch>
+        </IonReactRouter>
+      </WalksContextProvider>
     </IonApp>
   );
 };
