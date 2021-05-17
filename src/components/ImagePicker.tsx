@@ -62,6 +62,7 @@ const ImagePicker: React.FC<{
         source: CameraSource.Prompt,
         quality: 80,
         width: 740,
+        saveToGallery: true,
       });
 
       if (!photo || !photo.webPath) {
