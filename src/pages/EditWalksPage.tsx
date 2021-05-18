@@ -165,6 +165,8 @@ const EditWalksPage: React.FC = () => {
     setLoading(false);
   };
 
+  const [closeAlert, setCloseAlert] = useState<boolean>(false);
+
   const [itemIdToDelete, setItemIdToDelete] = useState<string>("");
   const [deleteAlert, setDeleteAlert] = useState<boolean>(false);
   const deleteWalk = async () => {
@@ -479,10 +481,29 @@ const EditWalksPage: React.FC = () => {
                     <IonButton
                       className="ion-margin"
                       color="tertiary"
-                      onClick={resetEdit}
+                      onClick={() => setCloseAlert(true)}
                     >
                       Close
                     </IonButton>
+                    <IonAlert
+                      isOpen={closeAlert}
+                      onDidDismiss={() => {
+                        setCloseAlert(false);
+                      }}
+                      header={"Are you sure?"}
+                      subHeader={"Any changes you make will be lost"}
+                      buttons={[
+                        {
+                          text: "No",
+                          role: "cancel",
+                        },
+                        {
+                          text: "Yes",
+                          cssClass: "secondary",
+                          handler: resetEdit,
+                        },
+                      ]}
+                    />
                   </IonCol>
                 </IonRow>
                 <hr className="separator" />
