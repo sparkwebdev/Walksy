@@ -56,6 +56,7 @@ const EditWellbeingPage: React.FC = () => {
       setEditEntryId(entryData?.id || "");
       setTitle(entryData?.title || "");
       setContent(entryData?.content || "");
+      setCategory(entryData?.category || "");
       if (entryData.createdAt) {
         const dateFormatted = dayjs(entryData.createdAt).format(
           "YYYY-MM-DDThh:mm"
