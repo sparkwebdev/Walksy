@@ -68,6 +68,8 @@ const EditWalksPage: React.FC = () => {
 
   const addWalk = async () => {
     setCurrentAction("Add");
+    setEditWalkId("");
+    setMoments([]);
   };
 
   const editWalk = (walkId: string) => {
@@ -223,6 +225,7 @@ const EditWalksPage: React.FC = () => {
     setLocation("");
     setCircular("false");
     setCurrentAction("View");
+    setMoments([]);
   };
 
   const [moments, setMoments] = useState<Moment[]>([]);
