@@ -398,7 +398,9 @@ const EditWalksPage: React.FC = () => {
                         </IonLabel>
                         <br />
                         <span className="small-print">
-                          Choose from: {suggestedDescriptors.join(", ")}
+                          <small>
+                            Choose from: {suggestedDescriptors.join(", ")}
+                          </small>
                         </span>
                         <IonGrid>
                           <IonRow>
@@ -483,7 +485,7 @@ const EditWalksPage: React.FC = () => {
                     </IonButton>
                   </IonCol>
                 </IonRow>
-
+                <hr className="separator" />
                 <ol
                   reversed
                   className="moments-list moments-list--editing"
