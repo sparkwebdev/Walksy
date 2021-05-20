@@ -13,9 +13,10 @@ import {
   IonCol,
   IonGrid,
   IonIcon,
+  IonLoading,
   IonRow,
 } from "@ionic/react";
-import { close as cancelIcon } from "ionicons/icons";
+import { close as cancelIcon, headset } from "ionicons/icons";
 
 declare const window: any;
 
@@ -116,7 +117,20 @@ const MapWithMarkers: React.FC<{
   };
 
   if (loadError) return <div>Error loading maps.</div>;
-  if (!isLoaded) return <div>Loading maps.</div>;
+  if (!isLoaded)
+    return (
+      <div
+        style={{
+          background: "#f0e6d5",
+          justifyContent: "center",
+          alignItems: "center",
+          display: "flex",
+          height: "100%",
+        }}
+      >
+        <IonLoading isOpen={!isLoaded} message="Loading map..." />
+      </div>
+    );
 
   return (
     <>
