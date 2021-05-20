@@ -27,7 +27,7 @@ const LatestNews: React.FC<ContainerProps> = ({ count = 3 }) => {
           button
           key={entry.id}
           detail
-          routerLink={`/app/entries/${entry.id}`}
+          routerLink={`/entries/${entry.id}`}
         >
           <IonLabel className="ion-text-wrap">
             <h2

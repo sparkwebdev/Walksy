@@ -24,7 +24,7 @@ const NotFound: React.FC = () => {
           <IonCardContent>
             <div className="ion-padding">
               <h2>Sorry, we couldn't find anything at this location.</h2>
-              <IonButton className="ion-margin-top" routerLink="/app/home">
+              <IonButton className="ion-margin-top" routerLink="/">
                 Back to Home
               </IonButton>
             </div>
