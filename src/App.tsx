@@ -1,5 +1,5 @@
 import { IonApp } from "@ionic/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { IonReactRouter } from "@ionic/react-router";
 import { Redirect, Route, Switch } from "react-router";
 import WalksContextProvider from "./data/WalksContextProvider";
@@ -11,8 +11,20 @@ import EntryPage from "./components/EntryPage";
 import NewsPage from "./pages/NewsPage";
 import AboutPage from "./pages/AboutPage";
 import PrivacyPage from "./pages/PrivacyPage";
+import { auth } from "./firebase";
 
 const App: React.FC = () => {
+  useEffect(() => {
+    auth
+      .signInAnonymously()
+      .then(() => {
+        console.log("signed in");
+      })
+      .catch((error) => {
+        console.log(error.code, error.message);
+      });
+  }, []);
+
   return (
     <IonApp>
       <WalksContextProvider>
