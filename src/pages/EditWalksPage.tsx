@@ -256,7 +256,7 @@ const EditWalksPage: React.FC = () => {
     const walksRef = firestore.collection("users-walks");
     return walksRef
       .orderBy("start", "desc")
-      .limit(99)
+      .limit(25)
       .onSnapshot(({ docs }) => setWalks(docs.map(toWalk)));
   }, []);
 

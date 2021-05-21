@@ -142,7 +142,7 @@ const EditWellbeingPage: React.FC = () => {
     const entriesRef = firestore.collection("wellbeing-entries");
     return entriesRef
       .orderBy("createdAt", "desc")
-      .limit(999)
+      .limit(16)
       .onSnapshot(({ docs }) => setEntries(docs.map(toEntry)));
   }, []);
 

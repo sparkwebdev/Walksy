@@ -141,7 +141,7 @@ const EditNewsPage: React.FC = () => {
     const entriesRef = firestore.collection("entries");
     return entriesRef
       .orderBy("createdAt", "desc")
-      .limit(999)
+      .limit(12)
       .onSnapshot(({ docs }) => setEntries(docs.map(toEntry)));
   }, []);
 
