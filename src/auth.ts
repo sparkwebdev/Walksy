@@ -21,10 +21,19 @@ export function useAuth(): Auth {
 export function useAuthInit(): AuthInit {
   const [authInit, setAuthInit] = useState<AuthInit>({ loading: true } );
   useEffect(() => {
-    return firebaseAuth.onAuthStateChanged((firebaseUser) => {
-      const auth = firebaseUser ? { loggedIn: true, userId: firebaseUser.uid, userEmail: firebaseUser.email!, userCreatedAt: firebaseUser.metadata.creationTime! } : { loggedIn: false }
-      setAuthInit({ loading: false, auth });
-    });
+    const auth = { loggedIn: false }
+    setAuthInit({ loading: true, auth });
+    firebaseAuth
+      .signInAnonymously()
+      .then(() => {
+        const auth = { loggedIn: true }
+        setAuthInit({ loading: false, auth });
+      })
+      .catch((error) => {
+        const auth = { loggedIn: false }
+        setAuthInit({ loading: true, auth });
+        console.log(error.code, error.message);
+      });
   }, []);
   return authInit;
 }
