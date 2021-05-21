@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { IonAlert, IonContent, IonLoading, IonPage } from "@ionic/react";
+import { IonContent, IonPage, IonSpinner } from "@ionic/react";
 import PageHeader from "../components/PageHeader";
 import WalkItem from "../components/WalkItem";
 import { useParams } from "react-router";
@@ -7,6 +7,7 @@ import { firestore } from "../firebase";
 import { toWalk, Walk } from "../data/models";
 import WalksContext from "../data/walks-context";
 import { useLocation } from "react-router-dom";
+import { useAuthInit } from "../auth";
 
 interface RouteParams {
   id: string;
@@ -18,7 +19,7 @@ interface RecievedWalkValues {
 const WalkEntryPage: React.FC = () => {
   const locationURL = useLocation<RecievedWalkValues>();
   const { share } = locationURL.state || false;
-  const [loading, setLoading] = useState<boolean>(true);
+  const { loading } = useAuthInit();
 
   const walksCtx = useContext(WalksContext);
   const { id } = useParams<RouteParams>();
@@ -34,14 +35,18 @@ const WalkEntryPage: React.FC = () => {
       .catch((e) => {
         console.log("Couldn't load user walks", e);
       });
-    setLoading(false);
   }, [id]);
 
   return (
     <IonPage>
       <PageHeader title="Walk" back={true} />
       <IonContent className="ion-padding-bottom">
-        {walk && (
+        {loading && (
+          <div className="spinner ion-text-center">
+            <IonSpinner color="primary" name="dots" />
+          </div>
+        )}
+        {!loading && walk && (
           <div className="ion-margin-bottom constrain constrain--large">
             <WalkItem
               id={walk.id}
@@ -65,18 +70,6 @@ const WalkEntryPage: React.FC = () => {
           </div>
         )}
       </IonContent>
-      <IonAlert
-        header={"Saving your moments..."}
-        subHeader={`${walksCtx.moments?.length} to go`}
-        isOpen={
-          !!walksCtx.moments &&
-          walksCtx.moments.length > 0 &&
-          !!walksCtx.walk &&
-          walksCtx.walk.end !== ""
-        }
-        backdropDismiss={false}
-      />
-      <IonLoading isOpen={loading} message={"Please wait..."} />
     </IonPage>
   );
 };

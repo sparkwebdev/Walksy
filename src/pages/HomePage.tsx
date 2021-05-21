@@ -19,9 +19,10 @@ import { toWalk, Walk } from "../data/models";
 import { firestore } from "../firebase";
 import MomentsGroup from "../components/MomentsGroup";
 import LatestNews from "../components/LatestNews";
+import { useAuthInit } from "../auth";
 
 const HomePage: React.FC = () => {
-  const [loading, setLoading] = useState<boolean>(true);
+  const { loading } = useAuthInit();
   const [latestUserWalks, setLatestUserWalks] = useState<Walk[]>([]);
   const [latestUserWalksWithCoverImage, setLatestUserWalksWithCoverImage] =
     useState<Walk[]>([]);
@@ -40,7 +41,6 @@ const HomePage: React.FC = () => {
           return walk.coverImage !== "";
         });
         setLatestUserWalksWithCoverImage([...walksWithCoverImage]);
-        setLoading(false);
       });
   }, []);
 
