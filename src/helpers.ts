@@ -12,6 +12,13 @@ export const numberWithCommas = (x: string | number) => {
 }
 
 /* File functions */
+export const getFileExtension = (file: string) => {
+  var re = /(?:\.([^.]+))?$/;
+  var ext = re.exec(file);
+  return ext;
+}
+
+
 export const loadImage = async (imagePath: string) => {
   await Filesystem.readFile({
     path: `moments/${imagePath}`,
