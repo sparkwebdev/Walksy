@@ -642,6 +642,9 @@ ion-slides {
   flex-direction: column;
   height: 100%;
 }
+.add-moment-audio {
+  margin-top: auto;
+}
 .add-moment-note {
   margin-top: auto;
 }
@@ -683,16 +686,7 @@ ion-slides {
   object-fit: cover;
 }
 .add-moment-audio {
-  flex: 0 1 auto;
-  overflow: hidden;
-  height: 100%;
-  padding-top: 50px;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-}
-.audio-picker {
-  width: 100%;
+  margin-top: auto;
 }
 
 .audio-recorder {
