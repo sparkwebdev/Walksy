@@ -55,6 +55,7 @@ export interface Time {
 export interface Photo {
   path: string | undefined;
   preview: string;
+  location?: Location;
 }
 
 export interface UploadedFile {

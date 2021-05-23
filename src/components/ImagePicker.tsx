@@ -10,11 +10,8 @@ import {
   CameraSource,
   Capacitor,
 } from "@capacitor/core";
-
-export interface Photo {
-  path: string | undefined;
-  preview: string;
-}
+import exifr from "exifr";
+import { Location, Photo } from "../data/models";
 
 const { Camera } = Plugins;
 
@@ -35,6 +32,10 @@ const ImagePicker: React.FC<{
 
   const openFilePicker = () => {
     filePickerRef.current!.click();
+  };
+
+  const getGPSData = async (file: any) => {
+    return await exifr.gps(file);
   };
 
   const pickFileHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,10 +69,19 @@ const ImagePicker: React.FC<{
       if (!photo || !photo.webPath) {
         return;
       }
-      const pickedPhoto: Photo = {
+      let pickedPhoto: Photo = {
         path: photo.path,
         preview: photo.webPath,
       };
+      await getGPSData(photo.webPath).then((data) => {
+        if (data) {
+          const location: Location = {
+            lat: data.latitude,
+            lng: data.longitude,
+          };
+          pickedPhoto = { ...pickedPhoto, location };
+        }
+      });
       setTakenPhoto(pickedPhoto);
       props.onImagePick(pickedPhoto);
     } catch (error) {
