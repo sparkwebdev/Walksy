@@ -6,6 +6,7 @@ import {
   IonCol,
   IonGrid,
   IonIcon,
+  IonInput,
   IonLabel,
   IonModal,
   IonRow,
@@ -20,6 +21,7 @@ import ImagePicker from "../components/ImagePicker";
 import { base64FromPath } from "@ionic/react-hooks/filesystem";
 import { Filesystem, FilesystemDirectory } from "@capacitor/core";
 import AudioPicker from "../components/AudioPicker";
+import dayjs from "dayjs";
 
 const noteMaxLength = 280;
 
@@ -28,14 +30,30 @@ const NewWalkMoments: React.FC<{
   colour: string;
   momentType: string;
   resetMomentType: () => void;
-  getLocation: () => Promise<Location | null>;
-}> = ({ walkId, colour, momentType, resetMomentType, getLocation }) => {
+  updateLocations: (location: Location) => void;
+  updateTimestamp: (timestamp: string) => void;
+  lastTimestamp?: string;
+}> = ({
+  walkId,
+  colour,
+  momentType,
+  resetMomentType,
+  updateLocations,
+  updateTimestamp,
+  lastTimestamp,
+}) => {
   const walksCtx = useContext(WalksContext);
 
   // const imagePathRef = useRef<HTMLIonInputElement>(null);
   // const audioPathRef = useRef<HTMLIonInputElement>(null);
   const noteRef = useRef<HTMLIonTextareaElement>(null);
   const [note, setNote] = useState<string>("");
+
+  const [latitude, setLatitude] = useState<number>();
+  const [longitude, setLongitude] = useState<number>();
+  const [timestamp, setTimestamp] = useState<string>(
+    dayjs().format("YYYY-MM-DDTHH:mm")
+  );
 
   const [takenPhoto, setTakenPhoto] = useState<Photo | null>();
   const [recordedAudioFilename, setRecordedAudioFilename] =
@@ -44,6 +62,10 @@ const NewWalkMoments: React.FC<{
   const imagePickerRef = useRef<any>();
 
   const photoPickHandler = (photo: Photo) => {
+    if (photo.location) {
+      setLatitude(photo.location.lat);
+      setLongitude(photo.location.lng);
+    }
     setTakenPhoto(photo);
     // resetMomentType();
   };
@@ -97,72 +119,133 @@ const NewWalkMoments: React.FC<{
   };
 
   useEffect(() => {
+    if (lastTimestamp) {
+      setTimestamp(
+        dayjs(lastTimestamp).format("YYYY-MM-DDTHH:mm") ||
+          dayjs().format("YYYY-MM-DDTHH:mm")
+      );
+    }
+  }, [lastTimestamp]);
+
+  useEffect(() => {
     if (takenPhoto?.path && !takenPhoto.path.startsWith("file://")) {
       addMomentHandler();
     }
   }, [takenPhoto]);
 
   const addMomentHandler = async () => {
-    const enteredNote = noteRef.current?.value || "";
-    if (
-      !recordedAudioFilename &&
-      enteredNote.toString().trim().length === 0 &&
-      !takenPhoto
-    ) {
-      return;
-    }
-    let loadedPhotoPath = "";
-    let loadedAudioPath = "";
-    if (takenPhoto?.path) {
-      const enteredImagePath = takenPhoto?.path || "";
-      await Filesystem.readFile({
-        path: `moments/${enteredImagePath}`,
-        directory: FilesystemDirectory.Data,
-      })
-        .then((file) => {
-          loadedPhotoPath = `data:image/jpeg;base64,${file.data}`;
+    updateTimestamp(timestamp);
+    const location: Location | null =
+      latitude && longitude && timestamp
+        ? {
+            lat: latitude,
+            lng: longitude,
+            timestamp: dayjs(timestamp).valueOf(),
+          }
+        : null;
+    if (momentType === "Location") {
+      if (location) {
+        updateLocations(location);
+      }
+    } else {
+      const enteredNote = noteRef.current?.value || "";
+      if (
+        !recordedAudioFilename &&
+        enteredNote.toString().trim().length === 0 &&
+        !takenPhoto
+      ) {
+        return;
+      }
+      let loadedPhotoPath = "";
+      let loadedAudioPath = "";
+      if (takenPhoto?.path) {
+        const enteredImagePath = takenPhoto?.path || "";
+        await Filesystem.readFile({
+          path: `moments/${enteredImagePath}`,
+          directory: FilesystemDirectory.Data,
         })
-        .catch((e) => {
-          console.log("Couldn't load file", loadedPhotoPath);
-          resetMomentType();
-        });
-    } else if (recordedAudioFilename) {
-      const enteredAudioPath = recordedAudioFilename || "";
-      await Filesystem.readFile({
-        path: `moments/${enteredAudioPath}`,
-        directory: FilesystemDirectory.Data,
-      })
-        .then((file) => {
-          loadedAudioPath = `data:audio/aac;base64,${file.data}`;
+          .then((file) => {
+            loadedPhotoPath = `data:image/jpeg;base64,${file.data}`;
+          })
+          .catch((e) => {
+            console.log("Couldn't load file", loadedPhotoPath);
+            resetMomentType();
+          });
+      } else if (recordedAudioFilename) {
+        const enteredAudioPath = recordedAudioFilename || "";
+        await Filesystem.readFile({
+          path: `moments/${enteredAudioPath}`,
+          directory: FilesystemDirectory.Data,
         })
-        .catch((e) => {
-          console.log("Couldn't load file", loadedAudioPath);
-          resetMomentType();
-        });
+          .then((file) => {
+            loadedAudioPath = `data:audio/aac;base64,${file.data}`;
+          })
+          .catch((e) => {
+            console.log("Couldn't load file", loadedAudioPath);
+            resetMomentType();
+          });
+      }
+
+      walksCtx.addMoment(
+        walkId,
+        loadedPhotoPath,
+        loadedAudioPath,
+        enteredNote!.toString(),
+        location,
+        timestamp
+      );
+      if (location) {
+        updateLocations(location);
+      }
     }
-
-    const latestLocation: Location | undefined = walksCtx.walk?.locations
-      .slice(-1)
-      .pop();
-
-    getLocation()
-      .then((newLocation) => {
-        walksCtx.addMoment(
-          walkId,
-          loadedPhotoPath,
-          loadedAudioPath,
-          enteredNote!.toString(),
-          newLocation || latestLocation || null,
-          new Date().toISOString()
-        );
-      })
-      .catch((e) => {
-        console.log("Could not get your location", e);
-      });
+    setLatitude(undefined);
+    setLongitude(undefined);
+    setTimestamp(dayjs().format("YYYY-MM-DDTHH:mm"));
     setTakenPhoto(null);
+    setNote("");
     setRecordedAudioFilename(null);
     resetMomentType();
   };
+
+  const locationInput = (
+    <IonGrid>
+      <IonRow className="ion-text-start">
+        <IonCol>
+          <IonInput
+            className="input-text input-text--small"
+            type="number"
+            value={latitude}
+            onIonChange={(e) => setLatitude(+e.detail!.value!)}
+          />
+          <IonLabel position="stacked">
+            <small>Latitude</small>
+          </IonLabel>
+        </IonCol>
+        <IonCol>
+          <IonInput
+            className="input-text input-text--small"
+            type="number"
+            value={longitude}
+            onIonChange={(e) => setLongitude(+e.detail!.value!)}
+          />
+          <IonLabel position="stacked">
+            <small>Longitude</small>
+          </IonLabel>
+        </IonCol>
+        <IonCol>
+          <IonInput
+            className="input-text input-text--small"
+            type="datetime-local"
+            value={timestamp}
+            onIonChange={(e) => setTimestamp(e.detail!.value!)}
+          />
+          <IonLabel position="stacked">
+            <small>Timestamp</small>
+          </IonLabel>
+        </IonCol>
+      </IonRow>
+    </IonGrid>
+  );
 
   return (
     <IonCardContent className="constrain constrain--large">
@@ -194,15 +277,14 @@ const NewWalkMoments: React.FC<{
                 </div>
               )}
               {momentType === "Audio" && (
-                <div className="ion-text-center ion-padding add-moment-audio">
-                  <div className="audio-picker ion-margin">
-                    <AudioPicker
-                      onAudioPick={(fileName: string) => {
-                        audioPickHandler(fileName);
-                      }}
-                    />
-                  </div>
-                </div>
+                <IonCard className="add-moment-audio">
+                  <AudioPicker
+                    onAudioPick={(fileName: string) => {
+                      audioPickHandler(fileName);
+                    }}
+                  />
+                  {locationInput}
+                </IonCard>
               )}
               {(momentType === "Note" || takenPhoto) && (
                 <IonCard
@@ -234,11 +316,24 @@ const NewWalkMoments: React.FC<{
                       {noteMaxLength - note.length} characters remaining
                     </small>
                   </p>
-
                   {/* <IonItem>
                       <IonLabel position="floating">Moment Note</IonLabel>
                       <IonInput type="text" ref={noteRef}></IonInput>
                     </IonItem> */}
+                  {locationInput}
+                </IonCard>
+              )}
+              {momentType === "Location" && (
+                <IonCard
+                  className={
+                    takenPhoto
+                      ? "add-moment-note add-moment-note--with-photo"
+                      : "add-moment-note"
+                  }
+                >
+                  <IonLabel hidden={true}>Add a location...</IonLabel>
+
+                  {locationInput}
                 </IonCard>
               )}
               <IonCardHeader
@@ -260,6 +355,10 @@ const NewWalkMoments: React.FC<{
                           if (recordedAudioFilename) {
                             audioPickDeleteHandler(recordedAudioFilename);
                           }
+                          setLatitude(undefined);
+                          setLongitude(undefined);
+                          setTimestamp(dayjs().format("YYYY-MM-DDTHH:mm"));
+                          setNote("");
                           resetMomentType();
                         }}
                       >
@@ -275,10 +374,13 @@ const NewWalkMoments: React.FC<{
                           takenPhoto ? saveImageHandler : addMomentHandler
                         }
                         disabled={
-                          (note.length < 1 ||
-                            note.toString().trim().length < 1) &&
-                          !takenPhoto &&
-                          !recordedAudioFilename
+                          !latitude ||
+                          !longitude ||
+                          !timestamp ||
+                          (momentType === "Note" &&
+                            note.toString().trim().length < 1) ||
+                          (momentType === "Photo" && !takenPhoto) ||
+                          (momentType === "Audio" && !recordedAudioFilename)
                         }
                       >
                         <IonIcon slot="start" icon={addIcon} />

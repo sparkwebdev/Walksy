@@ -20,6 +20,7 @@ import {
 } from "ionicons/icons";
 import MapWithMarkers from "./MapWithMarkers";
 import WalksContext from "../data/walks-context";
+import dayjs from "dayjs";
 
 const MomentsList: React.FC<{
   moments: Moment[];
@@ -136,66 +137,68 @@ const MomentsList: React.FC<{
           color: props.colour,
         }}
       >
-        {props.moments.map((moment: Moment) => (
-          <li
-            className={`moments-list__item moments-list__item--${
-              (moment.imagePath && "photo") ||
-              (moment.audioPath && "audio") ||
-              (moment.note && "note")
-            }`}
-            key={moment.id}
-          >
-            <IonGrid className="ion-no-padding">
-              <IonRow className="ion-no-margin ion-align-items-center">
-                <IonCol
-                  size={isEditing ? "9" : "12"}
-                  sizeSm={isEditing ? "10" : "12"}
-                >
-                  {moment.imagePath && (
-                    <IonCard className="moments-list__image-container ion-no-margin">
-                      <IonImg src={moment.imagePath} alt="" />
-                    </IonCard>
-                  )}
-                  {moment.audioPath && (
-                    <IonCard className="moments-list__audio-container ion-no-margin ion-padding">
-                      <audio controls className="moments-list__audio">
-                        <source src={moment.audioPath} type="audio/mpeg" />
-                      </audio>
-                    </IonCard>
-                  )}
-                  {moment.note && (
-                    <IonCard
-                      className={
-                        moment.imagePath
-                          ? "moments-list__note moments-list__note--caption text-body ion-no-margin"
-                          : "moments-list__note text-body ion-no-margin"
-                      }
-                    >
-                      {moment.note.split("\n").map((str, index) => (
-                        <p key={index}>{str}</p>
-                      ))}
-                    </IonCard>
-                  )}
-                </IonCol>
-                {props.canDelete && isEditing && (
-                  <IonCol className="ion-text-end">
-                    <IonButton
-                      className="moments-list__delete"
-                      color="danger"
-                      onClick={() => {
-                        setMomentItemIdToDelete(moment.id);
-                        setDeleteMomentAlert(true);
-                      }}
-                      hidden={!isEditing}
-                    >
-                      <IonIcon icon={deleteIcon} slot="icon-only" />
-                    </IonButton>
+        {props.moments.map((moment: Moment) => {
+          return (
+            <li
+              className={`moments-list__item moments-list__item--${
+                (moment.imagePath && "photo") ||
+                (moment.audioPath && "audio") ||
+                (moment.note && "note")
+              }`}
+              key={moment.id}
+            >
+              <IonGrid className="ion-no-padding">
+                <IonRow className="ion-no-margin ion-align-items-center">
+                  <IonCol
+                    size={isEditing ? "9" : "12"}
+                    sizeSm={isEditing ? "10" : "12"}
+                  >
+                    {moment.imagePath && (
+                      <IonCard className="moments-list__image-container ion-no-margin">
+                        <IonImg src={moment.imagePath} alt="" />
+                      </IonCard>
+                    )}
+                    {moment.audioPath && (
+                      <IonCard className="moments-list__audio-container ion-no-margin ion-padding">
+                        <audio controls className="moments-list__audio">
+                          <source src={moment.audioPath} type="audio/mpeg" />
+                        </audio>
+                      </IonCard>
+                    )}
+                    {moment.note && (
+                      <IonCard
+                        className={
+                          moment.imagePath
+                            ? "moments-list__note moments-list__note--caption text-body ion-no-margin"
+                            : "moments-list__note text-body ion-no-margin"
+                        }
+                      >
+                        {moment.note.split("\n").map((str, index) => (
+                          <p key={index}>{str}</p>
+                        ))}
+                      </IonCard>
+                    )}
                   </IonCol>
-                )}
-              </IonRow>
-            </IonGrid>
-          </li>
-        ))}
+                  {props.canDelete && isEditing && (
+                    <IonCol className="ion-text-end">
+                      <IonButton
+                        className="moments-list__delete"
+                        color="danger"
+                        onClick={() => {
+                          setMomentItemIdToDelete(moment.id);
+                          setDeleteMomentAlert(true);
+                        }}
+                        hidden={!isEditing}
+                      >
+                        <IonIcon icon={deleteIcon} slot="icon-only" />
+                      </IonButton>
+                    </IonCol>
+                  )}
+                </IonRow>
+              </IonGrid>
+            </li>
+          );
+        })}
         <IonAlert
           isOpen={deleteMomentAlert}
           onDidDismiss={() => {
@@ -217,6 +220,35 @@ const MomentsList: React.FC<{
           ]}
         />
       </ol>
+      {props.locations && (
+        <>
+          <h2>Locations</h2>
+          <ol>
+            {props.locations?.map((location: Location, index) => {
+              return (
+                <li key={index} className="ion-text-start">
+                  <IonGrid className="ion-no-padding">
+                    <IonRow>
+                      <IonCol>
+                        <small>Lat:</small>&nbsp;<strong>{location.lat}</strong>{" "}
+                        — 
+                        <small>Lng:</small>&nbsp;
+                        <strong>{location.lng}</strong>
+                      </IonCol>
+                      <IonCol>
+                        <small>Time: </small>
+                        <strong>
+                          {dayjs(location.timestamp).format("HH:mm DD/MM/YY")}
+                        </strong>
+                      </IonCol>
+                    </IonRow>
+                  </IonGrid>
+                </li>
+              );
+            })}
+          </ol>
+        </>
+      )}
       {!!props.isWalking && (
         <IonModal
           isOpen={showMap}

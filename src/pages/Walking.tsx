@@ -38,11 +38,8 @@ import NewWalkMoments from "./NewWalkMoments";
 import PageHeader from "../components/PageHeader";
 import ProgressOverview from "../components/ProgressOverview";
 import { storeWalkHandler } from "../firebase";
-import { getDistanceBetweenPoints } from "../helpers";
-import { cancelNotifications } from "../components/Notifications";
-let watch: any = null;
 
-const { Geolocation, Storage } = Plugins;
+const { Storage } = Plugins;
 
 const Walking: React.FC = () => {
   const { loggedIn } = useAuth();
@@ -73,6 +70,8 @@ const Walking: React.FC = () => {
   const [locations, setLocations] = useState<Location[]>([]);
   const [end, setEnd] = useState<string>("");
 
+  const [lastTimestamp, setLastTimestamp] = useState<string>();
+
   const [momentType, setMomentType] = useState<string>("");
 
   const [cancelWalkAlert, setCancelWalkAlert] = useState(false);
@@ -96,104 +95,16 @@ const Walking: React.FC = () => {
         value: JSON.stringify(startDate),
       });
 
-      // Cancel notifications
-      cancelNotifications();
-      getLocation(true)
-        .then(() => {
-          setStart(startDate);
-          startWatchPosition();
-          walksCtx.updateWalk({
-            start: startDate,
-          });
-        })
-        .catch((e) => {
-          startWatchPosition();
-          setError({ showError: true, message: "Could not get your location" });
-        });
+      setStart(startDate);
+      walksCtx.updateWalk({
+        start: startDate,
+      });
     }
-    return () => {
-      if (watch !== null) {
-        Geolocation.clearWatch(watch);
-        Geolocation.clearWatch({
-          id: watch,
-        });
-      }
-    };
   }, []);
 
-  const startWatchPosition = () => {
-    watch = Geolocation.watchPosition(
-      {
-        enableHighAccuracy: true,
-        timeout: 5000,
-        maximumAge: 10000,
-      },
-      (position, err) => {
-        if (position) {
-          const newLocation: Location = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude,
-            timestamp: position.timestamp,
-            accuracy: position.coords.accuracy,
-          };
-          updateLocations(newLocation, true);
-        }
-      }
-    );
-  };
-
-  const getLocation = async (showLoading: boolean = true) => {
-    if (showLoading) {
-      setLoading(true);
-    }
-    try {
-      const position = await Geolocation.getCurrentPosition({
-        timeout: 4000,
-      });
-      const newLocation: Location = {
-        lat: position.coords.latitude,
-        lng: position.coords.longitude,
-        timestamp: position.timestamp,
-        accuracy: position.coords.accuracy,
-      };
-      if (newLocation) {
-        updateLocations(newLocation, false);
-      }
-      setLoading(false);
-      return newLocation;
-    } catch (e) {
-      setLoading(false);
-      setError({ showError: true, message: "Could not get your location" });
-      return null;
-    }
-  };
-
-  const updateLocations = (newLocation: Location, compare: boolean = false) => {
+  const updateLocations = (newLocation: Location) => {
     setLocations((curLocations) => {
-      const latestLoc = curLocations?.slice(-1).pop();
-      if (!compare || !latestLoc) {
-        return curLocations.concat([newLocation]);
-      }
-      if (latestLoc) {
-        const diff = getDistanceBetweenPoints(
-          {
-            lat: latestLoc.lat,
-            lng: latestLoc.lng,
-          },
-          {
-            lat: newLocation.lat,
-            lng: newLocation.lng,
-          },
-          "km"
-        );
-        if (
-          diff > 0.005 &&
-          (!newLocation.accuracy || newLocation.accuracy < 10.01)
-        ) {
-          return curLocations.concat([newLocation]);
-        }
-      }
-      return curLocations;
+      return curLocations.concat([newLocation]);
     });
   };
 
@@ -213,16 +124,14 @@ const Walking: React.FC = () => {
 
   const endWalkHandler = async () => {
     setAddBarVisible(false);
-    getLocation().then(() => {
-      const endDate = new Date().toISOString();
-      walksCtx.updateWalk({
-        end: endDate,
-        steps,
-        distance,
-        locations,
-      });
-      setEnd(endDate);
+    const endDate = new Date().toISOString();
+    walksCtx.updateWalk({
+      end: endDate,
+      steps,
+      distance,
+      locations,
     });
+    setEnd(endDate);
   };
 
   const storeWalk = async () => {
@@ -332,7 +241,13 @@ const Walking: React.FC = () => {
                   resetMomentType={() => {
                     setMomentType("");
                   }}
-                  getLocation={getLocation}
+                  updateLocations={(location) => {
+                    updateLocations(location);
+                  }}
+                  updateTimestamp={(timestamp) => {
+                    setLastTimestamp(timestamp);
+                  }}
+                  lastTimestamp={lastTimestamp}
                 />
               )}
             </>
@@ -361,49 +276,73 @@ const Walking: React.FC = () => {
             <IonCard className="moment-panel__card ion-no-margin ion-padding-bottom">
               <IonCardContent className="constrain constrain--medium">
                 <IonGrid>
-                  <IonRow>
+                  <IonRow className="ion-align-items-center">
                     <IonCol
                       onClick={() => {
-                        addMomentHandler("Audio");
+                        addMomentHandler("Location");
                       }}
                     >
                       <h3 className="moment-panel__label text-heading ion-text-center">
-                        <strong>Audio</strong>
+                        <strong>Location</strong>
                       </h3>
                       <img
                         className="moment-panel__icon"
-                        src="assets/img/icon-audio.svg"
+                        src="assets/img/icon-location.svg"
                         alt=""
                       />
                     </IonCol>
-                    <IonCol
-                      onClick={() => {
-                        addMomentHandler("Photo");
-                      }}
-                    >
-                      <h3 className="moment-panel__label text-heading ion-text-center">
-                        <strong>Photo</strong>
-                      </h3>
-                      <img
-                        className="moment-panel__icon"
-                        src="assets/img/icon-camera.svg"
-                        alt=""
-                      />
-                    </IonCol>
-                    <IonCol
-                      onClick={() => {
-                        addMomentHandler("Note");
-                      }}
-                    >
-                      <h3 className="moment-panel__label text-heading ion-text-center">
-                        <strong>Note</strong>
-                      </h3>
-                      <img
-                        className="moment-panel__icon"
-                        src="assets/img/icon-note.svg"
-                        alt=""
-                      />
-                    </IonCol>
+                    {walksCtx.walk?.locations &&
+                    walksCtx.walk?.locations.length > 0 ? (
+                      <>
+                        <IonCol
+                          onClick={() => {
+                            addMomentHandler("Audio");
+                          }}
+                        >
+                          <h3 className="moment-panel__label text-heading ion-text-center">
+                            <strong>Audio</strong>
+                          </h3>
+                          <img
+                            className="moment-panel__icon"
+                            src="assets/img/icon-audio.svg"
+                            alt=""
+                          />
+                        </IonCol>
+                        <IonCol
+                          onClick={() => {
+                            addMomentHandler("Photo");
+                          }}
+                        >
+                          <h3 className="moment-panel__label text-heading ion-text-center">
+                            <strong>Photo</strong>
+                          </h3>
+                          <img
+                            className="moment-panel__icon"
+                            src="assets/img/icon-camera.svg"
+                            alt=""
+                          />
+                        </IonCol>
+                        <IonCol
+                          onClick={() => {
+                            addMomentHandler("Note");
+                          }}
+                        >
+                          <h3 className="moment-panel__label text-heading ion-text-center">
+                            <strong>Note</strong>
+                          </h3>
+                          <img
+                            className="moment-panel__icon"
+                            src="assets/img/icon-note.svg"
+                            alt=""
+                          />
+                        </IonCol>
+                      </>
+                    ) : (
+                      <IonCol size="9" className="ion-text-center">
+                        Add a starting location
+                        <br /> before adding Moments
+                      </IonCol>
+                    )}
                   </IonRow>
                 </IonGrid>
               </IonCardContent>
