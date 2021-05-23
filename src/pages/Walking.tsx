@@ -39,6 +39,8 @@ import PageHeader from "../components/PageHeader";
 import ProgressOverview from "../components/ProgressOverview";
 import { storeWalkHandler } from "../firebase";
 import { getDistanceBetweenPoints } from "../helpers";
+import { cancelNotifications } from "../components/Notifications";
+let watch: any = null;
 
 const { Geolocation, Storage } = Plugins;
 
@@ -94,32 +96,104 @@ const Walking: React.FC = () => {
         value: JSON.stringify(startDate),
       });
 
-      getLocation()
+      // Cancel notifications
+      cancelNotifications();
+      getLocation(true)
         .then(() => {
           setStart(startDate);
+          startWatchPosition();
           walksCtx.updateWalk({
             start: startDate,
           });
         })
         .catch((e) => {
+          startWatchPosition();
           setError({ showError: true, message: "Could not get your location" });
         });
     }
+    return () => {
+      if (watch !== null) {
+        Geolocation.clearWatch(watch);
+        Geolocation.clearWatch({
+          id: watch,
+        });
+      }
+    };
   }, []);
 
-  const getLocation = async () => {
-    const dummyLocation: Location = {
-      lat: 0,
-      lng: 0,
-      timestamp: parseInt(new Date().toISOString()),
-    };
-    updateLocations(dummyLocation);
-    return dummyLocation;
+  const startWatchPosition = () => {
+    watch = Geolocation.watchPosition(
+      {
+        enableHighAccuracy: true,
+        timeout: 5000,
+        maximumAge: 10000,
+      },
+      (position, err) => {
+        if (position) {
+          const newLocation: Location = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+            timestamp: position.timestamp,
+            accuracy: position.coords.accuracy,
+          };
+          updateLocations(newLocation, true);
+        }
+      }
+    );
   };
 
-  const updateLocations = (newLocation: Location) => {
+  const getLocation = async (showLoading: boolean = true) => {
+    if (showLoading) {
+      setLoading(true);
+    }
+    try {
+      const position = await Geolocation.getCurrentPosition({
+        timeout: 4000,
+      });
+      const newLocation: Location = {
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+        timestamp: position.timestamp,
+        accuracy: position.coords.accuracy,
+      };
+      if (newLocation) {
+        updateLocations(newLocation, false);
+      }
+      setLoading(false);
+      return newLocation;
+    } catch (e) {
+      setLoading(false);
+      setError({ showError: true, message: "Could not get your location" });
+      return null;
+    }
+  };
+
+  const updateLocations = (newLocation: Location, compare: boolean = false) => {
     setLocations((curLocations) => {
-      return curLocations.concat([newLocation]);
+      const latestLoc = curLocations?.slice(-1).pop();
+      if (!compare || !latestLoc) {
+        return curLocations.concat([newLocation]);
+      }
+      if (latestLoc) {
+        const diff = getDistanceBetweenPoints(
+          {
+            lat: latestLoc.lat,
+            lng: latestLoc.lng,
+          },
+          {
+            lat: newLocation.lat,
+            lng: newLocation.lng,
+          },
+          "km"
+        );
+        if (
+          diff > 0.005 &&
+          (!newLocation.accuracy || newLocation.accuracy < 10.01)
+        ) {
+          return curLocations.concat([newLocation]);
+        }
+      }
+      return curLocations;
     });
   };
 
@@ -258,9 +332,7 @@ const Walking: React.FC = () => {
                   resetMomentType={() => {
                     setMomentType("");
                   }}
-                  updateLocations={(location) => {
-                    updateLocations(location);
-                  }}
+                  getLocation={getLocation}
                 />
               )}
             </>
@@ -290,20 +362,6 @@ const Walking: React.FC = () => {
               <IonCardContent className="constrain constrain--medium">
                 <IonGrid>
                   <IonRow>
-                    <IonCol
-                      onClick={() => {
-                        addMomentHandler("Location");
-                      }}
-                    >
-                      <h3 className="moment-panel__label text-heading ion-text-center">
-                        <strong>Location</strong>
-                      </h3>
-                      <img
-                        className="moment-panel__icon"
-                        src="assets/img/icon-location.svg"
-                        alt=""
-                      />
-                    </IonCol>
                     <IonCol
                       onClick={() => {
                         addMomentHandler("Audio");
