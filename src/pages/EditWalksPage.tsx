@@ -598,7 +598,8 @@ const EditWalksPage: React.FC = () => {
                     <IonButton
                       className="ion-margin"
                       color="secondary"
-                      onClick={addWalk}
+                      // onClick={addWalk}
+                      routerLink="/app/new-walk"
                     >
                       Add new
                     </IonButton>

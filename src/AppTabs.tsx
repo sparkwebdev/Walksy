@@ -22,6 +22,7 @@ import {
   footsteps as walkIcon,
 } from "ionicons/icons";
 import { appData } from "./data/appData";
+import NewWalk from "./pages/NewWalk";
 
 const AppTabs: React.FC = () => {
   const { loggedIn, userEmail } = useAuth();
@@ -50,6 +51,9 @@ const AppTabs: React.FC = () => {
           </Route>
           <Route exact path="/app/edit-wellbeing">
             <EditWellbeingPage />
+          </Route>
+          <Route path="/app/new-walk">
+            <NewWalk />
           </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">

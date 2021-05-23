@@ -8,6 +8,7 @@ import WalksContextProvider from "./data/WalksContextProvider";
 
 import LoginPage from "./pages/LoginPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import Walking from "./pages/Walking";
 
 const App: React.FC = () => {
   const { loading, auth } = useAuthInit();
@@ -23,6 +24,9 @@ const App: React.FC = () => {
             <Switch>
               <Route exact path="/login">
                 <LoginPage />
+              </Route>
+              <Route path="/walking">
+                <Walking />
               </Route>
               <Route path="/app">
                 <AppTabs />
