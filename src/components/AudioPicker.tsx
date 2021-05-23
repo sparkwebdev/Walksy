@@ -6,8 +6,10 @@ import {
   IonText,
   IonToast,
 } from "@ionic/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Filesystem, FilesystemDirectory } from "@capacitor/core";
+import { base64FromPath } from "@ionic/react-hooks/filesystem";
+import { getFileExtension } from "../helpers";
 
 import { Plugins } from "@capacitor/core";
 import { RecordingData, GenericResponse } from "capacitor-voice-recorder";
@@ -28,13 +30,14 @@ const AudioPicker: React.FC<{
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [audioPath, setAudioPath] = useState<string>("");
   const [audioFilename, setAudioFilename] = useState<string>("");
-  const [secondsRemaining, setSecondsRemaining] = useState<number>(
-    maximumDuration
-  );
+  const [secondsRemaining, setSecondsRemaining] =
+    useState<number>(maximumDuration);
   const [error, setError] = useState<{
     showError: boolean;
     message?: string;
   }>({ showError: false });
+
+  const filePickerRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     // // will print true / false based on the device ability to record
@@ -57,13 +60,9 @@ const AudioPicker: React.FC<{
         setCanRecord(true); // Check for value
       })
       .catch((e: Error) => {
-        console.log(e);
+        console.log("Can't request audio status", e);
+        openFilePicker();
       });
-
-    // // will print true / false based on the status of the recording permission
-    // VoiceRecorder.hasAudioRecordingPermission.then((result: GenericResponse) =>
-    //   console.log(result.value)
-    // );
   }, []);
 
   // /**
@@ -125,11 +124,20 @@ const AudioPicker: React.FC<{
     setAudioPath("");
   };
 
-  const saveAudioFileHandler = async (base64Data: string) => {
+  const openFilePicker = () => {
+    if (filePickerRef.current) {
+      filePickerRef.current.click();
+    }
+  };
+
+  const saveAudioFileHandler = async (
+    base64Data: string,
+    fileType: string = "aac"
+  ) => {
     if (!base64Data) {
       return;
     }
-    const fileName = new Date().getTime() + ".aac";
+    const fileName = `${new Date().getTime()}.${fileType}`;
     Filesystem.writeFile({
       path: `moments/${fileName}`,
       data: base64Data,
@@ -140,12 +148,50 @@ const AudioPicker: React.FC<{
     });
   };
 
+  const pickFileHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target!.files![0];
+    let targetFileType = "mp3";
+    const fileExtensionData = getFileExtension(file.name);
+    if (
+      !fileExtensionData ||
+      (fileExtensionData[1] !== "mp3" && fileExtensionData[1] !== "aac")
+    ) {
+      setError({
+        showError: true,
+        message: "Please upload a valid file type (.mp3 or .aac)",
+      });
+      return;
+    } else {
+      targetFileType = fileExtensionData[1];
+    }
+
+    const fr = new FileReader();
+    fr.onload = async () => {
+      const data = fr.result!.toString();
+      if (data) {
+        setAudioPath(data);
+        const base64 = await base64FromPath(data);
+        saveAudioFileHandler(base64, targetFileType);
+      }
+    };
+    fr.readAsDataURL(file);
+  };
+
   return (
     <>
       <div className="audio-recorder ion-text-center">
-        {canRecord ? (
+        {audioPath ? (
+          <div className="audio-recorder__output ion-margin">
+            <audio controls className="moments-list__audio">
+              <source src={audioPath} type="audio/mpeg" />
+            </audio>
+            <IonButton className="ion-margin-top" onClick={tryAgainHandler}>
+              Try again?
+            </IonButton>
+          </div>
+        ) : (
           <>
-            {!audioPath ? (
+            {canRecord ? (
               <>
                 <IonButton
                   color={isRecording ? "tertiary" : "secondary"}
@@ -176,29 +222,33 @@ const AudioPicker: React.FC<{
                 </p>
               </>
             ) : (
-              <div className="audio-recorder__output">
-                <audio controls className="moments-list__audio">
-                  <source src={audioPath} type="audio/mpeg" />
-                </audio>
-                <IonButton className="ion-margin-top" onClick={tryAgainHandler}>
-                  Try again?
-                </IonButton>
-              </div>
+              <IonCard className="constrain constrain--small ion-margin">
+                <IonCardContent>
+                  <IonIcon icon={errorIcon} size="large" color="danger" />
+                  <p>
+                    <IonText color="danger">
+                      <strong>
+                        It looks like your device doesn't support audio
+                        recording.
+                      </strong>
+                    </IonText>
+                    <IonButton
+                      className="ion-margin-top"
+                      onClick={openFilePicker}
+                    >
+                      Upload a file
+                    </IonButton>
+                  </p>
+                  <input
+                    type="file"
+                    hidden
+                    ref={filePickerRef}
+                    onChange={pickFileHandler}
+                  />
+                </IonCardContent>
+              </IonCard>
             )}
           </>
-        ) : (
-          <IonCard className="constrain constrain--small ion-margin">
-            <IonCardContent>
-              <IonIcon icon={errorIcon} size="large" color="danger" />
-              <p>
-                <IonText color="danger">
-                  <strong>
-                    It looks like your device doesn't support audio recording.
-                  </strong>
-                </IonText>
-              </p>
-            </IonCardContent>
-          </IonCard>
         )}
       </div>
       <IonToast
