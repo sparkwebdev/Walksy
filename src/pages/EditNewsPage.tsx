@@ -39,7 +39,7 @@ const EditNewsPage: React.FC = () => {
   const [content, setContent] = useState<string>("");
   const [excerpt, setExcerpt] = useState<string>("");
   const [createdAt, setCreatedAt] = useState<string>(
-    dayjs().format("YYYY-MM-DDThh:mm")
+    dayjs().format("YYYY-MM-DDTHH:mm")
   );
 
   const addEntry = async () => {
@@ -58,7 +58,7 @@ const EditNewsPage: React.FC = () => {
       setContent(entryData?.content || "");
       if (entryData.createdAt) {
         const dateFormatted = dayjs(entryData.createdAt).format(
-          "YYYY-MM-DDThh:mm"
+          "YYYY-MM-DDTHH:mm"
         );
         setCreatedAt(dateFormatted);
       }
@@ -133,7 +133,7 @@ const EditNewsPage: React.FC = () => {
     setTitle("");
     setExcerpt("");
     setContent("");
-    setCreatedAt(dayjs().format("YYYY-MM-DDThh:mm"));
+    setCreatedAt(dayjs().format("YYYY-MM-DDTHH:mm"));
     setCurrentAction("View");
   };
 

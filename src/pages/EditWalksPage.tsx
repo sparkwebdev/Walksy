@@ -59,9 +59,9 @@ const EditWalksPage: React.FC = () => {
   const [descriptor2, setDescriptor2] = useState<string>("");
   const [descriptor3, setDescriptor3] = useState<string>("");
   const [start, setStart] = useState<string>(
-    dayjs().format("YYYY-MM-DDThh:mm")
+    dayjs().format("YYYY-MM-DDTHH:mm")
   );
-  const [end, setEnd] = useState<string>(dayjs().format("YYYY-MM-DDThh:mm"));
+  const [end, setEnd] = useState<string>(dayjs().format("YYYY-MM-DDTHH:mm"));
   const [distance, setDistance] = useState<number>(0);
   const [location, setLocation] = useState<string>("");
   const [circular, setCircular] = useState<string>("false");
@@ -84,11 +84,11 @@ const EditWalksPage: React.FC = () => {
       setOverview(walkData?.overview || "");
       setColour(walkData?.colour || "");
       if (walkData.start) {
-        const dateFormatted = dayjs(walkData.start).format("YYYY-MM-DDThh:mm");
+        const dateFormatted = dayjs(walkData.start).format("YYYY-MM-DDTHH:mm");
         setStart(dateFormatted);
       }
       if (walkData.end) {
-        const dateFormatted = dayjs(walkData.end).format("YYYY-MM-DDThh:mm");
+        const dateFormatted = dayjs(walkData.end).format("YYYY-MM-DDTHH:mm");
         setEnd(dateFormatted);
       }
       if (walkData.description) {
@@ -219,8 +219,8 @@ const EditWalksPage: React.FC = () => {
     setDescriptor1("");
     setDescriptor2("");
     setDescriptor3("");
-    setStart(dayjs().format("YYYY-MM-DDThh:mm"));
-    setEnd(dayjs().format("YYYY-MM-DDThh:mm"));
+    setStart(dayjs().format("YYYY-MM-DDTHH:mm"));
+    setEnd(dayjs().format("YYYY-MM-DDTHH:mm"));
     setDistance(0);
     setLocation("");
     setCircular("false");

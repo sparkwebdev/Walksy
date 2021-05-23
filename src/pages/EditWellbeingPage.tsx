@@ -40,7 +40,7 @@ const EditWellbeingPage: React.FC = () => {
   const [category, setCategory] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [createdAt, setCreatedAt] = useState<string>(
-    dayjs().format("YYYY-MM-DDThh:mm")
+    dayjs().format("YYYY-MM-DDTHH:mm")
   );
 
   const addEntry = async () => {
@@ -59,7 +59,7 @@ const EditWellbeingPage: React.FC = () => {
       setCategory(entryData?.category || "");
       if (entryData.createdAt) {
         const dateFormatted = dayjs(entryData.createdAt).format(
-          "YYYY-MM-DDThh:mm"
+          "YYYY-MM-DDTHH:mm"
         );
         setCreatedAt(dateFormatted);
       }
@@ -134,7 +134,7 @@ const EditWellbeingPage: React.FC = () => {
     setTitle("");
     setCategory("");
     setContent("");
-    setCreatedAt(dayjs().format("YYYY-MM-DDThh:mm"));
+    setCreatedAt(dayjs().format("YYYY-MM-DDTHH:mm"));
     setCurrentAction("View");
   };
 
