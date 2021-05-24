@@ -12,6 +12,8 @@ import {
 } from "@capacitor/core";
 import exifr from "exifr";
 import { Location, Photo } from "../data/models";
+import { IonToast } from "@ionic/react";
+import { getFileExtension } from "../helpers";
 
 const { Camera } = Plugins;
 
@@ -21,6 +23,10 @@ const ImagePicker: React.FC<{
   ref?: any;
 }> = forwardRef((props, ref) => {
   const [takenPhoto, setTakenPhoto] = useState<Photo>();
+  const [error, setError] = useState<{
+    showError: boolean;
+    message?: string;
+  }>({ showError: false });
 
   const filePickerRef = useRef<HTMLInputElement>(null);
 
@@ -40,6 +46,29 @@ const ImagePicker: React.FC<{
 
   const pickFileHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target!.files![0];
+    if (!file) {
+      return;
+    }
+    if (file.size > 1000000) {
+      setError({
+        showError: true,
+        message: "Please upload a file less than 1MB",
+      });
+      return;
+    }
+    const fileExtensionData = getFileExtension(file.name);
+    if (
+      !fileExtensionData ||
+      (fileExtensionData[1] !== "jpg" &&
+        fileExtensionData[1] !== "jpeg" &&
+        fileExtensionData[1] !== "png")
+    ) {
+      setError({
+        showError: true,
+        message: "Please upload a valid file type (.jpg or .png)",
+      });
+      return;
+    }
     const fr = new FileReader();
     fr.onload = () => {
       const photo: Photo = {
@@ -107,6 +136,13 @@ const ImagePicker: React.FC<{
         hidden
         ref={filePickerRef}
         onChange={pickFileHandler}
+      />
+      <IonToast
+        duration={3000}
+        position="middle"
+        isOpen={error.showError}
+        onDidDismiss={() => setError({ showError: false, message: undefined })}
+        message={error.message}
       />
     </div>
   );
