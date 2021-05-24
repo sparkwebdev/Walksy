@@ -146,7 +146,7 @@ export const storeMomentHandler = async (moment: Moment, walkId: string, userId:
   let momentToStore: Moment = {...moment};
   let storedFilePath: string = "";
   if (moment.imagePath !== "") {
-    await storeFilehandler(moment.imagePath).then((newUrl) => {
+    await storeFilehandler(moment.base64Data).then((newUrl) => {
       momentToStore = {
         ...moment,
         imagePath: newUrl
@@ -156,7 +156,7 @@ export const storeMomentHandler = async (moment: Moment, walkId: string, userId:
       console.log('error storing file', e);
     });
   } else if (moment.audioPath !== "") {
-    await storeFilehandler(moment.audioPath).then((newUrl) => {
+    await storeFilehandler(moment.base64Data).then((newUrl) => {
       momentToStore = {
         ...moment,
         audioPath: newUrl

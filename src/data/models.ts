@@ -17,6 +17,7 @@ export interface Moment {
   walkId: string;
   imagePath: string;
   audioPath: string;
+  base64Data: string;
   note: string;
   location: Location | null;
   timestamp: string;

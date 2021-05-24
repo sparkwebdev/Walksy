@@ -17,7 +17,7 @@ const WalksContextProvider: React.FC = (props) => {
     []
   );
 
-  useEffect(() => {
+  const initContext = () => {
     Storage.get({ key: "walk" })
       .then((data) => {
         const walkData = data.value ? JSON.parse(data.value) : null;
@@ -31,11 +31,38 @@ const WalksContextProvider: React.FC = (props) => {
         setWalk(defaultWalk);
         console.log("No walk data", e);
       });
+
     Storage.get({ key: "moments" })
       .then((data) => {
-        const momentsData = data.value ? JSON.parse(data.value) : null;
-        if (momentsData) {
-          setMoments(momentsData);
+        if (data) {
+          const momentsData = data.value ? JSON.parse(data.value) : null;
+          if (momentsData) {
+            const readableMoments: Moment[] = [];
+            for (const moment of momentsData) {
+              if (moment.imagePath || moment.audioPath) {
+                Filesystem.readFile({
+                  path: `moments/${moment.imagePath || moment.audioPath}`,
+                  directory: FilesystemDirectory.Data,
+                }).then((file) => {
+                  readableMoments.push({
+                    id: moment.id,
+                    walkId: moment.walkId,
+                    imagePath: moment.imagePath,
+                    audioPath: moment.audioPath,
+                    base64Data: `data:image/${
+                      moment.imagePath ? "jpeg" : "aac"
+                    };base64,${file.data}`,
+                    note: moment.note,
+                    location: moment.location,
+                    timestamp: moment.timestamp,
+                  });
+                });
+              } else {
+                readableMoments.push(moment);
+              }
+            }
+            setMoments(readableMoments);
+          }
         } else {
           setMoments([]);
         }
@@ -44,6 +71,10 @@ const WalksContextProvider: React.FC = (props) => {
         setMoments([]);
         console.log("No moments data", e);
       });
+  };
+
+  useEffect(() => {
+    initContext();
   }, []);
 
   useEffect(() => {
@@ -51,7 +82,18 @@ const WalksContextProvider: React.FC = (props) => {
   }, [walk]);
 
   useEffect(() => {
-    Storage.set({ key: "moments", value: JSON.stringify(moments) });
+    const storableMoments = moments?.map((moment) => {
+      return {
+        id: moment.id,
+        walkId: moment.walkId,
+        imagePath: moment.imagePath,
+        audioPath: moment.audioPath,
+        note: moment.note,
+        location: moment.location,
+        timestamp: moment.timestamp,
+      };
+    });
+    Storage.set({ key: "moments", value: JSON.stringify(storableMoments) });
   }, [moments]);
 
   useEffect(() => {
@@ -75,6 +117,7 @@ const WalksContextProvider: React.FC = (props) => {
     walkId: string,
     imagePath: string,
     audioPath: string,
+    base64Data: string,
     note: string,
     location: Location | null,
     timestamp: string
@@ -84,6 +127,7 @@ const WalksContextProvider: React.FC = (props) => {
       walkId,
       imagePath,
       audioPath,
+      base64Data,
       note,
       location,
       timestamp,
@@ -124,8 +168,8 @@ const WalksContextProvider: React.FC = (props) => {
       return;
     }
     if (storedWalkId !== "" && userId) {
-      moments.forEach((moment) => {
-        storeMomentHandler(moment, storedWalkId, userId)
+      for (const moment of moments) {
+        await storeMomentHandler(moment, storedWalkId, userId)
           .then((newImagePath) => {
             if (newImagePath) {
               addStoredImagesForCover(newImagePath);
@@ -135,7 +179,7 @@ const WalksContextProvider: React.FC = (props) => {
           .catch((e) => {
             console.log("Problem storing moment", e);
           });
-      });
+      }
     }
   };
 

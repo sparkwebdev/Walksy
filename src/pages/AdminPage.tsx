@@ -92,6 +92,7 @@ const AdminPage: React.FC = () => {
             results![i].type === "image" ? results![i].filePath : "",
             results![i].type === "audio" ? results![i].filePath : "",
             "",
+            "",
             {
               lat: results![i].latitude || 0,
               lng: results![i].longitude || 0,
@@ -212,7 +213,7 @@ const AdminPage: React.FC = () => {
   };
 
   const addMomentHandler = () => {
-    walksCtx.addMoment("", "", "", "", null, "");
+    walksCtx.addMoment("", "", "", "", "", null, "");
   };
 
   const deleteMomentHandler = (momentId: string) => {

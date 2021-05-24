@@ -101,13 +101,6 @@ const NewWalkMoments: React.FC<{
       directory: FilesystemDirectory.Data,
     })
       .then(() => {
-        // setTakenPhoto((curPhoto) => {
-        //   return {
-        //     ...curPhoto!,
-        //     path: fileName,
-        //   };
-        // });
-        // addMomentHandler();
         setTakenPhoto({
           path: fileName,
           preview: takenPhoto.preview,
@@ -156,40 +149,29 @@ const NewWalkMoments: React.FC<{
       ) {
         return;
       }
-      let loadedPhotoPath = "";
-      let loadedAudioPath = "";
-      if (takenPhoto?.path) {
-        const enteredImagePath = takenPhoto?.path || "";
-        await Filesystem.readFile({
-          path: `moments/${enteredImagePath}`,
-          directory: FilesystemDirectory.Data,
-        })
-          .then((file) => {
-            loadedPhotoPath = `data:image/jpeg;base64,${file.data}`;
-          })
-          .catch((e) => {
-            console.log("Couldn't load file", loadedPhotoPath);
-            resetMomentType();
-          });
+
+      let base64Data = "";
+      if (takenPhoto?.preview) {
+        base64Data = await base64FromPath(takenPhoto.preview);
       } else if (recordedAudioFilename) {
-        const enteredAudioPath = recordedAudioFilename || "";
         await Filesystem.readFile({
-          path: `moments/${enteredAudioPath}`,
+          path: `moments/${recordedAudioFilename}`,
           directory: FilesystemDirectory.Data,
         })
           .then((file) => {
-            loadedAudioPath = `data:audio/aac;base64,${file.data}`;
+            base64Data = `data:audio/aac;base64,${file.data}`;
           })
           .catch((e) => {
-            console.log("Couldn't load file", loadedAudioPath);
+            console.log("Couldn't load file", recordedAudioFilename);
             resetMomentType();
           });
       }
 
       walksCtx.addMoment(
         walkId,
-        loadedPhotoPath,
-        loadedAudioPath,
+        takenPhoto?.path || "",
+        recordedAudioFilename || "",
+        base64Data,
         enteredNote!.toString(),
         location,
         timestamp
@@ -317,9 +299,9 @@ const NewWalkMoments: React.FC<{
                     </small>
                   </p>
                   {/* <IonItem>
-                      <IonLabel position="floating">Moment Note</IonLabel>
-                      <IonInput type="text" ref={noteRef}></IonInput>
-                    </IonItem> */}
+                    <IonLabel position="floating">Moment Note</IonLabel>
+                    <IonInput type="text" ref={noteRef}></IonInput>
+                  </IonItem> */}
                   {locationInput}
                 </IonCard>
               )}
