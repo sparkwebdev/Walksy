@@ -151,6 +151,16 @@ const AudioPicker: React.FC<{
   const pickFileHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target!.files![0];
     let targetFileType = "mp3";
+    if (!file) {
+      return;
+    }
+    if (file.size > 1000000) {
+      setError({
+        showError: true,
+        message: "Please upload a file less than 1MB",
+      });
+      return;
+    }
     const fileExtensionData = getFileExtension(file.name);
     if (
       !fileExtensionData ||
@@ -234,7 +244,13 @@ const AudioPicker: React.FC<{
                     </IonText>
                     <IonButton
                       className="ion-margin-top"
-                      onClick={openFilePicker}
+                      onClick={() => {
+                        setError({
+                          showError: false,
+                          message: "",
+                        });
+                        openFilePicker();
+                      }}
                     >
                       Upload a file
                     </IonButton>
@@ -253,7 +269,7 @@ const AudioPicker: React.FC<{
       </div>
       <IonToast
         duration={3000}
-        position="bottom"
+        position="middle"
         isOpen={error.showError}
         onDidDismiss={() => setError({ showError: false, message: undefined })}
         message={error.message}
