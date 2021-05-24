@@ -150,7 +150,6 @@ const AudioPicker: React.FC<{
 
   const pickFileHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target!.files![0];
-    let targetFileType = "mp3";
     if (!file) {
       return;
     }
@@ -161,14 +160,12 @@ const AudioPicker: React.FC<{
       });
       return;
     }
+    let targetFileType = "aac";
     const fileExtensionData = getFileExtension(file.name);
-    if (
-      !fileExtensionData ||
-      (fileExtensionData[1] !== "mp3" && fileExtensionData[1] !== "aac")
-    ) {
+    if (!fileExtensionData || fileExtensionData[1] !== "aac") {
       setError({
         showError: true,
-        message: "Please upload a valid file type (.mp3 or .aac)",
+        message: "Please upload a valid file type (.aac)",
       });
       return;
     } else {
