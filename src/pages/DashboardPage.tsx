@@ -189,7 +189,7 @@ const DashboardPage: React.FC = () => {
               </div>
             </>
           )}
-          {likedWalks && (
+          {likedWalks && likedWalks.length > 0 && (
             <h2 className="text-heading ion-padding-start ion-padding-end ion-margin-top">
               <IonText color="primary">
                 <strong>Your Liked Walks...</strong>
@@ -197,6 +197,7 @@ const DashboardPage: React.FC = () => {
             </h2>
           )}
           {likedWalks &&
+            likedWalks.length > 0 &&
             likedWalks.map((walk) => (
               <IonRouterLink key={walk.id} routerLink={`/app/walk/${walk.id}`}>
                 <WalkItemPreview
