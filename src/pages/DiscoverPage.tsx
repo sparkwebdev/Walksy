@@ -22,16 +22,19 @@ const DiscoverPage: React.FC = () => {
 
   useEffect(() => {
     const walksRef = firestore.collection("users-walks");
-    return walksRef.where("type", "==", "curated").onSnapshot(({ docs }) => {
-      setCuratedWalksCount(docs.length);
-    });
+    return walksRef
+      .where("type", "==", "curated")
+      .limit(25)
+      .onSnapshot(({ docs }) => {
+        setCuratedWalksCount(docs.length);
+      });
   }, []);
 
   useEffect(() => {
     const walksRef = firestore.collection("users-walks");
     return walksRef
       .where("type", "==", "featured")
-      .orderBy("start")
+      .limit(25)
       .onSnapshot(({ docs }) => {
         setFeaturedWalksCount(docs.length);
       });
@@ -42,7 +45,6 @@ const DiscoverPage: React.FC = () => {
     return walksRef
       .where("type", "==", "user")
       .limit(25)
-      .orderBy("start")
       .onSnapshot(({ docs }) => {
         setLatestWalksCount(docs.length);
       });

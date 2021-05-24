@@ -31,27 +31,35 @@ const DiscoverEntryPage: React.FC = () => {
       case "latest":
         walksRef
           .where("type", "==", "user")
+          .orderBy("start", "desc")
           .limit(25)
-          .orderBy("start")
           .onSnapshot(({ docs }) => {
             setWalks(docs.map(toWalk));
           });
         break;
       case "curated":
-        walksRef.where("type", "==", "curated").onSnapshot(({ docs }) => {
-          setWalks(docs.map(toWalk));
-        });
+        walksRef
+          .where("type", "==", "curated")
+          .orderBy("start", "desc")
+          .limit(25)
+          .onSnapshot(({ docs }) => {
+            setWalks(docs.map(toWalk));
+          });
         break;
       case "featured":
-        walksRef.where("type", "==", "featured").onSnapshot(({ docs }) => {
-          setWalks(docs.map(toWalk));
-        });
+        walksRef
+          .where("type", "==", "featured")
+          .orderBy("start", "desc")
+          .limit(25)
+          .onSnapshot(({ docs }) => {
+            setWalks(docs.map(toWalk));
+          });
         break;
       default:
         if (id.startsWith("tag-")) {
           return walksRef
             .where("description", "array-contains", id.replace("tag-", ""))
-            .orderBy("start")
+            .orderBy("start", "desc")
             .limit(25)
             .onSnapshot(({ docs }) => {
               setWalks(docs.map(toWalk));
