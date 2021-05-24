@@ -49,8 +49,8 @@ const WalksContextProvider: React.FC = (props) => {
                     walkId: moment.walkId,
                     imagePath: moment.imagePath,
                     audioPath: moment.audioPath,
-                    base64Data: `data:image/${
-                      moment.imagePath ? "jpeg" : "aac"
+                    base64Data: `data:${
+                      moment.imagePath ? "image/jpeg" : "audio/aac"
                     };base64,${file.data}`,
                     note: moment.note,
                     location: moment.location,
