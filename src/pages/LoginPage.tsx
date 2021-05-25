@@ -85,6 +85,7 @@ const LoginPage: React.FC = () => {
                     <IonInput
                       type="email"
                       ref={emailInputRef}
+                      autocomplete="email"
                       onIonFocus={() =>
                         setStatus({ ...status, error: false, errorMessage: "" })
                       }
