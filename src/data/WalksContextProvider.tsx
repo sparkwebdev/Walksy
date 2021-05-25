@@ -62,6 +62,8 @@ const WalksContextProvider: React.FC = (props) => {
               }
             }
             setMoments(readableMoments);
+          } else {
+            setMoments([]);
           }
         } else {
           setMoments([]);
