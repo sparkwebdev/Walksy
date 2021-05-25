@@ -4,7 +4,6 @@
   "private": true,
   "dependencies": {
     "@capacitor/core": "2.4.6",
-    "@capacitor/ios": "^2.4.6",
     "@ionic-native/core": "^5.31.1",
     "@ionic-native/geolocation": "^5.31.1",
     "@ionic-native/local-notifications": "^5.32.1",

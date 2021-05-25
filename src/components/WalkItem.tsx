@@ -54,7 +54,6 @@ const WalkItem: React.FC<{
   const [currentUserHasLiked, setCurrentUserHasLiked] = useState<boolean>();
   const [storingLikeChoice, setStoringLikeChoice] = useState<boolean>(false);
   const [likers, setLikers] = useState<string[]>();
-  const [doesLike, setDoesLike] = useState<boolean>();
 
   const likeHandler = () => {
     if (userId) {
