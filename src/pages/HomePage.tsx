@@ -117,6 +117,7 @@ const HomePage: React.FC = () => {
                     steps={walk.steps}
                     distance={walk.distance}
                     coverImage={walk.coverImage}
+                    type={walk.type}
                     userId={walk.userId}
                     isCircular={walk.circular}
                     location={walk?.location}
@@ -165,6 +166,7 @@ const HomePage: React.FC = () => {
                     steps={walk.steps}
                     distance={walk.distance}
                     coverImage={walk.coverImage}
+                    type={walk.type}
                     overview={walk.overview}
                     userId={walk.userId}
                     isCircular={walk.circular}
@@ -206,6 +208,7 @@ const HomePage: React.FC = () => {
                       steps={walk.steps}
                       distance={walk.distance}
                       coverImage={walk.coverImage}
+                      type={walk.type}
                       userId={walk.userId}
                       isCircular={walk.circular}
                       location={walk?.location}
