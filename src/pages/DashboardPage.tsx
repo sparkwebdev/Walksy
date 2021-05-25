@@ -38,6 +38,7 @@ const DashboardPage: React.FC = () => {
     firestore
       .collection("users-walks")
       .where("userId", "==", userId)
+      .orderBy("start", "desc")
       .onSnapshot((result) => {
         setTotalWalks(result.size);
         const totalSteps = result.docs
