@@ -27,7 +27,7 @@ import NewWalk from "./pages/NewWalk";
 const AppTabs: React.FC = () => {
   const { loggedIn, userEmail } = useAuth();
 
-  if (userEmail !== appData.adminEmail) {
+  if (!userEmail || !appData.adminEmails.includes(userEmail)) {
     auth.signOut();
   }
 

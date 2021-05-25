@@ -18,5 +18,5 @@ export const appData =
       "rural",
       // "citycentre",
     ],
-    adminEmail: "admin@walksy.uk"
+    adminEmails: ["admin@walksy.uk", "stevenrobertpark@gmail.com", "rosy@artwalkporty.co.uk", "alison@artwalkporty.co.uk"]
   }
