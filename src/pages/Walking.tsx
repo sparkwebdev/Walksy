@@ -180,11 +180,10 @@ const Walking: React.FC = () => {
     setMomentType(type);
   };
 
-  const saveShareWalkHandler = async (share: boolean) => {
+  const saveWalkHandler = async () => {
     walksCtx.reset();
     history.push({
-      pathname: `/app/walk/${walksCtx.storedWalkId}`,
-      state: { share: share },
+      pathname: `/app/edit-walks`,
     });
   };
 
@@ -265,9 +264,7 @@ const Walking: React.FC = () => {
                   end={end}
                 />
               </div>
-              <NewWalkPost
-                saveShareWalk={(share: boolean) => saveShareWalkHandler(share)}
-              />
+              <NewWalkPost saveWalk={saveWalkHandler} />
             </>
           )}
         </div>

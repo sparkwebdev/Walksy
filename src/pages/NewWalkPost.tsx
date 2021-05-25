@@ -15,10 +15,7 @@ import {
   IonToggle,
 } from "@ionic/react";
 import React, { useContext, useEffect, useState } from "react";
-import {
-  checkmark as finishIcon,
-  shareOutline as shareIcon,
-} from "ionicons/icons";
+import { checkmark as finishIcon } from "ionicons/icons";
 import { appData } from "../data/appData";
 import WalksContext from "../data/walks-context";
 import { updateWalkHandler } from "../firebase";
@@ -28,7 +25,7 @@ const locationMaxLength = 28;
 const descriptorsMaxCount = 3;
 
 const NewWalkPost: React.FC<{
-  saveShareWalk: (share: boolean) => void;
+  saveWalk: () => void;
 }> = (props) => {
   const [description, setDescription] = useState<string[]>([]);
   const [chosenLocation, setChosenLocation] = useState<boolean>(false);
@@ -319,18 +316,9 @@ const NewWalkPost: React.FC<{
             <IonRow>
               <IonCol>
                 <IonButton
-                  color="primary"
-                  onClick={() => {
-                    props.saveShareWalk(true);
-                  }}
-                >
-                  <IonIcon slot="start" icon={shareIcon} />
-                  Share
-                </IonButton>
-                <IonButton
                   color="secondary"
                   onClick={() => {
-                    props.saveShareWalk(false);
+                    props.saveWalk();
                   }}
                 >
                   <IonIcon slot="start" icon={finishIcon} />
