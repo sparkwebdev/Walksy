@@ -27,7 +27,7 @@ const HomePage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [latestWalk, setLatestWalk] = useState<Walk[]>([]);
   const [curatedWalks, setCuratedWalks] = useState<Walk[]>([]);
-  const [featuredWalk, setFeaturedWalk] = useState<Walk[]>([]);
+  const [featuredWalks, setFeaturedWalks] = useState<Walk[]>([]);
   const [latestUserWalks, setLatestUserWalks] = useState<Walk[]>([]);
   const [latestUserWalksWithCoverImage, setLatestUserWalksWithCoverImage] =
     useState<Walk[]>([]);
@@ -60,10 +60,10 @@ const HomePage: React.FC = () => {
     firestore
       .collection("users-walks")
       .where("type", "==", "featured")
-      .limit(1)
+      .limit(2)
       .orderBy("start", "desc")
       .onSnapshot(({ docs }) => {
-        setFeaturedWalk(docs.map(toWalk));
+        setFeaturedWalks(docs.map(toWalk));
         setLoading(false);
       });
 
@@ -117,6 +117,7 @@ const HomePage: React.FC = () => {
                     steps={walk.steps}
                     distance={walk.distance}
                     coverImage={walk.coverImage}
+                    type={walk.type}
                     userId={walk.userId}
                     isCircular={walk.circular}
                     location={walk?.location}
@@ -165,6 +166,7 @@ const HomePage: React.FC = () => {
                     steps={walk.steps}
                     distance={walk.distance}
                     coverImage={walk.coverImage}
+                    type={walk.type}
                     overview={walk.overview}
                     userId={walk.userId}
                     isCircular={walk.circular}
@@ -175,23 +177,23 @@ const HomePage: React.FC = () => {
               ))}
               <IonButton
                 className="ion-margin-top ion-margin-bottom ion-margin-start"
-                routerLink="/app/discover"
+                routerLink="/app/discover/curated"
               >
                 <IonIcon icon={discoverIcon} slot="start" />
-                Discover Walks
+                View Curated Walks
               </IonButton>
             </>
           )}
-          {!loading && latestUserWalks.length > 0 && (
+          {!loading && featuredWalks.length > 0 && (
             <>
               <hr className="separator" />
               <div className="ion-margin-bottom ion-padding-bottom">
                 <h2 className="text-heading ion-padding-start ion-padding-end">
                   <IonText color="primary">
-                    <strong>Latest User Walks...</strong>
+                    <strong>Featured User Walks...</strong>
                   </IonText>
                 </h2>
-                {featuredWalk.map((walk) => (
+                {featuredWalks.map((walk) => (
                   <IonRouterLink
                     key={walk.id}
                     routerLink={`/app/walk/${walk.id}`}
@@ -206,6 +208,7 @@ const HomePage: React.FC = () => {
                       steps={walk.steps}
                       distance={walk.distance}
                       coverImage={walk.coverImage}
+                      type={walk.type}
                       userId={walk.userId}
                       isCircular={walk.circular}
                       location={walk?.location}
@@ -213,8 +216,27 @@ const HomePage: React.FC = () => {
                     />
                   </IonRouterLink>
                 ))}
+                <IonButton
+                  className="ion-margin-top ion-margin-start"
+                  routerLink="/app/discover/featured"
+                >
+                  <IonIcon icon={personIcon} slot="start" />
+                  View Featured Walks
+                </IonButton>
+              </div>
+            </>
+          )}
+          {!loading && latestUserWalks.length > 0 && (
+            <>
+              <hr className="separator" />
+              <div className="ion-margin-bottom ion-padding-bottom">
+                <h2 className="text-heading ion-padding-start ion-padding-end">
+                  <IonText color="primary">
+                    <strong>Latest User Walks...</strong>
+                  </IonText>
+                </h2>
                 <IonList lines="none">
-                  {latestUserWalks.slice(0, 2).map((walk) => (
+                  {latestUserWalks.slice(0, 3).map((walk) => (
                     <IonRouterLink
                       key={walk.id}
                       routerLink={`/app/walk/${walk.id}`}

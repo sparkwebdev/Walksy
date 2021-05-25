@@ -39,6 +39,8 @@ const Progress: React.FC<ContainerProps> = ({
   });
   const [steps, setSteps] = useState<number>(0);
   const [distance, setDistance] = useState<number>(0);
+  const [canCountSteps, setCanCountSteps] = useState<boolean>(false);
+  const [canCountDistance, setCanCountDistance] = useState<boolean>(false);
 
   useEffect(() => {
     let ticker: any = null;
@@ -49,6 +51,21 @@ const Progress: React.FC<ContainerProps> = ({
       setTime(minAndSec);
       seconds++;
     }, 1000);
+    Pedometer.isStepCountingAvailable()
+      .then(() => {
+        setCanCountSteps(true);
+      })
+      .catch((e) => {
+        console.log("Step counting not available", e);
+      });
+    Pedometer.isDistanceAvailable()
+      .then(() => {
+        setCanCountDistance(true);
+      })
+      .catch((e) => {
+        console.log("Distance not available", e);
+      });
+
     Pedometer.startPedometerUpdates().subscribe((data) => {
       setSteps(data.numberOfSteps);
       setDistance(data.distance / 1000); // metres to km
@@ -107,7 +124,11 @@ const Progress: React.FC<ContainerProps> = ({
                   fontSize: "1.4em",
                 }}
               />
-              {(savedDistance + distance).toFixed(1)}
+              {canCountDistance && distance > 0 ? (
+                <>{(savedDistance + distance).toFixed(1)}</>
+              ) : (
+                <span>--</span>
+              )}
               <small style={{ fontSize: "2px" }}>&nbsp;</small>
               <span className="smallprint">{getUnitDistance()}</span>
               <IonIcon
@@ -118,7 +139,11 @@ const Progress: React.FC<ContainerProps> = ({
                   fontSize: "1.4em",
                 }}
               />
-              {numberWithCommas(savedSteps + steps)}
+              {canCountSteps && steps > 0 ? (
+                <>{numberWithCommas(savedSteps + steps)}</>
+              ) : (
+                <span>--</span>
+              )}
               <small style={{ fontSize: "2px" }}>&nbsp;</small>
               <span className="smallprint">steps</span>
             </IonText>

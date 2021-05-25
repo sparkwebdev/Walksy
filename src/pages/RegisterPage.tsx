@@ -181,6 +181,7 @@ const RegisterPage: React.FC = () => {
                         type="text"
                         value={firstName}
                         autocapitalize="on"
+                        autocomplete="name"
                         onIonChange={(event) =>
                           setFirstName(event.detail!.value!)
                         }
@@ -200,6 +201,7 @@ const RegisterPage: React.FC = () => {
                       <IonInput
                         type="text"
                         autocapitalize="on"
+                        autocomplete="family-name"
                         value={lastName}
                         onIonChange={(event) =>
                           setLastName(event.detail!.value!)
@@ -219,6 +221,7 @@ const RegisterPage: React.FC = () => {
                       </IonLabel>
                       <IonInput
                         type="email"
+                        autocomplete="email"
                         value={email}
                         onIonChange={(event) => setEmail(event.detail!.value!)}
                         onIonFocus={() =>

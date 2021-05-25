@@ -126,6 +126,7 @@ const CompleteProfile: React.FC<{
             <IonInput
               type="text"
               value={displayName}
+              autocomplete="off"
               onIonChange={(event) => setDisplayName(event.detail!.value!)}
               onIonFocus={() =>
                 setStatus({ ...status, error: false, errorMessage: "" })
@@ -159,6 +160,7 @@ const CompleteProfile: React.FC<{
             <IonInput
               type="text"
               autocapitalize="on"
+              autocomplete="off"
               value={location}
               onIonChange={(event) => setLocation(event.detail!.value!)}
               onIonFocus={() =>

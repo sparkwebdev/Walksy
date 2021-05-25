@@ -38,6 +38,7 @@ const DashboardPage: React.FC = () => {
     firestore
       .collection("users-walks")
       .where("userId", "==", userId)
+      .orderBy("start", "desc")
       .onSnapshot((result) => {
         setTotalWalks(result.size);
         const totalSteps = result.docs
@@ -58,39 +59,39 @@ const DashboardPage: React.FC = () => {
         setLoading(false);
       });
 
-    var docRef = firestore
-      .collection("users-likes")
-      .where("users", "array-contains", userId);
-    docRef
-      .get()
-      .then((query) => {
-        const likedWalkIds = query.docs.map((result) => {
-          return result.id;
-        });
-        setLikedWalkIds(likedWalkIds);
-      })
-      .catch((error) => {
-        console.log("Error getting document:", error);
-      });
+    // var docRef = firestore
+    //   .collection("users-likes")
+    //   .where("users", "array-contains", userId);
+    // docRef
+    //   .get()
+    //   .then((query) => {
+    //     const likedWalkIds = query.docs.map((result) => {
+    //       return result.id;
+    //     });
+    //     setLikedWalkIds(likedWalkIds);
+    //   })
+    //   .catch((error) => {
+    //     console.log("Error getting document:", error);
+    //   });
   }, [userId]);
 
-  useEffect(() => {
-    likedWalkIds?.forEach((id) => {
-      var walkRef = firestore.collection("users-walks").doc(id);
-      walkRef
-        .get()
-        .then((doc) => {
-          if (doc.exists) {
-            setLikedWalks((curLikedWalks) => {
-              return curLikedWalks?.concat(toWalk(doc));
-            });
-          }
-        })
-        .catch((error) => {
-          console.log("Error getting document:", error);
-        });
-    });
-  }, [likedWalkIds]);
+  // useEffect(() => {
+  //   likedWalkIds?.forEach((id) => {
+  //     var walkRef = firestore.collection("users-walks").doc(id);
+  //     walkRef
+  //       .get()
+  //       .then((doc) => {
+  //         if (doc.exists) {
+  //           setLikedWalks((curLikedWalks) => {
+  //             return curLikedWalks?.concat(toWalk(doc));
+  //           });
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.log("Error getting document:", error);
+  //       });
+  //   });
+  // }, [likedWalkIds]);
 
   return (
     <IonPage>
@@ -189,7 +190,7 @@ const DashboardPage: React.FC = () => {
               </div>
             </>
           )}
-          {likedWalks && (
+          {/* {likedWalks && likedWalks.length > 0 && (
             <h2 className="text-heading ion-padding-start ion-padding-end ion-margin-top">
               <IonText color="primary">
                 <strong>Your Liked Walks...</strong>
@@ -197,6 +198,7 @@ const DashboardPage: React.FC = () => {
             </h2>
           )}
           {likedWalks &&
+            likedWalks.length > 0 &&
             likedWalks.map((walk) => (
               <IonRouterLink key={walk.id} routerLink={`/app/walk/${walk.id}`}>
                 <WalkItemPreview
@@ -215,7 +217,7 @@ const DashboardPage: React.FC = () => {
                   isMiniPreview={true}
                 />
               </IonRouterLink>
-            ))}
+            ))} */}
         </div>
       </IonContent>
       <IonLoading isOpen={loading} message={"Please wait..."} />
