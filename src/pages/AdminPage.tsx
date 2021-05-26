@@ -779,7 +779,7 @@ const AdminPage: React.FC = () => {
       </IonModal>
       <IonToast
         duration={5000}
-        position="top"
+        position="middle"
         isOpen={notice.showNotice}
         onDidDismiss={() =>
           setNotice({ showNotice: false, message: undefined })

@@ -307,8 +307,8 @@ const EditNewsPage: React.FC = () => {
       </IonContent>
       <IonLoading isOpen={loading} />
       <IonToast
-        duration={2000}
-        position="top"
+        duration={3000}
+        position="middle"
         isOpen={notice.showNotice}
         onDidDismiss={() =>
           setNotice({ showNotice: false, message: undefined })
