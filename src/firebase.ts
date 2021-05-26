@@ -171,10 +171,10 @@ export const storeMomentHandler = async (moment: Moment, walkId: string, userId:
   const data = {
     ...momentToStore
   }
-  let {id, ...dataMinusId} = data;
+  let {id, base64Data, ...dataMinusIdAndBase64Data} = data;
   await momentsRef
     .add({
-      ...dataMinusId,
+      ...dataMinusIdAndBase64Data,
       walkId,
       userId,
     }).then((result) => {
