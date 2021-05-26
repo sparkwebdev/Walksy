@@ -5,28 +5,19 @@ import {
   getTimeDiff,
   numberWithCommas,
 } from "../helpers";
-import {
-  IonButton,
-  IonCol,
-  IonGrid,
-  IonIcon,
-  IonRow,
-  IonText,
-} from "@ionic/react";
+import { IonCol, IonGrid, IonIcon, IonRow, IonText } from "@ionic/react";
 
 import { getUnitDistance } from "../helpers";
 
 import { Moment, toMoment, Location } from "../data/models";
 
-import { firestore, getRemoteUserData, storeLikeHandler } from "../firebase";
+import { firestore, getRemoteUserData } from "../firebase";
 import MomentsList from "./MomentsList";
 import { useAuth } from "../auth";
 import {
   timerOutline as timeIcon,
   arrowUpCircleOutline as distanceIcon,
   footstepsOutline as walkIcon,
-  heartOutline as likeIcon,
-  heart as likedIcon,
 } from "ionicons/icons";
 
 const WalkItem: React.FC<{
@@ -52,23 +43,6 @@ const WalkItem: React.FC<{
     props.end && props.start ? getTimeDiff(props.start, props.end) : 0;
   const time = getMinAndSec(timeDiff);
   const [moments, setMoments] = useState<Moment[]>([]);
-  const [currentUserHasLiked, setCurrentUserHasLiked] = useState<boolean>();
-  const [storingLikeChoice, setStoringLikeChoice] = useState<boolean>(false);
-  const [likers, setLikers] = useState<string[]>();
-
-  const likeHandler = () => {
-    if (userId) {
-      setStoringLikeChoice(true);
-      setCurrentUserHasLiked(!currentUserHasLiked);
-      storeLikeHandler(!currentUserHasLiked, props.id, userId)
-        .then(() => {
-          setStoringLikeChoice(false);
-        })
-        .catch(() => {
-          setStoringLikeChoice(false);
-        });
-    }
-  };
 
   useEffect(() => {
     if (props.userId) {
@@ -80,12 +54,6 @@ const WalkItem: React.FC<{
           console.log("Couldn't get remote user data", e);
         });
     }
-    firestore
-      .collection("users-likes")
-      .doc(props.id)
-      .onSnapshot((doc) => {
-        setLikers(doc.data()?.users);
-      });
     const momentsRef = firestore
       .collection("users-moments")
       .where("walkId", "==", props.id);
@@ -114,41 +82,6 @@ const WalkItem: React.FC<{
                   <strong>{props.title}</strong>
                 </h2>
               </IonText>
-            </IonCol>
-            <IonCol size="2" className="ion-text-end">
-              <div className="like-button">
-                <IonButton
-                  fill="clear"
-                  className="ion-text-lowercase like-button__btn"
-                  onClick={likeHandler}
-                  disabled={storingLikeChoice}
-                >
-                  <div className="like-button__inner">
-                    {likers?.includes(userId!) && (
-                      <IonIcon
-                        icon={likedIcon}
-                        size="large"
-                        color="tertiary"
-                        className="like-button__icon"
-                      />
-                    )}
-                    {!likers?.includes(userId!) && (
-                      <IonIcon
-                        icon={likeIcon}
-                        size="large"
-                        color="tertiary"
-                        className="like-button__icon"
-                      />
-                    )}
-                    {likers && (
-                      <IonText className="like-button__count" color="dark">
-                        {likers?.length} like
-                        {likers?.length !== 1 && <span>s</span>}
-                      </IonText>
-                    )}
-                  </div>
-                </IonButton>
-              </div>
             </IonCol>
           </IonRow>
           <IonRow>
