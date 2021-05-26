@@ -373,6 +373,7 @@ const WalkEditItem: React.FC<{
               moments={moments}
               locations={props.locations ? props.locations : []}
               colour={props.colour}
+              coverImage={coverImage || ""}
             />
           </>
         ) : (

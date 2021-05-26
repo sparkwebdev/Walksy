@@ -6,51 +6,51 @@ import {
   IonGrid,
   IonIcon,
   IonImg,
+  IonLoading,
   IonModal,
   IonRow,
   IonText,
+  IonToast,
 } from "@ionic/react";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Moment, Location } from "../data/models";
 import {
   location as mapIcon,
   trash as deleteIcon,
-  checkmark as doneIcon,
-  settingsOutline as editIcon,
+  createOutline as editIcon,
+  addOutline as addIcon,
 } from "ionicons/icons";
 import MapWithMarkers from "./MapWithMarkers";
-import WalksContext from "../data/walks-context";
 import dayjs from "dayjs";
+import MomentEditModal from "./MomentEditModal";
+import { deleteStoredItem } from "../firebase";
 
 const MomentsEditList: React.FC<{
   moments: Moment[];
   locations?: Location[];
   colour?: string;
-  canDelete?: boolean;
-  showMap?: boolean;
-  isWalking?: boolean;
+  coverImage: string;
 }> = (props) => {
-  const walksCtx = useContext(WalksContext);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [notice, setNotice] = useState<{
+    showNotice: boolean;
+    noticeColour?: string;
+    message?: string;
+  }>({ showNotice: false });
   const [momentsWithLocations, setMomentsWithLocations] = useState<Moment[]>(
     []
   );
   const [showMap, setShowMap] = useState<boolean>(false);
   const [mapKey, setMapKey] = useState<number>(Math.random());
-  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const [deleteMomentAlert, setDeleteMomentAlert] = useState<boolean>(false);
-  const [momentItemIdToDelete, setMomentItemIdToDelete] = useState<string>("");
+  const [momentItemToDelete, setMomentItemToDelete] = useState<Moment>();
 
   const viewMapHandler = () => {
     setShowMap(true);
   };
 
-  const deleteMoment = () => {
-    walksCtx.deleteMoment(momentItemIdToDelete);
-  };
-
   useEffect(() => {
-    setIsEditing(false);
     const momentsLoc = props.moments?.filter(
       (moment) => moment.location !== null
     );
@@ -59,18 +59,50 @@ const MomentsEditList: React.FC<{
     }
   }, [props.moments]);
 
+  const deleteMoment = () => {
+    setLoading(true);
+    if (momentItemToDelete) {
+      deleteStoredItem(
+        "users-moments",
+        momentItemToDelete.id,
+        momentItemToDelete.imagePath || momentItemToDelete.audioPath
+      )
+        .then(() => {
+          setLoading(false);
+          setNotice({
+            showNotice: true,
+            noticeColour: "success",
+            message: "Moment deleted.",
+          });
+        })
+        .catch(() => {
+          setLoading(false);
+          setNotice({
+            showNotice: true,
+            noticeColour: "danger",
+            message: "Couldn't delete moment.",
+          });
+        });
+    }
+  };
+
+  const [editMomentModal, setEditMomentModal] = useState<boolean>(false);
+  const [momentItemToEdit, setMomentItemToEdit] = useState<Moment>();
+
+  const closeMomentModalHandler = (message: string = "") => {
+    setEditMomentModal(false);
+    setMomentItemToEdit(undefined);
+    if (message) {
+      setNotice({
+        showNotice: true,
+        noticeColour: "success",
+        message: message,
+      });
+    }
+  };
+
   return (
     <>
-      {!props.isWalking && momentsWithLocations && (
-        <MapWithMarkers
-          moments={momentsWithLocations}
-          locations={props.locations ? props.locations : []}
-          onDismiss={() => setShowMap(false)}
-          colour={props.colour}
-          key={mapKey}
-          isWalking={!!props.isWalking}
-        />
-      )}
       <IonGrid className="ion-no-padding ion-margin-top">
         <IonRow>
           <IonCol size="2">
@@ -94,45 +126,30 @@ const MomentsEditList: React.FC<{
               </span> */}
             </IonText>
           </IonCol>
-          {!!props.isWalking && (
-            <IonCol
-              size="10"
-              sizeSm="6"
-              offsetSm="4"
-              className="ion-text-right"
+          <IonCol size="10" sizeSm="6" offsetSm="4" className="ion-text-right">
+            <IonButton
+              onClick={viewMapHandler}
+              className="ion-padding-start ion-padding-end"
             >
-              <IonButton
-                onClick={viewMapHandler}
-                className="ion-padding-start ion-padding-end"
-              >
-                <IonIcon slot="start" icon={mapIcon} />
-                View on Map
-              </IonButton>
-              {props.canDelete && (
-                <IonButton
-                  className="moments-list__delete"
-                  color={isEditing ? "success" : "secondary"}
-                  // fill={isEditing ? "solid" : "clear"}
-                  onClick={() => setIsEditing(!isEditing)}
-                >
-                  {isEditing ? (
-                    <IonIcon icon={doneIcon} slot="icon-only" size="small" />
-                  ) : (
-                    <IonIcon icon={editIcon} slot="icon-only" size="small" />
-                  )}
-                </IonButton>
-              )}
-            </IonCol>
-          )}
+              <IonIcon slot="start" icon={mapIcon} />
+              View on Map
+            </IonButton>
+            <IonButton
+              className="moments-list__delete"
+              color="success"
+              onClick={() => {
+                setMomentItemToEdit(undefined);
+                setEditMomentModal(true);
+              }}
+            >
+              <IonIcon icon={addIcon} slot="icon-only" size="small" />
+            </IonButton>
+          </IonCol>
         </IonRow>
       </IonGrid>
       <ol
         reversed
-        className={
-          isEditing
-            ? "moments-list moments-list--editing constrain constrain--large"
-            : "moments-list constrain constrain--large"
-        }
+        className="moments-list moments-list--editing constrain constrain--large"
         style={{
           color: props.colour,
         }}
@@ -148,10 +165,7 @@ const MomentsEditList: React.FC<{
           >
             <IonGrid className="ion-no-padding">
               <IonRow className="ion-no-margin ion-align-items-center">
-                <IonCol
-                  size={isEditing ? "9" : "12"}
-                  sizeSm={isEditing ? "10" : "12"}
-                >
+                <IonCol size="9">
                   {moment.imagePath && (
                     <IonCard className="moments-list__image-container ion-no-margin">
                       <IonImg
@@ -173,7 +187,7 @@ const MomentsEditList: React.FC<{
                   {moment.note && (
                     <IonCard
                       className={
-                        moment.imagePath
+                        moment.imagePath || moment.audioPath
                           ? "moments-list__note moments-list__note--caption text-body ion-no-margin"
                           : "moments-list__note text-body ion-no-margin"
                       }
@@ -184,21 +198,36 @@ const MomentsEditList: React.FC<{
                     </IonCard>
                   )}
                 </IonCol>
-                {props.canDelete && isEditing && (
-                  <IonCol className="ion-text-end">
-                    <IonButton
-                      className="moments-list__delete"
-                      color="danger"
-                      onClick={() => {
-                        setMomentItemIdToDelete(moment.id);
+                <IonCol size="3" className="ion-align-self-center ion-text-end">
+                  <IonButton
+                    onClick={() => {
+                      setMomentItemToEdit(moment);
+                      setEditMomentModal(true);
+                    }}
+                  >
+                    <IonIcon icon={editIcon} slot="icon-only" size="small" />
+                    <span className="ion-hide">Edit Moment</span>
+                  </IonButton>
+                  <IonButton
+                    className="moments-list__delete"
+                    color="danger"
+                    onClick={() => {
+                      if (moment.imagePath === props.coverImage) {
+                        setNotice({
+                          showNotice: true,
+                          noticeColour: "danger",
+                          message:
+                            "Error: This is currently used for your cover image. Please amend before deleting.",
+                        });
+                      } else {
+                        setMomentItemToDelete(moment);
                         setDeleteMomentAlert(true);
-                      }}
-                      hidden={!isEditing}
-                    >
-                      <IonIcon icon={deleteIcon} slot="icon-only" />
-                    </IonButton>
-                  </IonCol>
-                )}
+                      }
+                    }}
+                  >
+                    <IonIcon icon={deleteIcon} slot="icon-only" />
+                  </IonButton>
+                </IonCol>
               </IonRow>
             </IonGrid>
           </li>
@@ -207,7 +236,7 @@ const MomentsEditList: React.FC<{
           isOpen={deleteMomentAlert}
           onDidDismiss={() => {
             setDeleteMomentAlert(false);
-            setMomentItemIdToDelete("");
+            setMomentItemToDelete(undefined);
           }}
           header={"Delete Moment"}
           subHeader={"Are you sure?"}
@@ -253,26 +282,42 @@ const MomentsEditList: React.FC<{
           </ol>
         </>
       )}
-      {!!props.isWalking && (
-        <IonModal
-          isOpen={showMap}
-          onDidDismiss={() => {
-            setShowMap(false);
-          }}
-          onWillPresent={() => {
-            setMapKey(Math.random());
-          }}
-        >
-          <MapWithMarkers
-            moments={momentsWithLocations}
-            locations={props.locations ? props.locations : []}
-            onDismiss={() => setShowMap(false)}
-            colour={props.colour}
-            key={mapKey}
-            isWalking={!!props.isWalking}
-          />
-        </IonModal>
-      )}
+      <IonModal
+        isOpen={showMap}
+        onDidDismiss={() => {
+          setShowMap(false);
+        }}
+        onWillPresent={() => {
+          setMapKey(Math.random());
+        }}
+      >
+        <MapWithMarkers
+          moments={momentsWithLocations}
+          locations={props.locations ? props.locations : []}
+          onDismiss={() => setShowMap(false)}
+          colour={props.colour}
+          key={mapKey}
+          isWalking={false}
+        />
+      </IonModal>
+      <MomentEditModal
+        moment={momentItemToEdit}
+        isOpen={editMomentModal}
+        closeMomentModal={(message: string) => {
+          closeMomentModalHandler(message);
+        }}
+      />
+      <IonLoading isOpen={loading} />
+      <IonToast
+        duration={3000}
+        position="middle"
+        isOpen={notice.showNotice}
+        onDidDismiss={() =>
+          setNotice({ showNotice: false, message: undefined })
+        }
+        message={notice.message}
+        color={notice.noticeColour}
+      />
     </>
   );
 };
