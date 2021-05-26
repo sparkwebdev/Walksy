@@ -17,10 +17,12 @@ import React, { useEffect, useState } from "react";
 import { Moment } from "../data/models";
 import dayjs from "dayjs";
 
-import { firestore } from "../firebase";
+import { firestore, storeMomentHandler } from "../firebase";
 
 const MomentEditModal: React.FC<{
   moment?: Moment;
+  userId?: string;
+  walkId?: string;
   isOpen: boolean;
   closeMomentModal: (message: string) => void;
 }> = (props) => {
@@ -35,6 +37,7 @@ const MomentEditModal: React.FC<{
 
   const [imagePath, setImagePath] = useState<string>();
   const [audioPath, setAudioPath] = useState<string>();
+  const [base64Data, setBase64Data] = useState<string>();
   const [note, setNote] = useState<string>();
   const [latitude, setLatitude] = useState<string>();
   const [longitude, setLongitude] = useState<string>();
@@ -80,7 +83,33 @@ const MomentEditModal: React.FC<{
           });
         });
     } else {
-      // store new moment
+      if (props.walkId && props.userId) {
+        const data: Moment = {
+          id: "",
+          walkId: props.walkId,
+          imagePath: imagePath || "",
+          audioPath: audioPath || "",
+          base64Data: base64Data || "",
+          note: note || "",
+          location: {
+            lat: parseFloat(latitude + ""),
+            lng: parseFloat(longitude + ""),
+            timestamp: +dayjs(time).valueOf(),
+          },
+          timestamp: new Date(time + "").toISOString(),
+        };
+        storeMomentHandler(data, props.walkId, props.userId)
+          .then(() => {
+            props.closeMomentModal("Moment added.");
+          })
+          .catch(() => {
+            setNotice({
+              showNotice: true,
+              message: "Can't add moment.",
+              noticeColour: "error",
+            });
+          });
+      }
     }
     setLoading(false);
   };
@@ -223,7 +252,9 @@ const MomentEditModal: React.FC<{
                   (!imagePath && !audioPath && !note)
                 }
               >
-                {loading ? "Saving" : "Save Moment"}
+                {loading && "Saving"}
+                {!loading && props.moment?.id && "Save Moment"}
+                {!loading && !props.moment?.id && "Add Moment"}
               </IonButton>
             </IonCol>
           </IonRow>

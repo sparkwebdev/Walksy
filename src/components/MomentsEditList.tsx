@@ -27,6 +27,8 @@ import { deleteStoredItem } from "../firebase";
 
 const MomentsEditList: React.FC<{
   moments: Moment[];
+  userId: string;
+  walkId: string;
   locations?: Location[];
   colour?: string;
   coverImage: string;
@@ -126,23 +128,25 @@ const MomentsEditList: React.FC<{
               </span> */}
             </IonText>
           </IonCol>
-          <IonCol size="10" sizeSm="6" offsetSm="4" className="ion-text-right">
+          <IonCol size="10" sizeSm="8" offsetSm="2" className="ion-text-right">
+            {props.moments.length > 0 && (
+              <IonButton
+                onClick={viewMapHandler}
+                className="ion-padding-start ion-padding-end"
+              >
+                <IonIcon slot="start" icon={mapIcon} />
+                View on Map
+              </IonButton>
+            )}
             <IonButton
-              onClick={viewMapHandler}
-              className="ion-padding-start ion-padding-end"
-            >
-              <IonIcon slot="start" icon={mapIcon} />
-              View on Map
-            </IonButton>
-            <IonButton
-              className="moments-list__delete"
+              className="moments-list__add"
               color="success"
               onClick={() => {
                 setMomentItemToEdit(undefined);
                 setEditMomentModal(true);
               }}
             >
-              <IonIcon icon={addIcon} slot="icon-only" size="small" />
+              <IonIcon icon={addIcon} slot="icon-only" size="small" /> Add
             </IonButton>
           </IonCol>
         </IonRow>
@@ -302,6 +306,8 @@ const MomentsEditList: React.FC<{
       </IonModal>
       <MomentEditModal
         moment={momentItemToEdit}
+        userId={props.userId}
+        walkId={props.walkId}
         isOpen={editMomentModal}
         closeMomentModal={(message: string) => {
           closeMomentModalHandler(message);

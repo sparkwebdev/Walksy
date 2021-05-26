@@ -25,7 +25,7 @@ import { appData } from "../data/appData";
 import dayjs from "dayjs";
 
 const WalkEditItem: React.FC<{
-  id: string;
+  walkId: string;
   title?: string;
   colour?: string;
   description?: [];
@@ -89,7 +89,7 @@ const WalkEditItem: React.FC<{
     };
     await firestore
       .collection("users-walks")
-      .doc(props.id)
+      .doc(props.walkId)
       .get()
       .then((doc) => {
         doc.ref
@@ -116,11 +116,11 @@ const WalkEditItem: React.FC<{
   useEffect(() => {
     const momentsRef = firestore
       .collection("users-moments")
-      .where("walkId", "==", props.id);
+      .where("walkId", "==", props.walkId);
     return momentsRef.orderBy("timestamp").onSnapshot(({ docs }) => {
       setMoments(docs.map(toMoment));
     });
-  }, [props.id, props.userId]);
+  }, [props.walkId, props.userId]);
 
   return (
     <>
@@ -367,20 +367,14 @@ const WalkEditItem: React.FC<{
             </IonCol>
           </IonRow>
         </IonGrid>
-        {moments.length > 0 ? (
-          <>
-            <MomentsEditList
-              moments={moments}
-              locations={props.locations ? props.locations : []}
-              colour={props.colour}
-              coverImage={coverImage || ""}
-            />
-          </>
-        ) : (
-          <p className="ion-text-center text-body small-print">
-            No moments to show for this walk.
-          </p>
-        )}
+        <MomentsEditList
+          moments={moments}
+          userId={props.userId}
+          walkId={props.walkId}
+          locations={props.locations ? props.locations : []}
+          colour={props.colour}
+          coverImage={coverImage || ""}
+        />
       </div>
       <IonLoading isOpen={loading} />
       <IonToast

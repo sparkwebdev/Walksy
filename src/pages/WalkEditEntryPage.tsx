@@ -33,7 +33,7 @@ const WalkEditEntryPage: React.FC = () => {
         {walk && (
           <div className="ion-margin-bottom constrain constrain--large">
             <WalkEditItem
-              id={walk.id}
+              walkId={walk.id}
               title={walk.title}
               colour={walk.colour}
               description={walk.description}
