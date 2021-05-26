@@ -108,20 +108,18 @@ const WalkItemPreview: React.FC<{
   return (
     <>
       {props.isMiniPreview || !props.coverImage ? (
-        <IonList lines="none">
-          <IonItem
-            className="ion-no-margin walk-item walk-item--mini"
-            style={{
-              background: "rgba(255, 255, 255, 0.925)",
-              borderLeft: `solid 5px ${props.colour}`,
-              lineHeight: "1.2",
-              marginBottom: "1px",
-            }}
-            detail={true}
-          >
-            <IonLabel>{metaData}</IonLabel>
-          </IonItem>
-        </IonList>
+        <IonItem
+          className="ion-no-margin walk-item walk-item--mini"
+          style={{
+            background: "rgba(255, 255, 255, 0.925)",
+            borderLeft: `solid 5px ${props.colour}`,
+            lineHeight: "1.2",
+            marginBottom: "1px",
+          }}
+          detail={true}
+        >
+          <IonLabel>{metaData}</IonLabel>
+        </IonItem>
       ) : (
         <>
           <IonCard className="ion-no-margin walk-item walk-item--full">
