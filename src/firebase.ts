@@ -145,7 +145,7 @@ export const storeLikeHandler = async (like: boolean, walkId: string, userId: st
 export const storeMomentHandler = async (moment: Moment, walkId: string, userId: string) => {
   let momentToStore: Moment = {...moment};
   let storedFilePath: string = "";
-  if (moment.imagePath !== "") {
+  if (moment.imagePath !== "" && moment.base64Data !== "") {
     await storeFilehandler(moment.base64Data).then((newUrl) => {
       momentToStore = {
         ...moment,
@@ -155,7 +155,7 @@ export const storeMomentHandler = async (moment: Moment, walkId: string, userId:
     }).catch((e) => {
       console.log('error storing file', e);
     });
-  } else if (moment.audioPath !== "") {
+  } else if (moment.audioPath !== "" && moment.base64Data !== "") {
     await storeFilehandler(moment.base64Data).then((newUrl) => {
       momentToStore = {
         ...moment,
