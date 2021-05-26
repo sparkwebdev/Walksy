@@ -19,6 +19,7 @@ import { getUnitDistance } from "../helpers";
 import { Moment, toMoment, Location } from "../data/models";
 
 import { firestore, getRemoteUserData, storeLikeHandler } from "../firebase";
+import MomentsList from "./MomentsList";
 import { useAuth } from "../auth";
 import {
   timerOutline as timeIcon,
@@ -232,21 +233,11 @@ const WalkItem: React.FC<{
         </IonGrid>
         {moments.length > 0 ? (
           <>
-            {/* <MomentsList
+            <MomentsList
               moments={moments}
               locations={props.locations ? props.locations : []}
               colour={props.colour}
             />
-            {isPlatform("mobile") && moments.length > 0 && (
-              <Share
-                shareText={`Have a look at my ${
-                  props.title ? "'" + props.title + "'" : " latest walk"
-                } on Walksy...`}
-                shareImage={props.coverImage ? props.coverImage : ""}
-                shareUrl={`https://walksy.uk/walk/${props.id}`}
-                triggerShare={props.shouldShare}
-              />
-            )} */}
           </>
         ) : (
           <p className="ion-text-center text-body small-print">

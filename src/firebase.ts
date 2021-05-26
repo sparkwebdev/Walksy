@@ -243,10 +243,22 @@ export const getRemoteUserData = async (userId: string) => {
   }
 };
 
-export const deleteStoredItem = async (collection: string, id: string) => {
+export const deleteStoredItem = async (collection: string, id: string, fileUrl: string = "") => {
   await firestore.collection(collection).doc(id).delete().then(() => {
-      console.log("Document successfully deleted!", id);
+      console.log(collection, ": Document successfully deleted!", id);
   }).catch((error) => {
       console.error("Error removing document: ", error);
+  });
+  if (collection === "users-moments" && fileUrl !== "") {
+    deleteStoredFile(fileUrl);
+  }
+};
+
+export const deleteStoredFile = async (fileUrl: string) => {
+  let pictureRef = storage.refFromURL(fileUrl);
+  await pictureRef.delete().then(() => {
+    console.log("Document successfully deleted file from Cloud Storage", fileUrl);
+  }).catch((error) => {
+      console.error("Error deleting file from Cloud Storage: ", error);
   });
 };

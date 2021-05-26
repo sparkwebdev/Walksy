@@ -13,6 +13,8 @@ import HomePage from "./pages/HomePage";
 import EditWalksPage from "./pages/EditWalksPage";
 import EditNewsPage from "./pages/EditNewsPage";
 import EditWellbeingPage from "./pages/EditWellbeingPage";
+import WalkEntryPage from "./pages/WalkEntryPage";
+import WalkEditEntryPage from "./pages/WalkEditEntryPage";
 import { auth } from "./firebase";
 
 import {
@@ -54,6 +56,14 @@ const AppTabs: React.FC = () => {
           </Route>
           <Route path="/app/new-walk">
             <NewWalk />
+          </Route>
+
+          {/* Dynamic pages */}
+          <Route exact path="/app/walk/:id">
+            <WalkEntryPage />
+          </Route>
+          <Route exact path="/app/walk/edit/:id">
+            <WalkEditEntryPage />
           </Route>
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
