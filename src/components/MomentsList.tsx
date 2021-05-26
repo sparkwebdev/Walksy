@@ -21,6 +21,7 @@ import {
 import MapWithMarkers from "./MapWithMarkers";
 import WalksContext from "../data/walks-context";
 import dayjs from "dayjs";
+import LocationInfo from "./LocationInfo";
 
 const MomentsList: React.FC<{
   moments: Moment[];
@@ -199,6 +200,17 @@ const MomentsList: React.FC<{
                     </IonButton>
                   </IonCol>
                 )}
+              </IonRow>
+              <IonRow>
+                <IonCol>
+                  <IonCard className="ion-no-margin ion-padding">
+                    <LocationInfo
+                      lat={moment.location?.lat}
+                      lng={moment.location?.lng}
+                      timestamp={moment.location?.timestamp}
+                    />
+                  </IonCard>
+                </IonCol>
               </IonRow>
             </IonGrid>
           </li>

@@ -24,6 +24,7 @@ import MapWithMarkers from "./MapWithMarkers";
 import dayjs from "dayjs";
 import MomentEditModal from "./MomentEditModal";
 import { deleteStoredItem } from "../firebase";
+import LocationInfo from "./LocationInfo";
 
 const MomentsEditList: React.FC<{
   moments: Moment[];
@@ -231,6 +232,17 @@ const MomentsEditList: React.FC<{
                   >
                     <IonIcon icon={deleteIcon} slot="icon-only" />
                   </IonButton>
+                </IonCol>
+              </IonRow>
+              <IonRow>
+                <IonCol size="9">
+                  <IonCard className="ion-no-margin ion-padding">
+                    <LocationInfo
+                      lat={moment.location?.lat}
+                      lng={moment.location?.lng}
+                      timestamp={moment.location?.timestamp}
+                    />
+                  </IonCard>
                 </IonCol>
               </IonRow>
             </IonGrid>
