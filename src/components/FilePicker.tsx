@@ -49,13 +49,13 @@ const FilePicker: React.FC<{
     if (!inputFile) {
       return;
     }
-    // if (inputFile.size > 1000000) {
-    //   setError({
-    //     showError: true,
-    //     message: "Please upload a file less than 1MB",
-    //   });
-    //   return;
-    // }
+    if (inputFile.size > 2000000) {
+      setError({
+        showError: true,
+        message: "Please upload a file less than 2MB",
+      });
+      return;
+    }
     const fileExtensionData = getFileExtension(inputFile.name);
     if (
       !fileExtensionData ||
