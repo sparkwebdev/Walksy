@@ -207,7 +207,7 @@ const MomentsList: React.FC<{
                     <LocationInfo
                       lat={moment.location?.lat}
                       lng={moment.location?.lng}
-                      timestamp={moment.location?.timestamp}
+                      timestamp={moment.timestamp}
                     />
                   </IonCard>
                 </IonCol>

@@ -3,6 +3,8 @@ import {
   IonButton,
   IonCol,
   IonGrid,
+  IonIcon,
+  IonImg,
   IonInput,
   IonItem,
   IonLabel,
@@ -13,14 +15,17 @@ import {
   IonTextarea,
   IonToast,
 } from "@ionic/react";
-import React, { useEffect, useState } from "react";
-import { Moment } from "../data/models";
+import React, { useEffect, useRef, useState } from "react";
+import { addOutline as addIcon } from "ionicons/icons";
+import { Moment, File } from "../data/models";
 import dayjs from "dayjs";
+import { base64FromPath } from "@ionic/react-hooks/filesystem";
 
-import { firestore, storeMomentHandler } from "../firebase";
+import { firestore, storeFilehandler, storeMomentHandler } from "../firebase";
+import FilePicker from "./FilePicker";
 
 const MomentEditModal: React.FC<{
-  moment?: Moment;
+  moment?: Moment | null;
   userId?: string;
   walkId?: string;
   isOpen: boolean;
@@ -46,16 +51,22 @@ const MomentEditModal: React.FC<{
   const storeMoment = async () => {
     setLoading(true);
     if (props.moment?.id) {
+      let storedUrl = "";
+      if (base64Data) {
+        await storeFilehandler(base64Data).then((newUrl) => {
+          storedUrl = newUrl;
+        });
+      }
       const data = {
-        imagePath,
-        audioPath,
+        imagePath: imagePath && storedUrl !== "" ? storedUrl : imagePath,
+        audioPath: audioPath && storedUrl !== "" ? storedUrl : audioPath,
         note,
         location: {
           lat: parseFloat(latitude + ""),
           lng: parseFloat(longitude + ""),
           timestamp: +dayjs(time).valueOf(),
         },
-        timestamp: new Date(time + "").toISOString(),
+        timestamp: dayjs(time).format("YYYY-MM-DDTHH:mm"),
       };
       await firestore
         .collection("users-moments")
@@ -96,9 +107,9 @@ const MomentEditModal: React.FC<{
             lng: parseFloat(longitude + ""),
             timestamp: +dayjs(time).valueOf(),
           },
-          timestamp: new Date(time + "").toISOString(),
+          timestamp: dayjs(time).format("YYYY-MM-DDTHH:mm"),
         };
-        storeMomentHandler(data, props.walkId, props.userId)
+        await storeMomentHandler(data, props.walkId, props.userId)
           .then(() => {
             props.closeMomentModal("Moment added.");
           })
@@ -111,7 +122,49 @@ const MomentEditModal: React.FC<{
           });
       }
     }
+    reset();
     setLoading(false);
+  };
+
+  const [addImage, setAddImage] = useState<boolean>(false);
+  const [addAudio, setAddAudio] = useState<boolean>(false);
+  const [filePreview, setFilePreview] = useState<string>("");
+
+  const photoPickHandler = async (file: File) => {
+    if (file.location) {
+      setLatitude(file.location.lat.toString());
+      setLongitude(file.location.lng.toString());
+    }
+    setImagePath(file.path);
+    setFilePreview(file.preview);
+    const base64 = await base64FromPath(file.preview);
+    setBase64Data(base64);
+    setAddImage(false);
+  };
+
+  const audioPickHandler = async (file: File) => {
+    if (file.location) {
+      setLatitude(file.location.lat.toString());
+      setLongitude(file.location.lng.toString());
+    }
+    setAudioPath(file.path);
+    setFilePreview(file.preview);
+    const base64 = await base64FromPath(file.preview);
+    setBase64Data(base64);
+    setAddAudio(false);
+  };
+
+  const filePickerRef = useRef<any>();
+
+  const reset = () => {
+    setImagePath("");
+    setAudioPath("");
+    setBase64Data("");
+    setNote("");
+    setLatitude("");
+    setLongitude("");
+    setTime("");
+    setFilePreview("");
   };
 
   useEffect(() => {
@@ -120,7 +173,7 @@ const MomentEditModal: React.FC<{
     setNote(props.moment?.note || "");
     setLatitude(props.moment?.location?.lat.toString() || "");
     setLongitude(props.moment?.location?.lng.toString() || "");
-    setTime(dayjs(props.moment?.timestamp).format("YYYY-MM-DDTHH:mm:ss") || "");
+    setTime(dayjs(props.moment?.timestamp).format("YYYY-MM-DDTHH:mm") || "");
   }, [props.moment]);
 
   return (
@@ -128,6 +181,7 @@ const MomentEditModal: React.FC<{
       <IonModal
         isOpen={props.isOpen}
         onDidDismiss={() => {
+          // props.moment = undefined;
           props.closeMomentModal("");
         }}
       >
@@ -139,30 +193,160 @@ const MomentEditModal: React.FC<{
               </small>
             ) : (
               <small>
-                <strong>New moment</strong>
+                <strong className="ion-text-uppercase">Add new moment:</strong>
               </small>
             )}
           </IonItem>
           <IonItem>
-            <IonLabel position="stacked">Image Path</IonLabel>
-            <IonInput
-              className="input-text input-text--small"
-              type="text"
-              value={imagePath}
-              onIonChange={(e) => setImagePath(e.detail!.value!)}
-              disabled={audioPath !== ""}
-            />
+            <IonGrid style={{ width: "100%" }} className="ion-no-padding">
+              {!audioPath && (
+                <IonRow className="ion-align-items-center">
+                  <IonCol size="10">
+                    {filePreview ? (
+                      <>
+                        <IonButton
+                          onClick={() => {
+                            setFilePreview("");
+                            setImagePath("");
+                          }}
+                        >
+                          Remove
+                        </IonButton>{" "}
+                        {!imagePath?.startsWith("https://firebasestorage") &&
+                          imagePath}
+                      </>
+                    ) : (
+                      <>
+                        <IonLabel position="stacked">Image Path</IonLabel>
+                        <IonInput
+                          className="input-text input-text--small"
+                          type="text"
+                          value={imagePath}
+                          onIonChange={(e) => setImagePath(e.detail!.value!)}
+                          hidden={filePreview !== ""}
+                        />
+                      </>
+                    )}
+                  </IonCol>
+                  <IonCol size="2" className="ion-text-right">
+                    {filePreview || (imagePath && filePreview === "") ? (
+                      <IonImg
+                        src={filePreview || imagePath}
+                        className="ion-margin"
+                      />
+                    ) : (
+                      <IonButton
+                        color="success"
+                        className="ion-margin-top"
+                        onClick={() => {
+                          setAddImage(true);
+                        }}
+                      >
+                        <IonIcon icon={addIcon} slot="icon-only" size="small" />
+                      </IonButton>
+                    )}
+                  </IonCol>
+                </IonRow>
+              )}
+            </IonGrid>
           </IonItem>
-          <IonItem>
-            <IonLabel position="stacked">Audio Path</IonLabel>
-            <IonInput
-              className="input-text input-text--small"
-              type="text"
-              value={audioPath}
-              onIonChange={(e) => setAudioPath(e.detail!.value!)}
-              disabled={imagePath !== ""}
-            />
-          </IonItem>
+          {!imagePath && (
+            <IonItem>
+              <IonGrid style={{ width: "100%" }} className="ion-no-padding">
+                <IonRow className="ion-align-items-center">
+                  <IonCol size={audioPath ? "6" : "10"}>
+                    {filePreview ? (
+                      <>
+                        <IonButton
+                          onClick={() => {
+                            setFilePreview("");
+                            setAudioPath("");
+                          }}
+                        >
+                          Remove
+                        </IonButton>{" "}
+                        {!audioPath?.startsWith("https://firebasestorage") &&
+                          audioPath}
+                      </>
+                    ) : (
+                      <>
+                        <IonLabel position="stacked">Audio Path</IonLabel>
+                        <IonInput
+                          className="input-text input-text--small"
+                          type="text"
+                          value={audioPath}
+                          onIonChange={(e) => setAudioPath(e.detail!.value!)}
+                          hidden={filePreview !== ""}
+                        />
+                      </>
+                    )}
+                  </IonCol>
+                  <IonCol
+                    size={audioPath ? "6" : "2"}
+                    className="ion-text-right"
+                  >
+                    {filePreview || (audioPath && filePreview === "") ? (
+                      <audio controls className="ion-margin">
+                        <source
+                          src={filePreview || audioPath}
+                          type="audio/mpeg"
+                        />
+                      </audio>
+                    ) : (
+                      <IonButton
+                        color="success"
+                        className="ion-margin-top"
+                        onClick={() => {
+                          setAddAudio(true);
+                        }}
+                      >
+                        <IonIcon icon={addIcon} slot="icon-only" size="small" />
+                      </IonButton>
+                    )}
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+            </IonItem>
+          )}
+          {(addImage || addAudio) && (
+            <IonModal
+              isOpen={addImage || addAudio}
+              onDidPresent={() => {
+                if ((addImage || addAudio) && filePickerRef.current) {
+                  filePickerRef.current.triggerChooseFile();
+                }
+              }}
+            >
+              <IonGrid>
+                <IonRow>
+                  <IonCol>
+                    {addImage && (
+                      <FilePicker
+                        ref={filePickerRef}
+                        onFilePick={photoPickHandler}
+                        fileType={"image"}
+                      />
+                    )}
+                    {addAudio && (
+                      <FilePicker
+                        ref={filePickerRef}
+                        onFilePick={audioPickHandler}
+                        fileType={"audio"}
+                      />
+                    )}
+                    <IonButton
+                      onClick={() => {
+                        setAddImage(false);
+                        setAddAudio(false);
+                      }}
+                    >
+                      Cancel
+                    </IonButton>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+            </IonModal>
+          )}
           <IonItem>
             <IonLabel position="fixed">
               <small>Note</small>
@@ -177,9 +361,14 @@ const MomentEditModal: React.FC<{
             ></IonTextarea>
           </IonItem>
           <IonItem>
-            <IonGrid>
+            <IonGrid className="ion-no-padding" style={{ width: "100%" }}>
               <IonRow>
-                <IonCol size="12" sizeSm="6" sizeMd="4">
+                <IonCol
+                  size="12"
+                  sizeSm="6"
+                  sizeMd="4"
+                  className="ion-padding-end"
+                >
                   <IonLabel position="stacked">Latitude</IonLabel>
                   <IonInput
                     className="input-text input-text--small"
@@ -188,7 +377,12 @@ const MomentEditModal: React.FC<{
                     onIonChange={(e) => setLatitude(e.detail!.value!)}
                   />
                 </IonCol>
-                <IonCol size="12" sizeSm="6" sizeMd="4">
+                <IonCol
+                  size="12"
+                  sizeSm="6"
+                  sizeMd="4"
+                  className="ion-padding-end"
+                >
                   <IonLabel position="stacked">Longitude</IonLabel>
                   <IonInput
                     className="input-text input-text--small"
@@ -203,20 +397,24 @@ const MomentEditModal: React.FC<{
                     className="input-text input-text--small"
                     type="datetime-local"
                     value={time}
-                    onIonChange={(e) => setTime(e.detail!.value!)}
+                    onIonChange={(e) => {
+                      setTime(e.detail!.value!);
+                    }}
                   />
                 </IonCol>
               </IonRow>
             </IonGrid>
           </IonItem>
         </IonList>
-        <IonGrid>
+        <IonGrid className="ion-no-padding">
           <IonRow>
             <IonCol className="ion-text-center">
               <IonButton
                 className="ion-margin"
                 color="tertiary"
-                onClick={() => setCloseMomentAlert(true)}
+                onClick={() => {
+                  setCloseMomentAlert(true);
+                }}
               >
                 Close
               </IonButton>
@@ -235,7 +433,10 @@ const MomentEditModal: React.FC<{
                   {
                     text: "Yes",
                     cssClass: "secondary",
-                    handler: props.closeMomentModal,
+                    handler: () => {
+                      reset();
+                      props.closeMomentModal("");
+                    },
                   },
                 ]}
               />

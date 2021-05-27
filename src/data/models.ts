@@ -59,6 +59,12 @@ export interface Photo {
   location?: Location;
 }
 
+export interface File {
+  path: string | undefined;
+  preview: string;
+  location?: Location;
+}
+
 export interface UploadedFile {
   type: "image" | "audio";
   fileName: any;

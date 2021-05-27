@@ -62,10 +62,10 @@ const WalkEditItem: React.FC<{
     props.description || []
   );
   const [start, setStart] = useState<string>(
-    dayjs(props.start).format("YYYY-MM-DDTHH:mm:ss") || ""
+    dayjs(props.start).format("YYYY-MM-DDTHH:mm") || ""
   );
   const [end, setEnd] = useState<string>(
-    dayjs(props.end).format("YYYY-MM-DDTHH:mm:ss") || ""
+    dayjs(props.end).format("YYYY-MM-DDTHH:mm") || ""
   );
   const [distance, setDistance] = useState<number>(props.distance || 0);
   const [location, setLocation] = useState<string>(props.location || "");
@@ -332,7 +332,7 @@ const WalkEditItem: React.FC<{
                   ></IonTextarea>
                 </IonItem>
                 <IonItem>
-                  <IonGrid style={{ minWidth: "100%" }}>
+                  <IonGrid style={{ width: "100%" }}>
                     <IonRow className="ion-align-items-center">
                       <IonCol size="7" sizeSm="8">
                         <IonLabel position="stacked">Cover Image</IonLabel>

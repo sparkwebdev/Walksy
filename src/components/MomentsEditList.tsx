@@ -90,11 +90,11 @@ const MomentsEditList: React.FC<{
   };
 
   const [editMomentModal, setEditMomentModal] = useState<boolean>(false);
-  const [momentItemToEdit, setMomentItemToEdit] = useState<Moment>();
+  const [momentItemToEdit, setMomentItemToEdit] = useState<Moment | null>(null);
 
   const closeMomentModalHandler = (message: string = "") => {
     setEditMomentModal(false);
-    setMomentItemToEdit(undefined);
+    setMomentItemToEdit(null);
     if (message) {
       setNotice({
         showNotice: true,
@@ -143,7 +143,7 @@ const MomentsEditList: React.FC<{
               className="moments-list__add"
               color="success"
               onClick={() => {
-                setMomentItemToEdit(undefined);
+                setMomentItemToEdit(null);
                 setEditMomentModal(true);
               }}
             >
@@ -217,7 +217,10 @@ const MomentsEditList: React.FC<{
                     className="moments-list__delete"
                     color="danger"
                     onClick={() => {
-                      if (moment.imagePath === props.coverImage) {
+                      if (
+                        moment.imagePath === props.coverImage &&
+                        moment.imagePath !== ""
+                      ) {
                         setNotice({
                           showNotice: true,
                           noticeColour: "danger",
@@ -240,7 +243,7 @@ const MomentsEditList: React.FC<{
                     <LocationInfo
                       lat={moment.location?.lat}
                       lng={moment.location?.lng}
-                      timestamp={moment.location?.timestamp}
+                      timestamp={moment.timestamp}
                     />
                   </IonCard>
                 </IonCol>
