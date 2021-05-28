@@ -236,35 +236,7 @@ const MomentsList: React.FC<{
           ]}
         />
       </ol>
-      {props.locations && (
-        <>
-          <h2>Locations</h2>
-          <ol>
-            {props.locations?.map((location: Location, index) => {
-              return (
-                <li key={index} className="ion-text-start">
-                  <IonGrid className="ion-no-padding">
-                    <IonRow>
-                      <IonCol>
-                        <small>Lat:</small>&nbsp;<strong>{location.lat}</strong>{" "}
-                        — 
-                        <small>Lng:</small>&nbsp;
-                        <strong>{location.lng}</strong>
-                      </IonCol>
-                      <IonCol>
-                        <small>Time: </small>
-                        <strong>
-                          {dayjs(location.timestamp).format("HH:mm DD/MM/YY")}
-                        </strong>
-                      </IonCol>
-                    </IonRow>
-                  </IonGrid>
-                </li>
-              );
-            })}
-          </ol>
-        </>
-      )}
+
       {!!props.isWalking && (
         <IonModal
           isOpen={showMap}

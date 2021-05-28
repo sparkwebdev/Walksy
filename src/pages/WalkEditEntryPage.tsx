@@ -31,7 +31,7 @@ const WalkEditEntryPage: React.FC = () => {
       <PageHeader title="Edit Walk" back={true} />
       <IonContent className="ion-padding-bottom">
         {walk && (
-          <div className="ion-margin-bottom constrain constrain--large">
+          <div className="ion-margin-bottom constrain constrain--xxwide">
             <WalkEditItem
               walkId={walk.id}
               title={walk.title}

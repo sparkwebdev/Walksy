@@ -125,7 +125,7 @@ const WalkEditItem: React.FC<{
   return (
     <>
       <div className="ion-padding-start ion-padding-end">
-        <IonGrid className="ion-margin-bottom ion-padding-bottom">
+        <IonGrid>
           <IonRow
             className="ion-align-items-center"
             style={{
@@ -141,240 +141,260 @@ const WalkEditItem: React.FC<{
             </IonCol>
           </IonRow>
           <IonRow>
-            <IonCol>
-              <IonList>
-                <IonGrid>
-                  <IonRow>
-                    <IonCol size="12" sizeSm="6" sizeMd="8">
-                      <IonLabel position="stacked">Title</IonLabel>
-                      <IonInput
-                        className="input-text input-text--small"
-                        type="text"
-                        value={title}
-                        onIonChange={(e) => setTitle(e.detail!.value!)}
-                      />
-                    </IonCol>
-                    <IonCol size="12" sizeSm="6" sizeMd="4">
-                      <IonLabel position="stacked">Type</IonLabel>
-                      <IonSelect
-                        onIonChange={(event) => setType(event.detail!.value!)}
-                        value={type}
-                        className="input-select input-select--small"
-                      >
-                        <IonSelectOption value="curated">
-                          curated
-                        </IonSelectOption>
-                        <IonSelectOption value="featured">
-                          featured
-                        </IonSelectOption>
-                        <IonSelectOption value="user">user</IonSelectOption>
-                      </IonSelect>
-                    </IonCol>
-                  </IonRow>
-                </IonGrid>
-                <IonItem>
-                  <IonGrid>
-                    <IonRow>
-                      <IonCol size="12" sizeMd="4">
-                        <IonLabel position="stacked">Location</IonLabel>
-                        <IonInput
-                          className="input-text input-text--small"
-                          type="text"
-                          value={location}
-                          onIonChange={(e) => setLocation(e.detail!.value!)}
-                        />
-                      </IonCol>
-                      <IonCol size="12" sizeSm="6" sizeMd="4">
-                        <IonLabel position="stacked">Distance</IonLabel>
-                        <IonInput
-                          className="input-text input-text--small"
-                          type="number"
-                          value={distance}
-                          onIonChange={(e) =>
-                            setDistance(Number(e.detail!.value!))
-                          }
-                        />
-                      </IonCol>
-                      <IonCol size="12" sizeSm="6" sizeMd="4">
-                        <IonGrid className="ion-no-padding">
-                          <IonRow className="ion-align-items-center">
-                            <IonCol size="8">
-                              <IonLabel position="stacked">Colour</IonLabel>
+            <IonCol size="12" sizeLg="6">
+              <IonGrid className="ion-margin-bottom ion-padding-bottom">
+                <IonRow>
+                  <IonCol>
+                    <IonList>
+                      <IonGrid>
+                        <IonRow>
+                          <IonCol size="12" sizeSm="6" sizeMd="8">
+                            <IonLabel position="stacked">Title</IonLabel>
+                            <IonInput
+                              className="input-text input-text--small"
+                              type="text"
+                              value={title}
+                              onIonChange={(e) => setTitle(e.detail!.value!)}
+                            />
+                          </IonCol>
+                          <IonCol size="12" sizeSm="6" sizeMd="4">
+                            <IonLabel position="stacked">Type</IonLabel>
+                            <IonSelect
+                              onIonChange={(event) =>
+                                setType(event.detail!.value!)
+                              }
+                              value={type}
+                              className="input-select input-select--small"
+                            >
+                              <IonSelectOption value="curated">
+                                curated
+                              </IonSelectOption>
+                              <IonSelectOption value="featured">
+                                featured
+                              </IonSelectOption>
+                              <IonSelectOption value="user">
+                                user
+                              </IonSelectOption>
+                            </IonSelect>
+                          </IonCol>
+                        </IonRow>
+                      </IonGrid>
+                      <IonItem>
+                        <IonGrid>
+                          <IonRow>
+                            <IonCol size="12" sizeMd="4">
+                              <IonLabel position="stacked">Location</IonLabel>
                               <IonInput
                                 className="input-text input-text--small"
-                                placeholder="#29aae2"
                                 type="text"
-                                maxlength={7}
-                                value={colour}
-                                onIonChange={(event) =>
-                                  setColour(event.detail!.value!)
+                                value={location}
+                                onIonChange={(e) =>
+                                  setLocation(e.detail!.value!)
                                 }
                               />
                             </IonCol>
-                            <IonCol size="4">
-                              <div
-                                style={{
-                                  background: colour,
-                                  height: "2em",
-                                  marginTop: "1em",
-                                }}
-                              ></div>
+                            <IonCol size="12" sizeSm="6" sizeMd="4">
+                              <IonLabel position="stacked">Distance</IonLabel>
+                              <IonInput
+                                className="input-text input-text--small"
+                                type="number"
+                                value={distance}
+                                onIonChange={(e) =>
+                                  setDistance(Number(e.detail!.value!))
+                                }
+                              />
+                            </IonCol>
+                            <IonCol size="12" sizeSm="6" sizeMd="4">
+                              <IonGrid className="ion-no-padding">
+                                <IonRow className="ion-align-items-center">
+                                  <IonCol size="8">
+                                    <IonLabel position="stacked">
+                                      Colour
+                                    </IonLabel>
+                                    <IonInput
+                                      className="input-text input-text--small"
+                                      placeholder="#29aae2"
+                                      type="text"
+                                      maxlength={7}
+                                      value={colour}
+                                      onIonChange={(event) =>
+                                        setColour(event.detail!.value!)
+                                      }
+                                    />
+                                  </IonCol>
+                                  <IonCol size="4">
+                                    <div
+                                      style={{
+                                        background: colour,
+                                        height: "2em",
+                                        marginTop: "1em",
+                                      }}
+                                    ></div>
+                                  </IonCol>
+                                </IonRow>
+                              </IonGrid>
                             </IonCol>
                           </IonRow>
                         </IonGrid>
-                      </IonCol>
-                    </IonRow>
-                  </IonGrid>
-                </IonItem>
-                <IonItem>
-                  <IonGrid>
-                    <IonRow>
-                      <IonCol size="12" sizeSm="6">
-                        <IonLabel position="stacked">Start</IonLabel>
-                        <IonInput
-                          className="input-text input-text--small"
-                          type="datetime-local"
-                          value={start}
-                          onIonChange={(e) => setStart(e.detail!.value!)}
-                        />
-                      </IonCol>
-                      <IonCol size="12" sizeSm="6">
-                        <IonLabel position="stacked">End</IonLabel>
-                        <IonInput
-                          className="input-text input-text--small"
-                          type="datetime-local"
-                          value={end}
-                          onIonChange={(e) => setEnd(e.detail!.value!)}
-                        />
-                      </IonCol>
-                    </IonRow>
-                  </IonGrid>
-                </IonItem>
-                <IonItem>
-                  <IonLabel position="stacked">Description (choose 3)</IonLabel>
-                  <br />
-                  <span className="small-print">
-                    <small>
-                      Choose from: {suggestedDescriptors.join(", ")}
-                    </small>
-                  </span>
-                  <IonGrid>
-                    <IonRow>
-                      <IonCol size="12" sizeSm="4">
-                        <IonInput
-                          className="input-text input-text--small"
-                          type="text"
-                          value={description[0]}
+                      </IonItem>
+                      <IonItem>
+                        <IonGrid>
+                          <IonRow>
+                            <IonCol size="12" sizeSm="6">
+                              <IonLabel position="stacked">Start</IonLabel>
+                              <IonInput
+                                className="input-text input-text--small"
+                                type="datetime-local"
+                                value={start}
+                                onIonChange={(e) => setStart(e.detail!.value!)}
+                              />
+                            </IonCol>
+                            <IonCol size="12" sizeSm="6">
+                              <IonLabel position="stacked">End</IonLabel>
+                              <IonInput
+                                className="input-text input-text--small"
+                                type="datetime-local"
+                                value={end}
+                                onIonChange={(e) => setEnd(e.detail!.value!)}
+                              />
+                            </IonCol>
+                          </IonRow>
+                        </IonGrid>
+                      </IonItem>
+                      <IonItem>
+                        <IonLabel position="stacked">
+                          Description (choose 3)
+                        </IonLabel>
+                        <br />
+                        <span className="small-print">
+                          <small>
+                            Choose from: {suggestedDescriptors.join(", ")}
+                          </small>
+                        </span>
+                        <IonGrid>
+                          <IonRow>
+                            <IonCol size="12" sizeSm="4">
+                              <IonInput
+                                className="input-text input-text--small"
+                                type="text"
+                                value={description[0]}
+                                onIonChange={(event) =>
+                                  setDescription([
+                                    event.detail!.value!,
+                                    description[1],
+                                    description[2],
+                                  ])
+                                }
+                              />
+                            </IonCol>
+                            <IonCol size="12" sizeSm="4">
+                              <IonInput
+                                className="input-text input-text--small"
+                                type="text"
+                                value={description[1]}
+                                onIonChange={(event) =>
+                                  setDescription([
+                                    description[0],
+                                    event.detail!.value!,
+                                    description[2],
+                                  ])
+                                }
+                              />
+                            </IonCol>
+                            <IonCol size="12" sizeSm="4">
+                              <IonInput
+                                className="input-text input-text--small"
+                                type="text"
+                                value={description[2]}
+                                onIonChange={(event) =>
+                                  setDescription([
+                                    description[0],
+                                    description[1],
+                                    event.detail!.value!,
+                                  ])
+                                }
+                              />
+                            </IonCol>
+                          </IonRow>
+                        </IonGrid>
+                      </IonItem>
+                      <IonItem>
+                        <IonLabel position="stacked">Circular</IonLabel>
+                        <IonSelect
                           onIonChange={(event) =>
-                            setDescription([
-                              event.detail!.value!,
-                              description[1],
-                              description[2],
-                            ])
+                            setCircular(event.detail!.value! === "true")
                           }
-                        />
-                      </IonCol>
-                      <IonCol size="12" sizeSm="4">
-                        <IonInput
-                          className="input-text input-text--small"
-                          type="text"
-                          value={description[1]}
-                          onIonChange={(event) =>
-                            setDescription([
-                              description[0],
-                              event.detail!.value!,
-                              description[2],
-                            ])
-                          }
-                        />
-                      </IonCol>
-                      <IonCol size="12" sizeSm="4">
-                        <IonInput
-                          className="input-text input-text--small"
-                          type="text"
-                          value={description[2]}
-                          onIonChange={(event) =>
-                            setDescription([
-                              description[0],
-                              description[1],
-                              event.detail!.value!,
-                            ])
-                          }
-                        />
-                      </IonCol>
-                    </IonRow>
-                  </IonGrid>
-                </IonItem>
-                <IonItem>
-                  <IonLabel position="stacked">Circular</IonLabel>
-                  <IonSelect
-                    onIonChange={(event) =>
-                      setCircular(event.detail!.value! === "true")
-                    }
-                    value={circular?.toString()}
-                    className="input-select input-select--small"
-                  >
-                    <IonSelectOption value="true">Yes</IonSelectOption>
-                    <IonSelectOption value="false">No</IonSelectOption>
-                  </IonSelect>
-                </IonItem>
-                <IonItem>
-                  <IonLabel position="stacked">
-                    Overview (for curated walks)
-                  </IonLabel>
-                  <IonTextarea
-                    className="input-select input-select--small"
-                    rows={6}
-                    value={overview}
-                    onIonChange={(event) => {
-                      setOverview(event.detail!.value!);
-                    }}
-                  ></IonTextarea>
-                </IonItem>
-                <IonItem>
-                  <IonGrid style={{ width: "100%" }}>
-                    <IonRow className="ion-align-items-center">
-                      <IonCol size="7" sizeSm="8">
-                        <IonLabel position="stacked">Cover Image</IonLabel>
+                          value={circular?.toString()}
+                          className="input-select input-select--small"
+                        >
+                          <IonSelectOption value="true">Yes</IonSelectOption>
+                          <IonSelectOption value="false">No</IonSelectOption>
+                        </IonSelect>
+                      </IonItem>
+                      <IonItem>
+                        <IonLabel position="stacked">
+                          Overview (for curated walks)
+                        </IonLabel>
                         <IonTextarea
                           className="input-select input-select--small"
-                          rows={5}
-                          value={coverImage}
+                          rows={6}
+                          value={overview}
                           onIonChange={(event) => {
-                            setCoverImage(event.detail!.value!);
+                            setOverview(event.detail!.value!);
                           }}
                         ></IonTextarea>
-                      </IonCol>
-                      <IonCol size="5" sizeSm="4">
-                        {coverImage && <IonImg src={coverImage} />}
-                      </IonCol>
-                    </IonRow>
-                  </IonGrid>
-                </IonItem>
-              </IonList>
+                      </IonItem>
+                      <IonItem>
+                        <IonGrid style={{ width: "100%" }}>
+                          <IonRow className="ion-align-items-center">
+                            <IonCol size="7" sizeSm="8">
+                              <IonLabel position="stacked">
+                                Cover Image
+                              </IonLabel>
+                              <IonTextarea
+                                className="input-select input-select--small"
+                                rows={5}
+                                value={coverImage}
+                                onIonChange={(event) => {
+                                  setCoverImage(event.detail!.value!);
+                                }}
+                              ></IonTextarea>
+                            </IonCol>
+                            <IonCol size="5" sizeSm="4">
+                              {coverImage && <IonImg src={coverImage} />}
+                            </IonCol>
+                          </IonRow>
+                        </IonGrid>
+                      </IonItem>
+                    </IonList>
+                  </IonCol>
+                </IonRow>
+                <IonRow>
+                  <IonCol className="ion-text-center">
+                    <IonButton
+                      className="ion-margin"
+                      color={loading ? "dark" : "secondary"}
+                      onClick={storeWalk}
+                      disabled={!title || !start}
+                    >
+                      {loading ? "Saving" : "Save"}
+                    </IonButton>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
             </IonCol>
-          </IonRow>
-          <IonRow>
-            <IonCol className="ion-text-center">
-              <IonButton
-                className="ion-margin"
-                color={loading ? "dark" : "secondary"}
-                onClick={storeWalk}
-                disabled={!title || !start}
-              >
-                {loading ? "Saving" : "Save"}
-              </IonButton>
+            <IonCol size="12" sizeLg="6">
+              <MomentsEditList
+                moments={moments}
+                userId={props.userId}
+                walkId={props.walkId}
+                locations={props.locations ? props.locations : []}
+                colour={props.colour}
+                coverImage={coverImage || ""}
+              />
             </IonCol>
           </IonRow>
         </IonGrid>
-        <MomentsEditList
-          moments={moments}
-          userId={props.userId}
-          walkId={props.walkId}
-          locations={props.locations ? props.locations : []}
-          colour={props.colour}
-          coverImage={coverImage || ""}
-        />
       </div>
       <IonLoading isOpen={loading} />
       <IonToast

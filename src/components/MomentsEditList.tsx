@@ -15,7 +15,6 @@ import {
 import React, { useEffect, useState } from "react";
 import { Moment, Location } from "../data/models";
 import {
-  location as mapIcon,
   trash as deleteIcon,
   createOutline as editIcon,
   addOutline as addIcon,
@@ -108,6 +107,19 @@ const MomentsEditList: React.FC<{
     <>
       <IonGrid className="ion-no-padding ion-margin-top">
         <IonRow>
+          <IonCol>
+            <MapWithMarkers
+              moments={momentsWithLocations}
+              locations={props.locations ? props.locations : []}
+              onDismiss={() => setShowMap(false)}
+              colour={props.colour}
+              key={mapKey}
+              isWalking={false}
+            />
+            <hr className="separator" />
+          </IonCol>
+        </IonRow>
+        <IonRow>
           <IonCol size="2">
             <IonText
               className="text-body moments-list-count"
@@ -130,15 +142,6 @@ const MomentsEditList: React.FC<{
             </IonText>
           </IonCol>
           <IonCol size="10" sizeSm="8" offsetSm="2" className="ion-text-right">
-            {props.moments.length > 0 && (
-              <IonButton
-                onClick={viewMapHandler}
-                className="ion-padding-start ion-padding-end"
-              >
-                <IonIcon slot="start" icon={mapIcon} />
-                View on Map
-              </IonButton>
-            )}
             <IonButton
               className="moments-list__add"
               color="success"
