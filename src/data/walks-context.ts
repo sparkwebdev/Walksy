@@ -29,7 +29,6 @@ interface Context {
   likedWalkIds: string[];
   updateWalk: ({}) => void;
   addMoment: (walkId: string, imagePath: string, audioPath: string, base64Data: string, note: string, location: Location | null, timestamp: string) => void;
-  updateMoments: (moments: Moment[]) => void;
   addStoredImagesForCover: (image: string) => void,
   deleteMoment: (momentId: string) => void;
   storeMoments: (userId: string) => void;
@@ -49,7 +48,6 @@ const WalksContext = React.createContext<Context>({
   likedWalkIds: [],
   updateWalk: () => {},
   addMoment: () => {},
-  updateMoments: () => {},
   addStoredImagesForCover: () => {},
   deleteMoment: () => {},
   storeMoments: () => {},

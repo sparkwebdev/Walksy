@@ -165,10 +165,6 @@ const WalksContextProvider: React.FC = (props) => {
     });
   };
 
-  const updateMoments = (moments: Moment[]) => {
-    setMoments(moments);
-  };
-
   const deleteMoment = async (momentId: string) => {
     setMoments((curMoments) => {
       if (!curMoments) {
@@ -250,7 +246,6 @@ const WalksContextProvider: React.FC = (props) => {
         likedWalkIds,
         updateWalk,
         addMoment,
-        updateMoments,
         addStoredImagesForCover,
         deleteMoment,
         storeMoments,
