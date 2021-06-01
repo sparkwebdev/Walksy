@@ -70,7 +70,7 @@ const DashboardPage: React.FC = () => {
     });
     walksCtx.likedWalkIds?.forEach((id) => {
       const walk = likedWalks.find((walk) => {
-        return walk.id == id;
+        return walk.id === id;
       });
       if (!walk) {
         var walkRef = firestore.collection("users-walks").doc(id);

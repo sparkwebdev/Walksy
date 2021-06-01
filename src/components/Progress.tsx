@@ -44,12 +44,10 @@ const Progress: React.FC<ContainerProps> = ({
 
   useEffect(() => {
     let ticker: any = null;
-    let seconds = 0;
     ticker = setInterval(() => {
       const timeDiff = getTimeDiff(start, new Date().toISOString());
       const minAndSec = getMinAndSec(timeDiff);
       setTime(minAndSec);
-      seconds++;
     }, 1000);
     Pedometer.isStepCountingAvailable()
       .then(() => {

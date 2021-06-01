@@ -1,6 +1,5 @@
 import { IonCol, IonGrid, IonRow, IonText } from "@ionic/react";
 import React, { useContext } from "react";
-import { Walk } from "../data/models";
 
 import WalksContext from "../data/walks-context";
 import MomentsList from "./MomentsList";
