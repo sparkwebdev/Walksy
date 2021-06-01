@@ -82,6 +82,12 @@ small {
 .constrain--wide {
   max-width: 48rem;
 }
+.constrain--xwide {
+  max-width: 64rem;
+}
+.constrain--xxwide {
+  max-width: 80rem;
+}
 .centered-content {
   min-height: calc(100vh - 196px);
   display: flex;
