@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   formatDate,
   getMinAndSec,
@@ -30,6 +30,7 @@ import {
   heartOutline as likeIcon,
   heart as likedIcon,
 } from "ionicons/icons";
+import WalksContext from "../data/walks-context";
 
 const WalkItem: React.FC<{
   id: string;
@@ -54,16 +55,18 @@ const WalkItem: React.FC<{
     props.end && props.start ? getTimeDiff(props.start, props.end) : 0;
   const time = getMinAndSec(timeDiff);
   const [moments, setMoments] = useState<Moment[]>([]);
-  const [currentUserHasLiked, setCurrentUserHasLiked] = useState<boolean>();
   const [storingLikeChoice, setStoringLikeChoice] = useState<boolean>(false);
   const [likers, setLikers] = useState<string[]>();
+  const walksCtx = useContext(WalksContext);
 
   const likeHandler = () => {
     if (userId) {
       setStoringLikeChoice(true);
-      setCurrentUserHasLiked(!currentUserHasLiked);
-      storeLikeHandler(!currentUserHasLiked, props.id, userId)
-        .then(() => {
+      storeLikeHandler(props.id, userId)
+        .then((add) => {
+          if (typeof add !== "undefined") {
+            walksCtx.updateLikes(props.id, add);
+          }
           setStoringLikeChoice(false);
         })
         .catch(() => {

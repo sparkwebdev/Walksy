@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Plugins } from "@capacitor/core";
 import WalksContext, { defaultWalk } from "./walks-context";
 import { Walk, Moment, Location } from "../data/models";
-import { storeMomentHandler } from "../firebase";
+import { firestore, storeMomentHandler } from "../firebase";
 import { Filesystem, FilesystemDirectory } from "@capacitor/core";
 import { useAuth } from "../auth";
 const { Storage } = Plugins;
@@ -16,6 +16,7 @@ const WalksContextProvider: React.FC = (props) => {
   const [storedImagesForCover, setStoredImagesForCover] = useState<string[]>(
     []
   );
+  const [likedWalkIds, setLikedWalkIds] = useState<string[]>([]);
 
   const initContext = () => {
     Storage.get({ key: "walk" })
@@ -72,6 +73,21 @@ const WalksContextProvider: React.FC = (props) => {
       .catch((e) => {
         setMoments([]);
         console.log("No moments data", e);
+      });
+
+    var docRef = firestore
+      .collection("users-likes")
+      .where("users", "array-contains", userId);
+    docRef
+      .get()
+      .then((query) => {
+        const likedWalkIds = query.docs.map((result) => {
+          return result.id;
+        });
+        setLikedWalkIds(likedWalkIds);
+      })
+      .catch((error) => {
+        console.log("Error getting document:", error);
       });
   };
 
@@ -185,6 +201,16 @@ const WalksContextProvider: React.FC = (props) => {
     }
   };
 
+  const updateLikes = (walkId: string, add: boolean) => {
+    setLikedWalkIds((currentLikedWalkIds) => {
+      if (add) {
+        return [...currentLikedWalkIds, walkId];
+      } else {
+        return currentLikedWalkIds.filter((walk) => walkId !== walk);
+      }
+    });
+  };
+
   const resetWalk = () => {
     setWalk(defaultWalk);
   };
@@ -221,12 +247,14 @@ const WalksContextProvider: React.FC = (props) => {
         updateWalkIdForStorage,
         moments,
         storedImagesForCover,
+        likedWalkIds,
         updateWalk,
         addMoment,
         updateMoments,
         addStoredImagesForCover,
         deleteMoment,
         storeMoments,
+        updateLikes,
         resetWalk,
         resetMoments,
         resetStoredImagesForCover,

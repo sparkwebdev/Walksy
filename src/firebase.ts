@@ -107,15 +107,17 @@ export const updateWalkHandler = async (walkData: {}, walkId: string) => {
   return entriesRef;
 }
 
-export const storeLikeHandler = async (like: boolean, walkId: string, userId: string) => {
+export const storeLikeHandler = async (walkId: string, userId: string) => {
   const likesRef = firestore.collection('users-likes').doc(walkId);
-  likesRef.get()
+  const add = likesRef.get()
   .then((doc) => {
     if (doc.exists) {
       if (!doc.data()?.users.includes(userId)) {
         likesRef.update({users: firebase.firestore.FieldValue.arrayUnion(userId)});
+        return true;
       } else {
         likesRef.update({users: firebase.firestore.FieldValue.arrayRemove(userId)});
+        return false;
       }
     } else {
       likesRef.set(
@@ -127,7 +129,7 @@ export const storeLikeHandler = async (like: boolean, walkId: string, userId: st
       ) 
     }
   });
-  return likesRef;
+  return add;
 }
 
 export const storeMomentHandler = async (moment: Moment, walkId: string, userId: string) => {
