@@ -18,83 +18,106 @@ const WalksContextProvider: React.FC = (props) => {
   );
   const [likedWalkIds, setLikedWalkIds] = useState<string[]>([]);
 
-  const initContext = () => {
-    Storage.get({ key: "walk" })
+  const getWalkData = async () => {
+    const walkData = await Storage.get({ key: "walk" })
       .then((data) => {
-        const walkData =
-          data.value !== "undefined" && data.value
-            ? JSON.parse(data.value)
-            : null;
-        if (walkData) {
-          setWalk(walkData);
-        } else {
-          setWalk(defaultWalk);
-        }
+        return data.value !== "undefined" && data.value
+          ? JSON.parse(data.value)
+          : null;
       })
       .catch((e) => {
-        setWalk(defaultWalk);
         console.log("No walk data", e);
+        return defaultWalk;
       });
+    return walkData;
+  };
 
-    Storage.get({ key: "moments" })
+  const getMomentsData = async () => {
+    const momentsData = await Storage.get({ key: "moments" })
       .then((data) => {
-        if (data) {
-          const momentsData =
-            data.value !== "undefined" && data.value
-              ? JSON.parse(data.value)
-              : null;
-          if (momentsData) {
-            const readableMoments: Moment[] = [];
-            for (const moment of momentsData) {
-              if (moment.imagePath || moment.audioPath) {
-                Filesystem.readFile({
-                  path: `moments/${moment.imagePath || moment.audioPath}`,
-                  directory: FilesystemDirectory.Data,
-                }).then((file) => {
-                  readableMoments.push({
-                    id: moment.id,
-                    walkId: moment.walkId,
-                    imagePath: moment.imagePath,
-                    audioPath: moment.audioPath,
-                    base64Data: `data:${
-                      moment.imagePath ? "image/jpeg" : "audio/aac"
-                    };base64,${file.data}`,
-                    note: moment.note,
-                    location: moment.location,
-                    timestamp: moment.timestamp,
-                  });
-                });
-              } else {
-                readableMoments.push(moment);
-              }
-            }
-            setMoments(readableMoments);
-          } else {
-            setMoments([]);
-          }
-        } else {
-          setMoments([]);
-        }
+        return data.value !== "undefined" && data.value
+          ? JSON.parse(data.value)
+          : null;
       })
       .catch((e) => {
-        setMoments([]);
         console.log("No moments data", e);
+        return null;
       });
+    return momentsData;
+  };
 
-    var docRef = firestore
+  const readFiles = async (moments: Moment[]) => {
+    const readableMoments: Moment[] = [];
+    for (const moment of moments) {
+      if (moment.imagePath || moment.audioPath) {
+        await Filesystem.readFile({
+          path: `moments/${moment.imagePath || moment.audioPath}`,
+          directory: FilesystemDirectory.Data,
+        }).then((file) => {
+          readableMoments.push({
+            id: moment.id,
+            walkId: moment.walkId,
+            imagePath: moment.imagePath,
+            audioPath: moment.audioPath,
+            base64Data: `data:${
+              moment.imagePath ? "image/jpeg" : "audio/aac"
+            };base64,${file.data}`,
+            note: moment.note,
+            location: moment.location,
+            timestamp: moment.timestamp,
+          });
+        });
+      } else {
+        readableMoments.push(moment);
+      }
+    }
+    return readableMoments;
+  };
+
+  const getLikes = async () => {
+    var liked = await firestore
       .collection("users-likes")
-      .where("users", "array-contains", userId);
-    docRef
+      .where("users", "array-contains", userId)
       .get()
       .then((query) => {
         const likedWalkIds = query.docs.map((result) => {
           return result.id;
         });
-        setLikedWalkIds(likedWalkIds);
+        return likedWalkIds;
       })
       .catch((error) => {
-        console.log("Error getting document:", error);
+        console.log("Error getting likes:", error);
+        return null;
       });
+    return liked;
+  };
+
+  const initContext = async () => {
+    await getWalkData().then((walkData) => {
+      if (walkData) {
+        setWalk(() => {
+          return walkData;
+        });
+      } else {
+        setWalk(defaultWalk);
+      }
+    });
+    await getMomentsData().then((momentsData) => {
+      if (momentsData) {
+        readFiles(momentsData).then((readableMoments) => {
+          setMoments(() => {
+            return readableMoments;
+          });
+        });
+      } else {
+        setMoments([]);
+      }
+    });
+    await getLikes().then((likes) => {
+      if (likes) {
+        setLikedWalkIds(likes);
+      }
+    });
   };
 
   useEffect(() => {
@@ -102,22 +125,26 @@ const WalksContextProvider: React.FC = (props) => {
   }, []);
 
   useEffect(() => {
-    Storage.set({ key: "walk", value: JSON.stringify(walk) });
+    if (walk) {
+      Storage.set({ key: "walk", value: JSON.stringify(walk) });
+    }
   }, [walk]);
 
   useEffect(() => {
-    const storableMoments = moments?.map((moment) => {
-      return {
-        id: moment.id,
-        walkId: moment.walkId,
-        imagePath: moment.imagePath,
-        audioPath: moment.audioPath,
-        note: moment.note,
-        location: moment.location,
-        timestamp: moment.timestamp,
-      };
-    });
-    Storage.set({ key: "moments", value: JSON.stringify(storableMoments) });
+    if (moments) {
+      const storableMoments = moments?.map((moment) => {
+        return {
+          id: moment.id,
+          walkId: moment.walkId,
+          imagePath: moment.imagePath,
+          audioPath: moment.audioPath,
+          note: moment.note,
+          location: moment.location,
+          timestamp: moment.timestamp,
+        };
+      });
+      Storage.set({ key: "moments", value: JSON.stringify(storableMoments) });
+    }
   }, [moments]);
 
   useEffect(() => {
