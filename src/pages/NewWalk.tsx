@@ -55,9 +55,8 @@ const NewWalk: React.FC = () => {
   const [continueWalkAlert, setContinueWalkAlert] = useState<boolean>(false);
 
   // Walk view state - Tutorial
-  const [showTutorial, setShowTutorial] = useState<boolean | undefined>(
-    undefined
-  );
+  const [showTutorial, setShowTutorial] =
+    useState<boolean | undefined>(undefined);
   const [showTutorialText, setShowTutorialText] = useState<string>("Help");
 
   const [showHelp, setShowHelp] = useState<boolean>(false);
@@ -87,7 +86,10 @@ const NewWalk: React.FC = () => {
   useEffect(() => {
     Storage.get({ key: "walk" })
       .then((data) => {
-        const walkData = data.value ? JSON.parse(data.value) : null;
+        const walkData =
+          data.value !== "undefined" && data.value
+            ? JSON.parse(data.value)
+            : null;
         if (walkData && walksCtx.walk && walksCtx.walk.start) {
           setContinueWalkAlert(true);
         }
