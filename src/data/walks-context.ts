@@ -30,7 +30,7 @@ interface Context {
   updateWalk: ({}) => void;
   addMoment: (walkId: string, imagePath: string, audioPath: string, base64Data: string, note: string, location: Location | null, timestamp: string) => void;
   addStoredImagesForCover: (image: string) => void,
-  deleteMoment: (momentId: string) => void;
+  deleteMoment: (momentId: string, fileUrl: string) => void;
   storeMoments: (userId: string) => void;
   updateLikes: (walkId: string, add: boolean) => void;
   resetWalk: () => void;

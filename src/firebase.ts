@@ -135,7 +135,7 @@ export const storeLikeHandler = async (walkId: string, userId: string) => {
 export const storeMomentHandler = async (moment: Moment, walkId: string, userId: string) => {
   let momentToStore: Moment = {...moment};
   let storedFilePath: string = "";
-  if (moment.imagePath !== "") {
+  if (moment.imagePath !== "" && moment.base64Data !== "") {
     await storeFilehandler(moment.base64Data).then((newUrl) => {
       momentToStore = {
         ...moment,
@@ -145,7 +145,7 @@ export const storeMomentHandler = async (moment: Moment, walkId: string, userId:
     }).catch((e) => {
       console.log('error storing file', e);
     });
-  } else if (moment.audioPath !== "") {
+  } else if (moment.audioPath !== "" && moment.base64Data !== "") {
     await storeFilehandler(moment.base64Data).then((newUrl) => {
       momentToStore = {
         ...moment,
@@ -239,12 +239,16 @@ export const deleteStoredItem = async (collection: string, id: string, fileUrl: 
   }).catch((error) => {
       console.error("Error removing document: ", error);
   });
-  if (collection === "users-moments" && fileUrl !== "") {
+  if (collection === "users-moments" && fileUrl.startsWith("https://firebasestorage")) {
     deleteStoredFile(fileUrl);
   }
 };
 
 export const deleteStoredFile = async (fileUrl: string) => {
+  if (!fileUrl.startsWith("https://firebasestorage")) {
+    console.log("Not a firebase document");
+    return;
+  }
   let pictureRef = storage.refFromURL(fileUrl);
   await pictureRef.delete().then(() => {
     console.log("Document successfully deleted file from Cloud Storage", fileUrl);

@@ -166,6 +166,7 @@ const WalksContextProvider: React.FC = (props) => {
   };
 
   const deleteMoment = async (momentId: string) => {
+  const deleteMoment = async (momentId: string, fileUrl: string = "") => {
     setMoments((curMoments) => {
       if (!curMoments) {
         return;
@@ -175,6 +176,9 @@ const WalksContextProvider: React.FC = (props) => {
       );
       return remainingMoments;
     });
+    if (fileUrl) {
+      await deleteStoredFile(fileUrl);
+    }
   };
 
   const storeMoments = async (userId: string) => {
@@ -184,9 +188,9 @@ const WalksContextProvider: React.FC = (props) => {
     if (storedWalkId !== "" && userId) {
       for (const moment of moments) {
         await storeMomentHandler(moment, storedWalkId, userId)
-          .then((newImagePath) => {
-            if (newImagePath) {
-              addStoredImagesForCover(newImagePath);
+          .then((storedFilePath) => {
+            if (storedFilePath) {
+              addStoredImagesForCover(storedFilePath);
             }
             deleteMoment(moment.id);
           })
