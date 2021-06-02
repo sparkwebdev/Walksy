@@ -79,7 +79,7 @@ const Walking: React.FC = () => {
   const [finishWalkAlert, setFinishWalkAlert] = useState(false);
 
   useEffect(() => {
-    if (walksCtx.walk && walksCtx.walk.title === "") {
+    if (!walksCtx.walk?.start) {
       return;
     }
     if (walksCtx.walk && walksCtx.walk.start) {
@@ -89,6 +89,11 @@ const Walking: React.FC = () => {
       setSteps(walksCtx.walk.steps);
       setDistance(walksCtx.walk.distance);
       setLocations(walksCtx.walk.locations);
+      if (walksCtx.walk.end) {
+        setEnd(walksCtx.walk.end);
+      } else {
+        startWatchPosition();
+      }
     } else {
       const startDate = new Date().toISOString();
       Storage.set({
@@ -293,7 +298,7 @@ const Walking: React.FC = () => {
     });
   };
 
-  if (!loggedIn || (walksCtx.walk && walksCtx.walk.title === "")) {
+  if (!loggedIn || !walksCtx.walk?.start) {
     return <Redirect to="/app/new-walk" />;
   }
 

@@ -92,8 +92,11 @@ const NewWalk: React.FC = () => {
           data.value !== "undefined" && data.value
             ? JSON.parse(data.value)
             : null;
-        if (walkData && walksCtx.walk && walksCtx.walk.start) {
-          setContinueWalkAlert(true);
+        if (walkData) {
+          walksCtx.updateWalk({ ...walkData });
+          if (walkData.start) {
+            setContinueWalkAlert(true);
+          }
         }
       })
       .catch((e) => {
@@ -271,10 +274,13 @@ const NewWalk: React.FC = () => {
           )}
         </IonCard>
       </IonContent>
-
       <IonAlert
-        header={"Continue walk?"}
-        subHeader="You have a walk already in progress."
+        header={walksCtx.walk?.end ? "Save walk?" : "Continue walk?"}
+        subHeader={
+          walksCtx.walk?.end
+            ? "Your last walk was unsaved."
+            : "You have a walk already in progress."
+        }
         buttons={[
           {
             text: "No",
@@ -282,7 +288,7 @@ const NewWalk: React.FC = () => {
             handler: cancelWalk,
           },
           {
-            text: "Yes, continue",
+            text: "Yes",
             cssClass: "secondary",
             handler: continueWalk,
           },
