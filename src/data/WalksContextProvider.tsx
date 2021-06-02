@@ -161,8 +161,6 @@ const WalksContextProvider: React.FC = (props) => {
       }).then(() => {
         if (canStoreFiles && moments && moments.length > 0) {
           tryStoreFiles();
-        } else {
-          console.log("Not working", canStoreFiles);
         }
       });
     }
