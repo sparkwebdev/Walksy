@@ -8,7 +8,7 @@ import {
   IonIcon,
   IonSpinner,
 } from "@ionic/react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useAuth } from "../auth";
 import PageHeader from "../components/PageHeader";
 import WalkItemPreview from "../components/WalkItemPreview";
@@ -21,6 +21,8 @@ import {
 } from "ionicons/icons";
 import StartWalk from "../atoms/StartWalk";
 import MomentsGroup from "../components/MomentsGroup";
+import { useHistory } from "react-router-dom";
+import WalksContext from "../data/walks-context";
 
 const HomePage: React.FC = () => {
   const { userId } = useAuth();
@@ -31,6 +33,16 @@ const HomePage: React.FC = () => {
   const [latestUserWalks, setLatestUserWalks] = useState<Walk[]>([]);
   const [latestUserWalksWithCoverImage, setLatestUserWalksWithCoverImage] =
     useState<Walk[]>([]);
+  const history = useHistory();
+  const walksCtx = useContext(WalksContext);
+
+  useEffect(() => {
+    if (walksCtx.walk && walksCtx.walk.start) {
+      history.push({
+        pathname: `/app/new-walk`,
+      });
+    }
+  }, [walksCtx.walk]);
 
   // Fetch Latest Walk (current user)
   useEffect(() => {
