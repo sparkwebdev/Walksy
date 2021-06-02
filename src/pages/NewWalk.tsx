@@ -13,7 +13,6 @@ import {
   IonCardTitle,
   IonLabel,
   IonAlert,
-  IonIcon,
 } from "@ionic/react";
 import { Plugins } from "@capacitor/core";
 import WalkTutorial from "../components/WalkTutorial";
@@ -24,9 +23,9 @@ import {
   getFriendlyTimeOfDay,
   getFriendlyWalkDescriptor,
 } from "../helpers";
-import { warningOutline as warningIcon } from "ionicons/icons";
 import WalksContext from "../data/walks-context";
 import { useAuth } from "../auth";
+import NetworkStatusCheck from "../atoms/NetworkStatusCheck";
 
 const { Storage } = Plugins;
 
@@ -243,7 +242,7 @@ const NewWalk: React.FC = () => {
                   <IonGrid>
                     <IonRow>
                       <IonCol size="8" offset="2">
-                        {walksCtx.networkStatus?.connected ? (
+                        <NetworkStatusCheck>
                           <IonButton
                             expand="block"
                             disabled={title === ""}
@@ -252,19 +251,7 @@ const NewWalk: React.FC = () => {
                           >
                             Start Walk
                           </IonButton>
-                        ) : (
-                          <>
-                            <IonIcon
-                              icon={warningIcon}
-                              color="danger"
-                              size="large"
-                            />
-                            <p>
-                              Please make sure you are connected to the
-                              Internet.
-                            </p>
-                          </>
-                        )}
+                        </NetworkStatusCheck>
                       </IonCol>
                     </IonRow>
                   </IonGrid>
