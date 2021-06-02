@@ -21,7 +21,10 @@ const WalksContextProvider: React.FC = (props) => {
   const initContext = () => {
     Storage.get({ key: "walk" })
       .then((data) => {
-        const walkData = data.value ? JSON.parse(data.value) : null;
+        const walkData =
+          data.value !== "undefined" && data.value
+            ? JSON.parse(data.value)
+            : null;
         if (walkData) {
           setWalk(walkData);
         } else {
@@ -36,7 +39,10 @@ const WalksContextProvider: React.FC = (props) => {
     Storage.get({ key: "moments" })
       .then((data) => {
         if (data) {
-          const momentsData = data.value ? JSON.parse(data.value) : null;
+          const momentsData =
+            data.value !== "undefined" && data.value
+              ? JSON.parse(data.value)
+              : null;
           if (momentsData) {
             const readableMoments: Moment[] = [];
             for (const moment of momentsData) {
