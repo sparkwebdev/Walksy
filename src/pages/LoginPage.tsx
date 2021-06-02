@@ -26,7 +26,7 @@ import PageHeader from "../components/PageHeader";
 import { eye as eyeIcon, eyeOff as eyeOffIcon } from "ionicons/icons";
 
 const LoginPage: React.FC = () => {
-  const { loggedIn } = useAuth();
+  const { loggedIn, isAdmin } = useAuth();
   const emailInputRef = useRef<HTMLIonInputElement>(null);
   const passwordInputRef = useRef<HTMLIonInputElement>(null);
 
@@ -46,10 +46,17 @@ const LoginPage: React.FC = () => {
     }
     try {
       setStatus({ loading: true, error: false, errorMessage: "" });
-      const credential = await auth.signInWithEmailAndPassword(
-        email.toString(),
-        password.toString()
-      );
+      const credential = await auth
+        .signInWithEmailAndPassword(email.toString(), password.toString())
+        .then(() => {
+          if (isAdmin === false) {
+            setStatus({
+              loading: false,
+              error: true,
+              errorMessage: "You are not an admin of this site.",
+            });
+          }
+        });
       return credential;
     } catch (error) {
       setStatus({ loading: false, error: true, errorMessage: error.message });
@@ -61,7 +68,7 @@ const LoginPage: React.FC = () => {
     showPassword ? sePasswordIcon(eyeIcon) : sePasswordIcon(eyeOffIcon);
   };
 
-  if (loggedIn) {
+  if (loggedIn && isAdmin) {
     return <Redirect to="/app/home" />;
   }
   return (

@@ -15,7 +15,6 @@ import EditNewsPage from "./pages/EditNewsPage";
 import EditWellbeingPage from "./pages/EditWellbeingPage";
 import WalkEntryPage from "./pages/WalkEntryPage";
 import WalkEditEntryPage from "./pages/WalkEditEntryPage";
-import { auth } from "./firebase";
 
 import {
   home as homeIcon,
@@ -23,15 +22,10 @@ import {
   chatbubbles as wellbeingIcon,
   footsteps as walkIcon,
 } from "ionicons/icons";
-import { appData } from "./data/appData";
 import NewWalk from "./pages/NewWalk";
 
 const AppTabs: React.FC = () => {
-  const { loggedIn, userEmail } = useAuth();
-
-  if (!userEmail || !appData.adminEmails.includes(userEmail)) {
-    auth.signOut();
-  }
+  const { loggedIn } = useAuth();
 
   if (!loggedIn) {
     return <Redirect to="/login" />;
