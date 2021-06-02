@@ -9,12 +9,18 @@ import {
   storeMomentHandler,
   storeFilehandler,
 } from "../firebase";
-import { Filesystem, FilesystemDirectory } from "@capacitor/core";
+import {
+  Filesystem,
+  FilesystemDirectory,
+  PluginListenerHandle,
+} from "@capacitor/core";
 import { useAuth } from "../auth";
-const { Storage } = Plugins;
+import { NetworkStatus } from "@capacitor/core";
+const { Network, Storage } = Plugins;
 
 const WalksContextProvider: React.FC = (props) => {
   const { userId } = useAuth();
+  const [networkStatus, setNetworkStatus] = useState<NetworkStatus>();
   const [walk, setWalk] = useState<Walk>();
   const [storedWalkId, setStoredWalkId] = useState<string>("");
   const [moments, setMoments] = useState<Moment[]>();
@@ -134,6 +140,19 @@ const WalksContextProvider: React.FC = (props) => {
 
   useEffect(() => {
     initContext();
+    const networkListener: PluginListenerHandle = Network.addListener(
+      "networkStatusChange",
+      (status) => {
+        setNetworkStatus(status);
+        setCanStoreFiles(status.connected);
+      }
+    );
+    Network.getStatus().then((status) => {
+      setNetworkStatus(status);
+    });
+    return () => {
+      networkListener.remove();
+    };
   }, []);
 
   useEffect(() => {
@@ -344,6 +363,8 @@ const WalksContextProvider: React.FC = (props) => {
   return (
     <WalksContext.Provider
       value={{
+        networkStatus,
+        setNetworkStatus,
         walk,
         storedWalkId,
         updateWalkIdForStorage,

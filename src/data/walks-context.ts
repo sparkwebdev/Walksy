@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Walk, Moment, Location } from "../data/models";
+import { NetworkStatus } from "@capacitor/core";
 
 export const defaultWalk: Walk = {
   id: "",
@@ -21,6 +22,8 @@ export const defaultWalk: Walk = {
 };
 
 interface Context {
+  networkStatus: NetworkStatus | undefined;
+  setNetworkStatus: (status: NetworkStatus) => void;
   walk?: Walk;
   storedWalkId: string;
   updateWalkIdForStorage: (walkId: string) => void,
@@ -44,6 +47,8 @@ interface Context {
 }
 
 const WalksContext = React.createContext<Context>({
+  networkStatus: undefined,
+  setNetworkStatus: () => {},
   walk: defaultWalk,
   storedWalkId: "",
   updateWalkIdForStorage: () => {},
