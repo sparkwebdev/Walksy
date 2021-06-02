@@ -7,7 +7,6 @@ import {
   IonGrid,
   IonIcon,
   IonLabel,
-  IonLoading,
   IonModal,
   IonRow,
   IonSpinner,
@@ -243,6 +242,7 @@ const NewWalkMoments: React.FC<{
                           if (recordedAudioFilename) {
                             audioPickDeleteHandler(recordedAudioFilename);
                           }
+                          setNote("");
                           resetMomentType();
                         }}
                       >
