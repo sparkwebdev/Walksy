@@ -95,6 +95,7 @@ const Walking: React.FC = () => {
         key: "latestWalk",
         value: JSON.stringify(startDate),
       });
+      walksCtx.updateSetCanStoreFiles(true);
 
       // Cancel notifications
       cancelNotifications();
@@ -195,6 +196,13 @@ const Walking: React.FC = () => {
       }
       return curLocations;
     });
+    if (
+      walksCtx.canStoreFiles &&
+      walksCtx.moments &&
+      walksCtx.moments.length > 0
+    ) {
+      walksCtx.tryStoreFiles();
+    }
   };
 
   useLayoutEffect(() => {
@@ -205,6 +213,7 @@ const Walking: React.FC = () => {
 
   const cancelWalkHandler = () => {
     setAddBarVisible(false);
+    walksCtx.updateSetCanStoreFiles(true);
     walksCtx.reset();
     history.push({
       pathname: `/app/new-walk`,
@@ -213,6 +222,7 @@ const Walking: React.FC = () => {
 
   const endWalkHandler = async () => {
     setAddBarVisible(false);
+    walksCtx.updateSetCanStoreFiles(false);
     getLocation().then(() => {
       const endDate = new Date().toISOString();
       walksCtx.updateWalk({
@@ -270,6 +280,10 @@ const Walking: React.FC = () => {
     setAddBarVisible(false);
     setMomentType(type);
   };
+
+  useLayoutEffect(() => {
+    walksCtx.updateSetCanStoreFiles(!momentType);
+  }, [momentType]);
 
   const saveShareWalkHandler = async (share: boolean) => {
     walksCtx.reset();

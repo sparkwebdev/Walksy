@@ -7,8 +7,10 @@ import {
   IonGrid,
   IonIcon,
   IonLabel,
+  IonLoading,
   IonModal,
   IonRow,
+  IonSpinner,
   IonTextarea,
 } from "@ionic/react";
 import React, { useContext, useEffect, useRef, useState } from "react";
@@ -256,14 +258,21 @@ const NewWalkMoments: React.FC<{
                           takenPhoto ? saveImageHandler : addMomentHandler
                         }
                         disabled={
-                          (note.length < 1 ||
+                          walksCtx.canStoreFiles ||
+                          ((note.length < 1 ||
                             note.toString().trim().length < 1) &&
-                          !takenPhoto &&
-                          !recordedAudioFilename
+                            !takenPhoto &&
+                            !recordedAudioFilename)
                         }
                       >
-                        <IonIcon slot="start" icon={addIcon} />
-                        Add {momentType}
+                        {!walksCtx.canStoreFiles ? (
+                          <>
+                            <IonIcon slot="start" icon={addIcon} /> Add{" "}
+                            {momentType}
+                          </>
+                        ) : (
+                          <IonSpinner />
+                        )}
                       </IonButton>
                     </IonCol>
                   </IonRow>
