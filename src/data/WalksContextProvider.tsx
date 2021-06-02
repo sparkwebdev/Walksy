@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Plugins } from "@capacitor/core";
 import WalksContext, { defaultWalk } from "./walks-context";
 import { Walk, Moment, Location } from "../data/models";
-import { firestore, storeMomentHandler } from "../firebase";
+import { firestore, deleteStoredFile, storeMomentHandler } from "../firebase";
 import { Filesystem, FilesystemDirectory } from "@capacitor/core";
 import { useAuth } from "../auth";
 const { Storage } = Plugins;
@@ -165,7 +165,6 @@ const WalksContextProvider: React.FC = (props) => {
     });
   };
 
-  const deleteMoment = async (momentId: string) => {
   const deleteMoment = async (momentId: string, fileUrl: string = "") => {
     setMoments((curMoments) => {
       if (!curMoments) {
