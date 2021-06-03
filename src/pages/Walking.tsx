@@ -79,7 +79,7 @@ const Walking: React.FC = () => {
   const [finishWalkAlert, setFinishWalkAlert] = useState(false);
 
   useEffect(() => {
-    if (!walksCtx.walk?.start) {
+    if (!walksCtx.walk?.title) {
       return;
     }
     if (walksCtx.walk && walksCtx.walk.start) {
@@ -298,7 +298,7 @@ const Walking: React.FC = () => {
     });
   };
 
-  if (!loggedIn || !walksCtx.walk?.start) {
+  if (!loggedIn || !walksCtx.walk?.title) {
     return <Redirect to="/app/new-walk" />;
   }
 
