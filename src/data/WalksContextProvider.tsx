@@ -92,7 +92,7 @@ const WalksContextProvider: React.FC = (props) => {
   };
 
   const getLikes = async () => {
-    var liked = await firestore
+    const liked = await firestore
       .collection("users-likes")
       .where("users", "array-contains", userId)
       .get()

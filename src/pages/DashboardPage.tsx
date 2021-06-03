@@ -73,7 +73,7 @@ const DashboardPage: React.FC = () => {
         return walk.id === id;
       });
       if (!walk) {
-        var walkRef = firestore.collection("users-walks").doc(id);
+        const walkRef = firestore.collection("users-walks").doc(id);
         walkRef
           .get()
           .then((doc) => {
