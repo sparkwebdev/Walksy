@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Plugins } from "@capacitor/core";
 import WalksContext, { defaultWalk } from "./walks-context";
-import { Walk, Moment, Location } from "../data/models";
+import { Walk, Moment, Location, AppData } from "../data/models";
 import {
   firestore,
   deleteStoredFile,
@@ -16,11 +16,13 @@ import {
 } from "@capacitor/core";
 import { useAuth } from "../auth";
 import { NetworkStatus } from "@capacitor/core";
+import { localAppData } from "../data/localAppData";
 const { Network, Storage } = Plugins;
 
 const WalksContextProvider: React.FC = (props) => {
   const { userId } = useAuth();
   const [networkStatus, setNetworkStatus] = useState<NetworkStatus>();
+  const [appData, setAppData] = useState<AppData>({});
   const [walk, setWalk] = useState<Walk>();
   const [storedWalkId, setStoredWalkId] = useState<string>("");
   const [moments, setMoments] = useState<Moment[]>();
@@ -91,6 +93,20 @@ const WalksContextProvider: React.FC = (props) => {
     return readableMoments;
   };
 
+  const getAppData = async () => {
+    await firestore
+      .collection("app-data")
+      .doc("meta-data")
+      .get()
+      .then((doc) => {
+        setAppData({ ...doc.data() });
+      })
+      .catch((error) => {
+        console.log("Error getting remote app data:", error);
+        setAppData(localAppData);
+      });
+  };
+
   const getLikes = async () => {
     var liked = await firestore
       .collection("users-likes")
@@ -130,6 +146,7 @@ const WalksContextProvider: React.FC = (props) => {
         setMoments([]);
       }
     });
+    await getAppData();
     await getLikes().then((likes) => {
       if (likes) {
         setLikedWalkIds(likes);
@@ -365,6 +382,8 @@ const WalksContextProvider: React.FC = (props) => {
       value={{
         networkStatus,
         setNetworkStatus,
+        appData,
+        getAppData,
         walk,
         storedWalkId,
         updateWalkIdForStorage,

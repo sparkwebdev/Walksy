@@ -19,11 +19,10 @@ import {
   checkmark as finishIcon,
   shareOutline as shareIcon,
 } from "ionicons/icons";
-import { appData } from "../data/appData";
 import WalksContext from "../data/walks-context";
 import { updateWalkHandler } from "../firebase";
+import { Tag } from "../data/models";
 
-const suggestedDescriptors = appData.suggestedDescriptors;
 const locationMaxLength = 28;
 const descriptorsMaxCount = 3;
 
@@ -38,7 +37,14 @@ const NewWalkPost: React.FC<{
   const [circular, setCircular] = useState<boolean>(false);
   const [descriptors, setDescriptors] = useState<string[]>([]);
   const [coverImage, setCoverImage] = useState<string>("");
+  const [suggestedDescriptors, setSuggestedDescriptors] = useState<Tag[]>([]);
   const walksCtx = useContext(WalksContext);
+
+  useEffect(() => {
+    if (walksCtx.appData.suggestedDescriptors) {
+      setSuggestedDescriptors(walksCtx.appData.suggestedDescriptors);
+    }
+  }, [walksCtx.appData]);
 
   useEffect(() => {
     if (walksCtx.moments && walksCtx.moments.length === 0) {
@@ -239,22 +245,22 @@ const NewWalkPost: React.FC<{
                   : "ion-margin-top keywords"
               }
             >
-              {suggestedDescriptors.map((keyword) => {
-                return (
+              {suggestedDescriptors.map((descriptor) => {
+                return descriptor.tag ? (
                   <IonBadge
                     className={
-                      descriptors.includes(keyword)
+                      descriptors.includes(descriptor.tag)
                         ? "badge-keyword badge-keyword--active"
                         : "badge-keyword"
                     }
                     onClick={() => {
-                      chooseKeywordHandler(keyword);
+                      chooseKeywordHandler(descriptor.tag!);
                     }}
-                    key={keyword}
+                    key={descriptor.tag}
                   >
-                    {keyword}
+                    {descriptor.tag}
                   </IonBadge>
-                );
+                ) : null;
               })}
             </div>
             <IonLabel className="ion-hide">Walk description...</IonLabel>

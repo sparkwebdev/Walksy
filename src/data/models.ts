@@ -58,6 +58,22 @@ export interface Photo {
   preview: string;
 }
 
+export interface AppData {
+  [key: string]: any
+}
+
+export interface Project {
+  tag: string | undefined;
+  title: string | undefined;
+  description: string | undefined;
+  coverImage: string | undefined;
+}
+
+export interface Tag {
+  tag: string | undefined;
+  coverImage: string | undefined;
+}
+
 export interface UploadedFile {
   type: "image" | "audio";
   fileName: any;
