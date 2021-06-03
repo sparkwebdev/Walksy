@@ -68,19 +68,25 @@ const NewWalkPost: React.FC<{
   };
 
   const chosenLocationHandler = () => {
-    updateWalkHandler({ location, circular }, walksCtx.storedWalkId);
-    setChosenLocation(true);
+    if (walksCtx.storedWalkId) {
+      updateWalkHandler({ location, circular }, walksCtx.storedWalkId);
+      setChosenLocation(true);
+    }
   };
 
   const chosenCoverImageHandler = () => {
-    updateWalkHandler({ coverImage }, walksCtx.storedWalkId);
-    setChosenCoverImage(true);
-    walksCtx.resetStoredImagesForCover();
+    if (walksCtx.storedWalkId) {
+      updateWalkHandler({ coverImage }, walksCtx.storedWalkId);
+      setChosenCoverImage(true);
+      walksCtx.resetStoredImagesForCover();
+    }
   };
 
   const chosenDescriptionHandler = () => {
-    updateWalkHandler({ description }, walksCtx.storedWalkId);
-    setChosenDescription(true);
+    if (walksCtx.storedWalkId) {
+      updateWalkHandler({ description }, walksCtx.storedWalkId);
+      setChosenDescription(true);
+    }
   };
 
   return (
