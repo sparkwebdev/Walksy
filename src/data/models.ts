@@ -39,6 +39,7 @@ export interface Walk {
   overview: string;
   location: string;
   circular: boolean;
+  project?: string;
 }
 
 export interface Location {
