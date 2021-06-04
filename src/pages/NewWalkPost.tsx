@@ -3,15 +3,12 @@ import {
   IonButton,
   IonCard,
   IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
   IonCardTitle,
   IonCol,
   IonGrid,
   IonIcon,
   IonInput,
   IonLabel,
-  IonModal,
   IonRow,
   IonText,
   IonToast,
@@ -21,11 +18,10 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   checkmark as finishIcon,
   shareOutline as shareIcon,
-  helpCircleOutline as infoIcon,
 } from "ionicons/icons";
 import WalksContext from "../data/walks-context";
-import { updateWalkHandler } from "../firebase";
-import { Project, Tag } from "../data/models";
+import { updateStoredWalkHandler } from "../firebase";
+import { Tag } from "../data/models";
 
 const locationMaxLength = 28;
 const descriptorsMaxCount = 3;
@@ -33,42 +29,46 @@ const descriptorsMaxCount = 3;
 const NewWalkPost: React.FC<{
   saveShareWalk: (share: boolean) => void;
 }> = (props) => {
-  const [description, setDescription] = useState<string[]>([]);
+  const walksCtx = useContext(WalksContext);
+  const [chosenCoverImage, setChosenCoverImage] = useState<boolean>(false);
   const [chosenLocation, setChosenLocation] = useState<boolean>(false);
   const [chosenDescription, setChosenDescription] = useState<boolean>(false);
-  const [chosenCoverImage, setChosenCoverImage] = useState<boolean>(false);
-  const [location, setLocation] = useState<string>("");
-  const [chosenProject, setChosenProject] = useState<string>("");
-  const [circular, setCircular] = useState<boolean>(false);
-  const [descriptors, setDescriptors] = useState<string[]>([]);
-  const [coverImage, setCoverImage] = useState<string>("");
-  const [suggestedDescriptors, setSuggestedDescriptors] = useState<Tag[]>([]);
-  const [suggestedProjects, setSuggestedProjects] = useState<Project[]>([]);
-  const walksCtx = useContext(WalksContext);
 
-  const [showProjectsMoreInfo, setShowProjectsMoreInfo] =
-    useState<boolean>(false);
+  const [coverImage, setCoverImage] = useState<string>(
+    walksCtx.walk?.coverImage || ""
+  );
+  const [circular, setCircular] = useState<boolean>(
+    walksCtx.walk?.circular || false
+  );
+  const [location, setLocation] = useState<string>(
+    walksCtx.walk?.location || ""
+  );
+  const [description, setDescription] = useState<string[]>([]);
+  const [descriptors, setDescriptors] = useState<string[]>([]);
 
   useEffect(() => {
-    if (walksCtx.appData.suggestedDescriptors) {
-      setSuggestedDescriptors(walksCtx.appData.suggestedDescriptors);
+    if (walksCtx.walk?.coverImage) {
+      setChosenCoverImage(true);
     }
-    if (walksCtx.appData.projects) {
-      setSuggestedProjects(walksCtx.appData.projects);
+    if (walksCtx.walk?.description && walksCtx.walk?.description.length > 0) {
+      setChosenDescription(true);
     }
-  }, [walksCtx.appData]);
+    if (walksCtx.walk?.location) {
+      setChosenLocation(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (walksCtx.moments && walksCtx.moments.length === 0) {
       if (walksCtx.storedImagesForCover.length === 1) {
         const image = walksCtx.storedImagesForCover[0];
-        updateWalkHandler({ coverImage: image }, walksCtx.storedWalkId);
+        updateStoredWalkHandler({ coverImage: image }, walksCtx.storedWalkId);
         setChosenCoverImage(true);
         walksCtx.resetStoredImagesForCover();
       } else if (walksCtx.storedImagesForCover.length > 1) {
         const image = walksCtx.storedImagesForCover[0];
         setCoverImage(image);
-        updateWalkHandler({ coverImage: image }, walksCtx.storedWalkId);
+        updateStoredWalkHandler({ coverImage: image }, walksCtx.storedWalkId);
       } else if (walksCtx.storedImagesForCover.length === 0) {
         setChosenCoverImage(true);
       }
@@ -85,31 +85,27 @@ const NewWalkPost: React.FC<{
     }
   };
 
-  const chooseProjectHandler = (tag: string) => {
-    setChosenProject(tag);
-  };
-
-  const chosenLocationHandler = () => {
-    if (walksCtx.storedWalkId) {
-      updateWalkHandler(
-        { location, circular, chosenProject },
-        walksCtx.storedWalkId
-      );
-      setChosenLocation(true);
-    }
-  };
-
   const chosenCoverImageHandler = () => {
     if (walksCtx.storedWalkId) {
-      updateWalkHandler({ coverImage }, walksCtx.storedWalkId);
+      walksCtx.updateWalk({ coverImage });
+      updateStoredWalkHandler({ coverImage }, walksCtx.storedWalkId);
       setChosenCoverImage(true);
       walksCtx.resetStoredImagesForCover();
     }
   };
 
+  const chosenLocationHandler = () => {
+    if (walksCtx.storedWalkId) {
+      walksCtx.updateWalk({ location, circular });
+      updateStoredWalkHandler({ location, circular }, walksCtx.storedWalkId);
+      setChosenLocation(true);
+    }
+  };
+
   const chosenDescriptionHandler = () => {
     if (walksCtx.storedWalkId) {
-      updateWalkHandler({ description }, walksCtx.storedWalkId);
+      walksCtx.updateWalk({ description });
+      updateStoredWalkHandler({ description }, walksCtx.storedWalkId);
       setChosenDescription(true);
     }
   };
@@ -180,7 +176,6 @@ const NewWalkPost: React.FC<{
               Circular route...
             </IonCardTitle>
             <p className="small-print">Was this walk in a loop?</p>
-
             <IonGrid className="ion-text-center">
               <IonRow className="ion-align-items-center">
                 <IonCol className="ion-text-end">
@@ -214,7 +209,7 @@ const NewWalkPost: React.FC<{
               </IonRow>
             </IonGrid>
           </div>
-          <div className="ion-text-center ion-padding-bottom constrain constrain--medium">
+          <div className="ion-text-center ion-padding constrain constrain--medium">
             <IonCardTitle className="title text-heading">
               Add a location...
             </IonCardTitle>
@@ -232,65 +227,7 @@ const NewWalkPost: React.FC<{
               {locationMaxLength - location.length} characters remaining
             </p>
           </div>
-          <div className="ion-text-center ion-margin-bottom ion-padding-bottom constrain constrain--medium">
-            <IonCardTitle className="title text-heading">
-              Project...
-            </IonCardTitle>
-            <p className="small-print">
-              Was this walk part of a themed project?{" "}
-              <IonButton
-                color="secondary"
-                style={{ textDecoration: "underline", marginTop: "-1rem" }}
-                onClick={() => setShowProjectsMoreInfo(true)}
-                fill="clear"
-                size="small"
-                className="ion-no-margin ion-no-padding"
-              >
-                <IonIcon icon={infoIcon} size="large" />
-                <strong className="ion-hide">More info</strong>
-              </IonButton>
-            </p>
-            <div
-              className={
-                chosenProject !== ""
-                  ? "ion-margin-top keywords keywords--complete"
-                  : "ion-margin-top keywords"
-              }
-            >
-              {suggestedProjects.map((project: Project) => {
-                return (
-                  project.tag && (
-                    <IonBadge
-                      className={
-                        chosenProject === project.tag
-                          ? "badge-keyword badge-keyword--active"
-                          : "badge-keyword"
-                      }
-                      onClick={() => {
-                        chooseProjectHandler(project.tag!);
-                      }}
-                      key={project.tag}
-                    >
-                      {project.title}
-                    </IonBadge>
-                  )
-                );
-              })}
-              <IonBadge
-                className={
-                  chosenProject === ""
-                    ? "badge-keyword badge-keyword--active"
-                    : "badge-keyword"
-                }
-                onClick={() => {
-                  chooseProjectHandler("");
-                }}
-                key="no"
-              >
-                No
-              </IonBadge>
-            </div>
-          </div>
+
           <IonGrid className="ion-text-center">
             <IonRow>
               <IonCol className="ion-no-padding">
@@ -315,7 +252,7 @@ const NewWalkPost: React.FC<{
       )}
       {!chosenDescription && chosenLocation && chosenCoverImage && (
         <>
-          <div className="ion-text-center constrain constrain--large">
+          <div className="ion-text-center ion-padding constrain constrain--large">
             <IonCardTitle className="title text-heading">
               Describe this walk...
             </IonCardTitle>
@@ -329,7 +266,7 @@ const NewWalkPost: React.FC<{
                   : "ion-margin-top keywords"
               }
             >
-              {suggestedDescriptors.map((descriptor) => {
+              {walksCtx.appData.suggestedDescriptors.map((descriptor: Tag) => {
                 return descriptor.tag ? (
                   <IonBadge
                     className={
@@ -370,6 +307,7 @@ const NewWalkPost: React.FC<{
                 </IonBadge>
               )}
             </IonInput>
+
             <IonGrid className="ion-text-center">
               <IonRow>
                 <IonCol className="ion-no-padding">
@@ -437,56 +375,6 @@ const NewWalkPost: React.FC<{
         isOpen={!!walksCtx.moments && walksCtx.moments.length > 0}
         message={`Saving your moments: ${walksCtx.moments?.length}`}
       />
-      <IonModal
-        isOpen={showProjectsMoreInfo}
-        onDidDismiss={() => setShowProjectsMoreInfo(false)}
-      >
-        <IonCard
-          className="ion-no-margin"
-          style={{ display: "flex", flexDirection: "column", height: "100%" }}
-        >
-          <IonCardHeader className="ion-no-padding" color="dark">
-            <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
-              Projects
-            </IonCardSubtitle>
-          </IonCardHeader>
-          <IonCardContent className="ion-margin-top small-print">
-            <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis
-              aute irure dolor in reprehenderit in voluptate velit esse cillum
-              dolore eu fugiat nulla pariatur.
-            </p>
-            <ul>
-              {suggestedProjects.map((project) => {
-                return (
-                  <li>
-                    <h2>
-                      <strong>{project.title}</strong>
-                    </h2>
-                    {project.description}
-                  </li>
-                );
-              })}
-            </ul>
-          </IonCardContent>
-          <IonCardHeader
-            className="ion-no-padding ion-margin-top"
-            color="light"
-            style={{ marginTop: "auto" }}
-          >
-            <IonGrid>
-              <IonRow>
-                <IonCol className="ion-text-center">
-                  <IonButton onClick={() => setShowProjectsMoreInfo(false)}>
-                    Close
-                  </IonButton>
-                </IonCol>
-              </IonRow>
-            </IonGrid>
-          </IonCardHeader>
-        </IonCard>
-      </IonModal>
     </IonCardContent>
   );
 };

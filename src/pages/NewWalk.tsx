@@ -54,6 +54,10 @@ const NewWalk: React.FC = () => {
   const [colour, setColour] = useState<string>(colours[0]);
 
   const [continueWalkAlert, setContinueWalkAlert] = useState<boolean>(false);
+  const [continueWalkAlertHeader, setContinueWalkAlertHeader] =
+    useState<string>("Continue walk?");
+  const [continueWalkAlertSubHeader, setContinueWalkAlertSubHeader] =
+    useState<string>("You have a walk in progress.");
 
   // Walk view state - Tutorial
   const [showTutorial, setShowTutorial] =
@@ -93,6 +97,13 @@ const NewWalk: React.FC = () => {
             : null;
         if (walkData) {
           walksCtx.updateWalk({ ...walkData });
+          if (walkData.end) {
+            setContinueWalkAlertHeader("Save walk?");
+            setContinueWalkAlertSubHeader(
+              "Do you want to finish saving your walk?"
+            );
+            setContinueWalkAlert(true);
+          }
           if (walkData.start) {
             setContinueWalkAlert(true);
           }
@@ -114,6 +125,7 @@ const NewWalk: React.FC = () => {
   };
 
   const startWalkHandler = () => {
+    walksCtx.reset();
     startNewWalk();
   };
 
@@ -262,12 +274,8 @@ const NewWalk: React.FC = () => {
         </IonCard>
       </IonContent>
       <IonAlert
-        header={walksCtx.walk?.end ? "Save walk?" : "Continue walk?"}
-        subHeader={
-          walksCtx.walk?.end
-            ? "Your last walk was unsaved."
-            : "You have a walk already in progress."
-        }
+        header={continueWalkAlertHeader}
+        subHeader={continueWalkAlertSubHeader}
         buttons={[
           {
             text: "No",

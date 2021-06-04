@@ -95,7 +95,7 @@ export const storeWalkHandler = async (walkData: Walk) => {
   }
 }
 
-export const updateWalkHandler = async (walkData: {}, walkId: string) => {
+export const updateStoredWalkHandler = async (walkData: {}, walkId: string) => {
   const entriesRef = firestore.collection("users-walks")
   .doc(walkId)
   .get()
