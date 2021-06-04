@@ -260,9 +260,9 @@ const Walking: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!end) return;
+    if (!end || walksCtx.storedWalkId) return;
     storeWalk();
-  }, [end]);
+  }, [end, walksCtx.storedWalkId]);
 
   // Update state handlers
   const updateWalkStepsDistance = (steps: number, distance: number) => {
@@ -291,9 +291,10 @@ const Walking: React.FC = () => {
   }, [momentType]);
 
   const saveShareWalkHandler = async (share: boolean) => {
+    const walkId = walksCtx.storedWalkId;
     walksCtx.reset();
     history.push({
-      pathname: `/app/walk/${walksCtx.storedWalkId}`,
+      pathname: `/app/walk/${walkId}`,
       state: { share: share },
     });
   };

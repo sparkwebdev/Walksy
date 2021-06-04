@@ -109,6 +109,20 @@ const WalksContextProvider: React.FC = (props) => {
     return liked;
   };
 
+  const getStoredWalkId = async () => {
+    const walkId = await Storage.get({ key: "stored-walk-id" })
+      .then((data) => {
+        return data.value !== "undefined" && data.value
+          ? JSON.parse(data.value)
+          : null;
+      })
+      .catch((e) => {
+        console.log("No walk id data", e);
+        return null;
+      });
+    return walkId;
+  };
+
   const initContext = async () => {
     await getWalkData().then((walkData) => {
       if (walkData) {
@@ -133,6 +147,11 @@ const WalksContextProvider: React.FC = (props) => {
     await getLikes().then((likes) => {
       if (likes) {
         setLikedWalkIds(likes);
+      }
+    });
+    await getStoredWalkId().then((walkId) => {
+      if (walkId) {
+        setStoredWalkId(walkId);
       }
     });
     setCanStoreFiles(true);
@@ -188,6 +207,12 @@ const WalksContextProvider: React.FC = (props) => {
   useEffect(() => {
     if (storedWalkId !== "" && userId) {
       storeMoments(userId);
+    }
+    if (storedWalkId) {
+      Storage.set({
+        key: "stored-walk-id",
+        value: JSON.stringify(storedWalkId),
+      });
     }
   }, [storedWalkId]);
 
@@ -349,6 +374,14 @@ const WalksContextProvider: React.FC = (props) => {
     }
   };
 
+  const resetStoredWalkId = () => {
+    setStoredWalkId("");
+    Storage.set({
+      key: "stored-walk-id",
+      value: JSON.stringify(""),
+    });
+  };
+
   const resetStoredImagesForCover = () => {
     setStoredImagesForCover([]);
   };
@@ -356,7 +389,7 @@ const WalksContextProvider: React.FC = (props) => {
   const reset = () => {
     resetWalk();
     resetMoments();
-    setStoredWalkId("");
+    resetStoredWalkId();
     resetStoredImagesForCover();
   };
 

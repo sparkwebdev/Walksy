@@ -30,15 +30,33 @@ const descriptorsMaxCount = 3;
 const NewWalkPost: React.FC<{
   saveShareWalk: (share: boolean) => void;
 }> = (props) => {
-  const [description, setDescription] = useState<string[]>([]);
+  const walksCtx = useContext(WalksContext);
+  const [chosenCoverImage, setChosenCoverImage] = useState<boolean>(false);
   const [chosenLocation, setChosenLocation] = useState<boolean>(false);
   const [chosenDescription, setChosenDescription] = useState<boolean>(false);
-  const [chosenCoverImage, setChosenCoverImage] = useState<boolean>(false);
-  const [location, setLocation] = useState<string>("");
-  const [circular, setCircular] = useState<boolean>(false);
+  const [coverImage, setCoverImage] = useState<string>(
+    walksCtx.walk?.coverImage || ""
+  );
+  const [circular, setCircular] = useState<boolean>(
+    walksCtx.walk?.circular || false
+  );
+  const [location, setLocation] = useState<string>(
+    walksCtx.walk?.location || ""
+  );
+  const [description, setDescription] = useState<string[]>([]);
   const [descriptors, setDescriptors] = useState<string[]>([]);
-  const [coverImage, setCoverImage] = useState<string>("");
-  const walksCtx = useContext(WalksContext);
+
+  useEffect(() => {
+    if (walksCtx.walk?.coverImage) {
+      setChosenCoverImage(true);
+    }
+    if (walksCtx.walk?.description && walksCtx.walk?.description.length > 0) {
+      setChosenDescription(true);
+    }
+    if (walksCtx.walk?.location) {
+      setChosenLocation(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (walksCtx.moments && walksCtx.moments.length === 0) {
@@ -69,6 +87,7 @@ const NewWalkPost: React.FC<{
 
   const chosenLocationHandler = () => {
     if (walksCtx.storedWalkId) {
+      walksCtx.updateWalk({ location, circular });
       updateStoredWalkHandler({ location, circular }, walksCtx.storedWalkId);
       setChosenLocation(true);
     }
@@ -76,6 +95,7 @@ const NewWalkPost: React.FC<{
 
   const chosenCoverImageHandler = () => {
     if (walksCtx.storedWalkId) {
+      walksCtx.updateWalk({ coverImage });
       updateStoredWalkHandler({ coverImage }, walksCtx.storedWalkId);
       setChosenCoverImage(true);
       walksCtx.resetStoredImagesForCover();
@@ -84,6 +104,7 @@ const NewWalkPost: React.FC<{
 
   const chosenDescriptionHandler = () => {
     if (walksCtx.storedWalkId) {
+      walksCtx.updateWalk({ description });
       updateStoredWalkHandler({ description }, walksCtx.storedWalkId);
       setChosenDescription(true);
     }
