@@ -159,9 +159,6 @@ const MomentsList: React.FC<{
                 >
                   {moment.imagePath && (
                     <IonCard className="moments-list__image-container ion-no-margin">
-                      <p>
-                        <small>{moment.imagePath}</small>
-                      </p>
                       <IonImg
                         src={moment.base64Data || moment.imagePath}
                         alt=""
@@ -170,9 +167,6 @@ const MomentsList: React.FC<{
                   )}
                   {moment.audioPath && (
                     <IonCard className="moments-list__audio-container ion-no-margin ion-padding">
-                      <p>
-                        <small>{moment.audioPath}</small>
-                      </p>
                       <audio controls className="moments-list__audio">
                         <source
                           src={moment.base64Data || moment.audioPath}
