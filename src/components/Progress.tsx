@@ -79,7 +79,7 @@ const Progress: React.FC<ContainerProps> = ({
   }, [distance, steps, updateWalk]);
 
   return (
-    <IonCard className="progress-panel" color="tertiary">
+    <IonCard className="progress-panel" color="primary">
       <IonGrid>
         <IonRow className="ion-justify-content-center">
           <IonCol
