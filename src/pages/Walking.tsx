@@ -286,10 +286,6 @@ const Walking: React.FC = () => {
     setMomentType(type);
   };
 
-  useLayoutEffect(() => {
-    walksCtx.updateSetCanStoreFiles(!momentType);
-  }, [momentType]);
-
   const saveShareWalkHandler = async (share: boolean) => {
     const walkId = walksCtx.storedWalkId;
     walksCtx.reset();

@@ -231,7 +231,7 @@ const NewWalkMoments: React.FC<{
                 }}
               >
                 <IonGrid>
-                  <IonRow>
+                  <IonRow className="ion-align-items-center">
                     <IonCol size="5">
                       <IonButton
                         fill="clear"
@@ -250,7 +250,12 @@ const NewWalkMoments: React.FC<{
                         Cancel
                       </IonButton>
                     </IonCol>
-                    <IonCol size="7">
+                    {!walksCtx.canStoreFiles && (
+                      <IonCol size="1" className="ion-text-center">
+                        <IonSpinner color="medium" />
+                      </IonCol>
+                    )}
+                    <IonCol size={walksCtx.canStoreFiles ? "7" : "6"}>
                       <IonButton
                         expand="block"
                         color="secondary"
@@ -258,21 +263,13 @@ const NewWalkMoments: React.FC<{
                           takenPhoto ? saveImageHandler : addMomentHandler
                         }
                         disabled={
-                          walksCtx.canStoreFiles ||
-                          ((note.length < 1 ||
+                          (note.length < 1 ||
                             note.toString().trim().length < 1) &&
-                            !takenPhoto &&
-                            !recordedAudioFilename)
+                          !takenPhoto &&
+                          !recordedAudioFilename
                         }
                       >
-                        {!walksCtx.canStoreFiles ? (
-                          <>
-                            <IonIcon slot="start" icon={addIcon} /> Add{" "}
-                            {momentType}
-                          </>
-                        ) : (
-                          <IonSpinner />
-                        )}
+                        <IonIcon slot="start" icon={addIcon} /> Add {momentType}
                       </IonButton>
                     </IonCol>
                   </IonRow>

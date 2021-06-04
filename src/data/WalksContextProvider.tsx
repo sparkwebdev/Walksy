@@ -30,7 +30,7 @@ const WalksContextProvider: React.FC = (props) => {
     []
   );
   const [likedWalkIds, setLikedWalkIds] = useState<string[]>([]);
-  const [canStoreFiles, setCanStoreFiles] = useState<boolean>(false);
+  const [canStoreFiles, setCanStoreFiles] = useState<boolean>(true);
 
   const getWalkData = async () => {
     const walkData = await Storage.get({ key: "walk" })
@@ -171,7 +171,6 @@ const WalksContextProvider: React.FC = (props) => {
         setStoredWalkId(walkId);
       }
     });
-    setCanStoreFiles(true);
   };
 
   useEffect(() => {
@@ -326,6 +325,9 @@ const WalksContextProvider: React.FC = (props) => {
   };
 
   const tryStoreFiles = async () => {
+    if (!networkStatus?.connected) {
+      return;
+    }
     setCanStoreFiles(false);
     const momentWithFile = moments?.find((moment) => {
       return (
