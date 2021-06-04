@@ -254,16 +254,15 @@ const NewWalk: React.FC = () => {
                   <IonGrid>
                     <IonRow>
                       <IonCol size="8" offset="2">
-                        <NetworkStatusCheck>
-                          <IonButton
-                            expand="block"
-                            disabled={title === ""}
-                            onClick={startWalkHandler}
-                            color="secondary"
-                          >
-                            Start Walk
-                          </IonButton>
-                        </NetworkStatusCheck>
+                        <IonButton
+                          expand="block"
+                          disabled={title === ""}
+                          onClick={startWalkHandler}
+                          color="secondary"
+                        >
+                          Start Walk
+                        </IonButton>
+                        <NetworkStatusCheck></NetworkStatusCheck>
                       </IonCol>
                     </IonRow>
                   </IonGrid>
