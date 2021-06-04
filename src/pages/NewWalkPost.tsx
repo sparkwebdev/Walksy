@@ -3,12 +3,15 @@ import {
   IonButton,
   IonCard,
   IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
   IonCardTitle,
   IonCol,
   IonGrid,
   IonIcon,
   IonInput,
   IonLabel,
+  IonModal,
   IonRow,
   IonText,
   IonToast,
@@ -18,10 +21,11 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   checkmark as finishIcon,
   shareOutline as shareIcon,
+  helpCircleOutline as infoIcon,
 } from "ionicons/icons";
 import WalksContext from "../data/walks-context";
 import { updateStoredWalkHandler } from "../firebase";
-import { Tag } from "../data/models";
+import { Project, Tag } from "../data/models";
 
 const locationMaxLength = 28;
 const descriptorsMaxCount = 3;
@@ -43,6 +47,7 @@ const NewWalkPost: React.FC<{
   const [location, setLocation] = useState<string>(
     walksCtx.walk?.location || ""
   );
+  const [project, setProject] = useState<string>(walksCtx.walk?.project || "");
   const [description, setDescription] = useState<string[]>([]);
   const [descriptors, setDescriptors] = useState<string[]>([]);
 
@@ -57,6 +62,9 @@ const NewWalkPost: React.FC<{
       setChosenLocation(true);
     }
   }, []);
+
+  const [showProjectsMoreInfo, setShowProjectsMoreInfo] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (walksCtx.moments && walksCtx.moments.length === 0) {
@@ -104,8 +112,8 @@ const NewWalkPost: React.FC<{
 
   const chosenDescriptionHandler = () => {
     if (walksCtx.storedWalkId) {
-      walksCtx.updateWalk({ description });
-      updateStoredWalkHandler({ description }, walksCtx.storedWalkId);
+      walksCtx.updateWalk({ description, project });
+      updateStoredWalkHandler({ description, project }, walksCtx.storedWalkId);
       setChosenDescription(true);
     }
   };
@@ -254,6 +262,65 @@ const NewWalkPost: React.FC<{
         <>
           <div className="ion-text-center ion-padding constrain constrain--large">
             <IonCardTitle className="title text-heading">
+              Tag project...
+            </IonCardTitle>
+            <p className="small-print">
+              Was this walk part of a themed project?{" "}
+              <IonButton
+                color="secondary"
+                style={{ textDecoration: "underline", marginTop: "-1rem" }}
+                onClick={() => setShowProjectsMoreInfo(true)}
+                fill="clear"
+                size="small"
+                className="ion-no-margin ion-no-padding"
+              >
+                <IonIcon icon={infoIcon} size="large" />
+                <strong className="ion-hide">More info</strong>
+              </IonButton>
+            </p>
+            <div
+              className={
+                project !== ""
+                  ? "ion-margin-top keywords keywords--complete"
+                  : "ion-margin-top keywords"
+              }
+            >
+              {walksCtx.appData.projects.map((projectItem: Project) => {
+                return (
+                  projectItem.tag && (
+                    <IonBadge
+                      className={
+                        project === projectItem.tag
+                          ? "badge-keyword badge-keyword--active"
+                          : "badge-keyword"
+                      }
+                      onClick={() => {
+                        setProject(projectItem.tag!);
+                      }}
+                      key={projectItem.tag}
+                    >
+                      {projectItem.title}
+                    </IonBadge>
+                  )
+                );
+              })}
+              <IonBadge
+                className={
+                  project === ""
+                    ? "badge-keyword badge-keyword--active badge-keyword--active-alt"
+                    : "badge-keyword"
+                }
+                onClick={() => {
+                  setProject("");
+                }}
+                key="no"
+              >
+                No
+              </IonBadge>
+            </div>
+          </div>
+          <div className="ion-text-center ion-padding constrain constrain--large">
+            <IonCardTitle className="title text-heading">
               Describe this walk...
             </IonCardTitle>
             <p className="small-print">
@@ -375,6 +442,56 @@ const NewWalkPost: React.FC<{
         isOpen={!!walksCtx.moments && walksCtx.moments.length > 0}
         message={`Saving your moments: ${walksCtx.moments?.length}`}
       />
+      <IonModal
+        isOpen={showProjectsMoreInfo}
+        onDidDismiss={() => setShowProjectsMoreInfo(false)}
+      >
+        <IonCard
+          className="ion-no-margin"
+          style={{ display: "flex", flexDirection: "column", height: "100%" }}
+        >
+          <IonCardHeader className="ion-no-padding" color="dark">
+            <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
+              Projects
+            </IonCardSubtitle>
+          </IonCardHeader>
+          <IonCardContent className="ion-margin-top small-print">
+            <p>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis
+              aute irure dolor in reprehenderit in voluptate velit esse cillum
+              dolore eu fugiat nulla pariatur.
+            </p>
+            <ul>
+              {walksCtx.appData.projects.map((project: Project) => {
+                return (
+                  <li>
+                    <h2>
+                      <strong>{project.title}</strong>
+                    </h2>
+                    {project.description}
+                  </li>
+                );
+              })}
+            </ul>
+          </IonCardContent>
+          <IonCardHeader
+            className="ion-no-padding ion-margin-top"
+            color="light"
+            style={{ marginTop: "auto" }}
+          >
+            <IonGrid>
+              <IonRow>
+                <IonCol className="ion-text-center">
+                  <IonButton onClick={() => setShowProjectsMoreInfo(false)}>
+                    Close
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </IonCardHeader>
+        </IonCard>
+      </IonModal>
     </IonCardContent>
   );
 };
