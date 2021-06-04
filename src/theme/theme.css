@@ -371,6 +371,9 @@ ion-tab-button ion-label {
   --background: var(--ion-color-primary);
   opacity: 1;
 }
+.badge-keyword--active-alt {
+  --background: var(--ion-color-tertiary);
+}
 
 .age-select ion-label,
 .age-select .select-disabled {
