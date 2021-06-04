@@ -13,6 +13,8 @@ import {
   IonLabel,
   IonModal,
   IonRow,
+  IonSlide,
+  IonSlides,
   IonText,
   IonToast,
   IonToggle,
@@ -141,27 +143,36 @@ const NewWalkPost: React.FC<{
               </div>
               {walksCtx.storedImagesForCover.length > 0 ? (
                 <div className="cover-image-picker__scroller">
-                  {walksCtx.storedImagesForCover.map((image, index) => {
-                    return (
-                      <div
-                        key={index}
-                        onClick={() => {
-                          setCoverImage(image);
-                        }}
-                        className={
-                          coverImage === image
-                            ? "cover-image-picker__scroller-image-container cover-image-picker__scroller-image-container--chosen"
-                            : "cover-image-picker__scroller-image-container"
-                        }
-                      >
-                        <img
-                          src={image}
-                          alt=""
-                          className="cover-image-picker__scroller-image"
-                        />
-                      </div>
-                    );
-                  })}
+                  <IonSlides
+                    pager={true}
+                    options={{
+                      slidesPerView: 4.5,
+                    }}
+                  >
+                    {walksCtx.storedImagesForCover.map((image, index) => {
+                      return (
+                        <IonSlide>
+                          <div
+                            key={index}
+                            onClick={() => {
+                              setCoverImage(image);
+                            }}
+                            className={
+                              coverImage === image
+                                ? "cover-image-picker__scroller-image-container cover-image-picker__scroller-image-container--chosen"
+                                : "cover-image-picker__scroller-image-container"
+                            }
+                          >
+                            <img
+                              src={image}
+                              alt=""
+                              className="cover-image-picker__scroller-image"
+                            />
+                          </div>
+                        </IonSlide>
+                      );
+                    })}
+                  </IonSlides>
                 </div>
               ) : null}
             </IonCardContent>
@@ -440,7 +451,7 @@ const NewWalkPost: React.FC<{
         position="middle"
         color="secondary"
         isOpen={!!walksCtx.moments && walksCtx.moments.length > 0}
-        message={`Saving your moments: ${walksCtx.moments?.length}`}
+        message="Saving your moments"
       />
       <IonModal
         isOpen={showProjectsMoreInfo}
