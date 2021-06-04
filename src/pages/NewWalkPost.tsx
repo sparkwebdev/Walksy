@@ -21,7 +21,7 @@ import {
 } from "ionicons/icons";
 import { appData } from "../data/appData";
 import WalksContext from "../data/walks-context";
-import { updateWalkHandler } from "../firebase";
+import { updateStoredWalkHandler } from "../firebase";
 
 const suggestedDescriptors = appData.suggestedDescriptors;
 const locationMaxLength = 28;
@@ -44,13 +44,13 @@ const NewWalkPost: React.FC<{
     if (walksCtx.moments && walksCtx.moments.length === 0) {
       if (walksCtx.storedImagesForCover.length === 1) {
         const image = walksCtx.storedImagesForCover[0];
-        updateWalkHandler({ coverImage: image }, walksCtx.storedWalkId);
+        updateStoredWalkHandler({ coverImage: image }, walksCtx.storedWalkId);
         setChosenCoverImage(true);
         walksCtx.resetStoredImagesForCover();
       } else if (walksCtx.storedImagesForCover.length > 1) {
         const image = walksCtx.storedImagesForCover[0];
         setCoverImage(image);
-        updateWalkHandler({ coverImage: image }, walksCtx.storedWalkId);
+        updateStoredWalkHandler({ coverImage: image }, walksCtx.storedWalkId);
       } else if (walksCtx.storedImagesForCover.length === 0) {
         setChosenCoverImage(true);
       }
@@ -69,14 +69,14 @@ const NewWalkPost: React.FC<{
 
   const chosenLocationHandler = () => {
     if (walksCtx.storedWalkId) {
-      updateWalkHandler({ location, circular }, walksCtx.storedWalkId);
+      updateStoredWalkHandler({ location, circular }, walksCtx.storedWalkId);
       setChosenLocation(true);
     }
   };
 
   const chosenCoverImageHandler = () => {
     if (walksCtx.storedWalkId) {
-      updateWalkHandler({ coverImage }, walksCtx.storedWalkId);
+      updateStoredWalkHandler({ coverImage }, walksCtx.storedWalkId);
       setChosenCoverImage(true);
       walksCtx.resetStoredImagesForCover();
     }
@@ -84,7 +84,7 @@ const NewWalkPost: React.FC<{
 
   const chosenDescriptionHandler = () => {
     if (walksCtx.storedWalkId) {
-      updateWalkHandler({ description }, walksCtx.storedWalkId);
+      updateStoredWalkHandler({ description }, walksCtx.storedWalkId);
       setChosenDescription(true);
     }
   };
