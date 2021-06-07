@@ -216,6 +216,9 @@ const NewWalk: React.FC = () => {
                   <IonCardTitle className="title text-heading">
                     Choose a colour...
                   </IonCardTitle>
+                  <p className="small-print">
+                    Personalise this walk with a colour
+                  </p>
                   <IonGrid className="swatches ion-justify-content-center ion-padding">
                     <IonRow className="ion-justify-content-between">
                       {colours.map((current) => {
