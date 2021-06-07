@@ -70,25 +70,20 @@ const HomePage: React.FC = () => {
             </h3>
           </div>
           <IonGrid>
-            <IonRow style={{ opacity: 0.2 }}>
+            <IonRow>
               <IonCol offset="1" offsetSm="2" size="5" sizeSm="4">
-                <a href="/">
+                <a href="https://apps.apple.com/gb/app/walksy/id1561981317">
                   <img src="assets/img/btn-app-store.png" alt="" />
                 </a>
               </IonCol>
               <IonCol size="5" sizeSm="4">
-                <a href="/">
+                <a href="https://play.google.com/store/apps/details?id=uk.co.artwalkporty.walksy">
                   <img src="assets/img/btn-google-play.png" alt="" />
                 </a>
               </IonCol>
             </IonRow>
             <IonRow>
               <IonCol className="ion-text-center">
-                <h3>
-                  <IonText color="secondary">
-                    <strong>Coming Soon!</strong>
-                  </IonText>
-                </h3>
                 <IonButton routerLink="/about">Find out more</IonButton>
               </IonCol>
             </IonRow>
