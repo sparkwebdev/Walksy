@@ -483,6 +483,10 @@ ion-tab-button ion-label {
 .cover-image-picker .swiper-pagination-bullet-active {
   background: var(--ion-color-primary);
 }
+.cover-image-picker .swiper-slide {
+  padding-top: 0;
+  padding-bottom: 0;
+}
 
 .cover-image-picker .swiper-pagination.swiper-pagination-bullets {
   bottom: 0;
@@ -491,10 +495,8 @@ ion-tab-button ion-label {
 .cover-image-picker__cover-image {
   height: 100%;
   width: 100%;
-  object-fit: contain;
-  background: var(--ion-color-light);
-  padding: 16px;
-  max-height: 40vh;
+  object-fit: cover;
+  max-height: 32vh;
   display: block;
 }
 .cover-image-picker__scroller {
@@ -594,45 +596,45 @@ ion-tab-button ion-label {
   min-height: 3rem;
 }
 
-.intro ion-slides {
+ion-slides {
   height: 100%;
 }
-.intro .swiper-pagination-bullet,
-.intro .swiper-pagination-bullet-active {
+.swiper-pagination-bullet,
+.swiper-pagination-bullet-active {
   background: var(--ion-color-primary);
 }
 
-.intro .swiper-wrapper {
+.swiper-wrapper {
   align-items: center;
 }
-.intro > .swiper-pagination-bullets {
-  margin-bottom: 20px;
-}
-.intro .swiper-slide {
+.swiper-slide {
   flex-direction: column;
   padding-top: 20px;
   padding-bottom: 50px;
+}
+.swiper-slide .intro__panel {
+  max-height: 45vh;
+}
+.swiper-slide .intro__logo {
+  max-height: 10vh;
+}
+.swiper-slide .intro__icon {
+  max-height: calc(80vh - 22rem);
+}
+.swiper-slide .intro__partner {
+  width: 22vh;
+  margin: 0 auto;
+}
+.swiper-slide .intro__panel-2 {
+  max-height: 28vh;
+}
+.intro > .swiper-pagination-bullets {
+  margin-bottom: 20px;
 }
 .intro .swiper-slide img {
   display: block;
   margin: 16px auto;
   max-width: 80%;
-}
-.intro .swiper-slide .intro__panel {
-  max-height: 45vh;
-}
-.intro .swiper-slide .intro__logo {
-  max-height: 10vh;
-}
-.intro .swiper-slide .intro__icon {
-  max-height: calc(80vh - 22rem);
-}
-.intro .swiper-slide .intro__partner {
-  width: 22vh;
-  margin: 0 auto;
-}
-.intro .swiper-slide .intro__panel-2 {
-  max-height: 28vh;
 }
 .progress-panel {
   --ion-item-background: var(--ion-color-dark);
@@ -840,10 +842,6 @@ ion-col:nth-of-type(3n + 3) .walk-item--image-only .walk-item__cover-image {
 }
 .walk-item__overview p {
   padding-right: 16px;
-}
-
-ion-item.walk-item--mini {
-  --ion-background-color: rgba(255, 255, 255, 0.925);
 }
 .ion-item-transparent {
   --background: transparent;
