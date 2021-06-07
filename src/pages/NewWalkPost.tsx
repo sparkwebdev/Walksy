@@ -272,65 +272,67 @@ const NewWalkPost: React.FC<{
       )}
       {!chosenDescription && chosenLocation && chosenCoverImage && (
         <>
-          <div className="ion-text-center ion-padding constrain constrain--large">
-            <IonCardTitle className="title text-heading">
-              Tag project...
-            </IonCardTitle>
-            <p className="small-print">
-              Was this walk part of a themed project?{" "}
-              <IonButton
-                color="secondary"
-                style={{ textDecoration: "underline", marginTop: "-1rem" }}
-                onClick={() => setShowProjectsMoreInfo(true)}
-                fill="clear"
-                size="small"
-                className="ion-no-margin ion-no-padding"
-              >
-                <IonIcon icon={infoIcon} size="large" />
-                <strong className="ion-hide">More info</strong>
-              </IonButton>
-            </p>
-            <div
-              className={
-                project !== ""
-                  ? "ion-margin-top keywords keywords--complete"
-                  : "ion-margin-top keywords"
-              }
-            >
-              {walksCtx.appData.projects.map((projectItem: Project) => {
-                return (
-                  projectItem.tag && (
-                    <IonBadge
-                      className={
-                        project === projectItem.tag
-                          ? "badge-keyword badge-keyword--active"
-                          : "badge-keyword"
-                      }
-                      onClick={() => {
-                        setProject(projectItem.tag!);
-                      }}
-                      key={projectItem.tag}
-                    >
-                      {projectItem.title}
-                    </IonBadge>
-                  )
-                );
-              })}
-              <IonBadge
+          {walksCtx.appData.projects.length > 0 && (
+            <div className="ion-text-center ion-padding constrain constrain--large">
+              <IonCardTitle className="title text-heading">
+                Tag project...
+              </IonCardTitle>
+              <p className="small-print">
+                Was this walk part of a themed project?{" "}
+                <IonButton
+                  color="secondary"
+                  style={{ textDecoration: "underline", marginTop: "-1rem" }}
+                  onClick={() => setShowProjectsMoreInfo(true)}
+                  fill="clear"
+                  size="small"
+                  className="ion-no-margin ion-no-padding"
+                >
+                  <IonIcon icon={infoIcon} size="large" />
+                  <strong className="ion-hide">More info</strong>
+                </IonButton>
+              </p>
+              <div
                 className={
-                  project === ""
-                    ? "badge-keyword badge-keyword--active badge-keyword--active-alt"
-                    : "badge-keyword"
+                  project !== ""
+                    ? "ion-margin-top keywords keywords--complete"
+                    : "ion-margin-top keywords"
                 }
-                onClick={() => {
-                  setProject("");
-                }}
-                key="no"
               >
-                No
-              </IonBadge>
+                {walksCtx.appData.projects.map((projectItem: Project) => {
+                  return (
+                    projectItem.tag && (
+                      <IonBadge
+                        className={
+                          project === projectItem.tag
+                            ? "badge-keyword badge-keyword--active"
+                            : "badge-keyword"
+                        }
+                        onClick={() => {
+                          setProject(projectItem.tag!);
+                        }}
+                        key={projectItem.tag}
+                      >
+                        {projectItem.title}
+                      </IonBadge>
+                    )
+                  );
+                })}
+                <IonBadge
+                  className={
+                    project === ""
+                      ? "badge-keyword badge-keyword--active badge-keyword--active-alt"
+                      : "badge-keyword"
+                  }
+                  onClick={() => {
+                    setProject("");
+                  }}
+                  key="no"
+                >
+                  No
+                </IonBadge>
+              </div>
             </div>
-          </div>
+          )}
           <div className="ion-text-center ion-padding constrain constrain--large">
             <IonCardTitle className="title text-heading">
               Describe this walk...
@@ -471,10 +473,10 @@ const NewWalkPost: React.FC<{
           </IonCardHeader>
           <IonCardContent className="ion-margin-top small-print">
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Duis
-              aute irure dolor in reprehenderit in voluptate velit esse cillum
-              dolore eu fugiat nulla pariatur.
+              Walksy projects are organised walking events which you can
+              participate in and contribute to. If you know your walk is part of
+              a Walksy project, please tag this walk with the appropriate tag.
+              If it is not part of a project, simply select 'No';
             </p>
             <ul>
               {walksCtx.appData.projects.map((project: Project) => {
