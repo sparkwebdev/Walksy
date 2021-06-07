@@ -75,6 +75,9 @@ const WalksContextProvider: React.FC = (props) => {
   };
 
   const getLikes = async () => {
+    if (!userId) {
+      return;
+    }
     var liked = await firestore
       .collection("users-likes")
       .where("users", "array-contains", userId)
