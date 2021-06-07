@@ -243,7 +243,7 @@ const WalkItem: React.FC<{
               locations={props.locations ? props.locations : []}
               colour={props.colour}
             />
-            {isPlatform("mobile") && moments.length > 0 && (
+            {isPlatform("mobile") && (
               <Share
                 shareText={`Have a look at my ${
                   props.title ? "'" + props.title + "'" : " latest walk"

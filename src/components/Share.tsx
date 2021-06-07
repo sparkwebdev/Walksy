@@ -38,7 +38,6 @@ const Share: React.FC<{
     <>
       {(text || image || url) && (
         <div className="ion-text-center">
-          {props.triggerShare && <p>Should share</p>}
           <h3 className="text-heading">Share this walk</h3>
           <IonButton onClick={share}>
             <IonIcon icon={shareIcon} />

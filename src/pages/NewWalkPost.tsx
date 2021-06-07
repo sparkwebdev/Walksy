@@ -22,6 +22,7 @@ import {
 import { appData } from "../data/appData";
 import WalksContext from "../data/walks-context";
 import { updateWalkHandler } from "../firebase";
+import { isPlatform } from "@ionic/react";
 
 const suggestedDescriptors = appData.suggestedDescriptors;
 const locationMaxLength = 28;
@@ -318,15 +319,17 @@ const NewWalkPost: React.FC<{
           <IonGrid>
             <IonRow>
               <IonCol>
-                <IonButton
-                  color="primary"
-                  onClick={() => {
-                    props.saveShareWalk(true);
-                  }}
-                >
-                  <IonIcon slot="start" icon={shareIcon} />
-                  Share
-                </IonButton>
+                {isPlatform("mobile") && (
+                  <IonButton
+                    color="primary"
+                    onClick={() => {
+                      props.saveShareWalk(true);
+                    }}
+                  >
+                    <IonIcon slot="start" icon={shareIcon} />
+                    Share
+                  </IonButton>
+                )}
                 <IonButton
                   color="secondary"
                   onClick={() => {
