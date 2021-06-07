@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Walk, Moment, Location } from "../data/models";
+import { Walk, Moment, Location, AppData } from "../data/models";
+import { NetworkStatus } from "@capacitor/core";
 
 export const defaultWalk: Walk = {
   id: "",
@@ -21,6 +22,10 @@ export const defaultWalk: Walk = {
 };
 
 interface Context {
+  networkStatus: NetworkStatus | undefined;
+  setNetworkStatus: (status: NetworkStatus) => void;
+  appData: AppData;
+  getAppData: () => void;
   walk?: Walk;
   storedWalkId: string;
   updateWalkIdForStorage: (walkId: string) => void,
@@ -29,10 +34,14 @@ interface Context {
   likedWalkIds: string[];
   updateWalk: ({}) => void;
   addMoment: (walkId: string, imagePath: string, audioPath: string, base64Data: string, note: string, location: Location | null, timestamp: string) => void;
+  updateMoment: (moment: Moment) => void;
   addStoredImagesForCover: (image: string) => void,
   deleteMoment: (momentId: string, fileUrl: string) => void;
   storeMoments: (userId: string) => void;
   updateLikes: (walkId: string, add: boolean) => void;
+  canStoreFiles: boolean;
+  updateSetCanStoreFiles: (canStore: boolean) => void,
+  tryStoreFiles: () => void;
   resetWalk: () => void;
   resetMoments: () => void;
   resetStoredImagesForCover: () => void;
@@ -40,6 +49,10 @@ interface Context {
 }
 
 const WalksContext = React.createContext<Context>({
+  networkStatus: undefined,
+  setNetworkStatus: () => {},
+  appData: {},
+  getAppData: () => {},
   walk: defaultWalk,
   storedWalkId: "",
   updateWalkIdForStorage: () => {},
@@ -48,10 +61,14 @@ const WalksContext = React.createContext<Context>({
   likedWalkIds: [],
   updateWalk: () => {},
   addMoment: () => {},
+  updateMoment: () => {},
   addStoredImagesForCover: () => {},
   deleteMoment: () => {},
   storeMoments: () => {},
   updateLikes: () => {},
+  canStoreFiles: true,
+  updateSetCanStoreFiles: () => {},
+  tryStoreFiles: () => {},
   resetWalk: () => {},
   resetMoments: () => {},
   resetStoredImagesForCover: () => {},

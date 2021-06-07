@@ -79,7 +79,7 @@ const Walking: React.FC = () => {
   const [finishWalkAlert, setFinishWalkAlert] = useState(false);
 
   useEffect(() => {
-    if (walksCtx.walk && walksCtx.walk.title === "") {
+    if (!walksCtx.walk?.title) {
       return;
     }
     if (walksCtx.walk && walksCtx.walk.start) {
@@ -89,12 +89,18 @@ const Walking: React.FC = () => {
       setSteps(walksCtx.walk.steps);
       setDistance(walksCtx.walk.distance);
       setLocations(walksCtx.walk.locations);
+      if (walksCtx.walk.end) {
+        setEnd(walksCtx.walk.end);
+      } else {
+        startWatchPosition();
+      }
     } else {
       const startDate = new Date().toISOString();
       Storage.set({
         key: "latestWalk",
         value: JSON.stringify(startDate),
       });
+      walksCtx.updateSetCanStoreFiles(true);
 
       // Cancel notifications
       cancelNotifications();
@@ -195,6 +201,13 @@ const Walking: React.FC = () => {
       }
       return curLocations;
     });
+    if (
+      walksCtx.canStoreFiles &&
+      walksCtx.moments &&
+      walksCtx.moments.length > 0
+    ) {
+      walksCtx.tryStoreFiles();
+    }
   };
 
   useLayoutEffect(() => {
@@ -205,6 +218,7 @@ const Walking: React.FC = () => {
 
   const cancelWalkHandler = () => {
     setAddBarVisible(false);
+    walksCtx.updateSetCanStoreFiles(true);
     walksCtx.reset();
     history.push({
       pathname: `/app/new-walk`,
@@ -213,6 +227,7 @@ const Walking: React.FC = () => {
 
   const endWalkHandler = async () => {
     setAddBarVisible(false);
+    walksCtx.updateSetCanStoreFiles(false);
     getLocation().then(() => {
       const endDate = new Date().toISOString();
       walksCtx.updateWalk({
@@ -245,9 +260,9 @@ const Walking: React.FC = () => {
   };
 
   useEffect(() => {
-    if (!end) return;
+    if (!end || walksCtx.storedWalkId) return;
     storeWalk();
-  }, [end]);
+  }, [end, walksCtx.storedWalkId]);
 
   // Update state handlers
   const updateWalkStepsDistance = (steps: number, distance: number) => {
@@ -272,14 +287,15 @@ const Walking: React.FC = () => {
   };
 
   const saveShareWalkHandler = async (share: boolean) => {
+    const walkId = walksCtx.storedWalkId;
     walksCtx.reset();
     history.push({
-      pathname: `/app/walk/${walksCtx.storedWalkId}`,
+      pathname: `/app/walk/${walkId}`,
       state: { share: share },
     });
   };
 
-  if (!loggedIn || (walksCtx.walk && walksCtx.walk.title === "")) {
+  if (!loggedIn || !walksCtx.walk?.title) {
     return <Redirect to="/app/new-walk" />;
   }
 

@@ -39,6 +39,7 @@ export interface Walk {
   overview: string;
   location: string;
   circular: boolean;
+  project?: string;
 }
 
 export interface Location {
@@ -56,6 +57,22 @@ export interface Time {
 export interface Photo {
   path: string | undefined;
   preview: string;
+}
+
+export interface AppData {
+  [key: string]: any
+}
+
+export interface Project {
+  tag: string | undefined;
+  title: string | undefined;
+  description: string | undefined;
+  coverImage: string | undefined;
+}
+
+export interface Tag {
+  tag: string | undefined;
+  coverImage: string | undefined;
 }
 
 export interface UploadedFile {

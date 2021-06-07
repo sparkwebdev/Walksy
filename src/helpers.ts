@@ -43,7 +43,7 @@ const fileToDataURL = async (file: any) => {
   }).catch((e) => {
     console.log("Cannot save Image", e);
   });
-  var reader = new FileReader();
+  const reader = new FileReader();
   let type = file.type;
   if (type === "image/jpeg" || type === "image/jpg" || type === "image/png") {
     type = "image";
@@ -81,7 +81,7 @@ const fileToDataURL = async (file: any) => {
 };
 
 export const readAsDataURL = (target: any) => {
-  var filesArray = Array.prototype.slice.call(target.files);
+  const filesArray = Array.prototype.slice.call(target.files);
   return Promise.all(filesArray.map(fileToDataURL));
 };
 
@@ -130,14 +130,14 @@ export function getTimeDiff(start: string, end: string) {
 }
 
 export function getFriendlyTimeOfDay() {
-  var now = dayjs();
-  var day = now.format("dddd");
-  var morning = dayjs().hour(5).minute(0).second(0);
-  var lunchtime = dayjs().hour(11).minute(55).second(0);
-  var afternoon = dayjs().hour(13).minute(30).second(0);
-  var evening = dayjs().hour(17).minute(0).second(0);
-  var night = dayjs().hour(20).minute(0).second(0);
-  var latenight = dayjs().hour(0).minute(0).second(0);
+  const now = dayjs();
+  const day = now.format("dddd");
+  const morning = dayjs().hour(5).minute(0).second(0);
+  const lunchtime = dayjs().hour(11).minute(55).second(0);
+  const afternoon = dayjs().hour(13).minute(30).second(0);
+  const evening = dayjs().hour(17).minute(0).second(0);
+  const night = dayjs().hour(20).minute(0).second(0);
+  const latenight = dayjs().hour(0).minute(0).second(0);
 
   if (dayjs().isSameOrAfter(night)) {
     return day + " night";
@@ -183,7 +183,7 @@ export function generateHslaColors(
   let colors = [];
   let huedelta = Math.trunc(360 / amount);
 
-  var ranNum = Math.ceil(Math.random() * (180 / amount)) * (Math.round(Math.random()) ? 1 : -1);
+  const ranNum = Math.ceil(Math.random() * (180 / amount)) * (Math.round(Math.random()) ? 1 : -1);
   for (let i = amount; i > 0; i--) {
     let hue = i * huedelta;
     if (randomise) {

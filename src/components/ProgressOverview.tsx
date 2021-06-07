@@ -41,8 +41,9 @@ const ProgressOverview: React.FC<ContainerProps> = ({
     const minAndSec = getMinAndSec(timeDiff);
     setTime(minAndSec);
   }, [start]);
+
   return (
-    <IonCard className="progress-panel" color="tertiary">
+    <IonCard className="progress-panel" color="primary">
       <IonGrid>
         <IonRow className="ion-justify-content-center">
           <IonCol

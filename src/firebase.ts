@@ -95,7 +95,7 @@ export const storeWalkHandler = async (walkData: Walk) => {
   }
 }
 
-export const updateWalkHandler = async (walkData: {}, walkId: string) => {
+export const updateStoredWalkHandler = async (walkData: {}, walkId: string) => {
   const entriesRef = firestore.collection("users-walks")
   .doc(walkId)
   .get()
@@ -135,7 +135,9 @@ export const storeLikeHandler = async (walkId: string, userId: string) => {
 export const storeMomentHandler = async (moment: Moment, walkId: string, userId: string) => {
   let momentToStore: Moment = {...moment};
   let storedFilePath: string = "";
-  if (moment.imagePath !== "" && moment.base64Data !== "") {
+  if (moment.imagePath.startsWith("https://firebasestorage")) {
+    storedFilePath = moment.imagePath;
+  } else if (moment.imagePath !== "" && moment.base64Data !== "") {
     await storeFilehandler(moment.base64Data).then((newUrl) => {
       momentToStore = {
         ...moment,
@@ -145,6 +147,8 @@ export const storeMomentHandler = async (moment: Moment, walkId: string, userId:
     }).catch((e) => {
       console.log('error storing file', e);
     });
+  } else if (moment.audioPath.startsWith("https://firebasestorage")) {
+    storedFilePath = moment.audioPath;
   } else if (moment.audioPath !== "" && moment.base64Data !== "") {
     await storeFilehandler(moment.base64Data).then((newUrl) => {
       momentToStore = {

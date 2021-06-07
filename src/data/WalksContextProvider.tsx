@@ -2,14 +2,27 @@ import React, { useEffect, useState } from "react";
 
 import { Plugins } from "@capacitor/core";
 import WalksContext, { defaultWalk } from "./walks-context";
-import { Walk, Moment, Location } from "../data/models";
-import { firestore, deleteStoredFile, storeMomentHandler } from "../firebase";
-import { Filesystem, FilesystemDirectory } from "@capacitor/core";
+import { Walk, Moment, Location, AppData } from "../data/models";
+import {
+  firestore,
+  deleteStoredFile,
+  storeMomentHandler,
+  storeFilehandler,
+} from "../firebase";
+import {
+  Filesystem,
+  FilesystemDirectory,
+  PluginListenerHandle,
+} from "@capacitor/core";
 import { useAuth } from "../auth";
-const { Storage } = Plugins;
+import { NetworkStatus } from "@capacitor/core";
+import { localAppData } from "../data/localAppData";
+const { Network, Storage } = Plugins;
 
 const WalksContextProvider: React.FC = (props) => {
   const { userId } = useAuth();
+  const [networkStatus, setNetworkStatus] = useState<NetworkStatus>();
+  const [appData, setAppData] = useState<AppData>({});
   const [walk, setWalk] = useState<Walk>();
   const [storedWalkId, setStoredWalkId] = useState<string>("");
   const [moments, setMoments] = useState<Moment[]>();
@@ -17,6 +30,7 @@ const WalksContextProvider: React.FC = (props) => {
     []
   );
   const [likedWalkIds, setLikedWalkIds] = useState<string[]>([]);
+  const [canStoreFiles, setCanStoreFiles] = useState<boolean>(true);
 
   const getWalkData = async () => {
     const walkData = await Storage.get({ key: "walk" })
@@ -49,7 +63,12 @@ const WalksContextProvider: React.FC = (props) => {
   const readFiles = async (moments: Moment[]) => {
     const readableMoments: Moment[] = [];
     for (const moment of moments) {
-      if (moment.imagePath || moment.audioPath) {
+      if (
+        (moment.imagePath !== "" &&
+          !moment.imagePath.startsWith("https://firebasestorage")) ||
+        (moment.audioPath !== "" &&
+          !moment.audioPath.startsWith("https://firebasestorage"))
+      ) {
         await Filesystem.readFile({
           path: `moments/${moment.imagePath || moment.audioPath}`,
           directory: FilesystemDirectory.Data,
@@ -74,11 +93,25 @@ const WalksContextProvider: React.FC = (props) => {
     return readableMoments;
   };
 
+  const getAppData = async () => {
+    await firestore
+      .collection("app-data")
+      .doc("meta-data")
+      .get()
+      .then((doc) => {
+        setAppData({ ...doc.data() });
+      })
+      .catch((error) => {
+        console.log("Error getting remote app data:", error);
+        setAppData(localAppData);
+      });
+  };
+
   const getLikes = async () => {
     if (!userId) {
       return;
     }
-    var liked = await firestore
+    const liked = await firestore
       .collection("users-likes")
       .where("users", "array-contains", userId)
       .get()
@@ -93,6 +126,20 @@ const WalksContextProvider: React.FC = (props) => {
         return null;
       });
     return liked;
+  };
+
+  const getStoredWalkId = async () => {
+    const walkId = await Storage.get({ key: "stored-walk-id" })
+      .then((data) => {
+        return data.value !== "undefined" && data.value
+          ? JSON.parse(data.value)
+          : null;
+      })
+      .catch((e) => {
+        console.log("No walk id data", e);
+        return null;
+      });
+    return walkId;
   };
 
   const initContext = async () => {
@@ -116,15 +163,34 @@ const WalksContextProvider: React.FC = (props) => {
         setMoments([]);
       }
     });
+    await getAppData();
     await getLikes().then((likes) => {
       if (likes) {
         setLikedWalkIds(likes);
+      }
+    });
+    await getStoredWalkId().then((walkId) => {
+      if (walkId) {
+        setStoredWalkId(walkId);
       }
     });
   };
 
   useEffect(() => {
     initContext();
+    const networkListener: PluginListenerHandle = Network.addListener(
+      "networkStatusChange",
+      (status) => {
+        setNetworkStatus(status);
+        setCanStoreFiles(status.connected);
+      }
+    );
+    Network.getStatus().then((status) => {
+      setNetworkStatus(status);
+    });
+    return () => {
+      networkListener.remove();
+    };
   }, []);
 
   useEffect(() => {
@@ -146,13 +212,26 @@ const WalksContextProvider: React.FC = (props) => {
           timestamp: moment.timestamp,
         };
       });
-      Storage.set({ key: "moments", value: JSON.stringify(storableMoments) });
+      Storage.set({
+        key: "moments",
+        value: JSON.stringify(storableMoments),
+      }).then(() => {
+        if (canStoreFiles && moments && moments.length > 0) {
+          tryStoreFiles();
+        }
+      });
     }
   }, [moments]);
 
   useEffect(() => {
     if (storedWalkId !== "" && userId) {
       storeMoments(userId);
+    }
+    if (storedWalkId) {
+      Storage.set({
+        key: "stored-walk-id",
+        value: JSON.stringify(storedWalkId),
+      });
     }
   }, [storedWalkId]);
 
@@ -201,6 +280,14 @@ const WalksContextProvider: React.FC = (props) => {
     });
   };
 
+  const updateMoment = (momentToUpdate: Moment) => {
+    setMoments((currMoments) => {
+      return currMoments?.map((moment) =>
+        moment.id === momentToUpdate.id ? { ...momentToUpdate } : moment
+      );
+    });
+  };
+
   const deleteMoment = async (momentId: string, fileUrl: string = "") => {
     setMoments((curMoments) => {
       if (!curMoments) {
@@ -236,6 +323,52 @@ const WalksContextProvider: React.FC = (props) => {
     }
   };
 
+  const updateSetCanStoreFiles = (canStore: boolean) => {
+    setCanStoreFiles(canStore);
+  };
+
+  const tryStoreFiles = async () => {
+    if (!networkStatus?.connected) {
+      return;
+    }
+    setCanStoreFiles(false);
+    const momentWithFile = moments?.find((moment) => {
+      return (
+        (moment.imagePath !== "" &&
+          !moment.imagePath.startsWith("https://firebasestorage")) ||
+        (moment.audioPath !== "" &&
+          !moment.audioPath.startsWith("https://firebasestorage"))
+      );
+    });
+    if (momentWithFile) {
+      let momentToUpdate: Moment = { ...momentWithFile };
+      updateMoment(momentToUpdate);
+      await storeFilehandler(momentWithFile.base64Data)
+        .then((newUrl) => {
+          if (momentWithFile.imagePath) {
+            momentToUpdate = {
+              ...momentWithFile,
+              imagePath: newUrl,
+              base64Data: newUrl,
+            };
+          } else if (momentWithFile.audioPath) {
+            momentToUpdate = {
+              ...momentWithFile,
+              audioPath: newUrl,
+              base64Data: newUrl,
+            };
+            setCanStoreFiles(true);
+          }
+          updateMoment(momentToUpdate);
+        })
+        .catch((e) => {
+          console.log("error storing file", e);
+          setCanStoreFiles(true);
+        });
+    }
+    setCanStoreFiles(true);
+  };
+
   const updateLikes = (walkId: string, add: boolean) => {
     setLikedWalkIds((currentLikedWalkIds) => {
       if (add) {
@@ -263,6 +396,14 @@ const WalksContextProvider: React.FC = (props) => {
     }
   };
 
+  const resetStoredWalkId = () => {
+    setStoredWalkId("");
+    Storage.set({
+      key: "stored-walk-id",
+      value: JSON.stringify(""),
+    });
+  };
+
   const resetStoredImagesForCover = () => {
     setStoredImagesForCover([]);
   };
@@ -270,13 +411,17 @@ const WalksContextProvider: React.FC = (props) => {
   const reset = () => {
     resetWalk();
     resetMoments();
-    setStoredWalkId("");
+    resetStoredWalkId();
     resetStoredImagesForCover();
   };
 
   return (
     <WalksContext.Provider
       value={{
+        networkStatus,
+        setNetworkStatus,
+        appData,
+        getAppData,
         walk,
         storedWalkId,
         updateWalkIdForStorage,
@@ -285,10 +430,14 @@ const WalksContextProvider: React.FC = (props) => {
         likedWalkIds,
         updateWalk,
         addMoment,
+        updateMoment,
         addStoredImagesForCover,
         deleteMoment,
         storeMoments,
         updateLikes,
+        canStoreFiles,
+        updateSetCanStoreFiles,
+        tryStoreFiles,
         resetWalk,
         resetMoments,
         resetStoredImagesForCover,
