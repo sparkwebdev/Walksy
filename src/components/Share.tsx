@@ -8,6 +8,7 @@ const Share: React.FC<{
   shareImage?: string;
   shareUrl?: string;
   triggerShare?: boolean;
+  iconOnly?: boolean;
 }> = (props) => {
   const text = props.shareText || "";
   const image = props.shareImage || "";
@@ -38,8 +39,13 @@ const Share: React.FC<{
     <>
       {(text || image || url) && (
         <div className="ion-text-center">
-          <h3 className="text-heading">Share this walk</h3>
-          <IonButton onClick={share}>
+          {!props.iconOnly && <h3 className="text-heading">Share walk</h3>}
+          <IonButton
+            onClick={share}
+            fill={props.iconOnly ? "clear" : "default"}
+            size={props.iconOnly ? "large" : "default"}
+            className={props.iconOnly ? "ion-no-padding" : ""}
+          >
             <IonIcon icon={shareIcon} />
           </IonButton>
         </div>

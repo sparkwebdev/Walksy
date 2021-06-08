@@ -113,7 +113,7 @@ const WalkItem: React.FC<{
               borderBottom: "solid 4px " + props.colour,
             }}
           >
-            <IonCol>
+            <IonCol size="10">
               <IonText className="text-heading">
                 <h2>
                   <strong>{props.title}</strong>
@@ -124,7 +124,7 @@ const WalkItem: React.FC<{
               <div className="like-button">
                 <IonButton
                   fill="clear"
-                  className="ion-text-lowercase like-button__btn"
+                  className="ion-text-lowercase like-button__btn ion-no-padding"
                   onClick={likeHandler}
                   disabled={storingLikeChoice}
                 >
@@ -191,11 +191,31 @@ const WalkItem: React.FC<{
                     </li>
                   )}
                 </ul>
+              </IonText>
+            </IonCol>
+            {moments.length > 0 && isPlatform("mobile") && (
+              <IonCol size="2">
+                <Share
+                  shareText={`Have a look at ${
+                    userId === props.userId ? "my " : "this "
+                  } ${
+                    props.title ? "'" + props.title + "'" : " walk"
+                  } on Walksy...`}
+                  shareImage={props.coverImage ? props.coverImage : ""}
+                  shareUrl={`https://walksy.uk/walk/${props.id}`}
+                  triggerShare={props.shouldShare}
+                  iconOnly={true}
+                />
+              </IonCol>
+            )}
+          </IonRow>
+          <IonRow>
+            <IonCol size="12">
+              <IonText className="text-heading">
                 <IonText
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    marginTop: "5px",
                   }}
                 >
                   {props.distance && props.distance > 0.1 ? (
