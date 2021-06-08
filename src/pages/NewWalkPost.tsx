@@ -31,7 +31,7 @@ import { updateStoredWalkHandler } from "../firebase";
 import { Project, Tag } from "../data/models";
 
 const locationMaxLength = 28;
-const descriptorsMaxCount = 3;
+const descriptionMaxCount = 3;
 
 const NewWalkPost: React.FC<{
   saveShareWalk: (share: boolean) => void;
@@ -52,7 +52,6 @@ const NewWalkPost: React.FC<{
   );
   const [project, setProject] = useState<string>(walksCtx.walk?.project || "");
   const [description, setDescription] = useState<string[]>([]);
-  const [descriptors, setDescriptors] = useState<string[]>([]);
 
   useEffect(() => {
     if (walksCtx.walk?.coverImage) {
@@ -87,11 +86,19 @@ const NewWalkPost: React.FC<{
   }, [walksCtx.moments]);
 
   const chooseKeywordHandler = (keyword: string) => {
-    if (descriptors.includes(keyword)) {
-      setDescriptors(descriptors.filter((item) => item !== keyword));
+    if (description.includes(keyword)) {
+      setDescription((currDescription) => {
+        const newDescription = currDescription.filter(
+          (item) => item !== keyword && item.trim() !== ""
+        );
+        return newDescription;
+      });
     } else {
-      if (descriptors.length < descriptorsMaxCount) {
-        setDescriptors([...descriptors, keyword]);
+      if (description.length < descriptionMaxCount) {
+        setDescription((currDescription) => {
+          const newDescription = [...currDescription, keyword];
+          return newDescription;
+        });
       }
     }
   };
@@ -338,11 +345,11 @@ const NewWalkPost: React.FC<{
               Describe this walk...
             </IonCardTitle>
             <p className="small-print">
-              Choose up to {descriptorsMaxCount} words to describe this walk...
+              Choose up to {descriptionMaxCount} words to describe this walk...
             </p>
             <div
               className={
-                descriptors.length === 3
+                description.length === 3
                   ? "ion-margin-top keywords keywords--complete"
                   : "ion-margin-top keywords"
               }
@@ -351,7 +358,7 @@ const NewWalkPost: React.FC<{
                 return descriptor.tag ? (
                   <IonBadge
                     className={
-                      descriptors.includes(descriptor.tag)
+                      description.includes(descriptor.tag)
                         ? "badge-keyword badge-keyword--active"
                         : "badge-keyword"
                     }
@@ -368,14 +375,11 @@ const NewWalkPost: React.FC<{
             <IonLabel className="ion-hide">Walk description</IonLabel>
             <IonInput
               type="text"
-              value={descriptors.join(", ")}
-              onIonChange={(event) =>
-                setDescription(event.detail!.value!.split(", "))
-              }
+              value={description.join(", ")}
               className="input-text"
               disabled={true}
             >
-              {descriptors.length === 3 ? (
+              {description.length === 3 ? (
                 <IonIcon
                   icon={finishIcon}
                   size="large"
@@ -384,7 +388,7 @@ const NewWalkPost: React.FC<{
                 />
               ) : (
                 <IonBadge className="badge-input-feedback" color="light">
-                  {descriptorsMaxCount - descriptors.length}
+                  {descriptionMaxCount - description.length}
                 </IonBadge>
               )}
             </IonInput>
