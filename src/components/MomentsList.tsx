@@ -178,7 +178,7 @@ const MomentsList: React.FC<{
                   {moment.note && (
                     <IonCard
                       className={
-                        moment.imagePath
+                        moment.imagePath || moment.audioPath
                           ? "moments-list__note moments-list__note--caption text-body ion-no-margin"
                           : "moments-list__note text-body ion-no-margin"
                       }

@@ -186,7 +186,9 @@ const NewWalkMoments: React.FC<{
                   </div>
                 </div>
               )}
-              {(momentType === "Note" || takenPhoto) && (
+              {(momentType === "Note" ||
+                takenPhoto ||
+                recordedAudioFilename) && (
                 <IonCard
                   className={
                     takenPhoto
