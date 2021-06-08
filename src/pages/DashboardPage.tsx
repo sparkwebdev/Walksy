@@ -128,7 +128,7 @@ const DashboardPage: React.FC = () => {
                       <IonText color="light">
                         {totalWalks}
                         <small style={{ fontSize: "5px" }}>&nbsp;</small>
-                        <small>Walks</small>
+                        <small>Walk{totalWalks !== 1 && "s"}</small>
                         <IonIcon
                           icon={distanceIcon}
                           style={{
