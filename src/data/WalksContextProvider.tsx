@@ -163,12 +163,6 @@ const WalksContextProvider: React.FC = (props) => {
         setMoments([]);
       }
     });
-    await getAppData();
-    await getLikes().then((likes) => {
-      if (likes) {
-        setLikedWalkIds(likes);
-      }
-    });
     await getStoredWalkId().then((walkId) => {
       if (walkId) {
         setStoredWalkId(walkId);
@@ -192,6 +186,18 @@ const WalksContextProvider: React.FC = (props) => {
       networkListener.remove();
     };
   }, []);
+
+  useEffect(() => {
+    if (!userId) {
+      return;
+    }
+    getAppData();
+    getLikes().then((likes) => {
+      if (likes) {
+        setLikedWalkIds(likes);
+      }
+    });
+  }, [userId]);
 
   useEffect(() => {
     if (walk) {
