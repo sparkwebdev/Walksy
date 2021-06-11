@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Walk, Moment, Location } from "../data/models";
+import { Walk, Moment, Location, AppData } from "../data/models";
+import { NetworkStatus } from "@capacitor/core";
 
 export const defaultWalk: Walk = {
   id: "",
@@ -21,17 +22,26 @@ export const defaultWalk: Walk = {
 };
 
 interface Context {
+  networkStatus: NetworkStatus | undefined;
+  setNetworkStatus: (status: NetworkStatus) => void;
+  appData: AppData;
+  getAppData: () => void;
   walk?: Walk;
   storedWalkId: string;
   updateWalkIdForStorage: (walkId: string) => void,
   moments?: Moment[];
   storedImagesForCover: string[];
+  likedWalkIds: string[];
   updateWalk: ({}) => void;
   addMoment: (walkId: string, imagePath: string, audioPath: string, base64Data: string, note: string, location: Location | null, timestamp: string) => void;
-  updateMoments: (moments: Moment[]) => void;
+  updateMoment: (moment: Moment) => void;
   addStoredImagesForCover: (image: string) => void,
-  deleteMoment: (momentId: string) => void;
+  deleteMoment: (momentId: string, fileUrl: string) => void;
   storeMoments: (userId: string) => void;
+  updateLikes: (walkId: string, add: boolean) => void;
+  canStoreFiles: boolean;
+  updateSetCanStoreFiles: (canStore: boolean) => void,
+  tryStoreFiles: () => void;
   resetWalk: () => void;
   resetMoments: () => void;
   resetStoredImagesForCover: () => void;
@@ -39,17 +49,26 @@ interface Context {
 }
 
 const WalksContext = React.createContext<Context>({
+  networkStatus: undefined,
+  setNetworkStatus: () => {},
+  appData: {},
+  getAppData: () => {},
   walk: defaultWalk,
   storedWalkId: "",
   updateWalkIdForStorage: () => {},
   moments: [],
   storedImagesForCover: [],
+  likedWalkIds: [],
   updateWalk: () => {},
   addMoment: () => {},
-  updateMoments: () => {},
+  updateMoment: () => {},
   addStoredImagesForCover: () => {},
   deleteMoment: () => {},
   storeMoments: () => {},
+  updateLikes: () => {},
+  canStoreFiles: true,
+  updateSetCanStoreFiles: () => {},
+  tryStoreFiles: () => {},
   resetWalk: () => {},
   resetMoments: () => {},
   resetStoredImagesForCover: () => {},

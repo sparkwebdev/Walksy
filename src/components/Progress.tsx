@@ -44,12 +44,10 @@ const Progress: React.FC<ContainerProps> = ({
 
   useEffect(() => {
     let ticker: any = null;
-    let seconds = 0;
     ticker = setInterval(() => {
       const timeDiff = getTimeDiff(start, new Date().toISOString());
       const minAndSec = getMinAndSec(timeDiff);
       setTime(minAndSec);
-      seconds++;
     }, 1000);
     Pedometer.isStepCountingAvailable()
       .then(() => {
@@ -81,7 +79,7 @@ const Progress: React.FC<ContainerProps> = ({
   }, [distance, steps, updateWalk]);
 
   return (
-    <IonCard className="progress-panel" color="tertiary">
+    <IonCard className="progress-panel" color="primary">
       <IonGrid>
         <IonRow className="ion-justify-content-center">
           <IonCol
@@ -124,7 +122,7 @@ const Progress: React.FC<ContainerProps> = ({
                   fontSize: "1.4em",
                 }}
               />
-              {canCountDistance && distance > 0 ? (
+              {canCountDistance && distance + savedDistance > 0 ? (
                 <>{(savedDistance + distance).toFixed(1)}</>
               ) : (
                 <span>--</span>
@@ -139,7 +137,7 @@ const Progress: React.FC<ContainerProps> = ({
                   fontSize: "1.4em",
                 }}
               />
-              {canCountSteps && steps > 0 ? (
+              {canCountSteps && steps + savedSteps > 0 ? (
                 <>{numberWithCommas(savedSteps + steps)}</>
               ) : (
                 <span>--</span>

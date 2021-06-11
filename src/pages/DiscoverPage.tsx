@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   IonCard,
   IonCardHeader,
@@ -12,13 +12,15 @@ import {
 } from "@ionic/react";
 import PageHeader from "../components/PageHeader";
 import { firestore } from "../firebase";
-import { appData } from "../data/appData";
-const suggestedDescriptors = appData.suggestedDescriptors;
+import { Tag } from "../data/models";
+import WalksContext from "../data/walks-context";
 
 const DiscoverPage: React.FC = () => {
+  const walksCtx = useContext(WalksContext);
   const [curatedWalksCount, setCuratedWalksCount] = useState<number>();
   const [featuredWalks, setFeaturedWalksCount] = useState<number>();
   const [latestWalksCount, setLatestWalksCount] = useState<number>();
+  const [suggestedDescriptors, setSuggestedDescriptors] = useState<Tag[]>([]);
 
   useEffect(() => {
     const walksRef = firestore.collection("users-walks");
@@ -29,6 +31,12 @@ const DiscoverPage: React.FC = () => {
         setCuratedWalksCount(docs.length);
       });
   }, []);
+
+  useEffect(() => {
+    if (walksCtx.appData.suggestedDescriptors) {
+      setSuggestedDescriptors(walksCtx.appData.suggestedDescriptors);
+    }
+  }, [walksCtx.appData]);
 
   useEffect(() => {
     const walksRef = firestore.collection("users-walks");
@@ -147,16 +155,19 @@ const DiscoverPage: React.FC = () => {
           <IonCard className="ion-no-margin" style={{ background: "#777269" }}>
             <IonGrid className="grid grid--half ion-no-padding">
               <IonRow>
-                {suggestedDescriptors.map((keyword, index) => {
+                {suggestedDescriptors.map((descriptor) => {
                   return (
-                    <IonCol key={keyword}>
+                    <IonCol key={descriptor.tag}>
                       <IonCard
                         className="walk-card with-placeholder ion-no-margin"
-                        routerLink={`/app/discover/tag-${keyword}`}
+                        routerLink={`/app/discover/tag-${descriptor.tag}`}
                       >
                         <img
                           className="walk-card__image"
-                          src={`assets/img/cover-tag-${keyword}.jpg`}
+                          src={
+                            descriptor.coverImage ||
+                            `assets/img/cover-tag-${descriptor.tag}.jpg`
+                          }
                           alt=""
                           height="240"
                           width="159"
@@ -164,7 +175,7 @@ const DiscoverPage: React.FC = () => {
                         />
                         <IonCardHeader className="walk-card__header">
                           <IonCardTitle className="walk-card__title walk-card__title--small text-body">
-                            #{keyword}
+                            #{descriptor.tag}
                           </IonCardTitle>
                         </IonCardHeader>
                       </IonCard>

@@ -16,7 +16,7 @@ import {
   IonLoading,
   IonRow,
 } from "@ionic/react";
-import { close as cancelIcon, headset } from "ionicons/icons";
+import { close as cancelIcon } from "ionicons/icons";
 
 declare const window: any;
 
@@ -25,8 +25,6 @@ const options = {
   disableDefaultUI: true,
   zoomControl: true,
 };
-let startLocation: any = null;
-let endLocation: any = null;
 
 const MapWithMarkers: React.FC<{
   moments: Moment[];

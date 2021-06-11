@@ -38,14 +38,20 @@ const MomentsList: React.FC<{
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const [deleteMomentAlert, setDeleteMomentAlert] = useState<boolean>(false);
-  const [momentItemIdToDelete, setMomentItemIdToDelete] = useState<string>("");
+  const [momentDetailsToDelete, setMomentDetailsToDelete] =
+    useState<{ id: string; fileUrl: string } | null>();
 
   const viewMapHandler = () => {
     setShowMap(true);
   };
 
   const deleteMoment = () => {
-    walksCtx.deleteMoment(momentItemIdToDelete);
+    if (momentDetailsToDelete) {
+      const { id, fileUrl } = momentDetailsToDelete;
+      fileUrl.startsWith("https://firebasestorage")
+        ? walksCtx.deleteMoment(id, fileUrl)
+        : walksCtx.deleteMoment(id, "");
+    }
   };
 
   useEffect(() => {
@@ -172,7 +178,7 @@ const MomentsList: React.FC<{
                   {moment.note && (
                     <IonCard
                       className={
-                        moment.imagePath
+                        moment.imagePath || moment.audioPath
                           ? "moments-list__note moments-list__note--caption text-body ion-no-margin"
                           : "moments-list__note text-body ion-no-margin"
                       }
@@ -189,7 +195,10 @@ const MomentsList: React.FC<{
                       className="moments-list__delete"
                       color="danger"
                       onClick={() => {
-                        setMomentItemIdToDelete(moment.id);
+                        setMomentDetailsToDelete({
+                          id: moment.id,
+                          fileUrl: moment.imagePath || moment.audioPath,
+                        });
                         setDeleteMomentAlert(true);
                       }}
                       hidden={!isEditing}
@@ -206,7 +215,7 @@ const MomentsList: React.FC<{
           isOpen={deleteMomentAlert}
           onDidDismiss={() => {
             setDeleteMomentAlert(false);
-            setMomentItemIdToDelete("");
+            setMomentDetailsToDelete(null);
           }}
           header={"Delete Moment"}
           subHeader={"Are you sure?"}

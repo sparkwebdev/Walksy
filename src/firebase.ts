@@ -95,7 +95,7 @@ export const storeWalkHandler = async (walkData: Walk) => {
   }
 }
 
-export const updateWalkHandler = async (walkData: {}, walkId: string) => {
+export const updateStoredWalkHandler = async (walkData: {}, walkId: string) => {
   const entriesRef = firestore.collection("users-walks")
   .doc(walkId)
   .get()
@@ -107,15 +107,17 @@ export const updateWalkHandler = async (walkData: {}, walkId: string) => {
   return entriesRef;
 }
 
-export const storeLikeHandler = async (like: boolean, walkId: string, userId: string) => {
+export const storeLikeHandler = async (walkId: string, userId: string) => {
   const likesRef = firestore.collection('users-likes').doc(walkId);
-  likesRef.get()
+  const add = likesRef.get()
   .then((doc) => {
     if (doc.exists) {
       if (!doc.data()?.users.includes(userId)) {
         likesRef.update({users: firebase.firestore.FieldValue.arrayUnion(userId)});
+        return true;
       } else {
         likesRef.update({users: firebase.firestore.FieldValue.arrayRemove(userId)});
+        return false;
       }
     } else {
       likesRef.set(
@@ -127,13 +129,15 @@ export const storeLikeHandler = async (like: boolean, walkId: string, userId: st
       ) 
     }
   });
-  return likesRef;
+  return add;
 }
 
 export const storeMomentHandler = async (moment: Moment, walkId: string, userId: string) => {
   let momentToStore: Moment = {...moment};
   let storedFilePath: string = "";
-  if (moment.imagePath !== "") {
+  if (moment.imagePath.startsWith("https://firebasestorage")) {
+    storedFilePath = moment.imagePath;
+  } else if (moment.imagePath !== "" && moment.base64Data !== "") {
     await storeFilehandler(moment.base64Data).then((newUrl) => {
       momentToStore = {
         ...moment,
@@ -143,7 +147,9 @@ export const storeMomentHandler = async (moment: Moment, walkId: string, userId:
     }).catch((e) => {
       console.log('error storing file', e);
     });
-  } else if (moment.audioPath !== "") {
+  } else if (moment.audioPath.startsWith("https://firebasestorage")) {
+    storedFilePath = moment.audioPath;
+  } else if (moment.audioPath !== "" && moment.base64Data !== "") {
     await storeFilehandler(moment.base64Data).then((newUrl) => {
       momentToStore = {
         ...moment,
@@ -229,4 +235,28 @@ export const getRemoteUserData = async (userId: string) => {
   } catch (error) {
     console.log("Error getting user data: ", error);
   }
+};
+
+export const deleteStoredItem = async (collection: string, id: string, fileUrl: string = "") => {
+  await firestore.collection(collection).doc(id).delete().then(() => {
+      console.log(collection, ": Document successfully deleted!", id);
+  }).catch((error) => {
+      console.error("Error removing document: ", error);
+  });
+  if (collection === "users-moments" && fileUrl.startsWith("https://firebasestorage")) {
+    deleteStoredFile(fileUrl);
+  }
+};
+
+export const deleteStoredFile = async (fileUrl: string) => {
+  if (!fileUrl.startsWith("https://firebasestorage")) {
+    console.log("Not a firebase document");
+    return;
+  }
+  let pictureRef = storage.refFromURL(fileUrl);
+  await pictureRef.delete().then(() => {
+    console.log("Document successfully deleted file from Cloud Storage", fileUrl);
+  }).catch((error) => {
+      console.error("Error deleting file from Cloud Storage: ", error);
+  });
 };

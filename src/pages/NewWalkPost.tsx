@@ -3,13 +3,18 @@ import {
   IonButton,
   IonCard,
   IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
   IonCardTitle,
   IonCol,
   IonGrid,
   IonIcon,
   IonInput,
   IonLabel,
+  IonModal,
   IonRow,
+  IonSlide,
+  IonSlides,
   IonText,
   IonToast,
   IonToggle,
@@ -18,39 +23,62 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   checkmark as finishIcon,
   shareOutline as shareIcon,
+  helpCircleOutline as infoIcon,
 } from "ionicons/icons";
-import { appData } from "../data/appData";
 import WalksContext from "../data/walks-context";
-import { updateWalkHandler } from "../firebase";
+import { isPlatform } from "@ionic/react";
+import { updateStoredWalkHandler } from "../firebase";
+import { Project, Tag } from "../data/models";
 
-const suggestedDescriptors = appData.suggestedDescriptors;
 const locationMaxLength = 28;
-const descriptorsMaxCount = 3;
+const descriptionMaxCount = 3;
 
 const NewWalkPost: React.FC<{
   saveShareWalk: (share: boolean) => void;
 }> = (props) => {
-  const [description, setDescription] = useState<string[]>([]);
+  const walksCtx = useContext(WalksContext);
+  const [chosenCoverImage, setChosenCoverImage] = useState<boolean>(false);
   const [chosenLocation, setChosenLocation] = useState<boolean>(false);
   const [chosenDescription, setChosenDescription] = useState<boolean>(false);
-  const [chosenCoverImage, setChosenCoverImage] = useState<boolean>(false);
-  const [location, setLocation] = useState<string>("");
-  const [circular, setCircular] = useState<boolean>(false);
-  const [descriptors, setDescriptors] = useState<string[]>([]);
-  const [coverImage, setCoverImage] = useState<string>("");
-  const walksCtx = useContext(WalksContext);
+
+  const [coverImage, setCoverImage] = useState<string>(
+    walksCtx.walk?.coverImage || ""
+  );
+  const [circular, setCircular] = useState<boolean>(
+    walksCtx.walk?.circular || false
+  );
+  const [location, setLocation] = useState<string>(
+    walksCtx.walk?.location || ""
+  );
+  const [project, setProject] = useState<string>(walksCtx.walk?.project || "");
+  const [description, setDescription] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (walksCtx.walk?.coverImage) {
+      setChosenCoverImage(true);
+    }
+    if (walksCtx.walk?.description && walksCtx.walk?.description.length > 0) {
+      setChosenDescription(true);
+    }
+    if (walksCtx.walk?.location) {
+      setChosenLocation(true);
+    }
+  }, []);
+
+  const [showProjectsMoreInfo, setShowProjectsMoreInfo] =
+    useState<boolean>(false);
 
   useEffect(() => {
     if (walksCtx.moments && walksCtx.moments.length === 0) {
       if (walksCtx.storedImagesForCover.length === 1) {
         const image = walksCtx.storedImagesForCover[0];
-        updateWalkHandler({ coverImage: image }, walksCtx.storedWalkId);
+        updateStoredWalkHandler({ coverImage: image }, walksCtx.storedWalkId);
         setChosenCoverImage(true);
         walksCtx.resetStoredImagesForCover();
       } else if (walksCtx.storedImagesForCover.length > 1) {
         const image = walksCtx.storedImagesForCover[0];
         setCoverImage(image);
-        updateWalkHandler({ coverImage: image }, walksCtx.storedWalkId);
+        updateStoredWalkHandler({ coverImage: image }, walksCtx.storedWalkId);
       } else if (walksCtx.storedImagesForCover.length === 0) {
         setChosenCoverImage(true);
       }
@@ -58,29 +86,46 @@ const NewWalkPost: React.FC<{
   }, [walksCtx.moments]);
 
   const chooseKeywordHandler = (keyword: string) => {
-    if (descriptors.includes(keyword)) {
-      setDescriptors(descriptors.filter((item) => item !== keyword));
+    if (description.includes(keyword)) {
+      setDescription((currDescription) => {
+        const newDescription = currDescription.filter(
+          (item) => item !== keyword && item.trim() !== ""
+        );
+        return newDescription;
+      });
     } else {
-      if (descriptors.length < descriptorsMaxCount) {
-        setDescriptors([...descriptors, keyword]);
+      if (description.length < descriptionMaxCount) {
+        setDescription((currDescription) => {
+          const newDescription = [...currDescription, keyword];
+          return newDescription;
+        });
       }
     }
   };
 
-  const chosenLocationHandler = () => {
-    updateWalkHandler({ location, circular }, walksCtx.storedWalkId);
-    setChosenLocation(true);
+  const chosenCoverImageHandler = () => {
+    if (walksCtx.storedWalkId) {
+      walksCtx.updateWalk({ coverImage });
+      updateStoredWalkHandler({ coverImage }, walksCtx.storedWalkId);
+      setChosenCoverImage(true);
+      walksCtx.resetStoredImagesForCover();
+    }
   };
 
-  const chosenCoverImageHandler = () => {
-    updateWalkHandler({ coverImage }, walksCtx.storedWalkId);
-    setChosenCoverImage(true);
-    walksCtx.resetStoredImagesForCover();
+  const chosenLocationHandler = () => {
+    if (walksCtx.storedWalkId) {
+      walksCtx.updateWalk({ location, circular });
+      updateStoredWalkHandler({ location, circular }, walksCtx.storedWalkId);
+      setChosenLocation(true);
+    }
   };
 
   const chosenDescriptionHandler = () => {
-    updateWalkHandler({ description }, walksCtx.storedWalkId);
-    setChosenDescription(true);
+    if (walksCtx.storedWalkId) {
+      walksCtx.updateWalk({ description, project });
+      updateStoredWalkHandler({ description, project }, walksCtx.storedWalkId);
+      setChosenDescription(true);
+    }
   };
 
   return (
@@ -106,27 +151,36 @@ const NewWalkPost: React.FC<{
               </div>
               {walksCtx.storedImagesForCover.length > 0 ? (
                 <div className="cover-image-picker__scroller">
-                  {walksCtx.storedImagesForCover.map((image, index) => {
-                    return (
-                      <div
-                        key={index}
-                        onClick={() => {
-                          setCoverImage(image);
-                        }}
-                        className={
-                          coverImage === image
-                            ? "cover-image-picker__scroller-image-container cover-image-picker__scroller-image-container--chosen"
-                            : "cover-image-picker__scroller-image-container"
-                        }
-                      >
-                        <img
-                          src={image}
-                          alt=""
-                          className="cover-image-picker__scroller-image"
-                        />
-                      </div>
-                    );
-                  })}
+                  <IonSlides
+                    pager={true}
+                    options={{
+                      slidesPerView: 4.5,
+                    }}
+                  >
+                    {walksCtx.storedImagesForCover.map((image, index) => {
+                      return (
+                        <IonSlide>
+                          <div
+                            key={index}
+                            onClick={() => {
+                              setCoverImage(image);
+                            }}
+                            className={
+                              coverImage === image
+                                ? "cover-image-picker__scroller-image-container cover-image-picker__scroller-image-container--chosen"
+                                : "cover-image-picker__scroller-image-container"
+                            }
+                          >
+                            <img
+                              src={image}
+                              alt=""
+                              className="cover-image-picker__scroller-image"
+                            />
+                          </div>
+                        </IonSlide>
+                      );
+                    })}
+                  </IonSlides>
                 </div>
               ) : null}
             </IonCardContent>
@@ -149,7 +203,6 @@ const NewWalkPost: React.FC<{
               Circular route...
             </IonCardTitle>
             <p className="small-print">Was this walk in a loop?</p>
-
             <IonGrid className="ion-text-center">
               <IonRow className="ion-align-items-center">
                 <IonCol className="ion-text-end">
@@ -183,12 +236,12 @@ const NewWalkPost: React.FC<{
               </IonRow>
             </IonGrid>
           </div>
-          <div className="ion-text-center ion-padding-bottom constrain constrain--medium">
+          <div className="ion-text-center ion-padding constrain constrain--medium">
             <IonCardTitle className="title text-heading">
               Add a location...
             </IonCardTitle>
             <p className="small-print">Where was this walk?</p>
-            <IonLabel className="ion-hide">Walk location...</IonLabel>
+            <IonLabel className="ion-hide">Walk location</IonLabel>
             <IonInput
               type="text"
               value={location}
@@ -201,6 +254,7 @@ const NewWalkPost: React.FC<{
               {locationMaxLength - location.length} characters remaining
             </p>
           </div>
+
           <IonGrid className="ion-text-center">
             <IonRow>
               <IonCol className="ion-no-padding">
@@ -225,49 +279,107 @@ const NewWalkPost: React.FC<{
       )}
       {!chosenDescription && chosenLocation && chosenCoverImage && (
         <>
-          <div className="ion-text-center constrain constrain--large">
+          {walksCtx.appData.projects.length > 0 && (
+            <div className="ion-text-center ion-padding constrain constrain--large">
+              <IonCardTitle className="title text-heading">
+                Tag project...
+              </IonCardTitle>
+              <p className="small-print">
+                Was this walk part of a themed project?{" "}
+                <IonButton
+                  color="secondary"
+                  style={{ textDecoration: "underline", marginTop: "-1rem" }}
+                  onClick={() => setShowProjectsMoreInfo(true)}
+                  fill="clear"
+                  size="small"
+                  className="ion-no-margin ion-no-padding"
+                >
+                  <IonIcon icon={infoIcon} size="large" />
+                  <strong className="ion-hide">More info</strong>
+                </IonButton>
+              </p>
+              <div
+                className={
+                  project !== ""
+                    ? "ion-margin-top keywords keywords--complete"
+                    : "ion-margin-top keywords"
+                }
+              >
+                {walksCtx.appData.projects.map((projectItem: Project) => {
+                  return (
+                    projectItem.tag && (
+                      <IonBadge
+                        className={
+                          project === projectItem.tag
+                            ? "badge-keyword badge-keyword--active"
+                            : "badge-keyword"
+                        }
+                        onClick={() => {
+                          setProject(projectItem.tag!);
+                        }}
+                        key={projectItem.tag}
+                      >
+                        {projectItem.title}
+                      </IonBadge>
+                    )
+                  );
+                })}
+                <IonBadge
+                  className={
+                    project === ""
+                      ? "badge-keyword badge-keyword--active badge-keyword--active-alt"
+                      : "badge-keyword"
+                  }
+                  onClick={() => {
+                    setProject("");
+                  }}
+                  key="no"
+                >
+                  No
+                </IonBadge>
+              </div>
+            </div>
+          )}
+          <div className="ion-text-center ion-padding constrain constrain--large">
             <IonCardTitle className="title text-heading">
               Describe this walk...
             </IonCardTitle>
             <p className="small-print">
-              Choose up to {descriptorsMaxCount} words to describe this walk...
+              Choose up to {descriptionMaxCount} words to describe this walk...
             </p>
             <div
               className={
-                descriptors.length === 3
+                description.length === 3
                   ? "ion-margin-top keywords keywords--complete"
                   : "ion-margin-top keywords"
               }
             >
-              {suggestedDescriptors.map((keyword) => {
-                return (
+              {walksCtx.appData.suggestedDescriptors.map((descriptor: Tag) => {
+                return descriptor.tag ? (
                   <IonBadge
                     className={
-                      descriptors.includes(keyword)
+                      description.includes(descriptor.tag)
                         ? "badge-keyword badge-keyword--active"
                         : "badge-keyword"
                     }
                     onClick={() => {
-                      chooseKeywordHandler(keyword);
+                      chooseKeywordHandler(descriptor.tag!);
                     }}
-                    key={keyword}
+                    key={descriptor.tag}
                   >
-                    {keyword}
+                    {descriptor.tag}
                   </IonBadge>
-                );
+                ) : null;
               })}
             </div>
-            <IonLabel className="ion-hide">Walk description...</IonLabel>
+            <IonLabel className="ion-hide">Walk description</IonLabel>
             <IonInput
               type="text"
-              value={descriptors.join(", ")}
-              onIonChange={(event) =>
-                setDescription(event.detail!.value!.split(", "))
-              }
+              value={description.join(", ")}
               className="input-text"
               disabled={true}
             >
-              {descriptors.length === 3 ? (
+              {description.length === 3 ? (
                 <IonIcon
                   icon={finishIcon}
                   size="large"
@@ -276,10 +388,11 @@ const NewWalkPost: React.FC<{
                 />
               ) : (
                 <IonBadge className="badge-input-feedback" color="light">
-                  {descriptorsMaxCount - descriptors.length}
+                  {descriptionMaxCount - description.length}
                 </IonBadge>
               )}
             </IonInput>
+
             <IonGrid className="ion-text-center">
               <IonRow>
                 <IonCol className="ion-no-padding">
@@ -318,15 +431,17 @@ const NewWalkPost: React.FC<{
           <IonGrid>
             <IonRow>
               <IonCol>
-                <IonButton
-                  color="primary"
-                  onClick={() => {
-                    props.saveShareWalk(true);
-                  }}
-                >
-                  <IonIcon slot="start" icon={shareIcon} />
-                  Share
-                </IonButton>
+                {isPlatform("mobile") && (
+                  <IonButton
+                    color="primary"
+                    onClick={() => {
+                      props.saveShareWalk(true);
+                    }}
+                  >
+                    <IonIcon slot="start" icon={shareIcon} />
+                    Share
+                  </IonButton>
+                )}
                 <IonButton
                   color="secondary"
                   onClick={() => {
@@ -345,8 +460,58 @@ const NewWalkPost: React.FC<{
         position="middle"
         color="secondary"
         isOpen={!!walksCtx.moments && walksCtx.moments.length > 0}
-        message={`Saving your moments: ${walksCtx.moments?.length}`}
+        message="Saving your moments"
       />
+      <IonModal
+        isOpen={showProjectsMoreInfo}
+        onDidDismiss={() => setShowProjectsMoreInfo(false)}
+      >
+        <IonCard
+          className="ion-no-margin"
+          style={{ display: "flex", flexDirection: "column", height: "100%" }}
+        >
+          <IonCardHeader className="ion-no-padding" color="dark">
+            <IonCardSubtitle className="ion-padding ion-no-margin ion-text-uppercase ion-text-center">
+              Projects
+            </IonCardSubtitle>
+          </IonCardHeader>
+          <IonCardContent className="ion-margin-top small-print">
+            <p>
+              Walksy projects are organised walking events which you can
+              participate in and contribute to. If you know your walk is part of
+              a Walksy project, please tag this walk with the appropriate tag.
+              If it is not part of a project, simply select 'No';
+            </p>
+            <ul>
+              {walksCtx.appData.projects.map((project: Project) => {
+                return (
+                  <li>
+                    <h2>
+                      <strong>{project.title}</strong>
+                    </h2>
+                    {project.description}
+                  </li>
+                );
+              })}
+            </ul>
+          </IonCardContent>
+          <IonCardHeader
+            className="ion-no-padding ion-margin-top"
+            color="light"
+            style={{ marginTop: "auto" }}
+          >
+            <IonGrid>
+              <IonRow>
+                <IonCol className="ion-text-center">
+                  <IonButton onClick={() => setShowProjectsMoreInfo(false)}>
+                    Close
+                  </IonButton>
+                </IonCol>
+              </IonRow>
+            </IonGrid>
+          </IonCardHeader>
+        </IonCard>
+      </IonModal>
     </IonCardContent>
   );
 };

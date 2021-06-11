@@ -30,7 +30,7 @@ import { formatDate } from "../helpers";
 import WalksContext from "../data/walks-context";
 
 const SettingsPage: React.FC = () => {
-  const { userId, userCreatedAt, userEmail } = useAuth();
+  const { userId, userCreatedAt } = useAuth();
   const walksCtx = useContext(WalksContext);
 
   const [displayName, setDisplayName] = useState("");

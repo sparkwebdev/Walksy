@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   formatDate,
   getMinAndSec,
@@ -30,6 +30,7 @@ import {
   heartOutline as likeIcon,
   heart as likedIcon,
 } from "ionicons/icons";
+import WalksContext from "../data/walks-context";
 
 const WalkItem: React.FC<{
   id: string;
@@ -54,16 +55,18 @@ const WalkItem: React.FC<{
     props.end && props.start ? getTimeDiff(props.start, props.end) : 0;
   const time = getMinAndSec(timeDiff);
   const [moments, setMoments] = useState<Moment[]>([]);
-  const [currentUserHasLiked, setCurrentUserHasLiked] = useState<boolean>();
   const [storingLikeChoice, setStoringLikeChoice] = useState<boolean>(false);
   const [likers, setLikers] = useState<string[]>();
+  const walksCtx = useContext(WalksContext);
 
   const likeHandler = () => {
     if (userId) {
       setStoringLikeChoice(true);
-      setCurrentUserHasLiked(!currentUserHasLiked);
-      storeLikeHandler(!currentUserHasLiked, props.id, userId)
-        .then(() => {
+      storeLikeHandler(props.id, userId)
+        .then((add) => {
+          if (typeof add !== "undefined") {
+            walksCtx.updateLikes(props.id, add);
+          }
           setStoringLikeChoice(false);
         })
         .catch(() => {
@@ -110,7 +113,7 @@ const WalkItem: React.FC<{
               borderBottom: "solid 4px " + props.colour,
             }}
           >
-            <IonCol>
+            <IonCol size="10">
               <IonText className="text-heading">
                 <h2>
                   <strong>{props.title}</strong>
@@ -121,7 +124,7 @@ const WalkItem: React.FC<{
               <div className="like-button">
                 <IonButton
                   fill="clear"
-                  className="ion-text-lowercase like-button__btn"
+                  className="ion-text-lowercase like-button__btn ion-no-padding"
                   onClick={likeHandler}
                   disabled={storingLikeChoice}
                 >
@@ -188,11 +191,31 @@ const WalkItem: React.FC<{
                     </li>
                   )}
                 </ul>
+              </IonText>
+            </IonCol>
+            {moments.length > 0 && isPlatform("mobile") && (
+              <IonCol size="2">
+                <Share
+                  shareText={`Have a look at ${
+                    userId === props.userId ? "my " : "this "
+                  } ${
+                    props.title ? "'" + props.title + "'" : " walk"
+                  } on Walksy...`}
+                  shareImage={props.coverImage ? props.coverImage : ""}
+                  shareUrl={`https://walksy.uk/walk/${props.id}`}
+                  triggerShare={props.shouldShare}
+                  iconOnly={true}
+                />
+              </IonCol>
+            )}
+          </IonRow>
+          <IonRow>
+            <IonCol size="12">
+              <IonText className="text-heading">
                 <IonText
                   style={{
                     display: "flex",
                     alignItems: "center",
-                    marginTop: "5px",
                   }}
                 >
                   {props.distance && props.distance > 0.1 ? (
@@ -240,7 +263,7 @@ const WalkItem: React.FC<{
               locations={props.locations ? props.locations : []}
               colour={props.colour}
             />
-            {isPlatform("mobile") && moments.length > 0 && (
+            {isPlatform("mobile") && (
               <Share
                 shareText={`Have a look at my ${
                   props.title ? "'" + props.title + "'" : " latest walk"

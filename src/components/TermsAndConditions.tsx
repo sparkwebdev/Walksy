@@ -10,7 +10,6 @@ import {
   IonRow,
 } from "@ionic/react";
 import React from "react";
-import { appData } from "../data/appData";
 import PrivacyPolicy from "./PrivacyPolicy";
 
 const TermsAndConditions: React.FC<{

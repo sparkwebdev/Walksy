@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   IonButton,
   IonCard,
@@ -22,6 +22,7 @@ import {
   footstepsOutline as walkIcon,
 } from "ionicons/icons";
 import { formatDate, getUnitDistance, numberWithCommas } from "../helpers";
+import WalksContext from "../data/walks-context";
 
 const DashboardPage: React.FC = () => {
   const { userId, userCreatedAt } = useAuth();
@@ -31,7 +32,8 @@ const DashboardPage: React.FC = () => {
   const [totalDistance, setTotalDistance] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const [likedWalkIds, setLikedWalkIds] = useState<string[]>([]);
+  const walksCtx = useContext(WalksContext);
+
   const [likedWalks, setLikedWalks] = useState<Walk[]>([]);
 
   useEffect(() => {
@@ -58,40 +60,35 @@ const DashboardPage: React.FC = () => {
         setWalks(result.docs.slice(0, 9).map(toWalk));
         setLoading(false);
       });
-
-    // var docRef = firestore
-    //   .collection("users-likes")
-    //   .where("users", "array-contains", userId);
-    // docRef
-    //   .get()
-    //   .then((query) => {
-    //     const likedWalkIds = query.docs.map((result) => {
-    //       return result.id;
-    //     });
-    //     setLikedWalkIds(likedWalkIds);
-    //   })
-    //   .catch((error) => {
-    //     console.log("Error getting document:", error);
-    //   });
   }, [userId]);
 
-  // useEffect(() => {
-  //   likedWalkIds?.forEach((id) => {
-  //     var walkRef = firestore.collection("users-walks").doc(id);
-  //     walkRef
-  //       .get()
-  //       .then((doc) => {
-  //         if (doc.exists) {
-  //           setLikedWalks((curLikedWalks) => {
-  //             return curLikedWalks?.concat(toWalk(doc));
-  //           });
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.log("Error getting document:", error);
-  //       });
-  //   });
-  // }, [likedWalkIds]);
+  useEffect(() => {
+    setLikedWalks((curLikedWalks) => {
+      return curLikedWalks.filter((walk) => {
+        return walksCtx.likedWalkIds.includes(walk.id);
+      });
+    });
+    walksCtx.likedWalkIds?.forEach((id) => {
+      const walk = likedWalks.find((walk) => {
+        return walk.id === id;
+      });
+      if (!walk) {
+        const walkRef = firestore.collection("users-walks").doc(id);
+        walkRef
+          .get()
+          .then((doc) => {
+            if (doc.exists) {
+              setLikedWalks((curLikedWalks) => {
+                return curLikedWalks?.concat(toWalk(doc));
+              });
+            }
+          })
+          .catch((error) => {
+            console.log("Error getting document:", error);
+          });
+      }
+    });
+  }, [walksCtx.likedWalkIds]);
 
   return (
     <IonPage>
@@ -131,7 +128,7 @@ const DashboardPage: React.FC = () => {
                       <IonText color="light">
                         {totalWalks}
                         <small style={{ fontSize: "5px" }}>&nbsp;</small>
-                        <small>Walks</small>
+                        <small>Walk{totalWalks !== 1 && "s"}</small>
                         <IonIcon
                           icon={distanceIcon}
                           style={{
@@ -190,7 +187,7 @@ const DashboardPage: React.FC = () => {
               </div>
             </>
           )}
-          {/* {likedWalks && likedWalks.length > 0 && (
+          {likedWalks && likedWalks.length > 0 && (
             <h2 className="text-heading ion-padding-start ion-padding-end ion-margin-top">
               <IonText color="primary">
                 <strong>Your Liked Walks...</strong>
@@ -217,7 +214,7 @@ const DashboardPage: React.FC = () => {
                   isMiniPreview={true}
                 />
               </IonRouterLink>
-            ))} */}
+            ))}
         </div>
       </IonContent>
       <IonLoading isOpen={loading} message={"Please wait..."} />

@@ -25,6 +25,7 @@ import {
 } from "../helpers";
 import WalksContext from "../data/walks-context";
 import { useAuth } from "../auth";
+import NetworkStatusCheck from "../atoms/NetworkStatusCheck";
 
 const { Storage } = Plugins;
 
@@ -53,11 +54,14 @@ const NewWalk: React.FC = () => {
   const [colour, setColour] = useState<string>(colours[0]);
 
   const [continueWalkAlert, setContinueWalkAlert] = useState<boolean>(false);
+  const [continueWalkAlertHeader, setContinueWalkAlertHeader] =
+    useState<string>("Continue walk?");
+  const [continueWalkAlertSubHeader, setContinueWalkAlertSubHeader] =
+    useState<string>("You have a walk in progress.");
 
   // Walk view state - Tutorial
-  const [showTutorial, setShowTutorial] = useState<boolean | undefined>(
-    undefined
-  );
+  const [showTutorial, setShowTutorial] =
+    useState<boolean | undefined>(undefined);
   const [showTutorialText, setShowTutorialText] = useState<string>("Help");
 
   const [showHelp, setShowHelp] = useState<boolean>(false);
@@ -87,9 +91,22 @@ const NewWalk: React.FC = () => {
   useEffect(() => {
     Storage.get({ key: "walk" })
       .then((data) => {
-        const walkData = data.value ? JSON.parse(data.value) : null;
-        if (walkData && walksCtx.walk && walksCtx.walk.start) {
-          setContinueWalkAlert(true);
+        const walkData =
+          data.value !== "undefined" && data.value
+            ? JSON.parse(data.value)
+            : null;
+        if (walkData) {
+          walksCtx.updateWalk({ ...walkData });
+          if (walkData.end) {
+            setContinueWalkAlertHeader("Save walk?");
+            setContinueWalkAlertSubHeader(
+              "Do you want to finish saving your walk?"
+            );
+            setContinueWalkAlert(true);
+          }
+          if (walkData.start) {
+            setContinueWalkAlert(true);
+          }
         }
       })
       .catch((e) => {
@@ -108,6 +125,7 @@ const NewWalk: React.FC = () => {
   };
 
   const startWalkHandler = () => {
+    walksCtx.reset();
     startNewWalk();
   };
 
@@ -198,6 +216,9 @@ const NewWalk: React.FC = () => {
                   <IonCardTitle className="title text-heading">
                     Choose a colour...
                   </IonCardTitle>
+                  <p className="small-print">
+                    Personalise this walk with a colour
+                  </p>
                   <IonGrid className="swatches ion-justify-content-center ion-padding">
                     <IonRow className="ion-justify-content-between">
                       {colours.map((current) => {
@@ -244,6 +265,7 @@ const NewWalk: React.FC = () => {
                         >
                           Start Walk
                         </IonButton>
+                        <NetworkStatusCheck></NetworkStatusCheck>
                       </IonCol>
                     </IonRow>
                   </IonGrid>
@@ -253,10 +275,9 @@ const NewWalk: React.FC = () => {
           )}
         </IonCard>
       </IonContent>
-
       <IonAlert
-        header={"Continue walk?"}
-        subHeader="You have a walk already in progress."
+        header={continueWalkAlertHeader}
+        subHeader={continueWalkAlertSubHeader}
         buttons={[
           {
             text: "No",
@@ -264,7 +285,7 @@ const NewWalk: React.FC = () => {
             handler: cancelWalk,
           },
           {
-            text: "Yes, continue",
+            text: "Yes",
             cssClass: "secondary",
             handler: continueWalk,
           },

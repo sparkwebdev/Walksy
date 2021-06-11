@@ -45,7 +45,7 @@ const PrivacyPolicy: React.FC = () => {
       </p>
 
       <p>
-        <a href="https://walksy.uk/privacy" target="_blank">
+        <a href="https://walksy.uk/privacy" target="_blank" rel="noreferrer">
           View our full Privacy Policy
         </a>
         .
